@@ -14,45 +14,4 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwNoticeService extends IService<TwNotice> {
 
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
-     */
-    TwNotice queryById(Integer id);
-
-    /**
-     * 分页查询
-     *
-     * @param twNotice 筛选条件
-     * @param pageRequest      分页对象
-     * @return 查询结果
-     */
-    Page<TwNotice> queryByPage(TwNotice twNotice, PageRequest pageRequest);
-
-    /**
-     * 新增数据
-     *
-     * @param twNotice 实例对象
-     * @return 实例对象
-     */
-    TwNotice insert(TwNotice twNotice);
-
-    /**
-     * 修改数据
-     *
-     * @param twNotice 实例对象
-     * @return 实例对象
-     */
-    TwNotice update(TwNotice twNotice);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 是否成功
-     */
-    boolean deleteById(Integer id);
-
 }

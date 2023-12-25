@@ -14,45 +14,5 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwDjprofitService extends IService<TwDjprofit> {
 
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
-     */
-    TwDjprofit queryById(Integer id);
-
-    /**
-     * 分页查询
-     *
-     * @param twDjprofit 筛选条件
-     * @param pageRequest      分页对象
-     * @return 查询结果
-     */
-    Page<TwDjprofit> queryByPage(TwDjprofit twDjprofit, PageRequest pageRequest);
-
-    /**
-     * 新增数据
-     *
-     * @param twDjprofit 实例对象
-     * @return 实例对象
-     */
-    TwDjprofit insert(TwDjprofit twDjprofit);
-
-    /**
-     * 修改数据
-     *
-     * @param twDjprofit 实例对象
-     * @return 实例对象
-     */
-    TwDjprofit update(TwDjprofit twDjprofit);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 是否成功
-     */
-    boolean deleteById(Integer id);
 
 }

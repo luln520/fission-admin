@@ -14,45 +14,6 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwTradeJsonService extends IService<TwTradeJson> {
 
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
-     */
-    TwTradeJson queryById(String id);
 
-    /**
-     * 分页查询
-     *
-     * @param twTradeJson 筛选条件
-     * @param pageRequest      分页对象
-     * @return 查询结果
-     */
-    Page<TwTradeJson> queryByPage(TwTradeJson twTradeJson, PageRequest pageRequest);
-
-    /**
-     * 新增数据
-     *
-     * @param twTradeJson 实例对象
-     * @return 实例对象
-     */
-    TwTradeJson insert(TwTradeJson twTradeJson);
-
-    /**
-     * 修改数据
-     *
-     * @param twTradeJson 实例对象
-     * @return 实例对象
-     */
-    TwTradeJson update(TwTradeJson twTradeJson);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 是否成功
-     */
-    boolean deleteById(String id);
 
 }
