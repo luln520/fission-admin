@@ -32,6 +32,7 @@ import java.util.List;
  */
 @Api(tags = AdminSwaggerTagConst.Business.OA_NOTICE)
 @RestController
+@RequestMapping("/api")
 public class NoticeController {
 
     @Autowired

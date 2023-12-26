@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @since 2023-12-23 18:18:46
  */
 @RestController
-@RequestMapping("twAuthExtend")
+@RequestMapping("/api")
 public class TwAuthExtendController {
     /**
      * 服务对象

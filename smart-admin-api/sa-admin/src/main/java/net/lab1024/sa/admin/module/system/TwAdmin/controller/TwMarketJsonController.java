@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @since 2023-12-23 18:25:08
  */
 @RestController
-@RequestMapping("twMarketJson")
+@RequestMapping("/api")
 public class TwMarketJsonController {
     /**
      * 服务对象

@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @since 2023-12-23 18:17:06
  */
 @RestController
-@RequestMapping("twAdminLog")
+@RequestMapping("/api")
 public class TwAdminLogController {
     /**
      * 服务对象

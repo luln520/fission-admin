@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @since 2023-12-23 18:29:25
  */
 @RestController
-@RequestMapping("twUserQianbao")
+@RequestMapping("/api")
 public class TwUserQianbaoController {
     /**
      * 服务对象

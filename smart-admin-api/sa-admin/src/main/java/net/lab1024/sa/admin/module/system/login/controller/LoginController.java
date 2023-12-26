@@ -33,6 +33,7 @@ import javax.validation.Valid;
  * @Copyright 1024创新实验室 （ https://1024lab.net ），2012-2022
  */
 @RestController
+@RequestMapping("/api")
 @Api(tags = {AdminSwaggerTagConst.System.SYSTEM_LOGIN})
 public class LoginController {
 

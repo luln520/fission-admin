@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @since 2023-12-23 18:28:27
  */
 @RestController
-@RequestMapping("twTyhyorder")
+@RequestMapping("/api")
 public class TwTyhyorderController {
     /**
      * 服务对象

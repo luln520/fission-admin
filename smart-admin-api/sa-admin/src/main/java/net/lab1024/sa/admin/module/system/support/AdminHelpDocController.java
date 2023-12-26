@@ -30,6 +30,7 @@ import java.util.List;
  */
 @Api(tags = SwaggerTagConst.Support.HELP_DOC)
 @RestController
+@RequestMapping("/api")
 public class AdminHelpDocController extends SupportBaseController {
 
     @Autowired

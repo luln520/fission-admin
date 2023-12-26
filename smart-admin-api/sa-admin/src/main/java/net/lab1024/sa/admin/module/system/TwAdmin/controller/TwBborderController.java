@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @since 2023-12-23 18:19:54
  */
 @RestController
-@RequestMapping("twBborder")
+@RequestMapping("/api")
 public class TwBborderController {
     /**
      * 服务对象

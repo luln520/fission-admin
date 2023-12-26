@@ -10,6 +10,7 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.module.support.operatelog.annoation.OperateLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
  */
 @OperateLog
 @RestController
+@RequestMapping("/api")
 @Api(tags = {AdminSwaggerTagConst.System.SYSTEM_DATA_SCOPE})
 public class DataScopeController extends AdminBaseController {
 

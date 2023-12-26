@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @since 2023-12-23 18:19:21
  */
 @RestController
-@RequestMapping("twAuthGroupAccess")
+@RequestMapping("/api")
 public class TwAuthGroupAccessController {
     /**
      * 服务对象

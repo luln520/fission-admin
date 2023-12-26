@@ -27,6 +27,7 @@ import java.util.List;
  */
 @RestController
 @Api(tags = {SwaggerTagConst.Support.RELOAD})
+@RequestMapping("/api")
 public class AdminReloadController extends SupportBaseController {
 
     @Autowired

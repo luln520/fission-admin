@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -27,6 +28,7 @@ import javax.validation.Valid;
  * @Copyright 1024创新实验室 （ https://1024lab.net ）
  */
 @RestController
+@RequestMapping("/api")
 @Api(tags = {SwaggerTagConst.Support.FILE})
 public class AdminFileController extends SupportBaseController {
 
