@@ -22,5 +22,65 @@ import javax.annotation.Resource;
  */
 @Service("twTyhyorderService")
 public class TwTyhyorderServiceImpl extends ServiceImpl<TwTyhyorderDao, TwTyhyorder> implements TwTyhyorderService {
+    @Resource
+    private TwTyhyorderDao twTyhyorderDao;
 
+    /**
+     * 通过ID查询单条数据
+     *
+     * @param id 主键
+     * @return 实例对象
+     */
+    @Override
+    public TwTyhyorder queryById(Integer id) {
+        return this.twTyhyorderDao.queryById(id);
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param twTyhyorder 筛选条件
+     * @param pageRequest      分页对象
+     * @return 查询结果
+     */
+    @Override
+    public Page<TwTyhyorder> queryByPage(TwTyhyorder twTyhyorder, PageRequest pageRequest) {
+        long total = this.twTyhyorderDao.count(twTyhyorder);
+        return new PageImpl<>(this.twTyhyorderDao.queryAllByLimit(twTyhyorder, pageRequest), pageRequest, total);
+    }
+
+    /**
+     * 新增数据
+     *
+     * @param twTyhyorder 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public TwTyhyorder insert(TwTyhyorder twTyhyorder) {
+        this.twTyhyorderDao.insert(twTyhyorder);
+        return twTyhyorder;
+    }
+
+    /**
+     * 修改数据
+     *
+     * @param twTyhyorder 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public TwTyhyorder update(TwTyhyorder twTyhyorder) {
+        this.twTyhyorderDao.update(twTyhyorder);
+        return this.queryById(twTyhyorder.getId());
+    }
+
+    /**
+     * 通过主键删除数据
+     *
+     * @param id 主键
+     * @return 是否成功
+     */
+    @Override
+    public boolean deleteById(Integer id) {
+        return this.twTyhyorderDao.deleteById(id) > 0;
+    }
 }
