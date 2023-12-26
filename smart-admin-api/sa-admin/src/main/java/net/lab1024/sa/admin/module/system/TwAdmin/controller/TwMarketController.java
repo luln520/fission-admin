@@ -1,11 +1,10 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;;
 
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMarket;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMarketService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import service.TwMarketService;
 
 import javax.annotation.Resource;
 
