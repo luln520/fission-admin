@@ -11,6 +11,8 @@ import service.TwConfigService;
 
 import javax.annotation.Resource;
 
+
+
 /**
  * 网站配置表(TwConfig)表服务实现类
  *
@@ -21,3 +23,5 @@ import javax.annotation.Resource;
 public class TwConfigServiceImpl extends ServiceImpl<TwConfigDao, TwConfig> implements TwConfigService {
 
 }
+
+
