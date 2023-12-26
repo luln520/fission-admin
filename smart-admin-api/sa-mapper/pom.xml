@@ -8,11 +8,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>sa-admin</artifactId>
+    <artifactId>sa-mapper</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>sa-admin</name>
+    <name>sa-mapper</name>
     <description>sa-admin project</description>
 
     <dependencies>
@@ -26,6 +26,12 @@
         <dependency>
             <groupId>net.1024lab</groupId>
             <artifactId>sa-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.1024lab</groupId>
+            <artifactId>sa-eneity</artifactId>
             <version>${project.version}</version>
         </dependency>
 

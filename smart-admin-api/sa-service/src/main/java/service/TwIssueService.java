@@ -1,0 +1,18 @@
+package service;
+
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import entity.TwIssue;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+/**
+ * 认购发行表(TwIssue)表服务接口
+ *
+ * @author makejava
+ * @since 2023-12-23 18:23:47
+ */
+public interface TwIssueService extends IService<TwIssue> {
+
+
+}

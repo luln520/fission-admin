@@ -8,12 +8,12 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>sa-admin</artifactId>
+    <artifactId>sa-eneity</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>sa-admin</name>
-    <description>sa-admin project</description>
+    <name>sa-eneity</name>
+    <description>sa-eneity project</description>
 
     <dependencies>
 
