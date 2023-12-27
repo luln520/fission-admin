@@ -32,7 +32,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @OperateLog
-@RequestMapping("/api")
 @Api(tags = {AdminSwaggerTagConst.Business.OA_ENTERPRISE})
 public class EnterpriseController {
 

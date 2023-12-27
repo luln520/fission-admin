@@ -26,7 +26,6 @@ import javax.validation.Valid;
  */
 @OperateLog
 @RestController
-@RequestMapping("/api")
 @Api(tags = {AdminSwaggerTagConst.System.SYSTEM_ROLE_MENU})
 public class RoleMenuController extends AdminBaseController {
 

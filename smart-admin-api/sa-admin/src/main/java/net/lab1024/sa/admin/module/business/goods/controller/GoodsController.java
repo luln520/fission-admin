@@ -30,7 +30,6 @@ import javax.validation.Valid;
  */
 @OperateLog
 @RestController
-@RequestMapping("/api")
 @Api(tags = AdminSwaggerTagConst.Business.MANAGER_GOODS)
 public class GoodsController extends AdminBaseController {
 

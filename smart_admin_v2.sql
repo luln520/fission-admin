@@ -4,7 +4,7 @@
  Source Server         : 8_1024db
  Source Server Type    : MySQL
  Source Server Version : 80023
- Source Schema         : coin_admin_v2
+ Source Schema         : smart_admin_v2
 
  Target Server Type    : MySQL
  Target Server Version : 80023
@@ -13,10 +13,10 @@
  Date: 26/10/2022 19:53:12
 */
 
--- 导出 coin_admin_v2 的数据库结构
-DROP DATABASE IF EXISTS `coin_admin_v2`;
-CREATE DATABASE IF NOT EXISTS `coin_admin_v2` ;
-USE `coin_admin_v2`;
+-- 导出 smart_admin_v2 的数据库结构
+DROP DATABASE IF EXISTS `smart_admin_v2`;
+CREATE DATABASE IF NOT EXISTS `smart_admin_v2` ;
+USE `smart_admin_v2`;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;

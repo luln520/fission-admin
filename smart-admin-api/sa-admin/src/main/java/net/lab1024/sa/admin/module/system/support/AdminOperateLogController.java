@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Api(tags = {SwaggerTagConst.Support.OPERATE_LOG})
-@RequestMapping("/api")
 public class AdminOperateLogController extends SupportBaseController {
 
     @Autowired

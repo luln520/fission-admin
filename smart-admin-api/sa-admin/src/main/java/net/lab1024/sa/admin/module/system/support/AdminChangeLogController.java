@@ -23,7 +23,6 @@ import javax.validation.Valid;
  */
 
 @RestController
-@RequestMapping("/api")
 @Api(tags = SwaggerTagConst.Support.CHANGE_LOG)
 public class AdminChangeLogController {
 

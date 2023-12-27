@@ -28,7 +28,6 @@ import java.util.List;
  */
 @OperateLog
 @RestController
-@RequestMapping("/api")
 @Api(tags = {AdminSwaggerTagConst.System.SYSTEM_ROLE})
 public class RoleController extends AdminBaseController {
 

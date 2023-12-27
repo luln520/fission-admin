@@ -29,7 +29,6 @@ import java.util.List;
  */
 @OperateLog
 @RestController
-@RequestMapping("/api")
 @Api(tags = {AdminSwaggerTagConst.System.SYSTEM_DEPARTMENT})
 public class DepartmentController extends AdminBaseController {
 

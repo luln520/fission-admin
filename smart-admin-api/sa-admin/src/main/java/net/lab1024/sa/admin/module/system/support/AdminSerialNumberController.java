@@ -17,7 +17,10 @@ import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberRec
 import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -33,7 +36,6 @@ import java.util.List;
  */
 @Api(tags = SwaggerTagConst.Support.SERIAL_NUMBER)
 @RestController
-@RequestMapping("/api")
 public class AdminSerialNumberController extends SupportBaseController {
 
     @Autowired

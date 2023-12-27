@@ -27,7 +27,6 @@ import java.util.List;
  * @Copyright 1024创新实验室 （ https://1024lab.net ），2012-2022
  */
 @RestController
-@RequestMapping("/api")
 @Api(tags = {AdminSwaggerTagConst.Business.OA_BANK})
 public class BankController {
 

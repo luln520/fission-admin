@@ -29,7 +29,6 @@ import java.util.List;
  */
 @RestController
 @OperateLog
-@RequestMapping("/api")
 @Api(tags = {AdminSwaggerTagConst.System.SYSTEM_EMPLOYEE})
 public class EmployeeController extends AdminBaseController {
 

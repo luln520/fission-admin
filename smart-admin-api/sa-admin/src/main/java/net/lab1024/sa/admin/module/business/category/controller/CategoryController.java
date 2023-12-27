@@ -29,7 +29,6 @@ import java.util.List;
  */
 @OperateLog
 @RestController
-@RequestMapping("/api")
 @Api(tags = AdminSwaggerTagConst.Business.MANAGER_CATEGORY)
 public class CategoryController extends AdminBaseController {
 

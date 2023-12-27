@@ -12,7 +12,6 @@ import net.lab1024.sa.common.module.support.dict.service.DictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -29,7 +28,6 @@ import java.util.List;
  */
 @Api(tags = {SwaggerTagConst.Support.DICT})
 @RestController
-@RequestMapping("/api")
 public class AdminDictController extends SupportBaseController {
 
     @Autowired
