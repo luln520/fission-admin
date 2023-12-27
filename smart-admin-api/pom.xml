@@ -13,6 +13,9 @@
 	<modules>
         <module>sa-common</module>
 		<module>sa-admin</module>
+		<module>sa-service</module>
+		<module>sa-mapper</module>
+		<module>sa-eneity</module>
     </modules>
 
     <properties>

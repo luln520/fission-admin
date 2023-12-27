@@ -1,11 +1,10 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;;
 
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwTyhyorder;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwTyhyorderService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import service.TwTyhyorderService;
 
 import javax.annotation.Resource;
 

@@ -1,11 +1,10 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import service.TwAdminLogService;
 
 import javax.annotation.Resource;
 

@@ -22,5 +22,65 @@ import javax.annotation.Resource;
  */
 @Service("twFooterService")
 public class TwFooterServiceImpl extends ServiceImpl<TwFooterDao, TwFooter> implements TwFooterService {
+    @Resource
+    private TwFooterDao twFooterDao;
 
+    /**
+     * 通过ID查询单条数据
+     *
+     * @param id 主键
+     * @return 实例对象
+     */
+    @Override
+    public TwFooter queryById(String id) {
+        return this.twFooterDao.queryById(id);
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param twFooter 筛选条件
+     * @param pageRequest      分页对象
+     * @return 查询结果
+     */
+    @Override
+    public Page<TwFooter> queryByPage(TwFooter twFooter, PageRequest pageRequest) {
+        long total = this.twFooterDao.count(twFooter);
+        return new PageImpl<>(this.twFooterDao.queryAllByLimit(twFooter, pageRequest), pageRequest, total);
+    }
+
+    /**
+     * 新增数据
+     *
+     * @param twFooter 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public TwFooter insert(TwFooter twFooter) {
+        this.twFooterDao.insert(twFooter);
+        return twFooter;
+    }
+
+    /**
+     * 修改数据
+     *
+     * @param twFooter 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public TwFooter update(TwFooter twFooter) {
+        this.twFooterDao.update(twFooter);
+        return this.queryById(twFooter.getId());
+    }
+
+    /**
+     * 通过主键删除数据
+     *
+     * @param id 主键
+     * @return 是否成功
+     */
+    @Override
+    public boolean deleteById(String id) {
+        return this.twFooterDao.deleteById(id) > 0;
+    }
 }

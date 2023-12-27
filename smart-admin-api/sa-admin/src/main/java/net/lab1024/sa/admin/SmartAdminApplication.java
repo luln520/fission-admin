@@ -22,8 +22,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 @EnableScheduling
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
-@ComponentScan(basePackages = {"net.lab1024.sa"})
-@MapperScan(value = "net.lab1024.sa", annotationClass = Mapper.class)
+@ComponentScan(basePackages = {"net.lab1024.sa.admin.module.dao"})
+@MapperScan(value = "net.lab1024.sa.admin.module.dao", annotationClass = Mapper.class)
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class })
 public class SmartAdminApplication {
 
