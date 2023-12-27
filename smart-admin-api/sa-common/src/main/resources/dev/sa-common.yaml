@@ -28,7 +28,7 @@ spring:
   # redis 连接池配置信息
   redis:
     database: 1
-    host: 127.0.0.1
+    host: 206.238.199.169
     lettuce:
       pool:
         max-active: 5
