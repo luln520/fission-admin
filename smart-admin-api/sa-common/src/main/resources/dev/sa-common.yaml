@@ -37,7 +37,7 @@ spring:
         max-wait: 30000ms
     port: 6379
     timeout: 10000ms
-    password:
+    password: coin_123456
 
   # 上传文件大小配置
   servlet:
