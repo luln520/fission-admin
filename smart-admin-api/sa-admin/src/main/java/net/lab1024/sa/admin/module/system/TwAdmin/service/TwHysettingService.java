@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwHysettingService extends IService<TwHysetting> {
 
+    TwHysetting hysettingId();
 
+    boolean edit(TwHysetting twHysetting);
 
 }

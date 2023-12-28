@@ -3,7 +3,11 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserCoinDao">
 
     <select id="incre" resultType="java.lang.Integer">
-        UPDATE tw_user_coin SET usdt = usdt + #{num} WHERE userid = #{uid}
+        UPDATE tw_user_coin SET ${coinname} = ${coinname} + #{num} WHERE userid = #{uid};
+    </select>
+
+    <select id="afternum" resultType="double">
+        SELECT ${coinname} FROM tw_user_coin WHERE ${coinname} = #{coinname} AND userid = #{uid};
     </select>
 
 </mapper>

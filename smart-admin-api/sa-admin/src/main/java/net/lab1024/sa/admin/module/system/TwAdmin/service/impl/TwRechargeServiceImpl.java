@@ -150,14 +150,14 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 queryCoin.eq("userid", uid);
                 TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
                 if(twUserCoin != null){
-                    twUserCoinService.incre(uid,num);//增加用户资产
+                    twUserCoinService.incre(uid,num,coinname);//增加用户资产
 
                     TwBill twBill = new TwBill();
                     twBill.setUid(uid);
                     twBill.setUsername(one.getUsername());
                     twBill.setNum(one.getNum());
                     twBill.setCoinname(one.getCoin());
-                    twBill.setAfternum(twUserCoin.getUsdt()+num);
+                    twBill.setAfternum(twUserCoinService.afternum(uid,coinname));
                     twBill.setType(17);
                     twBill.setAddtime(new Date());
                     twBill.setSt(1);
@@ -183,10 +183,4 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
         return null;
     }
 
-    @Override
-    public ResponseDTO rejectCoin(int  id) {
-
-
-        return null;
-    }
 }

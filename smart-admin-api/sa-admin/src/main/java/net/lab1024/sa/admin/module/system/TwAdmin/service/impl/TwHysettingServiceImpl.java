@@ -1,5 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwHyorderDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwHysettingDao;
@@ -23,4 +24,15 @@ import javax.annotation.Resource;
 @Service("twHysettingService")
 public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysetting> implements TwHysettingService {
 
+    @Override
+    public TwHysetting hysettingId() {
+        QueryWrapper<TwHysetting> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", 1); // 添加查询条件
+        return this.getOne(queryWrapper);
+    }
+
+    @Override
+    public boolean edit(TwHysetting twHysetting) {
+        return this.saveOrUpdate(twHysetting);
+    }
 }

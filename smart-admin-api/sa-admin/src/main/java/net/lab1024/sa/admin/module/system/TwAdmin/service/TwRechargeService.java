@@ -30,5 +30,4 @@ public interface TwRechargeService extends IService<TwRecharge> {
 
     ResponseDTO confirm(int id);
 
-    ResponseDTO rejectCoin(int  id);
 }

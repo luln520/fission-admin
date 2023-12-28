@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjprofitDao">
+
+    <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjprofit">
+        select * from tw_kjprofit  where 1=1
+        <if test="obj.userName != null and obj.userName !=''">
+            and username = #{obj.userName}
+        </if>
+        order by id desc
+    </select>
+</mapper>

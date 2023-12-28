@@ -168,7 +168,7 @@ public class FinanceController {
     @ApiOperation(value = "驳回提币")
     @NoNeedLogin
     public ResponseDTO rejectCoin(@RequestParam int  id) {
-        return twRechargeService.rejectCoin(id);
+        return twMyzcService.rejectCoin(id);
     }
 
     /**
@@ -226,6 +226,13 @@ public class FinanceController {
      *             exit();
      *         }
      */
+
+    @PostMapping("/confirmCoin")
+    @ApiOperation(value = "通过提币")
+    @NoNeedLogin
+    public ResponseDTO confirmCoin(@RequestParam int  id) {
+        return twMyzcService.confirmCoin(id);
+    }
 
     /**
      * 通过提币 （逻辑如下） 四个表 ：myzc（提币表 ）   notice（通知表）

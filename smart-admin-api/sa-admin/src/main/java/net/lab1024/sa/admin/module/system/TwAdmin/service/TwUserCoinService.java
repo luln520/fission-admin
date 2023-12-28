@@ -20,6 +20,8 @@ public interface TwUserCoinService extends IService<TwUserCoin> {
      * @param num
      * @return
      */
-     int incre(Integer uid,double num);
+     int incre(Integer uid,double num,String coinname);
+
+     double afternum(Integer uid,String coinname);
 
 }

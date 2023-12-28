@@ -1,7 +1,18 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKuangjiService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * 交易中心
@@ -9,25 +20,57 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/admin/trade")
 public class TradeController {
+
+    @Autowired
+    private TwHyorderService twHyorderService;
+
+    @Autowired
+    private TwHysettingService twHysettingService;
+
     /**
-     * 合约订单 查询列表 并返回   表hyorder where status=1  order by id desc
+     * 合约,平仓订单 查询列表 并返回   表hyorder where status=1  order by id desc
      */
+    @PostMapping("/hyorderlist")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO hyorderlist(@Valid @RequestBody TwHyorderVo twHyorderVo) {
+        return ResponseDTO.ok(twHyorderService.listpage(twHyorderVo));
+    }
 
     /**
      * 合约订单 查询单个 并返回   表hyorder where id=?
      */
+    @GetMapping("/hyorderId")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO hyorderId(@RequestParam int id) {
+        return ResponseDTO.ok(twHyorderService.hyorderId(id));
+    }
 
     /**
      * 合约设置 获取 并返回    表hysetting where id=1
      */
+    @GetMapping("/hysettingId")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO hysettingId() {
+        return ResponseDTO.ok(twHysettingService.hysettingId());
+    }
 
     /**
      * 合约设置 编辑    表hysetting where id=1  对象直接保存
      */
+    @PostMapping("/edit")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO edit(@RequestBody TwHysetting twHysetting) {
+        return ResponseDTO.ok(twHysettingService.edit(twHysetting));
+    }
 
     /**
      * 平仓 查询列表 并返回   表hyorder where status=2  order by id desc
      */
+
 
     /**
      * 限价委托记录 查询列表 并返回   表bborder where ordertype=1  order by id desc
@@ -86,15 +129,6 @@ public class TradeController {
 
     /**
      * 合约单控盈亏 设置     表hyorder  id=? kongyk=?
-     */
-    /**
-     * 体验合约订单 查询列表 并返回   表tyhyorder where status=1  order by id desc
-     */
-    /**
-     * 合约体验订单 查询单个 并返回   表tyhyorder where id=?
-     */
-    /**
-     * 体验合约单控盈亏 设置     表tyhyorder  id=? kongyk=?
      */
 
 

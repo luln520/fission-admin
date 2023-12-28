@@ -20,11 +20,11 @@ public class TwMyzc implements Serializable {
 /**
      * id
      */
-    private String id;
+    private int id;
 /**
      * 会员ID
      */
-    private String userid;
+    private int userid;
 /**
      * 会员账号
      */
@@ -38,21 +38,21 @@ public class TwMyzc implements Serializable {
 /**
      * 提币数量
      */
-    private String num;
+    private double num;
 /**
      * 手续费
      */
-    private String fee;
+    private double fee;
 /**
      * 实际到账
      */
-    private String mum;
+    private double mum;
 /**
      * 提币地址
      */
     private String address;
 
-    private String sort;
+    private int sort;
 /**
      * 申请时间
      */

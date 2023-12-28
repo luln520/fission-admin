@@ -24,7 +24,12 @@ import javax.annotation.Resource;
 public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin> implements TwUserCoinService {
 
     @Override
-    public int incre(Integer uid, double num) {
-        return this.baseMapper.incre(uid,num);
+    public int incre(Integer uid, double num,String coinname) {
+        return this.baseMapper.incre(uid,num,coinname);
+    }
+
+    @Override
+    public double afternum(Integer uid, String coinname) {
+        return this.baseMapper.afternum(uid,coinname);
     }
 }

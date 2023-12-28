@@ -20,6 +20,8 @@ public interface TwUserCoinDao extends BaseMapper<TwUserCoin> {
     /**
      * 增加用户资产
      */
-    Integer incre(@Param("uid") int uid,@Param("num") double num);
+    Integer incre(@Param("uid") int uid,@Param("num") double num,@Param("coinname") String coinname);
+
+    double afternum(@Param("uid") int uid,@Param("coinname") String coinname);
 }
 

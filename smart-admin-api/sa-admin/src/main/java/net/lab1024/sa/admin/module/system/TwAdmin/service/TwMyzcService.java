@@ -7,6 +7,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -25,4 +26,8 @@ public interface TwMyzcService extends IService<TwMyzc> {
     BigDecimal sumAllWithdraw();
 
     IPage<TwMyzc> listpage(TwMyzcVo twMyzcVo);
+
+    ResponseDTO rejectCoin(int id);
+
+    ResponseDTO confirmCoin(int id);
 }

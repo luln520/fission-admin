@@ -1,8 +1,12 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjprofit;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -15,5 +19,9 @@ import org.springframework.data.domain.PageRequest;
 public interface TwHyorderService extends IService<TwHyorder> {
 
     int countUnClosedOrders();
+
+    TwHyorder hyorderId(int id);
+
+    IPage<TwHyorder> listpage(TwHyorderVo twHyorderVo);
 
 }

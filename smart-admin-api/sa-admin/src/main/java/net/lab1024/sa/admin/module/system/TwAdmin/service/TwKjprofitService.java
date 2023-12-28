@@ -1,8 +1,12 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjprofit;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjorderVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -14,5 +18,5 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwKjprofitService extends IService<TwKjprofit> {
 
-
+    IPage<TwKjprofit> listpage(TwKjprofitVo twKjprofitVo);
 }
