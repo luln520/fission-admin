@@ -2,6 +2,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -17,29 +18,23 @@ import java.io.Serializable;
 @TableName("tw_content")
 public class TwContent implements Serializable {
     private static final long serialVersionUID = -47261435617866204L;
-/**
-     * ID
-     */
+
+    @ApiModelProperty("id")
     private Integer id;
-/**
-     * 标题
-     */
+
+     @ApiModelProperty("标题")
     private String title;
-/**
-     * 公告图片
-     */
+
+    @ApiModelProperty("公告图片")
     private String img;
-/**
-     * 内容
-     */
+
+    @ApiModelProperty("内容")
     private String content;
-/**
-     * 添加时间
-     */
+
+    @ApiModelProperty("添加时间")
     private Date addtime;
-/**
-     * 状态1显示2隐藏
-     */
+
+    @ApiModelProperty("状态1显示2隐藏")
     private Integer status;
 
 }

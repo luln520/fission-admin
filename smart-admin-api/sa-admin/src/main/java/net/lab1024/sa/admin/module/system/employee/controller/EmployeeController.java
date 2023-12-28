@@ -20,12 +20,6 @@ import java.util.List;
 
 /**
  * 员工
- *
- * @Author 1024创新实验室-主任: 卓大
- * @Date 2021-12-09 22:57:49
- * @Wechat zhuoda1024
- * @Email lab1024@163.com
- * @Copyright 1024创新实验室 （ https://1024lab.net ）
  */
 @RestController
 @OperateLog

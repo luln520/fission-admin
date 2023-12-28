@@ -1,13 +1,20 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * 币种配置表(TwCoin)表控制层
@@ -25,5 +32,44 @@ public class TwCoinController {
     private TwCoinService twCoinService;
 
 
+    /**
+     * 所有获取币种   表Coin  order by sort asc
+     */
+    @PostMapping("/list")
+    @ApiOperation(value = "币种配置列表")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwCoin>> listpage(@Valid @RequestBody PageParam pageParam) {
+        return ResponseDTO.ok(twCoinService.listpage(pageParam));
+    }
+
+    /**
+     *添加 agent_id和name 都不能重复   表Coin
+     */
+    @PostMapping("/addOrUpdate")
+    @ApiOperation(value = "公告新增或编辑")
+    @NoNeedLogin
+    public ResponseDTO addOrUpdate(@RequestBody TwCoin twCoin) {
+        return ResponseDTO.ok(twCoinService.addOrUpdate(twCoin));
+    }
+
+    /**
+     * 设置 币状态 表Coin   修改status 1或者 2
+     */
+    @PostMapping("/updateStatus")
+    @ApiOperation(value = "币种禁用启用")
+    @NoNeedLogin
+    public ResponseDTO updateStatus(@RequestParam int id,@RequestParam String status) {
+        return ResponseDTO.ok(twCoinService.updateStatus(id,status));
+    }
+
+    /**
+     * 删除币 表Coin   where id=？
+     */
+    @GetMapping("/delete")
+    @ApiOperation(value = "删除公告")
+    @NoNeedLogin
+    public ResponseDTO delete(@RequestParam int id) {
+        return ResponseDTO.ok(twCoinService.delete(id));
+    }
 }
 
