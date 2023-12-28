@@ -14,6 +14,10 @@ public class TradeController {
      */
 
     /**
+     * 合约订单 查询单个 并返回   表hyorder where id=?
+     */
+
+    /**
      * 合约设置 获取 并返回    表hysetting where id=1
      */
 
@@ -79,6 +83,20 @@ public class TradeController {
     /**
      * 刷单设置 删除     表Market id=?
      */
+
+    /**
+     * 合约单控盈亏 设置     表hyorder  id=? kongyk=?
+     */
+    /**
+     * 体验合约订单 查询列表 并返回   表tyhyorder where status=1  order by id desc
+     */
+    /**
+     * 合约体验订单 查询单个 并返回   表tyhyorder where id=?
+     */
+    /**
+     * 体验合约单控盈亏 设置     表tyhyorder  id=? kongyk=?
+     */
+
 
 
 
