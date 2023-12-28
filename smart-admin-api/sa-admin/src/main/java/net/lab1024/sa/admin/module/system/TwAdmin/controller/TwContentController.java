@@ -65,5 +65,12 @@ public class TwContentController {
     public ResponseDTO delete(@RequestParam int id) {
         return ResponseDTO.ok(twContentService.delete(id));
     }
+
+    @GetMapping("/find")
+    @ApiOperation(value = "查询公告")
+    @NoNeedLogin
+    public ResponseDTO find(@RequestParam int id) {
+        return ResponseDTO.ok(twContentService.find(id));
+    }
 }
 

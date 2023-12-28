@@ -14,5 +14,5 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwKjorderService extends IService<TwKjorder> {
 
-
+    int countAllOrders();
 }

@@ -33,4 +33,13 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
+
+    @Override
+    public Integer countLineUsers(String startTime, String endTime) {
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.ge("startTime", startTime);
+        queryWrapper.le("endTime", endTime);
+        return this.baseMapper.selectCount(queryWrapper).intValue();
+    }
+
 }

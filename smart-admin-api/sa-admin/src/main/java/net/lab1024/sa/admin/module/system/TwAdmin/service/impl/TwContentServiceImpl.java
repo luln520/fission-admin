@@ -1,5 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -35,6 +36,13 @@ public class TwContentServiceImpl extends ServiceImpl<TwContentDao, TwContent> i
     @Override
     public boolean delete(int id) {
         return this.removeById(id);
+    }
+
+    @Override
+    public TwContent find(int id) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("id",id);
+        return this.getOne(queryWrapper);
     }
 
 

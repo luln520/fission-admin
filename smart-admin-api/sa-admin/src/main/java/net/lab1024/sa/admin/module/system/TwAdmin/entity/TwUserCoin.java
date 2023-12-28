@@ -21,22 +21,22 @@ public class TwUserCoin implements Serializable {
 
     private String userid;
 
-    private String usdt;
+    private double usdt;
 
-    private String usdtd;
+    private double usdtd;
 
-    private String usdtb;
+    private double usdtb;
 
-    private String btc;
+    private double btc;
 
-    private String btcd;
+    private double btcd;
 
-    private String btcb;
+    private double btcb;
 
-    private String eth;
+    private double eth;
 
-    private String ethd;
+    private double ethd;
 
-    private String ethb;
+    private double ethb;
 }
 

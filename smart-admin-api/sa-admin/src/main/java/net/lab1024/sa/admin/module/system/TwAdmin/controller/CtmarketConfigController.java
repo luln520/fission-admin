@@ -50,6 +50,14 @@ public class CtmarketConfigController {
         return ResponseDTO.ok(twCtmarketService.addOrUpdate(twCtmarket));
     }
 
+
+    @GetMapping("/find")
+    @ApiOperation(value = "查询市场配置")
+    @NoNeedLogin
+    public ResponseDTO find(@RequestParam int id) {
+        return ResponseDTO.ok(twCtmarketService.find(id));
+    }
+
     @GetMapping("/delete")
     @ApiOperation(value = "删除市场配置")
     @NoNeedLogin

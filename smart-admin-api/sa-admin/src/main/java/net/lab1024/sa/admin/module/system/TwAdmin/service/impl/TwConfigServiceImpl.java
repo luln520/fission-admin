@@ -1,10 +1,12 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwCoinDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwConfigDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwConfig;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwConfigService;
 import org.springframework.stereotype.Service;
@@ -23,4 +25,15 @@ import javax.annotation.Resource;
 @Service("twConfigService")
 public class TwConfigServiceImpl extends ServiceImpl<TwConfigDao, TwConfig> implements TwConfigService {
 
+    @Override
+    public TwConfig find(int id) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("id",1);
+        return this.getOne(queryWrapper);
+    }
+
+    @Override
+    public boolean addOrUpdate(TwConfig twConfig) {
+        return this.saveOrUpdate(twConfig);
+    }
 }

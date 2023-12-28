@@ -13,5 +13,5 @@ import org.springframework.data.domain.PageRequest;
  * @since 2023-12-23 18:24:00
  */
 public interface TwIssueLogService extends IService<TwIssueLog> {
-
+    int countAllIssueLogs();
 }

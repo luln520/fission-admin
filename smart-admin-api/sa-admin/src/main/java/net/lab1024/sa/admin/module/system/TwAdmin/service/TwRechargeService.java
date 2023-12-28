@@ -1,9 +1,16 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+
+import java.math.BigDecimal;
 
 /**
  * 充值记录(TwRecharge)表服务接口
@@ -13,5 +20,15 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwRechargeService extends IService<TwRecharge> {
 
+    BigDecimal sumDayRecharge(String startTime, String endTime);
 
+    BigDecimal sumAllRecharge();
+
+    IPage<TwRecharge> listpage(TwRechargeVo twRechargeVo);
+
+    ResponseDTO reject(int id);
+
+    ResponseDTO confirm(int id);
+
+    ResponseDTO rejectCoin(int  id);
 }

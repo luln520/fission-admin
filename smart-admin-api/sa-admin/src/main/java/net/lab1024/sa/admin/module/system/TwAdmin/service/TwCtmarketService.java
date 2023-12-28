@@ -25,4 +25,6 @@ public interface TwCtmarketService extends IService<TwCtmarket> {
 
     boolean delete(int id);
 
+    TwCtmarket find(int id);
+
 }

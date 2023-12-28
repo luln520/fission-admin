@@ -14,6 +14,12 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwUserCoinService extends IService<TwUserCoin> {
 
-
+    /**
+     * 增加用户资产
+     * @param uid
+     * @param num
+     * @return
+     */
+     int incre(Integer uid,double num);
 
 }

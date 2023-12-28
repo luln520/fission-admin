@@ -23,4 +23,8 @@ import javax.annotation.Resource;
 @Service("twUserCoinService")
 public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin> implements TwUserCoinService {
 
+    @Override
+    public int incre(Integer uid, double num) {
+        return this.baseMapper.incre(uid,num);
+    }
 }

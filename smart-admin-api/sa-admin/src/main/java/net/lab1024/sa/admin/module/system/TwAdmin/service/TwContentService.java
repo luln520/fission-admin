@@ -21,4 +21,6 @@ public interface TwContentService extends IService<TwContent> {
     boolean addOrUpdate(TwContent twContent);
 
     boolean delete(int id);
+
+    TwContent find(int id);
 }

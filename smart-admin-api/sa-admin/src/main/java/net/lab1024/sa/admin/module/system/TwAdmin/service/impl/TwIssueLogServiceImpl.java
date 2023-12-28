@@ -1,10 +1,12 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwHysettingDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwIssueLogDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwIssueLog;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwIssueLogService;
 import org.springframework.stereotype.Service;
@@ -23,4 +25,10 @@ import javax.annotation.Resource;
 @Service("twIssueLogService")
 public class TwIssueLogServiceImpl extends ServiceImpl<TwIssueLogDao, TwIssueLog> implements TwIssueLogService {
 
+    @Override
+    public int countAllIssueLogs() {
+        QueryWrapper<TwIssueLog> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status", "1"); // 添加查询条件
+        return this.baseMapper.selectCount(queryWrapper).intValue();
+    }
 }

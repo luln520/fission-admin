@@ -51,4 +51,11 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
     public boolean delete(int id) {
         return this.removeById(id);
     }
+
+    @Override
+    public TwCoin find(int id) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("id",id);
+        return this.getOne(queryWrapper);
+    }
 }

@@ -1,7 +1,24 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwBillService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMyzcService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwRechargeService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * 财务记录
@@ -9,15 +26,57 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/admin/ctmarketConfig")
 public class FinanceController {
+
+    @Autowired
+    private TwBillService twBillService;
+
+    @Autowired
+    private TwRechargeService twRechargeService;
+
+    @Autowired
+    private TwMyzcService twMyzcService;
+
     /**
      * 账务明细 表bill order by id desc
      */
+    @PostMapping("/list")
+    @ApiOperation(value = "账务明细列表")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwBill>> listpage(@Valid @RequestBody TwBillVo twBillVo) {
+        return ResponseDTO.ok(twBillService.listpage(twBillVo));
+    }
+
+
     /**
      * 充币列表  表recharge  order by id desc
      */
+    @PostMapping("/list")
+    @ApiOperation(value = "充币列表")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwRecharge>> listpage(@Valid @RequestBody TwRechargeVo twRechargeVo) {
+        return ResponseDTO.ok(twRechargeService.listpage(twRechargeVo));
+    }
+
     /**
      * 提币列表  表myzc  order by id desc
      */
+    @PostMapping("/list")
+    @ApiOperation(value = "充币列表")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwMyzc>> listpage(@Valid @RequestBody TwMyzcVo twMyzcVo) {
+        return ResponseDTO.ok(twMyzcService.listpage(twMyzcVo));
+    }
+
+
+    /**
+     * 驳回充值
+     */
+    @PostMapping("/reject")
+    @ApiOperation(value = "驳回充值")
+    @NoNeedLogin
+    public ResponseDTO reject(@RequestParam int  id) {
+        return twRechargeService.reject(id);
+    }
     /**
      * 驳回充币  表recharge  id=？   先判断订单是否存在   修改 表recharge  status=3
      * 然后 添加 notice（通知表） 字段内容如下
@@ -30,7 +89,7 @@ public class FinanceController {
      *         }
      *         if ($info['status'] != 1) {
      *             $this->error("此订单已处理");
-     *             exit();
+     *             exit();1
      *         }
      *          //修改订单状态
      *         $save['updatetime'] = date("Y-m-d H:i:s", time());
@@ -51,6 +110,14 @@ public class FinanceController {
      *             $this->error("驳回失败");
      *         }
      */
+
+
+    @PostMapping("/confirm")
+    @ApiOperation(value = "确认充币")
+    @NoNeedLogin
+    public ResponseDTO confirm(@RequestParam int  id) {
+        return twRechargeService.confirm(id);
+    }
     /**
      * 确认充币 （逻辑如下） 四个表 ：recharge（充值表 ） user_coin（用户资产表） bill （记录表）  notice（通知表）
      * 1.表recharge（充值表 ）  id=？   先判断订单是否存在  查询出来的结果为 info
@@ -96,6 +163,13 @@ public class FinanceController {
      *         }
      */
 
+
+    @PostMapping("/rejectCoin")
+    @ApiOperation(value = "驳回提币")
+    @NoNeedLogin
+    public ResponseDTO rejectCoin(@RequestParam int  id) {
+        return twRechargeService.rejectCoin(id);
+    }
 
     /**
      * 驳回提币 （逻辑如下） 四个表 ：myzc（提币表 ） user_coin（用户资产表） bill （充值记录表）  notice（通知表）

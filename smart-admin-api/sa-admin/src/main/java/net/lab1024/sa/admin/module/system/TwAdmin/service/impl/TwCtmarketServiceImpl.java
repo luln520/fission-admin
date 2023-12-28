@@ -49,4 +49,11 @@ public class TwCtmarketServiceImpl extends ServiceImpl<TwCtmarketDao, TwCtmarket
     public boolean delete(int id) {
          return this.removeById(id);
     }
+
+    @Override
+    public TwCtmarket find(int id) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("id",id);
+        return this.getOne(queryWrapper);
+    }
 }

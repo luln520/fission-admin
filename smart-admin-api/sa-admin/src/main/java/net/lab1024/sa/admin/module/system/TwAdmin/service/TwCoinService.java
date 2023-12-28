@@ -26,4 +26,6 @@ public interface TwCoinService extends IService<TwCoin> {
 
     boolean delete(int id);
 
+    TwCoin find(int id);
+
 }

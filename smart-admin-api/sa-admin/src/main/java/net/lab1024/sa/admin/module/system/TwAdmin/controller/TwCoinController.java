@@ -71,5 +71,12 @@ public class TwCoinController {
     public ResponseDTO delete(@RequestParam int id) {
         return ResponseDTO.ok(twCoinService.delete(id));
     }
+
+    @GetMapping("/find")
+    @ApiOperation(value = "查询公告")
+    @NoNeedLogin
+    public ResponseDTO find(@RequestParam int id) {
+        return ResponseDTO.ok(twCoinService.find(id));
+    }
 }
 
