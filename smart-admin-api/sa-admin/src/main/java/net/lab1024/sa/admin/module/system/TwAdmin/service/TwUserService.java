@@ -14,6 +14,6 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwUserService extends IService<TwUser> {
 
-
+    Integer countAllUsers();
 
 }

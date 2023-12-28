@@ -14,6 +14,6 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwHyorderService extends IService<TwHyorder> {
 
-
+    int countUnClosedOrders();
 
 }

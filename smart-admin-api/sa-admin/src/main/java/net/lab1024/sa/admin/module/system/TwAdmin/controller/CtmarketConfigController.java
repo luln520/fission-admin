@@ -1,7 +1,17 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCtmarketService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * 市场配置
@@ -9,20 +19,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/admin/ctmarketConfig")
 public class CtmarketConfigController {
+
+    @Autowired
+    private TwCtmarketService twCtmarketService;
+
     /**
      * 获取市场信息 表ctmarket order by sort asc
      */
+    @PostMapping("/list")
+    @ApiOperation(value = "市场配置列表")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwCtmarket>> listpage(@Valid @RequestBody PageParam pageParam) {
+        return ResponseDTO.ok(twCtmarketService.listpage(pageParam));
+    }
+
     /**
-     * 启用 停用  表ctmarket  修改status
+     * 设置 币状态 表Coin   修改status 1或者 2
      */
-    /**
-     * 增加  表ctmarket  直接存
-     */
-    /**
-     * 修改  表ctmarket  直接改   where id=？
-     */
-    /**
-     * 删除  表ctmarket  直接删 where id=？
-     */
+    @PostMapping("/updateStatus")
+    @ApiOperation(value = "市场配置禁用启用")
+    @NoNeedLogin
+    public ResponseDTO updateStatus(@RequestParam int id, @RequestParam int status) {
+        return ResponseDTO.ok(twCtmarketService.updateStatus(id,status));
+    }
+
+    @PostMapping("/addOrUpdate")
+    @ApiOperation(value = "市场配置新增或编辑")
+    @NoNeedLogin
+    public ResponseDTO addOrUpdate(@RequestBody TwCtmarket twCtmarket) {
+        return ResponseDTO.ok(twCtmarketService.addOrUpdate(twCtmarket));
+    }
+
+    @GetMapping("/delete")
+    @ApiOperation(value = "删除市场配置")
+    @NoNeedLogin
+    public ResponseDTO delete(@RequestParam int id) {
+        return ResponseDTO.ok(twCtmarketService.delete(id));
+    }
 }
 
