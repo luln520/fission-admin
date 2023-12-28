@@ -24,7 +24,7 @@ public class CtmarketConfigController {
     private TwCtmarketService twCtmarketService;
 
     /**
-     * 获取市场信息 表ctmarket order by sort asc
+     * 获取所有市场信息 表ctmarket order by sort asc
      */
     @PostMapping("/list")
     @ApiOperation(value = "市场配置列表")
