@@ -130,20 +130,20 @@ public class FinanceController {
      *         $info = M("recharge")->where(array('id' => $id))->find();（id 查询）
      *         $uid = $info['uid'];
      *         $num = $info['num'];
-     *         $coinname = strtolower(trim($info['coin']));（取出来然后转小写）
+     *         $coinname = strtolower(trim($info['coin']));（取出来然后转小写） 比如 $info['coin'] 是USDT $coinname则为 usdt
      *         $minfo = M("user_coin")->where(array('userid' => $uid))->find();（userid 查询）
      *         //修改订单状态
      *         $save['updatetime'] = date("Y-m-d H:i:s", time());
      *         $save['status'] = 2;
      *         $upre = M("recharge")->where(array('id' => $id))->save($save); （id 修改）
      *         //增加会员资产
-     *         $incre = M("user_coin")->where(array('userid' => $uid))->setInc($coinname, $num); (提示sql:UPDATE user_coin SET coinname = coinname + num WHERE userid = uid;)
+     *         $incre = M("user_coin")->where(array('userid' => $uid))->setInc($coinname, $num); (提示sql:UPDATE user_coin SET （这里就为 usdt） = （这里就为 usdt） + num WHERE userid = uid;)
      *         //增加充值日志
      *         $data['uid'] = $info['uid'];
      *         $data['username'] = $info['username'];
      *         $data['num'] = $num;
      *         $data['coinname'] = $coinname;
-     *         $data['afternum'] = $minfo[$coinname] + $num;
+     *         $data['afternum'] = $minfo[$coinname] + $num;（这里就是 取 minfo字段为 usdt的值）
      *         $data['type'] = 17;
      *         $data['addtime'] = date("Y-m-d H:i:s", time());
      *         $data['st'] = 1;
