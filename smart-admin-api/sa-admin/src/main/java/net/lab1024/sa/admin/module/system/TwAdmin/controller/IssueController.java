@@ -45,7 +45,7 @@ public class IssueController {
     }
 
     /**
-     * 添加
+     * 修改
      */
     @GetMapping("/updateIssue")
     @ResponseBody
