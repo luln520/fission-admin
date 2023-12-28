@@ -38,7 +38,6 @@ public class TradeController {
      */
 
 
-
     /**
      * 币币交易设置 获取 并返回    表bbsetting where id=1
      */
@@ -77,7 +76,7 @@ public class TradeController {
 
 
     /**
-     * 刷单设置 禁用启用     表Market id=?  status 0或者1
+     * 刷单设置 禁用启用     表Market  update set  status 0或者1 where id=?
      */
 
     /**
@@ -85,7 +84,7 @@ public class TradeController {
      */
 
     /**
-     * 合约单控盈亏 设置     表hyorder  id=? kongyk=?
+     * 合约单控盈亏 设置     表hyorder  update  set kongyk=?    where  id=?
      */
     /**
      * 体验合约订单 查询列表 并返回   表tyhyorder where status=1  order by id desc
@@ -94,10 +93,8 @@ public class TradeController {
      * 合约体验订单 查询单个 并返回   表tyhyorder where id=?
      */
     /**
-     * 体验合约单控盈亏 设置     表tyhyorder  id=? kongyk=?
+     * 体验合约单控盈亏 设置     表tyhyorder  update  set kongyk=?    where  id=?
      */
-
-
 
 
 }
