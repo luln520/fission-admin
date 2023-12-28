@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/ctmarketConfig")
 public class CtmarketConfigController {
     /**
-     * 获取市场信息 表ctmarket order by sort asc
+     * 获取所有市场信息 表ctmarket order by sort asc
      */
     /**
      * 启用 停用  表ctmarket  修改status

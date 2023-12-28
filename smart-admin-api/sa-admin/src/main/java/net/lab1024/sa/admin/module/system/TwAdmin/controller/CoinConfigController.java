@@ -17,7 +17,7 @@ public class CoinConfigController {
      */
 
     /**
-     * 设置 币状态 表Coin   修改status 1或者 2
+     * 设置 币状态 表Coin   修改status 0或者 1
      */
 
     /**
