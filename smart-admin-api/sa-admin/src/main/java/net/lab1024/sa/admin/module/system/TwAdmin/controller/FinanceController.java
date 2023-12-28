@@ -156,8 +156,8 @@ public class FinanceController {
     /**
      * 通过提币 （逻辑如下） 四个表 ：myzc（提币表 ）   notice（通知表）
      * 1.表myzc（提币表 ）  id=？   先判断订单是否存在  查询出来的结果为 info
-     * 1.先修改 表myzc（提币表 ）  status=2
-     * 4. 添加 表notice（通知表）
+     * 2.先修改 表myzc（提币表 ）  status=2
+     * 3.然后 添加 表notice（通知表）
      *
      * 参考逻辑和代码：
      *         $info = M("myzc")->where(array('id' => $id))->find();
