@@ -75,6 +75,29 @@ public class TokenService {
         redisService.set(redisKey, token, tokenExpire * 24 * 3600);
         return token;
     }
+    public String useToken(Integer userId, String userName, Boolean superPasswordFlag) {
+        long nowTimeMilli = System.currentTimeMillis();
+        Claims jwtClaims = Jwts.claims();
+        jwtClaims.put(JwtConst.CLAIM_ID_KEY, userId);
+        jwtClaims.put(JwtConst.CLAIM_NAME_KEY, userName);
+        jwtClaims.put(JwtConst.CLAIM_SUPER_PASSWORD_FLAG, superPasswordFlag);
+        JwtBuilder jwtBuilder = Jwts.builder()
+                .setClaims(jwtClaims)
+                .setIssuedAt(new Date(nowTimeMilli))
+                .signWith(SignatureAlgorithm.HS512, tokenKey);
+
+        // 如果是万能密码，则不需要记录到redis中;万能密码最多半个小时有效期
+        if (superPasswordFlag) {
+            jwtBuilder.setExpiration(new Date(nowTimeMilli + (HOUR_TIME_MILLI / 2)));
+            return jwtBuilder.compact();
+        }
+
+        jwtBuilder.setExpiration(new Date(nowTimeMilli + tokenExpire * 24 * HOUR_TIME_MILLI));
+        String token = jwtBuilder.compact();
+        String redisKey = this.userTokenRedisKey(userId,userName);
+        redisService.set(redisKey, token, tokenExpire * 24 * 3600);
+        return token;
+    }
 
     /**
      * 生成登录信息： 含设备信息
@@ -85,6 +108,18 @@ public class TokenService {
      */
     private String generateTokenRedisKey(Long userId, Integer userType, Integer device) {
         String userKey = userType + "_" + userId + "_" + device;
+        return redisService.generateRedisKey(RedisKeyConst.Support.TOKEN, userKey);
+    }
+
+    /**
+     * 生成登录信息： 含设备信息
+     *
+     * @param userId
+     * @param device
+     * @return
+     */
+    private String userTokenRedisKey(Integer userId, String userName) {
+        String userKey =userId + "_" + userName;
         return redisService.generateRedisKey(RedisKeyConst.Support.TOKEN, userKey);
     }
 

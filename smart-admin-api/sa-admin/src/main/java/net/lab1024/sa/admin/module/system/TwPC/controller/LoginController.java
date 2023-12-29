@@ -1,7 +1,27 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import cn.hutool.extra.servlet.ServletUtil;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
+import net.lab1024.sa.admin.module.system.login.domain.LoginEmployeeDetail;
+import net.lab1024.sa.admin.module.system.login.domain.LoginForm;
+import net.lab1024.sa.admin.module.system.login.service.LoginService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * 用户登陆/注册
@@ -9,6 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/pc/userLoginOrRegister")
 public class LoginController {
+
+    @Autowired
+    private TwUserService twUserService;
 
     /**
      * 用户登陆 表 user，user_log
@@ -153,25 +176,13 @@ public class LoginController {
      *             $this->ajaxReturn(['code' => 0, 'info' => L('注册失败')]);
      *         }
      * */
-
-
-    /**
-     * 用户发送验证码 表 user
-     * 参数： username（可能是手机号 也可能是邮箱） code(验证码)  password  type（注册类型 1 手机  2 邮箱）
-     * 大致逻辑：
-     *      1.验证用户是否存在
-     *      2.验证 code 是否存在且和属于该用户的
-     *      3.都通过  修改对应用户
-     * */
-
-
-    /**
-     * 用户修改密码
-     * 参数： username（可能是手机号 也可能是邮箱）   type（注册类型 1 手机  2 邮箱）
-     * 大致逻辑：
-     *      1.随机生产 10000-99999内的数字
-     *      2.判断type 调取 发送手机 或者 发送邮箱
-     * */
-
+    @NoNeedLogin
+    @PostMapping("/login")
+    @ApiOperation("用户登录")
+    public ResponseDTO<TwUser> login(@Valid @RequestBody UserReq userReq) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String ip = ServletUtil.getClientIP(request);
+        return twUserService.loginUser(userReq, ip);
+    }
 }
 

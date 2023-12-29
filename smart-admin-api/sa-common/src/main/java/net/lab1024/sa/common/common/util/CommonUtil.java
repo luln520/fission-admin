@@ -1,6 +1,8 @@
 package net.lab1024.sa.common.common.util;
 
+import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpUtil;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +14,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommonUtil {
+    private static final String PASSWORD_SALT_FORMAT = "smart_%s_admin_$^&*";
+    /**
+     * 获取 加密后 的密码
+     *
+     * @param password
+     * @return
+     */
+    public static String getEncryptPwd(String password) {
+        return DigestUtils.md5Hex(String.format(PASSWORD_SALT_FORMAT, password));
+    }
 
     /**
      * 获取用户IP
@@ -32,6 +44,11 @@ public class CommonUtil {
         }
 
         return ipAddress;
+    }
+
+
+    public  static String getIP(HttpServletRequest request) {
+        return  ServletUtil.getClientIP(request);
     }
 
 

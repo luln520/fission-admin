@@ -5,15 +5,26 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserQianbaoDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.admin.module.system.login.domain.LoginEmployeeDetail;
+import net.lab1024.sa.admin.module.system.login.domain.LoginForm;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.common.enumeration.UserTypeEnum;
 import net.lab1024.sa.common.common.util.CommonUtil;
+import net.lab1024.sa.common.module.support.config.ConfigKeyEnum;
+import net.lab1024.sa.common.module.support.config.ConfigService;
+import net.lab1024.sa.common.module.support.loginlog.LoginLogResultEnum;
+import net.lab1024.sa.common.module.support.token.TokenService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.springframework.beans.FatalBeanException;
@@ -33,6 +44,7 @@ import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * 用户信息表(TwUser)表服务实现类
@@ -48,6 +60,12 @@ import java.util.List;
 public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements TwUserService {
 
     private static final String PASSWORD_SALT_FORMAT = "smart_%s_admin_$^&*";
+
+    /**
+     * 登录信息二级缓存
+     */
+    private ConcurrentMap<Integer, TwUser> loginUserDetailCache = new ConcurrentLinkedHashMap.Builder<Integer, TwUser>().maximumWeightedCapacity(1000).build();
+
     @Autowired
     private TwUserCoinService twUserCoinService;
     @Autowired
@@ -72,6 +90,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     private TwIssueService twIssueService;
     @Autowired
     private TwKjorderService twKjorderService;
+
+    @Autowired
+    private ConfigService configService;
+
+    @Autowired
+    private TokenService tokenService;
     @Override
     public Integer countAllUsers() {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -320,6 +344,60 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             }
               return true;
         }
+
+    /**
+     * PC H5 用户登录
+     * @param ip
+     * @return
+     */
+
+    @Override
+    public ResponseDTO<TwUser> loginUser(UserReq userReq, String ip) {
+        //        LoginDeviceEnum loginDeviceEnum = SmartEnumUtil.getEnumByValue(loginForm.getLoginDevice(), LoginDeviceEnum.class);
+//        if (loginDeviceEnum == null) {
+//            return ResponseDTO.userErrorParam("登录设备暂不支持！");
+//        }
+
+
+        /**
+         * 验证账号和账号状态
+         */
+        Integer uid = userReq.getUid();
+        String username = userReq.getUsername();
+        String password = userReq.getPassword();
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        TwUser one = this.getOne(queryWrapper);
+        if (null == one) {
+            return ResponseDTO.userErrorParam("登录名不存在！");
+        }
+
+        if (one.getStatus() == 2) {
+            return ResponseDTO.userErrorParam("您的账号已被禁用,请联系工作人员！");
+        }
+        /**
+         * 验证密码：
+         * 1、万能密码
+         * 2、真实密码
+         */
+        String superPassword =CommonUtil.getEncryptPwd(configService.getConfigValue(ConfigKeyEnum.SUPER_PASSWORD));
+        String requestPassword = EmployeeService.getEncryptPwd(password);
+        if (!(superPassword.equals(requestPassword) || password.equals(requestPassword))) {
+            return ResponseDTO.userErrorParam("登录名或密码错误！");
+        }
+
+        // 生成 登录token，保存token
+        Boolean superPasswordFlag = superPassword.equals(requestPassword);
+        String token = tokenService.useToken(uid, username, superPasswordFlag);
+
+        //获取员工登录信息
+        one.setToken(token);
+
+        // 放入缓存
+        loginUserDetailCache.put(uid, one);
+
+        return ResponseDTO.ok(one);
+    }
 
     /**
      * 获取 加密后 的密码
