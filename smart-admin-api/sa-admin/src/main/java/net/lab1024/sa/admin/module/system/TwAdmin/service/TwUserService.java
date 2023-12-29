@@ -7,6 +7,9 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
+import net.lab1024.sa.admin.module.system.login.domain.LoginEmployeeDetail;
+import net.lab1024.sa.admin.module.system.login.domain.LoginForm;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
@@ -43,5 +46,7 @@ public interface TwUserService extends IService<TwUser> {
     boolean setMoney(int uid,int type,double money, String bizhong);
 
     boolean userNotice(int uid,int type,String title, String content,String imgs);
+
+    ResponseDTO<TwUser> loginUser(UserReq userReq, String ip);
 
 }

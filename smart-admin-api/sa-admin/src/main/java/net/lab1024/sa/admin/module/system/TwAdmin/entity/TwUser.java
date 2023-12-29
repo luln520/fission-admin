@@ -1,5 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -166,6 +167,10 @@ public class TwUser implements Serializable {
      * 信用分
      */
     private Integer jifen;
+
+
+    @TableField(exist = false) //
+    private String token;
 
 }
 
