@@ -1,7 +1,10 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
@@ -33,7 +36,7 @@ public class TradeController {
     @PostMapping("/hyorderlist")
     @ResponseBody
     @NoNeedLogin
-    public ResponseDTO hyorderlist(@Valid @RequestBody TwHyorderVo twHyorderVo) {
+    public ResponseDTO<IPage<TwHyorder>> hyorderlist(@Valid @RequestBody TwHyorderVo twHyorderVo) {
         return ResponseDTO.ok(twHyorderService.listpage(twHyorderVo));
     }
 
@@ -129,7 +132,12 @@ public class TradeController {
     /**
      * 合约单控盈亏 设置     表hyorder  update  set kongyk=?    where  id=?
      */
-
+    @GetMapping("/editKongyK")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO editKongyK(@RequestParam Integer kongyk,@RequestParam int id) {
+        return ResponseDTO.ok(twHyorderService.editKongyK(kongyk,id));
+    }
 
 
 

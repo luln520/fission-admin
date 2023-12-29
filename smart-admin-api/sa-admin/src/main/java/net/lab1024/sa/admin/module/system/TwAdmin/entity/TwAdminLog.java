@@ -39,7 +39,7 @@ public class TwAdminLog implements Serializable {
 /**
      * 创建时间
      */
-    private String createTime;
+    private int createTime;
 /**
      * 备注
      */

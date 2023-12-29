@@ -19,7 +19,7 @@ public class TwUser implements Serializable {
 /**
      * ID
      */
-    private String id;
+    private Integer id;
 /**
      * 账号(邮箱)
      */
@@ -121,7 +121,7 @@ public class TwUser implements Serializable {
 /**
      * 状态1正常2禁用
      */
-    private String status;
+    private int status;
 /**
      * 提币状态1正常2禁止
      */

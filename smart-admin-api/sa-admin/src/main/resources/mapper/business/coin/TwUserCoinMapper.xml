@@ -3,11 +3,24 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserCoinDao">
 
     <select id="incre" resultType="java.lang.Integer">
-        UPDATE tw_user_coin SET ${coinname} = ${coinname} + #{num} WHERE userid = #{uid};
+        UPDATE tw_user_coin SET ${coinname} = ${coinname} + #{num} WHERE userid = #{uid}
+    </select>
+
+    <select id="decre" resultType="java.lang.Integer">
+        UPDATE tw_user_coin SET ${coinname} = ${coinname} - #{num} WHERE userid = #{uid}
     </select>
 
     <select id="afternum" resultType="double">
-        SELECT ${coinname} FROM tw_user_coin WHERE ${coinname} = #{coinname} AND userid = #{uid};
+        SELECT ${coinname} FROM tw_user_coin WHERE ${coinname} = #{coinname} AND userid = #{uid}
+    </select>
+
+
+    <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin">
+        select * from tw_user_coin where 1=1
+        <if test="obj.userName != null and obj.userName !=''">
+            and username = #{obj.userName}
+        </if>
+        order by id desc
     </select>
 
 </mapper>

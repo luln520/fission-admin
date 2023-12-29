@@ -4,11 +4,7 @@ import lombok.Data;
 import net.lab1024.sa.common.common.domain.PageParam;
 
 @Data
-public class TwBillVo extends PageParam {
+public class TwUserVo extends PageParam {
 
-    private String userName;
-
-    private String coinname;
-
-    private Integer st;
+     private String username;
 }

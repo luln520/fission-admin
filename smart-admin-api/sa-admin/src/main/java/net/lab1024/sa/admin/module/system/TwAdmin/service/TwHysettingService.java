@@ -16,6 +16,8 @@ public interface TwHysettingService extends IService<TwHysetting> {
 
     TwHysetting hysettingId();
 
+    boolean setWin(int id,int type,int uid);
+
     boolean edit(TwHysetting twHysetting);
 
 }

@@ -1,5 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -35,6 +36,9 @@ public class TwUserLog implements Serializable {
     private String endtime;
 
     private Integer status;
+
+    @TableField(exist = false) // 排除数据库字段
+    private String username;
 
 }
 

@@ -9,6 +9,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 合约订单表(TwHyorder)表服务接口
@@ -23,5 +24,7 @@ public interface TwHyorderService extends IService<TwHyorder> {
     TwHyorder hyorderId(int id);
 
     IPage<TwHyorder> listpage(TwHyorderVo twHyorderVo);
+
+    boolean editKongyK(Integer kongyk, int id);
 
 }

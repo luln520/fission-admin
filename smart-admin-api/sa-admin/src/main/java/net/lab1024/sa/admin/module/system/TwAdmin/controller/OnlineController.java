@@ -1,7 +1,18 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwOnlineService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 在线客服
@@ -10,16 +21,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/online")
 public class OnlineController {
 
+
+    @Autowired
+    private TwOnlineService twOnlineService;
+
     /**
      * 获取所有用户的聊天列表 表online
      *  字段 id,uid,username,count(username)as nor,addtime   where state=0 group by username order by addtime desc
      */
+    @PostMapping("/list")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwOnline>> list(@Valid @RequestBody PageParam pageParam) {
+        return ResponseDTO.ok(twOnlineService.listpage(pageParam));
+    }
+
 
     /**
      * 获取单个用户的对话信息  表online
      * 接收： 用户 id
      *  where uid=？and type =2  order by id asc
      */
+    @PostMapping("/getId")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO<List<TwOnline>> getId(@RequestParam int id) {
+        return ResponseDTO.ok(twOnlineService.getId(id));
+    }
 
     /**
      * 客服回复  表 online
@@ -42,6 +70,11 @@ public class OnlineController {
      *             $this->error("回复失败");
      *         }
      */
-
+    @PostMapping("/backOnline")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO backOnline(@RequestParam int id, @RequestParam String content) {
+        return twOnlineService.backOnline(id,content);
+    }
 }
 

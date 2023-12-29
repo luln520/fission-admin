@@ -6,32 +6,4 @@
         select * from tw_content order by addtime desc
     </select>
 
-    <select id="hotNews" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent">
-        select nl.id,nl.img,nl.title,nl.new_text,nl.status,nl.create_time,nl.update_time,nl.type,nl.news_type,nl.hot,nl.hot_type,nl.sport_type,nl.site_status
-        from ty_news_list nl right join ty_news_information ni on nl.id = ni.new_id where nl.news_type = 2 and nl.source=1 and nl.on_status =1 and ni.source=1 and ni.on_status =1
-        <if test="obj.type != null and obj.type !=''">
-            and nl.type =#{obj.type}
-        </if>
-        <if test="obj.sportType != null and obj.sportType !=''">
-            and nl.sport_type =#{obj.sportType}
-        </if>
-        <if test="obj.siteStatus != null and obj.siteStatus !=''">
-            and nl.site_status =#{obj.siteStatus}
-        </if>
-        <if test="obj.hotType != null and obj.hotType !=''">
-            and nl.hot_type = #{obj.hotType}
-        </if>
-        <if test="obj.startTime != null and obj.startTime !=''">
-            and nl.create_time >= #{obj.startTime}
-        </if>
-        <if test="obj.endTime != null and obj.endTime !=''">
-            and #{obj.endTime} > nl.create_time
-        </if>
-
-        <if test="obj.label != null and obj.label !=''">
-            and nl.label =#{obj.label}
-        </if>
-            order by nl.create_time desc
-    </select>
-
 </mapper>
