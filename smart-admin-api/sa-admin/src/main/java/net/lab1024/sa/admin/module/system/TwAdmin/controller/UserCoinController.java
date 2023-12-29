@@ -1,7 +1,21 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * 用户财产
@@ -10,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/usercoin")
 public class UserCoinController {
 
+    @Autowired
+    private TwUserCoinService twUserCoinService;
     /**
      * 获取用户财产列表 表 UserCoin
      * order by id desc
@@ -21,6 +37,16 @@ public class UserCoinController {
      *             $list[$k]['username'] = M('User')->where(array('id' => $v['userid']))->getField('username');
      *         }
      * */
+
+    /**
+     * 获取所有公告  表content 全部查询
+     */
+    @PostMapping("/list")
+    @ApiOperation(value = "用户财产列表")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwUserCoin>> listpage(@Valid @RequestBody TwUserVo twUserVo) {
+        return ResponseDTO.ok(twUserCoinService.listpage(twUserVo));
+    }
 
 }
 

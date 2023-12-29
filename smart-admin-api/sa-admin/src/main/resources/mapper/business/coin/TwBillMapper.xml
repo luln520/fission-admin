@@ -7,6 +7,12 @@
         <if test="obj.userName != null and obj.userName !=''">
             and username = #{obj.userName}
         </if>
+        <if test="obj.coinname != null and obj.coinname !=''">
+            and coinname = #{obj.coinname}
+        </if>
+        <if test="obj.st != null">
+            and st = #{obj.st}
+        </if>
         order by id desc
     </select>
 

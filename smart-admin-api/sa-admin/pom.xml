@@ -22,6 +22,11 @@
             <artifactId>sa-common</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-annotation</artifactId>
+            <version>3.5.4</version>
+        </dependency>
 
     </dependencies>
 

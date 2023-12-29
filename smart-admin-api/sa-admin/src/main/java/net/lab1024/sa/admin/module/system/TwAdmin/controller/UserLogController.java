@@ -1,7 +1,20 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserLog;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserLogService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * 会员登录日志
@@ -10,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/adminlog")
 public class UserLogController {
 
+
+    @Autowired
+    private TwUserLogService twUserLogService;
     /**
      * 查询操作日志列表 表 UserLog
      * 然后遍历得到的list
@@ -20,6 +36,13 @@ public class UserLogController {
      *             $list[$k]['username'] = M('User')->where(array('id' => $v['userid']))->getField('username');
      *         }
      * */
+    @PostMapping("/list")
+    @ApiOperation(value = "获取所有用户")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwUserLog>> listpage(@Valid @RequestBody TwUserVo twUserVo) {
+        return ResponseDTO.ok(twUserLogService.listpage(twUserVo));
+    }
+
 
 }
 

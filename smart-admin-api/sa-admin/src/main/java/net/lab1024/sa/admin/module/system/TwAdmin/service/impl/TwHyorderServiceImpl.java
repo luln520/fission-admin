@@ -50,4 +50,13 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         objectPage.setRecords(baseMapper.listpage(objectPage, twHyorderVo));
         return objectPage;
     }
+
+    @Override
+    public boolean editKongyK(Integer kongyk, int id) {
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id); // 添加查询条件
+        TwHyorder one = this.getOne(queryWrapper);
+        one.setKongyk(kongyk);
+        return this.updateById(one);
+    }
 }

@@ -1,8 +1,12 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwTyhyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
+import net.lab1024.sa.common.common.domain.PageParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +26,10 @@ public interface TwUserCoinDao extends BaseMapper<TwUserCoin> {
      */
     Integer incre(@Param("uid") int uid,@Param("num") double num,@Param("coinname") String coinname);
 
+    Integer decre(@Param("uid") int uid,@Param("num") double num,@Param("coinname") String coinname);
+
     double afternum(@Param("uid") int uid,@Param("coinname") String coinname);
+
+    List<TwUserCoin> listpage(@Param("objectPage") Page<TwUserCoin> objectPage, @Param("obj") TwUserVo twUserVo);
 }
 

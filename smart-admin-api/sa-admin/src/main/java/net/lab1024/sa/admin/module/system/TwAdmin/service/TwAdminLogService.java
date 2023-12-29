@@ -1,8 +1,12 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoinComment;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
+import net.lab1024.sa.common.common.domain.PageParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -14,6 +18,13 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwAdminLogService extends IService<TwAdminLog> {
 
+    IPage<TwAdminLog> listpage(TwBillVo twBillVo);
 
+    /**
+     * 日志新增记录
+     * @param twBillVo
+     * @return
+     */
+    boolean add(TwAdminLog twAdminLog);
 
 }

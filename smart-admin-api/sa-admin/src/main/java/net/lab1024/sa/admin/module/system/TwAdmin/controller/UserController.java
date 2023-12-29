@@ -5,14 +5,23 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwContentService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 
 /**
  * 用户
@@ -21,6 +30,11 @@ import javax.validation.Valid;
 @RequestMapping("/api/admin/user")
 public class UserController {
 
+    @Autowired
+    private TwUserService twUserService;
+
+    @Autowired
+    private TwHysettingService twHysettingService;
     /**
      * 获取所有用户  表User 全部查询 order by id desc
      * 所有表：User(用户) user_log（用户登陆日志） coin （用户财产）
@@ -38,12 +52,26 @@ public class UserController {
      *             $list[$k]['state'] = $user_login_state['state'];
      *         }
      */
+    @PostMapping("/list")
+    @ApiOperation(value = "获取所有用户")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwUser>> listUserpage(@Valid @RequestBody TwUserVo twUserVo) {
+        return ResponseDTO.ok(twUserService.listUserpage(twUserVo));
+    }
+
 
     /**
      * 禁止/允许交易  表User update set buy_on=? where id=?
      * 参数：id buy_on
      * 说明：buy_on=2 禁止    buy_on=1 允许
      */
+    @GetMapping("/setBUy")
+    @ApiOperation(value = "禁止/允许交易")
+    @NoNeedLogin
+    public ResponseDTO setBUy(@RequestParam int id,@RequestParam int buyOn) {
+        return ResponseDTO.ok(twUserService.setBUy(id,buyOn));
+    }
+
 
     /**
      * 指定必赢/指定必输/正常输赢  表User 表hysetting
@@ -58,6 +86,12 @@ public class UserController {
      * 功能3：正常输赢
      *      两个字段内都把 该用户 id 删除就行
      */
+    @GetMapping("/setWin")
+    @ApiOperation(value = "指定必赢/指定必输/正常输赢")
+    @NoNeedLogin
+    public ResponseDTO setWin(@RequestParam int id,@RequestParam int type,@RequestParam int uid) {
+        return ResponseDTO.ok(twHysettingService.setWin(id,type,uid));
+    }
 
     /**
      * 修改会员状态（冻结，解冻，启动提币禁止提币 ，删除会员）  表User update
@@ -84,6 +118,15 @@ public class UserController {
      *                 M("kjorder")->where(["uid" => $id])->delete();
      *
      */
+
+    //不要删除会员
+    @GetMapping("/setUser")
+    @ApiOperation(value = "修改会员状态（冻结，解冻，启动提币禁止提币 ，删除会员）")
+    @NoNeedLogin
+    public ResponseDTO setUser(@RequestParam int id,@RequestParam int type,@RequestParam int uid) {
+        return ResponseDTO.ok(twUserService.setUser(id,type,uid));
+    }
+
 
     /**
      * 给会员发送通知或者群发  表User 表notice
@@ -115,6 +158,17 @@ public class UserController {
      *
      *
      */
+    @GetMapping("/userNotice")
+    @ApiOperation(value = "给会员发送通知或者群发")
+    @NoNeedLogin
+    public ResponseDTO userNotice(@RequestParam int id,
+                                  @RequestParam int type,
+                                  @RequestParam String title,
+                                  @RequestParam String content,
+                                  @RequestParam String imgs) {
+        return ResponseDTO.ok(twUserService.userNotice(id,type,title,content,imgs));
+    }
+
 
     /**
      * 修改用户余额  表User user_coin  recharge bill
@@ -172,6 +226,13 @@ public class UserController {
      *
      */
 
+    @GetMapping("/setMoney")
+    @ApiOperation(value = "修改用户余额")
+    @NoNeedLogin
+    public ResponseDTO setMoney(@RequestParam int uid,@RequestParam int type,@RequestParam double money,@RequestParam String bizhong) {
+        return ResponseDTO.ok(twUserService.setMoney(uid,type,money,bizhong));
+    }
+
 
     /**
      * 编辑或新增会员  表User 判断id 是否存在  存在就修改 不存在就插入
@@ -188,6 +249,13 @@ public class UserController {
      *      其余这段不修改 直接写入 表user
      *      调取写入 操作日志AdminLog
      */
+    @PostMapping("/addOrUpdate")
+    @ApiOperation(value = "编辑或新增会员")
+    @NoNeedLogin
+    public ResponseDTO addOrUpdate(@RequestBody TwUser twUser, HttpServletRequest request) throws IOException {
+        return twUserService.addOrUpdate(twUser,request);
+    }
+
 
 }
 

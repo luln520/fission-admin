@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwOnlineDao">
+
+    <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline">
+        select id,uid,username,count(username)as nor,addtime from tw_online  where state=0 group by username order by addtime desc
+    </select>
+
+    <select id="getId" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline">
+        select * from tw_online  where uid= #{id} and type =2  order by id asc
+    </select>
+
+    <select id="updateState" resultType="java.lang.Integer">
+        UPDATE tw_online SET  state = 1  WHERE uid = #{uid}
+    </select>
+
+</mapper>

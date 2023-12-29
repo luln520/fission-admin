@@ -1,6 +1,7 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -38,5 +39,8 @@ public class TwUserCoin implements Serializable {
     private double ethd;
 
     private double ethb;
+
+    @TableField(exist = false) // 排除数据库字段
+    private String username;
 }
 

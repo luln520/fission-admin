@@ -1,7 +1,19 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * 代理管理
@@ -10,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/adminlog")
 public class AgentController {
 
+
+    @Autowired
+    private TwUserService twUserService;
     /**
      * 查询代理列表  表 User where is_agent=1 order by id desc
      * 然后遍历得到的list
@@ -17,34 +32,27 @@ public class AgentController {
      * 参考代码：
      *  $where['is_agent'] = 1;
      *         $list = M('User')->where($where)->order('id desc')->select(); （代理列表）
-     *         foreach ($list as $k => $v) {
-     *             $uid = $v['id'];（ 当前对象的user 的 id）
-     *             $one = M('User')->where(array('invit_1' => $uid))->count(); （一级代理人数 ）
-     *             if ($one <= 0) {
-     *                 $one = 0;
-     *             }
-     *             $two = M('User')->where(array('invit_2' => $uid))->count();（二级代理人数 ）
-     *             if ($two <= 0) {
-     *                 $two = 0;
-     *             }
-     *             $three = M('User')->where(array('invit_3' => $uid))->count();（三级代理人数 ）
-     *             if ($three <= 0) {
-     *                 $three = 0;
-     *             }
-     *             $all = $one + $two + $three;（代理人数总数）
-     *             if ($all <= 0) {
-     *                 $all = 0;
-     *             }
-     *             $list[$k]['all'] = $all;（放入对象）
-     *             $list[$k]['one'] = $one;（放入对象）
-     *             $list[$k]['two'] = $two;（放入对象）
-     *             $list[$k]['three'] = $three;（放入对象）
-     *         }
      * */
+    @PostMapping("/list")
+    @ApiOperation(value = "管理员操作日志列表")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwUser>> listpage(@Valid @RequestBody TwUserVo twUserVo) {
+        return ResponseDTO.ok(twUserService.listpage(twUserVo));
+    }
+
+
 
     /**
      * 设置为代理或者取消代理   表 User  update set is_agent=？ where id=?
      * 传入：is_agent  id
      */
+
+    @GetMapping("/setAgent")
+    @ApiOperation(value = "设置为代理或者取消代理")
+    @NoNeedLogin
+    public ResponseDTO setAgent(@RequestParam int isAgent,@RequestParam int id) {
+        return ResponseDTO.ok(twUserService.setAgent(isAgent,id));
+    }
+
 }
 
