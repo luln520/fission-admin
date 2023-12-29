@@ -13,6 +13,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.common.util.CommonUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.springframework.beans.FatalBeanException;
@@ -141,8 +142,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            }
            String encryptPwd = getEncryptPwd(password);
            String invite = generateRandomString();
-           String ip = getClientIP(request);
-           String locationByIP = getLocationByIP(ip);
+           String ip = CommonUtil.getClientIP(request);
+           String locationByIP = CommonUtil.getLocationByIP(ip);
            twUser.setPassword(encryptPwd);
            twUser.setInvit(invite);
            twUser.setAddr(locationByIP);
@@ -346,50 +347,5 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         return stringBuilder.toString();
     }
 
-    public  String getClientIP(HttpServletRequest request) {
-        String ipAddress = request.getHeader("X-Forwarded-For");
 
-        if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("Proxy-Client-IP");
-        }
-        if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-            ipAddress = request.getRemoteAddr();
-        }
-
-        return ipAddress;
-    }
-
-
-    private  String getLocationByIP(String ipAddress) throws IOException {
-        String apiUrl = "http://ip-api.com/json/" + ipAddress;
-        URL url = new URL(apiUrl);
-
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-
-        int responseCode = connection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            reader.close();
-
-            // 解析 JSON 响应，提取地理位置信息
-            String jsonResponse = response.toString();
-            // 这里的解析方式仅作为演示，实际中你可能需要使用更复杂的 JSON 解析库
-            String country = jsonResponse.split(",")[1].split(":")[1].replaceAll("\"", "");
-            String region = jsonResponse.split(",")[4].split(":")[1].replaceAll("\"", "");
-
-            return country + ", " + region;
-        } else {
-            throw new IOException("Unable to retrieve location information. HTTP Response Code: " + responseCode);
-        }
-    }
 }
