@@ -52,7 +52,7 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
         Page<TwUserCoin> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
         List<TwUserCoin> list = baseMapper.listpage(objectPage, twUserVo);
         for (TwUserCoin twUserCoin: list){
-            String userid = twUserCoin.getUserid();
+            Integer userid = twUserCoin.getUserid();
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", userid);
             TwUser one = twUserService.getOne(queryWrapper);

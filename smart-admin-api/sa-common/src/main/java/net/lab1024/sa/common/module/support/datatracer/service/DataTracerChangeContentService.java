@@ -286,9 +286,9 @@ public class DataTracerChangeContentService {
         Object fieldValue = "";
         Class clazz = object.getClass();
         try {
-            PropertyDescriptor pd = new PropertyDescriptor(field.getName(), clazz);
-            Method get = pd.getReadMethod();
-            fieldValue = get.invoke(object);
+//            PropertyDescriptor pd = new PropertyDescriptor(field.getName(), clazz);
+//            Method get = pd.getReadMethod();
+//            fieldValue = get.invoke(object);
         } catch (Exception e) {
             log.error("bean operate log: reflect field value error " + field.getName());
             return null;
