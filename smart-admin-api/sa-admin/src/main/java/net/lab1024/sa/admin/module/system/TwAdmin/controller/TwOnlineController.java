@@ -1,9 +1,7 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwOnlineService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.PageParam;
@@ -19,7 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/admin/online")
-public class OnlineController {
+public class TwOnlineController {
 
 
     @Autowired
@@ -61,7 +59,7 @@ public class OnlineController {
      *         $data['content'] = $content;（写入客服回复的内容）
      *         $data['type'] = 1;
      *         $data['addtime'] = date("Y-m-d H:i:s", time());
-     *         $data['state'] = 1;
+     *         $data['state'] = 2;
      *         $result = M("online")->add($data);（添加客服回复内容记录）
      *         if ($result) {
      *             M("online")->where(array('uid' => uid))->save(array('state' => 1));（修改被回复人信息的状态）
@@ -73,8 +71,8 @@ public class OnlineController {
     @PostMapping("/backOnline")
     @ResponseBody
     @NoNeedLogin
-    public ResponseDTO backOnline(@RequestParam int id, @RequestParam String content) {
-        return twOnlineService.backOnline(id,content);
+    public ResponseDTO backOnline(@RequestParam int uid, @RequestParam String content) {
+        return twOnlineService.backOnline(uid,content);
     }
 }
 

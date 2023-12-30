@@ -1,15 +1,24 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserQianbao;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserQianbaoService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 币种
  */
 @RestController
 @RequestMapping("/api/pc/qianbao")
-public class QianBaoController {
+public class PcQianBaoController {
 
+    @Autowired
+    private TwUserQianbaoService twUserQianbaoService;
 
     /**
      * 提币地址管理
@@ -17,6 +26,13 @@ public class QianBaoController {
      * 参数： id （用户 id）
      * select user_qianbao  where  userid=？
      * */
+    @GetMapping("/list")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "提币地址管理")
+    public ResponseDTO<List<TwUserQianbao>> lists(@RequestParam int uid) {
+        return ResponseDTO.ok(twUserQianbaoService.lists(uid));
+    }
 
     /**
      * 删除提币地址
@@ -24,6 +40,14 @@ public class QianBaoController {
      * 参数： id （user_qianbao表的id）
      * delete user_qianbao  where  id=？
      * */
+    @GetMapping("/del")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "删除提币地址")
+    public ResponseDTO del(@RequestParam int id) {
+        return ResponseDTO.ok(twUserQianbaoService.del(id));
+    }
+
 
     /**
      * 添加提币地址
@@ -52,7 +76,17 @@ public class QianBaoController {
      *             $this->ajaxReturn(['code' => 0, 'msg' => L('添加失败')]);
      *         }
      * */
-
+    @GetMapping("/add")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "添加提币地址")
+    public ResponseDTO add(@RequestParam int uid,
+                           @RequestParam int oid,
+                           @RequestParam String address,
+                           @RequestParam String remark,
+                           @RequestParam String czline) {
+        return ResponseDTO.ok(twUserQianbaoService.add(uid,oid,address,remark,czline));
+    }
 
 }
 

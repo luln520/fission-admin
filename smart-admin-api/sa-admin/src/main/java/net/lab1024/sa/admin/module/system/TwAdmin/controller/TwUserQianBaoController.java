@@ -2,7 +2,6 @@ package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserQianbao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserQianbaoService;
@@ -18,7 +17,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/admin/userqianbao")
-public class UserQianBaoController {
+public class TwUserQianBaoController {
 
     @Autowired
     private TwUserQianbaoService twUserQianbaoService;
@@ -53,11 +52,11 @@ public class UserQianBaoController {
     /**
      * 删除用户钱包 表 UserQianbao   where id=？
      */
-    @GetMapping("/delete")
-    @ApiOperation(value = "获取所有用户")
+    @GetMapping("/del")
+    @ApiOperation(value = "删除用户钱包")
     @NoNeedLogin
     public ResponseDTO delete(@RequestParam int id) {
-        return ResponseDTO.ok(twUserQianbaoService.delete(id));
+        return ResponseDTO.ok(twUserQianbaoService.del(id));
     }
 
 }

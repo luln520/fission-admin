@@ -14,6 +14,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserLogService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +32,7 @@ import java.util.List;
 public class TwUserLogServiceImpl extends ServiceImpl<TwUserLogDao, TwUserLog> implements TwUserLogService {
 
     @Autowired
+    @Lazy
     private TwUserService twUserService;
     @Override
     public IPage<TwUserLog> listpage(TwUserVo twUserVo) {

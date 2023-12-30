@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 /**
  * 币种配置表(TwCoin)表服务接口
  *
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface TwCoinService extends IService<TwCoin> {
 
     IPage<TwCoin> listpage(PageParam pageParam);
+
+    List<TwCoin> lists();
 
     boolean addOrUpdate(TwCoin twCoin);
 

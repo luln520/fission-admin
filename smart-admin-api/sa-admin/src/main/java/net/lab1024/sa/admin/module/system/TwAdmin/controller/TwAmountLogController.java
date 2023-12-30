@@ -2,11 +2,10 @@ package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNoticeService;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwBillService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
-import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,24 +16,26 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 /**
- * 通知管理
+ * 资金流水
  */
 @RestController
-@RequestMapping("/api/admin/notice")
-public class NoticeController {
+@RequestMapping("/api/admin/amountlog")
+public class TwAmountLogController {
 
     @Autowired
-    private TwNoticeService twNoticeService;
+    private TwBillService twBillService;
+
     /**
-     * 获取所有通知 表notice
+     * 获取所有 表bill
      * order by id desc
      */
     @PostMapping("/list")
-    @ApiOperation(value = "通知管理列表")
+    @ApiOperation(value = "资金流水列表")
     @NoNeedLogin
-    public ResponseDTO<IPage<TwNotice>> listpage(@Valid @RequestBody PageParam pageParam) {
-        return ResponseDTO.ok(twNoticeService.listpage(pageParam));
+    public ResponseDTO<IPage<TwBill>> listpage(@Valid @RequestBody TwBillVo twBillVo) {
+        return ResponseDTO.ok(twBillService.listpage(twBillVo));
     }
+
 
 }
 

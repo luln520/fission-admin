@@ -1,10 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
-import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import io.swagger.models.auth.In;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwDjprofit;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjorderVo;
@@ -16,20 +12,16 @@ import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 矿机
  */
 @RestController
 @RequestMapping("/api/admin/kuangm")
-public class KuangmController {
+public class TwKuangmController {
 
      @Autowired
      private TwKuangjiService twKuangjiService;

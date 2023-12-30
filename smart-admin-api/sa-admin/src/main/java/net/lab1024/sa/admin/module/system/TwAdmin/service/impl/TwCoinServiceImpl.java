@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 币种配置表(TwCoin)表服务实现类
@@ -31,6 +32,13 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
         Page<TwCoin> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
         objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
         return objectPage;
+    }
+
+    @Override
+    public List<TwCoin> lists() {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("txstatus",1);
+        return this.list(queryWrapper);
     }
 
     @Override

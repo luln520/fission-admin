@@ -8,6 +8,9 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserQianbao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * 用户钱包表(TwUserQianbao)表服务接口
@@ -17,8 +20,14 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwUserQianbaoService extends IService<TwUserQianbao> {
     IPage<TwUserQianbao> listpage(TwUserVo twUserVo);
+
+    List<TwUserQianbao> lists(int uid);
     boolean addUpdate(TwUserQianbao userQianBao);
 
-    boolean delete(int id);
+    boolean del(int id);
+
+    boolean add(int uid,int oid, String address,String remark, String czline);
+
+
 
 }

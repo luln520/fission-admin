@@ -3,13 +3,11 @@ package net.lab1024.sa.admin.module.system.TwPC.controller;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNoticeService;
-import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -17,7 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/notice")
-public class NoticeController {
+public class PcNoticeController {
 
     @Autowired
     private TwNoticeService twNoticeService;

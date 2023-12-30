@@ -54,4 +54,6 @@ public interface TwUserService extends IService<TwUser> {
     ResponseDTO editpassword(UserReq userReq);
 
     ResponseDTO<TwUser> userInfo(String token);
+
+    ResponseDTO auth(int uid,String phone,String realName,String cardzm,String cardfm);
 }

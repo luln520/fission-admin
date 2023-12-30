@@ -1,7 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import cn.hutool.core.date.DateUtil;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwConfig;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,7 +20,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/admin/index")
-public class IndexController {
+public class TwIndexController {
 
     @Autowired
     private TwUserService twUserService;
