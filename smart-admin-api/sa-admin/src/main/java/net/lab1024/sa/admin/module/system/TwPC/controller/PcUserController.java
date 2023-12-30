@@ -15,7 +15,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/pc/user")
-public class UserController {
+public class PcUserController {
 
     @Autowired
     private TwUserService twUserService;

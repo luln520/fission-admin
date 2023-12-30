@@ -28,7 +28,7 @@ import javax.validation.Valid;
  */
 @RestController
 @Api(tags = {SwaggerTagConst.Support.FILE})
-public class FileController extends SupportBaseController {
+public class PcFileController extends SupportBaseController {
 
     @Autowired
     private FileService fileService;

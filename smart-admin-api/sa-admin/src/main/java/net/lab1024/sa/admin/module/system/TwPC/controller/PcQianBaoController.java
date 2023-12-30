@@ -1,7 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
 import io.swagger.annotations.ApiOperation;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserQianbao;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserQianbaoService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -16,7 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/qianbao")
-public class QianBaoController {
+public class PcQianBaoController {
 
     @Autowired
     private TwUserQianbaoService twUserQianbaoService;
