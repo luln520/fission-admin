@@ -195,5 +195,27 @@ public class LoginController {
         return twUserService.register(userReq, ip);
     }
 
+
+    /**
+     * 用户重置密码  表 user，notice
+     * 参数： username  password  code（验证码）
+     * 大致逻辑：
+     *      1.通过用户名查询用户，先判断该用户是否存在
+     *      3.判断账号和code 是否对应
+     *      4.都通过  MD5 加密 修改password 字段
+     *      5.新增通知记录 （表 notice）
+     *
+     *
+     * 参考代码：
+     *      //通知写入
+     *       $data['uid'] = $uinfo['id'];（用户id）
+     *       $data['account'] = $uinfo['username']; （用户 username）
+     *       $data['title'] = '重置密码'
+     *       $data['content'] = '登陆密码重置成功';
+     *       $data['addtime'] = date("Y-m-d H:i:s", time());
+     *       $data['status'] = 1;
+     *       M("notice")->add($data); （写入通知表）
+     * */
+
 }
 
