@@ -57,7 +57,7 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
         QueryWrapper<TwNotice> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         TwNotice one = this.getOne(queryWrapper);
-        one.setStatus(1);
+        one.setStatus(2);
         this.updateById(one);
         return ResponseDTO.ok();
     }
@@ -78,7 +78,7 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
         queryWrapper.eq("uid", uidToken.intValue());
         List<TwNotice> list = this.list(queryWrapper);
         for (TwNotice twNotice:list){
-            twNotice.setStatus(1);
+            twNotice.setStatus(2);
             this.updateById(twNotice);
         }
         return ResponseDTO.ok();

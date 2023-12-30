@@ -2,6 +2,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -16,6 +17,7 @@ import java.io.Serializable;
  */
 @Data
 @TableName("tw_content")
+@ApiModel(value="广告图片表", description="")
 public class TwContent implements Serializable {
     private static final long serialVersionUID = -47261435617866204L;
 

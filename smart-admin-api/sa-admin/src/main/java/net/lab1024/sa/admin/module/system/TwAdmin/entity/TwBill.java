@@ -2,6 +2,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import java.util.Date;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 
 @Data
 @TableName("tw_bill")
+@ApiModel(value="操作日志", description="")
 public class TwBill implements Serializable {
     private static final long serialVersionUID = -11575939499653388L;
 /**

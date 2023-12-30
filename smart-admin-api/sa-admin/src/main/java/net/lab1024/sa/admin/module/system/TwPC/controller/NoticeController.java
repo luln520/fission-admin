@@ -53,7 +53,7 @@ public class NoticeController {
      * 标记全部已经读取
      * 参数：token
      * 表 notice
-     * update notice set status=1  where  uid=?（通过 token 拿到id）
+     * update notice set status=2  where  uid=?（通过 token 拿到id）
      * */
     @NoNeedLogin
     @GetMapping("/read")
@@ -66,7 +66,7 @@ public class NoticeController {
      * 标记单个已经读取
      * 参数：id(notice的id)
      * 表 notice
-     * update notice set status=1  where  id=?
+     * update notice set status=2  where  id=?
      * */
     @NoNeedLogin
     @GetMapping("/readone")

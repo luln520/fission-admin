@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,35 +16,29 @@ import java.io.Serializable;
 
 @Data
 @TableName("tw_admin_log")
+@ApiModel(value="后台管理员操作日志表", description="")
 public class TwAdminLog implements Serializable {
     private static final long serialVersionUID = -75349395372140753L;
-/**
-     * 主键ID
-     */
+
+    @ApiModelProperty(value = "主键ID")
     private String id;
-/**
-     * 管理员ID
-     */
+
+    @ApiModelProperty(value = "管理员ID")
     private String adminId;
-/**
-     * 管理员用户名
-     */
+
+    @ApiModelProperty(value = "管理员用户名")
     private String adminUsername;
-/**
-     * 操作名称
-     */
+
+     @ApiModelProperty(value = "操作名称")
     private String action;
-/**
-     * 操作IP地址
-     */
+
+    @ApiModelProperty(value = "操作IP地址")
     private String ip;
-/**
-     * 创建时间
-     */
+
+    @ApiModelProperty(value = "创建时间")
     private int createTime;
-/**
-     * 备注
-     */
+
+    @ApiModelProperty(value = "备注")
     private String remark;
 
 }

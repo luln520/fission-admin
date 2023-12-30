@@ -1,6 +1,10 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -9,6 +13,9 @@ import java.io.Serializable;
  * @author makejava
  * @since 2023-12-23 18:28:00
  */
+@Data
+@TableName("tw_trade_json")
+@ApiModel(value="广告图片表", description="")
 public class TwTradeJson implements Serializable {
     private static final long serialVersionUID = -35181137554144131L;
 

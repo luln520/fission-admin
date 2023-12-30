@@ -1,6 +1,7 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @TableName("tw_kjorder")
+@ApiModel(value="广告图片表", description="")
 public class TwKjorder implements Serializable {
     private static final long serialVersionUID = 707620219017503079L;
 /**
