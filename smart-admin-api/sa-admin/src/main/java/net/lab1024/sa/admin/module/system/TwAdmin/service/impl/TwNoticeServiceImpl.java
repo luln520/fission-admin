@@ -6,14 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMyzcDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwNoticeDao;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMyzcService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNoticeService;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.module.support.token.TokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +29,8 @@ import java.util.List;
 @Service("twNoticeService")
 public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> implements TwNoticeService {
 
+    @Autowired
+    private TokenService tokenService;
     @Override
     public IPage<TwNotice> listpage(PageParam pageParam) {
         Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
@@ -49,5 +50,49 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
         QueryWrapper<TwNotice> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id",id);
         return ResponseDTO.ok(this.getOne(queryWrapper));
+    }
+
+    @Override
+    public ResponseDTO readone(int id) {
+        QueryWrapper<TwNotice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        TwNotice one = this.getOne(queryWrapper);
+        one.setStatus(1);
+        this.updateById(one);
+        return ResponseDTO.ok();
+    }
+
+    @Override
+    public ResponseDTO deleteOne(int id) {
+        QueryWrapper<TwNotice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        TwNotice one = this.getOne(queryWrapper);
+        this.removeById(one);
+        return ResponseDTO.ok();
+    }
+
+    @Override
+    public ResponseDTO read(String token) {
+        Long uidToken = tokenService.getUIDToken(token);
+        QueryWrapper<TwNotice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid", uidToken.intValue());
+        List<TwNotice> list = this.list(queryWrapper);
+        for (TwNotice twNotice:list){
+            twNotice.setStatus(1);
+            this.updateById(twNotice);
+        }
+        return ResponseDTO.ok();
+    }
+
+    @Override
+    public ResponseDTO delete(String token) {
+        Long uidToken = tokenService.getUIDToken(token);
+        QueryWrapper<TwNotice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid", uidToken.intValue());
+        List<TwNotice> list = this.list(queryWrapper);
+        for (TwNotice twNotice:list){
+            this.removeById(twNotice);
+        }
+        return ResponseDTO.ok();
     }
 }

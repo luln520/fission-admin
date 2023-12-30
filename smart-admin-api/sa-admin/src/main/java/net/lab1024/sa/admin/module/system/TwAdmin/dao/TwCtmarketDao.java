@@ -21,6 +21,7 @@ import java.util.List;
 public interface TwCtmarketDao extends BaseMapper<TwCtmarket> {
 
     List<TwCtmarket> listpage(@Param("objectPage") Page<TwCtmarket> objectPage, @Param("obj") PageParam pageParam);
+    List<TwCtmarket> listPCpage(@Param("objectPage") Page<TwCtmarket> objectPage, @Param("obj") PageParam pageParam);
 
 }
 

@@ -29,6 +29,13 @@ public class TwContentServiceImpl extends ServiceImpl<TwContentDao, TwContent> i
     }
 
     @Override
+    public IPage<TwContent> listPCpage(PageParam pageParam) {
+        Page<TwContent> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+        objectPage.setRecords(baseMapper.listPCpage(objectPage, pageParam));
+        return objectPage;
+    }
+
+    @Override
     public boolean addOrUpdate(TwContent twContent) {
         return this.saveOrUpdate(twContent);
     }

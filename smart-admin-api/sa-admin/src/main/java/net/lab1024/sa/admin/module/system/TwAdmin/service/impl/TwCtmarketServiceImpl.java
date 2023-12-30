@@ -30,6 +30,12 @@ public class TwCtmarketServiceImpl extends ServiceImpl<TwCtmarketDao, TwCtmarket
         objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
         return objectPage;
     }
+    @Override
+    public IPage<TwCtmarket> listPCpage(PageParam pageParam) {
+        Page<TwCtmarket> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+        objectPage.setRecords(baseMapper.listPCpage(objectPage, pageParam));
+        return objectPage;
+    }
 
     @Override
     public boolean addOrUpdate(TwCtmarket twCtmarket) {

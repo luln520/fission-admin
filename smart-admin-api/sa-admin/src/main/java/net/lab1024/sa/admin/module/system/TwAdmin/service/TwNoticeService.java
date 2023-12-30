@@ -25,4 +25,13 @@ public interface TwNoticeService extends IService<TwNotice> {
     ResponseDTO<List<TwNotice>>  notice(int uid);
 
     ResponseDTO<TwNotice>  noticeDetail(int id);
+    ResponseDTO  readone(int id);
+
+    ResponseDTO  deleteOne(int id);
+
+    ResponseDTO  read(String token);
+
+    ResponseDTO  delete(String token);
+
+
 }

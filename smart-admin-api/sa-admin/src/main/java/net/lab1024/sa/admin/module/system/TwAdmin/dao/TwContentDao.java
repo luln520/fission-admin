@@ -19,6 +19,7 @@ import java.util.List;
 public interface TwContentDao extends BaseMapper<TwContent> {
 
     List<TwContent> listpage(@Param("objectPage") Page<TwContent> objectPage, @Param("obj") PageParam pageParam);
+    List<TwContent> listPCpage(@Param("objectPage") Page<TwContent> objectPage, @Param("obj") PageParam pageParam);
 
 }
 

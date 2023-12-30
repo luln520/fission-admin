@@ -6,4 +6,8 @@
         select * from tw_content order by addtime desc
     </select>
 
+    <select id="listPCpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent">
+        select * from tw_content where status = 1 order by addtime desc
+    </select>
+
 </mapper>
