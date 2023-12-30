@@ -198,11 +198,11 @@ public class LoginController {
 
     /**
      * 用户重置密码  表 user，notice
-     * 参数： username  password  code（验证码）
+     * 参数： username  password  oldPassword（老密码）
      * 大致逻辑：
      *      1.通过用户名查询用户，先判断该用户是否存在
-     *      3.判断账号和code 是否对应
-     *      4.都通过  MD5 加密 修改password 字段
+     *      3.判断账号老密码是否正确MD5
+     *      4.都通过  MD5 加密password 修改password 字段
      *      5.新增通知记录 （表 notice）
      *
      *
