@@ -91,6 +91,16 @@ public class UserController {
      *             $this->ajaxReturn(['code' => 0, 'info' => L('认证资料提交失败')]);
      *         }
      * */
-
+    @GetMapping("/auth")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "用户提交实名认证")
+    public ResponseDTO auth(@RequestParam int uid,
+                           @RequestParam String phone,
+                           @RequestParam String realName,
+                           @RequestParam String cardzm,
+                           @RequestParam String cardfm) {
+        return ResponseDTO.ok(twUserService.auth(uid,phone,realName,cardzm,cardfm));
+    }
 }
 

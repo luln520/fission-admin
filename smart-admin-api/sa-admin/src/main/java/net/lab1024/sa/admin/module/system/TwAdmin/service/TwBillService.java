@@ -9,6 +9,8 @@ import net.lab1024.sa.common.common.domain.PageParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 /**
  * 操作日志(TwBill)表服务接口
  *
@@ -18,6 +20,8 @@ import org.springframework.data.domain.PageRequest;
 public interface TwBillService extends IService<TwBill> {
 
     IPage<TwBill> listpage(TwBillVo twBillVo);
+
+    List<TwBill> lists(int uid);
 
 
 

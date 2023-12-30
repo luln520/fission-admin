@@ -61,7 +61,7 @@ public class OnlineController {
      *         $data['content'] = $content;（写入客服回复的内容）
      *         $data['type'] = 1;
      *         $data['addtime'] = date("Y-m-d H:i:s", time());
-     *         $data['state'] = 1;
+     *         $data['state'] = 2;
      *         $result = M("online")->add($data);（添加客服回复内容记录）
      *         if ($result) {
      *             M("online")->where(array('uid' => uid))->save(array('state' => 1));（修改被回复人信息的状态）
@@ -73,8 +73,8 @@ public class OnlineController {
     @PostMapping("/backOnline")
     @ResponseBody
     @NoNeedLogin
-    public ResponseDTO backOnline(@RequestParam int id, @RequestParam String content) {
-        return twOnlineService.backOnline(id,content);
+    public ResponseDTO backOnline(@RequestParam int uid, @RequestParam String content) {
+        return twOnlineService.backOnline(uid,content);
     }
 }
 

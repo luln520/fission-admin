@@ -8,10 +8,13 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwNoticeDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwOnlineDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNoticeService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwOnlineService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -30,11 +33,21 @@ import java.util.List;
 @Service("twOnlineService")
 public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> implements TwOnlineService {
 
+    @Autowired
+    private TwUserService twUserService;
     @Override
     public IPage<TwOnline> listpage(PageParam pageParam) {
         Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
         objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
         return objectPage;
+    }
+
+    @Override
+    public List<TwOnline> lists(int uid) {
+        QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid",uid);
+        queryWrapper.orderByDesc("addtime");
+        return this.list(queryWrapper);
     }
 
     @Override
@@ -46,10 +59,9 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     public ResponseDTO backOnline(int id, String content) {
         try{
             QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("id",id);
+            queryWrapper.eq("uid",id);
             queryWrapper.orderByDesc("addtime").last("LIMIT 1"); // Replace "your_date_column" with the actual column you want to use for ordering.
-
-            TwOnline one = getOne(queryWrapper, false);
+            TwOnline one = getOne(queryWrapper);
             Integer uid = one.getUid();
 
             TwOnline one1 =new TwOnline();
@@ -58,7 +70,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             one1.setContent(content);
             one1.setType(1);
             one1.setAddtime(new Date());
-            one1.setState(1);
+            one1.setState(2);
             this.save(one1);
 
             this.baseMapper.updateState(uid);
@@ -68,5 +80,29 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
         }catch (Exception e){
             return ResponseDTO.userErrorParam("回复失败");
         }
+    }
+
+    @Override
+    public ResponseDTO sendMsg(int uid, String content) {
+        try{
+            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("uid",uid);
+
+            TwUser one = twUserService.getOne(queryWrapper);
+
+            TwOnline one1 =new TwOnline();
+            one1.setUid(one.getId());
+            one1.setUsername(one.getUsername());
+            one1.setContent(content);
+            one1.setType(2);
+            one1.setAddtime(new Date());
+            this.save(one1);
+
+            return ResponseDTO.userErrorParam("发送成功");
+
+        }catch (Exception e){
+            return ResponseDTO.userErrorParam("发送失败");
+        }
+
     }
 }

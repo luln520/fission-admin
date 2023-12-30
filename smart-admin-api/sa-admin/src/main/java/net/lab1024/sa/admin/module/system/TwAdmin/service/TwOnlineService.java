@@ -22,8 +22,12 @@ import java.util.List;
 public interface TwOnlineService extends IService<TwOnline> {
     IPage<TwOnline> listpage(PageParam pageParam);
 
+    List<TwOnline> lists(int uid);
+
     List<TwOnline> getId(int id);
 
     ResponseDTO backOnline(int id, String content);
+
+    ResponseDTO sendMsg(int uid, String content);
 
 }

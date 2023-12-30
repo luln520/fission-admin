@@ -1,7 +1,17 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwOnlineService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 客服聊天
@@ -10,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/pc/online")
 public class OnlineController {
 
+    @Autowired
+    private TwOnlineService twOnlineService;
 
     /**
      * 获取聊天列表
@@ -17,7 +29,13 @@ public class OnlineController {
      * 参数： id （用户 id）
      * select online  where  uid=？ order by id asc
      * */
-
+    @GetMapping("/list")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "获取聊天列表")
+    public ResponseDTO<List<TwOnline>> lists(@RequestParam int uid) {
+        return ResponseDTO.ok(twOnlineService.lists(uid));
+    }
     /**
      * 发送聊天
      * 表 online，user
@@ -34,6 +52,13 @@ public class OnlineController {
      *         $data['addtime'] = date("Y-m-d H:i:s", time());
      *         $result = M("online")->add($data);
      * */
+    @GetMapping("/sendMsg")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "发送聊天")
+    public ResponseDTO sendMsg(@RequestParam int uid,@RequestParam String content) {
+        return ResponseDTO.ok(twOnlineService.sendMsg(uid,content));
+    }
 
 }
 

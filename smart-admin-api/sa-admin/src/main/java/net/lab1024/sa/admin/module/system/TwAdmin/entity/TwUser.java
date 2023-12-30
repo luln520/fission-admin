@@ -116,11 +116,11 @@ public class TwUser implements Serializable {
 /**
      * 认证提交时间
      */
-    private String rztime;
+    private int rztime;
 /**
      * 认证处理时间
      */
-    private String rzuptime;
+    private int rzuptime;
 /**
      * 状态1正常2禁用
      */

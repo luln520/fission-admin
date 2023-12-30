@@ -72,10 +72,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Autowired
     private TwUserCoinService twUserCoinService;
     @Autowired
-    private TwHyorderService twHyorderService;
-    @Autowired
-    private TwBborderService twBborderService;
-    @Autowired
     private TwBillService twBillService;
     @Autowired
     private TwRechargeService twRechargeService;
@@ -84,15 +80,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Autowired
     private TwNoticeService twNoticeService;
     @Autowired
-    private TwOnlineService twOnlineService;
-    @Autowired
-    private TwKjprofitService twKjprofitService;
-    @Autowired
     private TwUserLogService twUserLogService;
-    @Autowired
-    private TwIssueService twIssueService;
-    @Autowired
-    private TwKjorderService twKjorderService;
     @Autowired
     private TwConfigService twConfigService;
 
@@ -561,6 +549,48 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         queryWrapper.eq("id", uidToken.intValue());
         TwUser one = this.getOne(queryWrapper);
         return ResponseDTO.ok(one);
+    }
+
+    @Override
+    public ResponseDTO auth(int uid, String phone, String realName, String cardzm, String cardfm) {
+        try{
+            if(StringUtils.isEmpty(phone)){
+                return ResponseDTO.userErrorParam("手机号不能为空");
+            }
+            if(StringUtils.isEmpty(realName)){
+                return ResponseDTO.userErrorParam("真实姓名不能为空");
+            }
+            if(StringUtils.isEmpty(cardzm)){
+                return ResponseDTO.userErrorParam("正面不能为空");
+            }
+            if(StringUtils.isEmpty(cardfm)){
+                return ResponseDTO.userErrorParam("背面不能为空");
+            }
+
+            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", uid);
+            TwUser one = this.getOne(queryWrapper);
+            one.setCardzm(cardzm);
+            one.setCardfm(cardfm);
+            one.setRealName(realName);
+            one.setRzstatus(1);
+            long timestampInSeconds = Instant.now().getEpochSecond();
+            one.setRztime((int) timestampInSeconds);
+            this.updateById(one);
+
+            TwNotice twNotice = new TwNotice();
+            twNotice.setUid(one.getId());
+            twNotice.setAccount(one.getUsername());
+            twNotice.setTitle("认证资料提交成功");
+            twNotice.setContent("实名资料提成功，耐心等待管理员审核");
+            twNotice.setAddtime(new Date());
+            twNotice.setStatus(1);
+            twNoticeService.save(twNotice);
+            return ResponseDTO.okMsg("认证资料提交成功");
+        }catch (Exception e){
+             return ResponseDTO.userErrorParam("认证资料提交失败");
+        }
+
     }
 
     /**

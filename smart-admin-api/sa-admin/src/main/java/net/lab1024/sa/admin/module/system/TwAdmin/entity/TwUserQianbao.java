@@ -22,11 +22,11 @@ public class TwUserQianbao implements Serializable {
 /**
      * ID
      */
-    private String id;
+    private int id;
 /**
      * 会员ID
      */
-    private String userid;
+    private int userid;
 /**
      * 会员账号
      */
@@ -50,7 +50,7 @@ public class TwUserQianbao implements Serializable {
 /**
      * 排序
      */
-    private String sort;
+    private int sort;
 /**
      * 添加时间
      */

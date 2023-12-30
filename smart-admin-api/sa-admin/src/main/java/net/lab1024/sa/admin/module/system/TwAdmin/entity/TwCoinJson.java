@@ -15,7 +15,6 @@ import java.io.Serializable;
  */
 @Data
 @TableName("tw_coin_json")
-@ApiModel(value="广告图片表", description="")
 public class TwCoinJson implements Serializable {
     private static final long serialVersionUID = -75794272065325925L;
 

@@ -53,11 +53,11 @@ public class UserQianBaoController {
     /**
      * 删除用户钱包 表 UserQianbao   where id=？
      */
-    @GetMapping("/delete")
-    @ApiOperation(value = "获取所有用户")
+    @GetMapping("/del")
+    @ApiOperation(value = "删除用户钱包")
     @NoNeedLogin
     public ResponseDTO delete(@RequestParam int id) {
-        return ResponseDTO.ok(twUserQianbaoService.delete(id));
+        return ResponseDTO.ok(twUserQianbaoService.del(id));
     }
 
 }
