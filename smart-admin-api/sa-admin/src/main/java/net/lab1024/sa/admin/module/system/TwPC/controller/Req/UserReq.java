@@ -20,4 +20,5 @@ public class UserReq {
 
      //（注册类型 1 手机  2 邮箱）
      private int type;
+
 }

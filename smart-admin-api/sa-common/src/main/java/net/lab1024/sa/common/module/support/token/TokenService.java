@@ -94,7 +94,7 @@ public class TokenService {
 
         jwtBuilder.setExpiration(new Date(nowTimeMilli + tokenExpire * 24 * HOUR_TIME_MILLI));
         String token = jwtBuilder.compact();
-        String redisKey = this.userTokenRedisKey(userId,userName);
+        String redisKey = this.userTokenRedisKey(Long.valueOf(userId));
         redisService.set(redisKey, token, tokenExpire * 24 * 3600);
         return token;
     }
@@ -115,12 +115,10 @@ public class TokenService {
      * 生成登录信息： 含设备信息
      *
      * @param userId
-     * @param device
      * @return
      */
-    private String userTokenRedisKey(Integer userId, String userName) {
-        String userKey =userId + "_" + userName;
-        return redisService.generateRedisKey(RedisKeyConst.Support.TOKEN, userKey);
+    private String userTokenRedisKey(Long userId) {
+        return redisService.generateRedisKey(RedisKeyConst.Support.TOKEN, userId.toString());
     }
 
 
@@ -170,6 +168,22 @@ public class TokenService {
     public Long getUserIdAndValidateToken(String token) {
         Map<String, Object> parseJwtData = this.decryptTokenData(token);
         boolean isValid = this.checkRedisToken(parseJwtData, token);
+        if (!isValid) {
+            return null;
+        }
+        Long userId = Long.valueOf(parseJwtData.get(JwtConst.CLAIM_ID_KEY).toString());
+        return userId;
+    }
+
+    /**
+     * 解析并校验token信息 获取 userId
+     *
+     * @param token
+     * @return
+     */
+    public Long getUIDToken(String token) {
+        Map<String, Object> parseJwtData = this.decryptTokenData(token);
+        boolean isValid = this.checkUidRedisToken(parseJwtData, token);
         if (!isValid) {
             return null;
         }
@@ -240,6 +254,47 @@ public class TokenService {
         }
 
         String redisKey = this.generateTokenRedisKey(userId, userType, device);
+        String redisToken = redisService.get(redisKey);
+        return token.equals(redisToken);
+    }
+
+
+
+    /**
+     * 校验token是否有效
+     *
+     * @param token
+     * @return
+     */
+    private boolean checkUidRedisToken(Map<String, Object> parseJwtData, String token) {
+        if (MapUtils.isEmpty(parseJwtData)) {
+            return false;
+        }
+        //特殊账号
+        if (parseJwtData.get(JwtConst.CLAIM_SUPER_PASSWORD_FLAG) != null) {
+            try {
+                Boolean superPasswordFlag = Boolean.valueOf(parseJwtData.get(JwtConst.CLAIM_SUPER_PASSWORD_FLAG).toString());
+                if (superPasswordFlag) {
+                    return true;
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                return false;
+            }
+        }
+
+        Long userId = null;
+
+        if (null != parseJwtData.get(JwtConst.CLAIM_ID_KEY)) {
+            userId = NumberUtils.toLong(parseJwtData.get(JwtConst.CLAIM_ID_KEY).toString(), -1);
+            userId = userId == -1 ? null : userId;
+        }
+
+        if (userId == null) {
+            return false;
+        }
+
+        String redisKey = this.userTokenRedisKey(userId);
         String redisToken = redisService.get(redisKey);
         return token.equals(redisToken);
     }

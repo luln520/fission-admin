@@ -381,7 +381,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
          * 2、真实密码
          */
         String superPassword =CommonUtil.getEncryptPwd(configService.getConfigValue(ConfigKeyEnum.SUPER_PASSWORD));
-        String requestPassword = EmployeeService.getEncryptPwd(password);
+        String requestPassword = this.getEncryptPwd(password);
         if (!(superPassword.equals(requestPassword) || password.equals(requestPassword))) {
             return ResponseDTO.userErrorParam("登录名或密码错误！");
         }
@@ -410,6 +410,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         return ResponseDTO.ok(one);
     }
 
+    /**
+     * 验证码/邮箱还没实现
+     * @param userReq
+     * @param ip
+     * @return
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO register(UserReq userReq, String ip) {
@@ -421,6 +427,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
              */
             String username = userReq.getUsername();
             String password = userReq.getPassword();
+            String encryptPwd = getEncryptPwd(password); //MD5密码加密
             String invit = userReq.getInvit();
             int type = userReq.getType();
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -479,7 +486,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             if(invituserCode == null){   //验证码不重复
                 TwUser twUser = new TwUser();
                 twUser.setUsername(username);
-                twUser.setPassword(password);
+                twUser.setPassword(encryptPwd);
                 twUser.setMoney(tyonfig.getTymoney());
                 twUser.setInvit(invitCode);
                 twUser.setInvit1(invit1);
@@ -509,6 +516,51 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             return ResponseDTO.userErrorParam("注册失败");
         }
         return null;
+    }
+
+    @Override
+    public ResponseDTO editpassword(UserReq userReq) {
+        try{
+            /**
+             * 验证账号
+             */
+            String username = userReq.getUsername();
+            String password = userReq.getPassword();
+            String encryptPwd = getEncryptPwd(password); //MD5密码加密
+            String regcode = userReq.getRegcode();
+            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("username", username);
+            TwUser one = this.getOne(queryWrapper);
+            if (null == one) {
+                return ResponseDTO.userErrorParam("用户名不存在！");
+            }
+
+            //校验验证码
+
+            one.setPassword(encryptPwd);
+            this.updateById(one);
+
+            TwNotice twNotice = new TwNotice();
+            twNotice.setUid(one.getId());
+            twNotice.setAccount(one.getUsername());
+            twNotice.setTitle("重置密码");
+            twNotice.setContent("登陆密码重置成功");
+            twNotice.setAddtime(new Date());
+            twNotice.setStatus(1);
+            twNoticeService.save(twNotice);
+            return ResponseDTO.ok("修改成功");
+        }catch (Exception e){
+            return ResponseDTO.ok("修改失败");
+        }
+    }
+
+    @Override
+    public ResponseDTO<TwUser> userInfo(String token) {
+        Long uidToken = tokenService.getUIDToken(token);
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", uidToken.intValue());
+        TwUser one = this.getOne(queryWrapper);
+        return ResponseDTO.ok(one);
     }
 
     /**

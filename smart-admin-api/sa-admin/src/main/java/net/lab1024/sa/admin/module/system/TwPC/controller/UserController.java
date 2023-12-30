@@ -1,7 +1,14 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * 用户
@@ -10,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/pc/user")
 public class UserController {
 
+    @Autowired
+    private TwUserService twUserService;
 
     /**
      * 获取用户信息
@@ -17,6 +26,12 @@ public class UserController {
      * 参数： token
      * select user  where  uid=？
      * */
+    @NoNeedLogin
+    @GetMapping("/userInfo")
+    @ApiOperation("获取用户信息")
+    public ResponseDTO userInfo(@RequestParam String token) {
+        return twUserService.userInfo(token);
+    }
 
     /**
      * 通知详情

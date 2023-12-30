@@ -216,6 +216,12 @@ public class LoginController {
      *       $data['status'] = 1;
      *       M("notice")->add($data); （写入通知表）
      * */
+    @NoNeedLogin
+    @PostMapping("/editpassword")
+    @ApiOperation("用户重置密码")
+    public ResponseDTO editpassword(@Valid @RequestBody UserReq userReq) {
+        return twUserService.editpassword(userReq);
+    }
 
 }
 

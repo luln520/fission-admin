@@ -7,8 +7,11 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
 import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+
+import java.util.List;
 
 /**
  * 通知表(TwNotice)表服务接口
@@ -18,4 +21,8 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwNoticeService extends IService<TwNotice> {
     IPage<TwNotice> listpage(PageParam pageParam);
+
+    ResponseDTO<List<TwNotice>>  notice(int uid);
+
+    ResponseDTO<TwNotice>  noticeDetail(int id);
 }
