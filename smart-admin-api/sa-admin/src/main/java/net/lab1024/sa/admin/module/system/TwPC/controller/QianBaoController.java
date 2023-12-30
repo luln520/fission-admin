@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 币种
  */
 @RestController
-@RequestMapping("/api/pc/coin")
+@RequestMapping("/api/pc/qianbao")
 public class QianBaoController {
 
 
