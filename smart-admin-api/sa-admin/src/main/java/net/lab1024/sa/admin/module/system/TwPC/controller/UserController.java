@@ -60,5 +60,37 @@ public class UserController {
         return twUserService.editpassword(userReq);
     }
 
+
+    /**
+     * 用户提交实名认证  表 user，notice
+     * 参数：id(用户id),phone(手机号), real_name（真实姓名）, cardzm（身份证正面）, cardfm（身份证背面）
+     * 大致逻辑：
+     *      1.判断四个参数是否为空
+     *      3.写入 user表   phone(手机号), real_name（真实姓名）, cardzm（身份证正面）, cardfm（身份证背面  where id=？
+     *      4.写入通知表 notice
+     *
+     *
+     * 参考代码：
+     *          $data['cardzm'] = $cardzm;
+     *         $data['cardfm'] = $cardfm;
+     *         $data['real_name'] = $real_name;
+     *         $data['rzstatus'] = 1;
+     *         $data['rztime'] = time();
+     *         $re = M("user")->where(array('id' => $id))->save($data);（逻辑 2）
+     *         $userinfo = M("user")->where(array('id' => $id))->find();
+     *         if ($re) {
+     *             $notice['uid'] = $id;
+     *             $notice['account'] = $userinfo['username']; （读取用户的 username）
+     *             $notice['title'] = L('认证资料提交成功');
+     *             $notice['content'] = L('实名资料提成功，耐心等待管理员审核');
+     *             $notice['addtime'] = date("Y-m-d H:i:s", time());
+     *             $notice['status'] = 1;
+     *             M("notice")->add($notice); （逻辑 3）
+     *             $this->ajaxReturn(['code' => 1, 'info' => L('认证资料提交成功')]);
+     *         } else {
+     *             $this->ajaxReturn(['code' => 0, 'info' => L('认证资料提交失败')]);
+     *         }
+     * */
+
 }
 
