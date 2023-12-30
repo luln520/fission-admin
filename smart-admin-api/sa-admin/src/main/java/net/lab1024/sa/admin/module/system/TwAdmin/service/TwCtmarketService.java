@@ -19,6 +19,8 @@ public interface TwCtmarketService extends IService<TwCtmarket> {
 
     IPage<TwCtmarket> listpage(PageParam pageParam);
 
+    IPage<TwCtmarket> listPCpage(PageParam pageParam);
+
     boolean addOrUpdate(TwCtmarket twCtmarket);
 
     boolean updateStatus(int id, int status);

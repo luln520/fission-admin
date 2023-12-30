@@ -6,4 +6,8 @@
         select * from tw_ctmarket order by sort desc
     </select>
 
+    <select id="listPCpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket">
+        select * from tw_ctmarket WHERE status = 1 order by sort desc
+    </select>
+
 </mapper>

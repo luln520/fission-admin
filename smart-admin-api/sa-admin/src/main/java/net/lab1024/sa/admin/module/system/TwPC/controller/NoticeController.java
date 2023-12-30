@@ -55,6 +55,12 @@ public class NoticeController {
      * 表 notice
      * update notice set status=1  where  uid=?（通过 token 拿到id）
      * */
+    @NoNeedLogin
+    @GetMapping("/read")
+    @ApiOperation("标记全部已经读取")
+    public ResponseDTO read(@RequestParam String token) {
+        return twNoticeService.read(token);
+    }
 
     /**
      * 标记单个已经读取
@@ -62,13 +68,25 @@ public class NoticeController {
      * 表 notice
      * update notice set status=1  where  id=?
      * */
-
+    @NoNeedLogin
+    @GetMapping("/readone")
+    @ApiOperation("标记单个已经读取")
+    public ResponseDTO readone(@RequestParam int id) {
+        return twNoticeService.readone(id);
+    }
     /**
      * 删除我的全部通知
      * 参数： token
      * 表 notice
      * delete notice  where  uid=?（通过 token 拿到id）
      * */
+    @NoNeedLogin
+    @GetMapping("/delete")
+    @ApiOperation("删除我的全部通知")
+    public ResponseDTO delete(@RequestParam String token) {
+        return twNoticeService.delete(token);
+    }
+
 
     /**
      * 删除我单个通知
@@ -76,7 +94,12 @@ public class NoticeController {
      * 表 notice
      * delete notice  where  id=?
      * */
-
+    @NoNeedLogin
+    @GetMapping("/deleteOne")
+    @ApiOperation("删除我单个通知")
+    public ResponseDTO deleteOne(@RequestParam int id) {
+        return twNoticeService.deleteOne(id);
+    }
 
 }
 

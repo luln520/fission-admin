@@ -18,6 +18,8 @@ public interface TwContentService extends IService<TwContent> {
 
     IPage<TwContent> listpage(PageParam pageParam);
 
+    IPage<TwContent> listPCpage(PageParam pageParam);
+
     boolean addOrUpdate(TwContent twContent);
 
     boolean delete(int id);
