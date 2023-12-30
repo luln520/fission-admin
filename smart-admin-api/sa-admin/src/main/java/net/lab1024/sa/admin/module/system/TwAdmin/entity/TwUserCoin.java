@@ -20,7 +20,7 @@ public class TwUserCoin implements Serializable {
 
     private String id;
 
-    private String userid;
+    private Integer userid;
 
     private double usdt;
 

@@ -27,11 +27,13 @@ import net.lab1024.sa.common.module.support.loginlog.LoginLogResultEnum;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.Md5Crypt;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +59,7 @@ import java.util.concurrent.ConcurrentMap;
 
 
 @Service("twUserService")
+@Transactional
 public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements TwUserService {
 
     private static final String PASSWORD_SALT_FORMAT = "smart_%s_admin_$^&*";
@@ -90,6 +93,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     private TwIssueService twIssueService;
     @Autowired
     private TwKjorderService twKjorderService;
+    @Autowired
+    private TwConfigService twConfigService;
 
     @Autowired
     private ConfigService configService;
@@ -167,7 +172,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            String encryptPwd = getEncryptPwd(password);
            String invite = generateRandomString();
            String ip = CommonUtil.getClientIP(request);
-           String locationByIP = CommonUtil.getLocationByIP(ip);
+           String locationByIP = CommonUtil.getAddress(ip);
            twUser.setPassword(encryptPwd);
            twUser.setInvit(invite);
            twUser.setAddr(locationByIP);
@@ -353,27 +358,22 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public ResponseDTO<TwUser> loginUser(UserReq userReq, String ip) {
-        //        LoginDeviceEnum loginDeviceEnum = SmartEnumUtil.getEnumByValue(loginForm.getLoginDevice(), LoginDeviceEnum.class);
-//        if (loginDeviceEnum == null) {
-//            return ResponseDTO.userErrorParam("登录设备暂不支持！");
-//        }
-
 
         /**
          * 验证账号和账号状态
          */
-        Integer uid = userReq.getUid();
         String username = userReq.getUsername();
         String password = userReq.getPassword();
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         TwUser one = this.getOne(queryWrapper);
+        Integer uid = one.getId();
         if (null == one) {
-            return ResponseDTO.userErrorParam("登录名不存在！");
+            return ResponseDTO.userErrorParam("用户不存在！");
         }
 
-        if (one.getStatus() == 2) {
-            return ResponseDTO.userErrorParam("您的账号已被禁用,请联系工作人员！");
+        if (one.getStatus() != 1) {
+            return ResponseDTO.userErrorParam("你的账号已冻结请联系管理员!");
         }
         /**
          * 验证密码：
@@ -396,7 +396,119 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         // 放入缓存
         loginUserDetailCache.put(uid, one);
 
+        TwUserLog twUserLog = new TwUserLog();
+        twUserLog.setUserid(uid);
+        twUserLog.setType("登录");
+        twUserLog.setRemark("邮箱登录");
+        long timestampInSeconds = Instant.now().getEpochSecond();
+        twUserLog.setAddtime((int) timestampInSeconds);
+        twUserLog.setAddip(one.getAddip());
+        twUserLog.setAddr(one.getAddr());
+        twUserLog.setStatus(1);
+        twUserLogService.save(twUserLog);
+
         return ResponseDTO.ok(one);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO register(UserReq userReq, String ip) {
+
+        try{
+
+            /**
+             * 验证账号和账号状态
+             */
+            String username = userReq.getUsername();
+            String password = userReq.getPassword();
+            String invit = userReq.getInvit();
+            int type = userReq.getType();
+            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("username", username);
+            TwUser one = this.getOne(queryWrapper);
+            if (null != one) {
+                return ResponseDTO.userErrorParam("用户名已存在！");
+            }
+
+            //验证码
+
+            if(StringUtils.isEmpty(password)){
+                return ResponseDTO.userErrorParam("请输入密码！");
+            }
+
+            if(StringUtils.isEmpty(invit)){
+                return ResponseDTO.userErrorParam("请输入邀请码！");
+            }
+
+            QueryWrapper<TwConfig> queryConfig = new QueryWrapper<>();
+            queryConfig.eq("id", 1);
+            TwConfig tyonfig = twConfigService.getOne(queryConfig);    //获取体验金信息
+
+
+            String invit1 = "0";
+            String invit2 = "0";
+            String invit3 = "0";
+            String path = "";
+
+            if(!invit.equals("0")){
+                QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
+                queryWrapperInvite.eq("invit", invit);
+                TwUser invitUser = this.getOne(queryWrapperInvite);  //获取邀请人信息
+                if(invitUser == null){
+                    return ResponseDTO.userErrorParam("推荐人不存在！");
+                }
+
+                Integer inivtId = invitUser.getId();
+                invit1 = invitUser.getInvit1();
+                invit2 = invitUser.getInvit2();
+                String path1 = invitUser.getPath();
+                if(StringUtils.isNotEmpty(path1)){  //拼接团队路径
+                    path = path1 +","+ inivtId;
+                }else{
+                    path = inivtId.toString();
+                }
+            }
+
+            String invitCode = generateRandomString();  //生成验证码
+
+            String address = CommonUtil.getAddress(ip);
+
+            QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
+            queryWrapperInvite.eq("invit", invitCode);
+            TwUser invituserCode = this.getOne(queryWrapperInvite);
+            if(invituserCode == null){   //验证码不重复
+                TwUser twUser = new TwUser();
+                twUser.setUsername(username);
+                twUser.setPassword(password);
+                twUser.setMoney(tyonfig.getTymoney());
+                twUser.setInvit(invitCode);
+                twUser.setInvit1(invit1);
+                twUser.setInvit2(invit2);
+                twUser.setInvit3(invit3);
+                twUser.setType(type);
+                twUser.setAreaCode("");
+                twUser.setPath(path);
+                twUser.setAddip(ip);
+                twUser.setAddr(address);
+                long timestampInSeconds = Instant.now().getEpochSecond();
+                twUser.setAddtime((int) timestampInSeconds);
+                twUser.setStatus(1);
+                twUser.setTxstate(1);
+                twUser.setRzstatus(2);
+                this.save(twUser);
+
+                Integer uid = twUser.getId();
+                TwUserCoin twUserCoin = new TwUserCoin();
+                twUserCoin.setUserid(uid);
+                twUserCoin.setUsdt(tyonfig.getTymoney());
+                twUserCoinService.save(twUserCoin);
+
+                return ResponseDTO.ok("注册成功");
+            }
+        }catch (Exception e){
+            return ResponseDTO.userErrorParam("注册失败");
+        }
+        return null;
     }
 
     /**

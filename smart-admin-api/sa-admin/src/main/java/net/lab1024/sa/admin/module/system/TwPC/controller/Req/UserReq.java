@@ -5,9 +5,19 @@ import lombok.Data;
 
 @Data
 public class UserReq {
+
      private Integer uid;
 
      private String username;
 
      private String password;
+
+     //验证码
+     private String regcode;
+
+     //邀请码
+     private String invit;
+
+     //（注册类型 1 手机  2 邮箱）
+     private int type;
 }

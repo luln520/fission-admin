@@ -17,9 +17,9 @@ import java.io.Serializable;
 public class TwUserLog implements Serializable {
     private static final long serialVersionUID = 799632603465017419L;
 
-    private String id;
+    private Integer id;
 
-    private String userid;
+    private Integer userid;
 
     private String type;
 
@@ -29,11 +29,11 @@ public class TwUserLog implements Serializable {
 
     private String addr;
 
-    private String sort;
+    private Integer sort;
 
-    private String addtime;
+    private Integer addtime;
 
-    private String endtime;
+    private Integer endtime;
 
     private Integer status;
 

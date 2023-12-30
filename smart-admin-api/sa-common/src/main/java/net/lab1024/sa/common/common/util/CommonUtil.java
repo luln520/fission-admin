@@ -56,7 +56,7 @@ public class CommonUtil {
      /**
      * 实现 传入 ip地址  通过用户真实ip  拿到ip属于哪个国家 （日志需要）
      */
-     public static String getLocationByIP(String ipAddress) throws IOException {
+     public static String getAddress(String ipAddress) throws IOException {
          String apiUrl = "http://ip-api.com/json/" + ipAddress;
          URL url = new URL(apiUrl);
 

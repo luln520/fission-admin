@@ -79,6 +79,15 @@ public class LoginController {
      *         }
      * */
 
+    @NoNeedLogin
+    @PostMapping("/login")
+    @ApiOperation("用户登录")
+    public ResponseDTO<TwUser> login(@Valid @RequestBody UserReq userReq) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String ip = ServletUtil.getClientIP(request);
+        return twUserService.loginUser(userReq, ip);
+    }
+
     /**
      * 用户注册 表 user，config，tw_user_coin
      * 需要开启事务
@@ -176,13 +185,15 @@ public class LoginController {
      *             $this->ajaxReturn(['code' => 0, 'info' => L('注册失败')]);
      *         }
      * */
+
     @NoNeedLogin
-    @PostMapping("/login")
-    @ApiOperation("用户登录")
-    public ResponseDTO<TwUser> login(@Valid @RequestBody UserReq userReq) {
+    @PostMapping("/register")
+    @ApiOperation("用户注册")
+    public ResponseDTO register(@Valid @RequestBody UserReq userReq) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String ip = ServletUtil.getClientIP(request);
-        return twUserService.loginUser(userReq, ip);
+        return twUserService.register(userReq, ip);
     }
+
 }
 

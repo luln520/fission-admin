@@ -49,4 +49,5 @@ public interface TwUserService extends IService<TwUser> {
 
     ResponseDTO<TwUser> loginUser(UserReq userReq, String ip);
 
+    ResponseDTO register(UserReq userReq, String ip);
 }

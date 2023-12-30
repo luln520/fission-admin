@@ -25,11 +25,6 @@ import javax.validation.Valid;
 /**
  * 文件服务
  *
- * @Author 1024创新实验室: 罗伊
- * @Date 2019年10月11日 15:34:47
- * @Wechat zhuoda1024
- * @Email lab1024@163.com
- * @Copyright 1024创新实验室 （ https://1024lab.net ）
  */
 @RestController
 @Api(tags = {SwaggerTagConst.Support.FILE})
@@ -39,7 +34,7 @@ public class FileController extends SupportBaseController {
     private FileService fileService;
 
 
-    @ApiOperation(value = "文件上传 @author 胡克", notes = FileFolderTypeEnum.INFO)
+    @ApiOperation(value = "文件上传", notes = FileFolderTypeEnum.INFO)
     @PostMapping("/file/upload")
     @NoNeedLogin
     public ResponseDTO<FileUploadVO> upload(@RequestParam MultipartFile file,
@@ -48,7 +43,7 @@ public class FileController extends SupportBaseController {
         return fileService.fileUpload(file, folder, requestUser);
     }
 
-    @ApiOperation(value = "文件上传，通过url上传 @author 胡克", notes = FileFolderTypeEnum.INFO)
+    @ApiOperation(value = "文件上传，通过url上传", notes = FileFolderTypeEnum.INFO)
     @PostMapping("/file/upload/url")
     @NoNeedLogin
     public ResponseDTO<FileUploadVO> uploadByUrl(@RequestBody @Valid FileUrlUploadForm uploadForm) {
@@ -56,14 +51,14 @@ public class FileController extends SupportBaseController {
         return fileService.fileUpload(uploadForm,requestUser);
     }
 
-    @ApiOperation("获取文件URL：根据fileKey @author 胡克")
+    @ApiOperation("获取文件URL：根据fileKey ")
     @GetMapping("/file/getFileUrl")
     @NoNeedLogin
     public ResponseDTO<String> getUrl(@RequestParam String fileKey) {
         return fileService.getFileUrl(fileKey);
     }
 
-    @ApiOperation(value = "下载文件流（根据fileKey） @author 胡克")
+    @ApiOperation(value = "下载文件流（根据fileKey）")
     @GetMapping("/file/downLoad")
     @NoNeedLogin
     public ResponseEntity<Object> downLoad(@RequestParam String fileKey, HttpServletRequest request) {

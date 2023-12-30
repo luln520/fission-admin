@@ -92,9 +92,9 @@ public class TwUser implements Serializable {
 /**
      * 注册时间j
      */
-    private String addtime;
+    private int addtime;
 
-    private String endtime;
+    private int endtime;
 /**
      * 登陆时间
      */
