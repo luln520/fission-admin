@@ -2,10 +2,9 @@ package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserLog;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserLogService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,32 +16,35 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 /**
- * 会员登录日志
+ * 用户财产
  */
 @RestController
-@RequestMapping("/api/admin/adminlog")
-public class UserLogController {
-
+@RequestMapping("/api/admin/usercoin")
+public class TwUserCoinController {
 
     @Autowired
-    private TwUserLogService twUserLogService;
+    private TwUserCoinService twUserCoinService;
     /**
-     * 查询操作日志列表 表 UserLog
+     * 获取用户财产列表 表 UserCoin
+     * order by id desc
      * 然后遍历得到的list
-     * 查询 用户的名称
-     * 参考代码：
-     *       $list = M('UserLog')->order('id desc')->select();
+     *  查询 用户的名称
+     *  参考代码：
+     *       $list = M('UserCoin')->order('id desc')->select();
      *         foreach ($list as $k => $v) {
      *             $list[$k]['username'] = M('User')->where(array('id' => $v['userid']))->getField('username');
      *         }
      * */
-    @PostMapping("/list")
-    @ApiOperation(value = "获取所有用户")
-    @NoNeedLogin
-    public ResponseDTO<IPage<TwUserLog>> listpage(@Valid @RequestBody TwUserVo twUserVo) {
-        return ResponseDTO.ok(twUserLogService.listpage(twUserVo));
-    }
 
+    /**
+     * 获取所有公告  表content 全部查询
+     */
+    @PostMapping("/list")
+    @ApiOperation(value = "用户财产列表")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwUserCoin>> listpage(@Valid @RequestBody TwUserVo twUserVo) {
+        return ResponseDTO.ok(twUserCoinService.listpage(twUserVo));
+    }
 
 }
 

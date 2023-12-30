@@ -42,7 +42,7 @@ public class PcIndexController {
     /**
      * 获取所有市场信息 表ctmarket order by sort asc
      */
-    @PostMapping("/list")
+    @PostMapping("/ctmarketlist")
     @ApiOperation(value = "获取所有市场信息")
     @NoNeedLogin
     public ResponseDTO<IPage<TwCtmarket>> listpage(@Valid @RequestBody PageParam pageParam) {
@@ -53,7 +53,7 @@ public class PcIndexController {
     /**
      * 获取所有公告  表content 全部查询
      */
-    @PostMapping("/list")
+    @PostMapping("/contentlist")
     @ApiOperation(value = "获取所有公告")
     @NoNeedLogin
     public ResponseDTO<IPage<TwContent>> listContentPage(@Valid @RequestBody PageParam pageParam) {

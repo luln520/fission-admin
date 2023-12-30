@@ -1,15 +1,11 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKuangjiService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +18,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/admin/trade")
-public class TradeController {
+public class TwTradeController {
 
     @Autowired
     private TwHyorderService twHyorderService;

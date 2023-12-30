@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/admin/file")
-public class FileController {
+public class TwFileController {
     /**
      * 文件上传接口   file（文件流） baseFileName（文件夹名称） 需要开放静态文件访问路径
      * 1.限制file类型为 图片 和 10M以内('jpg', 'gif', 'png', 'jpeg')

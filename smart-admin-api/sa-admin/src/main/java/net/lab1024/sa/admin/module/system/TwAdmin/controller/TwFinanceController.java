@@ -3,7 +3,6 @@ package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
@@ -13,7 +12,6 @@ import net.lab1024.sa.admin.module.system.TwAdmin.service.TwBillService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMyzcService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwRechargeService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
-import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +22,8 @@ import javax.validation.Valid;
  * 财务记录
  */
 @RestController
-@RequestMapping("/api/admin/ctmarketConfig")
-public class FinanceController {
+@RequestMapping("/api/admin/financeConfig")
+public class TwFinanceController {
 
     @Autowired
     private TwBillService twBillService;
@@ -39,7 +37,7 @@ public class FinanceController {
     /**
      * 账务明细 表bill order by id desc
      */
-    @PostMapping("/list")
+    @PostMapping("/billList")
     @ApiOperation(value = "账务明细列表")
     @NoNeedLogin
     public ResponseDTO<IPage<TwBill>> listpage(@Valid @RequestBody TwBillVo twBillVo) {
@@ -50,7 +48,7 @@ public class FinanceController {
     /**
      * 充币列表  表recharge  order by id desc
      */
-    @PostMapping("/list")
+    @PostMapping("/rechargeList")
     @ApiOperation(value = "充币列表")
     @NoNeedLogin
     public ResponseDTO<IPage<TwRecharge>> listpage(@Valid @RequestBody TwRechargeVo twRechargeVo) {
