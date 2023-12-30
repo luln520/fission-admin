@@ -37,7 +37,7 @@ public class TwUserLogServiceImpl extends ServiceImpl<TwUserLogDao, TwUserLog> i
         Page<TwUserLog> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
         List<TwUserLog> list = baseMapper.listpage(objectPage, twUserVo);
         for (TwUserLog twUserLog: list){
-            String userid = twUserLog.getUserid();
+            Integer userid = twUserLog.getUserid();
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", userid);
             TwUser one = twUserService.getOne(queryWrapper);
