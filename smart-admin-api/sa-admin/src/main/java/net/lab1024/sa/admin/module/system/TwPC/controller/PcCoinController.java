@@ -33,5 +33,13 @@ public class PcCoinController {
     public ResponseDTO<List<TwCoin>> lists() {
         return ResponseDTO.ok(twCoinService.lists());
     }
+
+    /**
+     * 获取单个币种信息
+     * 表 coin
+     * 参数：id(币种 id)
+     * select coin  where  id=？
+     * */
+
 }
 
