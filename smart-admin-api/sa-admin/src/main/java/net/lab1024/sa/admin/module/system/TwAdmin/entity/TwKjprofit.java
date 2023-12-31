@@ -1,8 +1,10 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.util.Date;
@@ -57,78 +59,8 @@ public class TwKjprofit implements Serializable {
      */
     private Date day;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getUid() {
-        return uid;
-    }
-
-    public void setUid(Integer uid) {
-        this.uid = uid;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Integer getKid() {
-        return kid;
-    }
-
-    public void setKid(Integer kid) {
-        this.kid = kid;
-    }
-
-    public String getKtitle() {
-        return ktitle;
-    }
-
-    public void setKtitle(String ktitle) {
-        this.ktitle = ktitle;
-    }
-
-    public Double getNum() {
-        return num;
-    }
-
-    public void setNum(Double num) {
-        this.num = num;
-    }
-
-    public String getCoin() {
-        return coin;
-    }
-
-    public void setCoin(String coin) {
-        this.coin = coin;
-    }
-
-    public Date getAddtime() {
-        return addtime;
-    }
-
-    public void setAddtime(Date addtime) {
-        this.addtime = addtime;
-    }
-
-    public Date getDay() {
-        return day;
-    }
-
-    public void setDay(Date day) {
-        this.day = day;
-    }
+    @TableField(exist = false) //
+    private Integer status;
 
 }
 

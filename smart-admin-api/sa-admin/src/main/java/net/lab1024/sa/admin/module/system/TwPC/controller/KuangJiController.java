@@ -1,7 +1,21 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjprofit;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKjorderService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKjprofitService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKuangjiService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 矿机
@@ -10,14 +24,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/pc/kuangji")
 public class KuangJiController {
 
+    @Autowired
+    private TwKuangjiService twKuangjiService;
+
+    @Autowired
+    private TwKjorderService twKjorderService;
+
+    @Autowired
+    private TwKjprofitService twKjprofitService;
+
+
 
     /**
      * 获取矿机列表
      * 表 kuangji
-     * 参数： type （可选参数）
+     * 参数： type （可选参数）  //不要共享
      *  获取全部：select kuangji  where   status=1 and rtype=1 order by id asc
-     *  获取单类型（type 区分）：select kuangji  where  type=?  and status=1 and rtype=1 order by id asc
+     *  获取单类型（type 区分）：select kuangji  where  type=1  and status=1 and rtype=1 order by id asc
      * */
+    @PostMapping("/pcList")
+    @ResponseBody
+    @ApiOperation(value = "获取矿机列表")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwKuangji>> pcList(@Valid @RequestBody PageParam pageParam) {
+        return ResponseDTO.ok(twKuangjiService.pcList(pageParam));
+    }
 
 
     /**
@@ -26,7 +57,21 @@ public class KuangJiController {
      * 参数： id （用户 id）
      *  select kjorder  where   uid=？  order by id asc
      * */
-
+//合并
+    /**
+     * 获取用户 运行/过期 的矿机
+     * 表 kjorder
+     * 参数： id
+     *  运行中：select kjorder  where   id=？ and  status=1
+     *  过期：select kjorder  where   id=？ and  status！=1
+     * */
+    @GetMapping("/uidList")
+    @ResponseBody
+    @ApiOperation(value = "获取用户矿机列表/获取用户 运行/过期 的矿机")
+    @NoNeedLogin
+    public ResponseDTO<List<TwKjorder>> uidList(@RequestParam int uid) {
+        return ResponseDTO.ok(twKjorderService.uidList(uid));
+    }
     /**
      * 获取矿机详情
      * 表 kuangji
@@ -42,14 +87,14 @@ public class KuangJiController {
      *             $info['fe2'] = $typearr[1];
      *         }
      * */
+    @GetMapping("/detail")
+    @ResponseBody
+    @ApiOperation(value = "获取矿机详情")
+    @NoNeedLogin
+    public ResponseDTO<TwKuangji> detail(@RequestParam int id) {
+        return ResponseDTO.ok(twKuangjiService.detail(id));
+    }
 
-    /**
-     * 获取用户 运行/过期 的矿机
-     * 表 kjorder
-     * 参数： id
-     *  运行中：select kjorder  where   id=？ and  status=1
-     *  过期：select kjorder  where   id=？ and  status！=1
-     * */
 
 
     /**
@@ -70,7 +115,13 @@ public class KuangJiController {
      *             }
      *         }
      * */
-
+    @GetMapping("/kjprofit")
+    @ResponseBody
+    @ApiOperation(value = "矿机收益列表")
+    @NoNeedLogin
+    public ResponseDTO<List<TwKjprofit>> kjprofit(@RequestParam int uid) {
+        return ResponseDTO.ok(twKjprofitService.kjprofit(uid));
+    }
 
     /**
      * 购买共享矿机 （很复杂）
@@ -251,7 +302,7 @@ public class KuangJiController {
      *         //查会员购买资质
      *         $umoney = M("user_coin")->where(array('userid' => $uid))->find();
      *         $buyask = $minfo['buyask'];
-     *         //按持仓平台币数量
+     *         //按持仓平台币数量    这坨逻辑不要
      *         if ($buyask == 1) {
      *             $ptcoin = strtolower(PT_COIN);
      *             $ptcoind = $ptcoin . "d";
@@ -340,6 +391,14 @@ public class KuangJiController {
      *             $this->ajaxReturn(['code' => 1, 'msg' => L('购买失败')]);
      *         }
      * */
+    @GetMapping("/buyKuangji")
+    @ResponseBody
+    @ApiOperation(value = "购买独资矿机")
+    @NoNeedLogin
+    public ResponseDTO buyKuangji(@RequestParam int uid, @RequestParam int kid) {
+        return ResponseDTO.ok(twKuangjiService.buyKuangji(uid,kid));
+    }
+
 
 
 

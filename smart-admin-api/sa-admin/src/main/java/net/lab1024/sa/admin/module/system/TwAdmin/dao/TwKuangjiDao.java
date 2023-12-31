@@ -22,5 +22,7 @@ public interface TwKuangjiDao extends BaseMapper<TwKuangji> {
 
     List<TwKuangji> listpage(@Param("objectPage") Page<TwKuangji> objectPage, @Param("obj") PageParam pageParam);
 
+    List<TwKuangji> pcList(@Param("objectPage") Page<TwKuangji> objectPage, @Param("obj") PageParam pageParam);
+
 }
 

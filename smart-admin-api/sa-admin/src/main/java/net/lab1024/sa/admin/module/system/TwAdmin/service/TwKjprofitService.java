@@ -10,6 +10,8 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 /**
  * 矿机收益表(TwKjprofit)表服务接口
  *
@@ -19,4 +21,6 @@ import org.springframework.data.domain.PageRequest;
 public interface TwKjprofitService extends IService<TwKjprofit> {
 
     IPage<TwKjprofit> listpage(TwKjprofitVo twKjprofitVo);
+
+    List<TwKjprofit> kjprofit(int uid);
 }
