@@ -1,7 +1,10 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import net.lab1024.sa.common.common.util.CommonUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * 行情
@@ -27,22 +30,7 @@ public class TradeController {
      *      //获取当前最新价格
      *     public function getcoinprice($symbol = null)
      *     {
-     *         if ($symbol == "MBN/USDT") { （本地数据库）
-     *             $symbol = "mbn_usdt";
-     *             $mlist = M("market")->where(array('name' => $symbol))->field("new_price,min_price,max_price,faxingjia,volume")->find();
-     *             $num = 0.001 * rand(1, 9);
-     *             $open = $mlist['min_price'];//开盘价
-     *             $close = $mlist['new_price'] + $num;//现价
-     *             $lowhig = $close - $open; //涨
-     *             $change = round(($lowhig / $open * 100), 2); //涨跌幅
-     *             $data['code'] = 1;
-     *             $data['price'] = $close;
-     *             $data['change'] = $change;
-     *             $data['high'] = $mlist['max_price'];
-     *             $data['low'] = $mlist['min_price'];
-     *             $data['amount'] = $mlist['volume'];//量
-     *             $this->ajaxReturn($data);
-     *         } else { （调取 api）
+     *      （调取 api）
      *             $arr = explode('/', $symbol);(参数：symbol 使用 / 分割，数组命名为：arr)
      *             $coinname = strtolower($arr[0]) . strtolower($arr[1]); （arr 取第一个和第二个 分别转小写后 ，字符串命名为：coinname）
      *             $url = $this->base_path . $coinname;（静态变量   basePath 拼接） java代码：url=basePath+coinname（字符串拼接）
@@ -59,11 +47,17 @@ public class TradeController {
      *             $data['low'] = $pdata['low'];//最高
      *             $data['amount'] = $pdata['amount'];//量
      *             $this->ajaxReturn($data);
-     *         }
+     *
      *     }
      *
      * */
 
+    //btc，eth，eos，doge，bch，ltc，iota，fil，flow，jst，itc，ht
+    public static void main(String[] args) {
+        String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol=btcusdt";
+        Map<String, Object> stringObjectMap = CommonUtil.doGet(str, null);
+        System.out.println(stringObjectMap);
+    }
 
     /**
      * 获取当前最新价格 （和上面逻辑基本相同 返回参数少点，先保留）
@@ -73,15 +67,7 @@ public class TradeController {
      *      //获取当前最新价格
      *     public function getnewprice($symbol = null)
      *     {
-     *         if ($symbol == "MBN/USDT") {
-     *             $symbol = "mbn_usdt";
-     *             $mlist = M("market")->where(array('name' => $symbol))->field("new_price")->find();
-     *             $num = 0.001 * rand(1, 9);
-     *             $close = $mlist['new_price'] + $num;//现价
-     *             $data['code'] = 1;
-     *             $data['price'] = $close;
-     *             $this->ajaxReturn($data);
-     *         } else {
+     *
      *             $arr = explode('/', $symbol);
      *             $coinname = strtolower($arr[0]) . strtolower($arr[1]);
      *             $url = $this->base_path . $coinname;（静态变量   basePath 拼接）
@@ -92,7 +78,6 @@ public class TradeController {
      *             $data['price'] = $price;
      *             $this->ajaxReturn($data);
      *         }
-     *     }
      *
      * */
 
@@ -115,18 +100,7 @@ public class TradeController {
      *      //获取10条卖出记录  （完成）
      *     public function gettradbuyten($symbol = null)
      *     {
-     *         if ($symbol == "MBN/USDT") {
-     *             $market = "mbn_usdt";
-     *             $list = M("trade")->where(array('market' => $market))->order("id desc")->limit(40)->select();
-     *             foreach ($list as $key => $vo) {
-     *                 if ($vo['type'] == 1) {
-     *                     $ajdata[$key]['amount'] = sprintf("%.4f", $vo['num']);
-     *                     $ajdata[$key]['price'] = sprintf("%.4f", $vo['price']);
-     *                     $ajdata[$key]['time'] = date('H:i:s', round($vo['ts'] / 1000));
-     *                 }
-     *             }
-     *             $this->ajaxReturn(['code' => 1, 'data' => $ajdata]);
-     *         } else {
+     *
      *             $arr = explode('/', $symbol);
      *             $coinname = strtolower($arr[0]) . strtolower($arr[1]);
      *             $url = "https://api.huobi.pro/market/history/trade?symbol=" . $coinname . "&size=40";
@@ -143,7 +117,6 @@ public class TradeController {
      *                 }
      *             }
      *             $this->ajaxReturn(['code' => 1, 'data' => $ajdata]);
-     *         }
      *     }
      *
      * */
@@ -164,18 +137,7 @@ public class TradeController {
      *      //获取10条卖出记录  （完成）
      *     public function gettradbuyten($symbol = null)
      *     {
-     *         if ($symbol == "MBN/USDT") {
-     *             $market = "mbn_usdt";
-     *             $list = M("trade")->where(array('market' => $market))->order("id desc")->limit(40)->select();
-     *             foreach ($list as $key => $vo) {
-     *                 if ($vo['type'] == 1) {
-     *                     $ajdata[$key]['amount'] = sprintf("%.4f", $vo['num']);
-     *                     $ajdata[$key]['price'] = sprintf("%.4f", $vo['price']);
-     *                     $ajdata[$key]['time'] = date('H:i:s', round($vo['ts'] / 1000));
-     *                 }
-     *             }
-     *             $this->ajaxReturn(['code' => 1, 'data' => $ajdata]);
-     *         } else {
+     *
      *             $arr = explode('/', $symbol);
      *             $coinname = strtolower($arr[0]) . strtolower($arr[1]);
      *             $url = "https://api.huobi.pro/market/history/trade?symbol=" . $coinname . "&size=40";
@@ -192,7 +154,7 @@ public class TradeController {
      *                 }
      *             }
      *             $this->ajaxReturn(['code' => 1, 'data' => $ajdata]);
-     *         }
+     *
      *     }
      *
      * */
@@ -397,20 +359,7 @@ public class TradeController {
      *         $where['status'] = 1;
      *         $list = M("ctmarket")->where($where)->field("coinname,id")->select();
      *         foreach ($list as $k => $v) {
-     *             if ($v['coinname'] == "mbn") {
-     *                 $symbol = "mbnusdt";
-     *                 $cname = "MBN/USDT";
-     *                 $sid = $v['id'];
-     *                 $api = $this->base_path . $symbol; （（静态变量   basePath 拼接）
-     *                 $data = $this->get_maket_api($api); (调取 api GET)
-     *                 $result = $this->hydata($data, $cname); (调取 处理方法 hyData)
-     *                 $alldata[$k]['sid'] = $sid;
-     *                 $alldata[$k]['coin'] = strtoupper($v['coinname']);
-     *                 $alldata[$k]['cname'] = $result['cname'];
-     *                 $alldata[$k]['symbol'] = $v['coinname'];
-     *                 $alldata[$k]['open'] = $result['open'];
-     *                 $alldata[$k]['change'] = $result['change'];
-     *             } else {
+     *
      *                 $symbol = $v['coinname'] . "usdt";
      *                 $cname = strtoupper($v['coinname']) . "/USDT";
      *                 $sid = $v['id'];
@@ -423,7 +372,7 @@ public class TradeController {
      *                 $alldata[$k]['symbol'] = $v['coinname'];
      *                 $alldata[$k]['open'] = $result['open'];
      *                 $alldata[$k]['change'] = $result['change'];
-     *             }
+     *
      *         }
      *         $this->ajaxReturn(['code' => 1, 'data' => $alldata]);
      *     }
@@ -447,25 +396,7 @@ public class TradeController {
      *      public function getcoin_data()
      *     {
      *         $coinname = trim($_POST['coinname']);
-     *         if ($coinname == "MBN") {
-     *             $symbol = "mbn_usdt";
-     *             $mlist = M("market")->where(array('name' => $symbol))->field("new_price,min_price,max_price,faxingjia,volume")->find();
-     *             $num = 0.001 * rand(1, 9);
-     *             $open = $mlist['min_price'];//开盘价
-     *             $close = $mlist['new_price'] + $num;//现价
-     *             $lowhig = $close - $open; //涨跌
-     *             $change = round(($lowhig / $open * 100), 2); //涨跌幅
-     *             $high = $mlist['max_price'];
-     *             $low = $mlist['min_price'];
-     *             $amount = $mlist['volume'];
-     *             $result['close'] = $close;
-     *             $result['change'] = $change;
-     *             $result['high'] = $high;
-     *             $result['low'] = $low;
-     *             $result['amount'] = sprintf("%.6f", $amount);
-     *             $result['code'] = 1;
-     *             $this->ajaxReturn($result);
-     *         } else {
+     *
      *             $symbol = strtolower($coinname) . "usdt";
      *             $api = $this->base_path . $symbol;
      *             $data = $this->get_maket_api($api);
@@ -484,7 +415,7 @@ public class TradeController {
      *             $result['amount'] = sprintf("%.6f", $amount);
      *             $result['code'] = 1;
      *             $this->ajaxReturn($result);
-     *         }
+     *
      *     }
      *
      * */

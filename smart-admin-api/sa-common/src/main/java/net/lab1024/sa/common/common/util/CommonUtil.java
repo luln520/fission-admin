@@ -95,14 +95,13 @@ public class CommonUtil {
      * @param proxyIp 代理IP
      * @return
      */
-    public static Map<String, Object> doGet(String url, String charset, String proxyIp) {
+    public static Map<String, Object> doGet(String url, String charset) {
         Map<String, Object> map = new HashMap<String, Object>();
         if (null == charset) {
             charset = "utf-8";
         }
         try {
 
-            SocketAddress addr = new InetSocketAddress(proxyIp.split(":")[0], Integer.parseInt(proxyIp.split(":")[1]));
             cn.hutool.http.HttpRequest httpRequest = HttpUtil.createGet(String.valueOf(url))           //设置代理端口
                     .timeout(10000);//发送GET请求
             String body = httpRequest.execute().body();

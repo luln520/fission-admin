@@ -143,7 +143,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorder.setSynum(kuangji.getCycle());
 //        twKjorder.setOuttype(kuangji.getOuttype());
 //        twKjorder.setOutcoin(kuangji.getOutcoin());
-//        twKjorder.setOutnum(kuangji.getDayoutnum());
+        twKjorder.setOutnum(kuangji.getDayoutnum());
 //        twKjorder.setOutusdt(kuangji.getDayoutnum());
         twKjorder.setAddtime(new Date());
         twKjorder.setEndtime(addDay(new Date()));
