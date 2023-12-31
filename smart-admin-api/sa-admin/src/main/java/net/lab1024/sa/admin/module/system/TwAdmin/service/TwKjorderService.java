@@ -10,6 +10,8 @@ import net.lab1024.sa.common.common.domain.PageParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 /**
  * 矿机订单表(TwKjorder)表服务接口
  *
@@ -18,6 +20,8 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwKjorderService extends IService<TwKjorder> {
     IPage<TwKjorder> listpage(TwKjorderVo twKjorderVo);
+
+    List<TwKjorder> uidList(int uid);
     int countAllOrders();
 
     boolean open(int  id);

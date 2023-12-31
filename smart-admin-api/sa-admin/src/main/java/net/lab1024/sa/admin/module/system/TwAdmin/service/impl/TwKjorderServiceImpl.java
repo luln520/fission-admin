@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 矿机订单表(TwKjorder)表服务实现类
@@ -35,6 +36,13 @@ public class TwKjorderServiceImpl extends ServiceImpl<TwKjorderDao, TwKjorder> i
             Page<TwKjorder> objectPage = new Page<>(twKjorderVo.getPageNum(), twKjorderVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twKjorderVo));
             return objectPage;
+    }
+
+    @Override
+    public List<TwKjorder> uidList(int uid) {
+        QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid", uid); // 添加查询条件
+        return this.list(queryWrapper);
     }
 
     @Override
