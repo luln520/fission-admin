@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/pc/trade")
 public class TradeController {
-    //api接口基础地址
-    public static String basePath = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol=";
+    //api接口基础地址()
+    public String basePath = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol=";
 
     /**
      * 获取当前最新价格
@@ -43,10 +43,10 @@ public class TradeController {
      *             $data['amount'] = $mlist['volume'];//量
      *             $this->ajaxReturn($data);
      *         } else { （调取 api）
-     *             $arr = explode('/', $symbol);
-     *             $coinname = strtolower($arr[0]) . strtolower($arr[1]);
-     *             $url = $this->base_path . $coinname;（静态变量   basePath 拼接）
-     *             $result = $this->get_maket_api($url);
+     *             $arr = explode('/', $symbol);(参数：symbol 使用 / 分割，数组命名为：arr)
+     *             $coinname = strtolower($arr[0]) . strtolower($arr[1]); （arr 取第一个和第二个 分别转小写后 ，字符串命名为：coinname）
+     *             $url = $this->base_path . $coinname;（静态变量   basePath 拼接） java代码：basePath+coinname（字符串拼接）
+     *             $result = $this->get_maket_api($url);（调取api GET 得到返回值）
      *             $pdata = $result['data'][0];
      *             $open = $pdata['open'];//开盘价
      *             $close = $pdata['close'];//现价
@@ -65,9 +65,8 @@ public class TradeController {
      * */
 
 
-
     /**
-     * 获取当前最新价格 （和上面逻辑相同 返回少点，先保留）
+     * 获取当前最新价格 （和上面逻辑基本相同 返回参数少点，先保留）
      * 表 market
      * 参数：symbol  格式为： xxx/xxx   例如：MBN/USDT
      * 参考代码：
@@ -96,7 +95,6 @@ public class TradeController {
      *     }
      *
      * */
-
 
 
     /**
@@ -198,10 +196,6 @@ public class TradeController {
      *     }
      *
      * */
-
-
-
-
 
 
     /**
@@ -437,7 +431,6 @@ public class TradeController {
      */
 
 
-
     /**
      * 获取交易对数据
      * 表 market
@@ -495,11 +488,6 @@ public class TradeController {
      *     }
      *
      * */
-
-
-
-
-
 
 
 }
