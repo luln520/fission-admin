@@ -45,7 +45,7 @@ public class TradeController {
      *         } else { （调取 api）
      *             $arr = explode('/', $symbol);(参数：symbol 使用 / 分割，数组命名为：arr)
      *             $coinname = strtolower($arr[0]) . strtolower($arr[1]); （arr 取第一个和第二个 分别转小写后 ，字符串命名为：coinname）
-     *             $url = $this->base_path . $coinname;（静态变量   basePath 拼接） java代码：basePath+coinname（字符串拼接）
+     *             $url = $this->base_path . $coinname;（静态变量   basePath 拼接） java代码：url=basePath+coinname（字符串拼接）
      *             $result = $this->get_maket_api($url);（调取api GET 得到返回值）
      *             $pdata = $result['data'][0];
      *             $open = $pdata['open'];//开盘价
