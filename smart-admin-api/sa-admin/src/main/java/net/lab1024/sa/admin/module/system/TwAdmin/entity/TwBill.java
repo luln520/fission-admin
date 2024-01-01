@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.io.Serializable;
 
@@ -32,7 +33,7 @@ public class TwBill implements Serializable {
     private String username;
 
     @ApiModelProperty(value = "操作金额")
-    private Double num;
+    private BigDecimal num;
 
     @ApiModelProperty(value = "币名称")
     private String coinname;

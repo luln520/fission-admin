@@ -1,7 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
@@ -20,6 +22,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/admin/usercoin")
+@Api(tags = {AdminSwaggerTagConst.System.TW_USERCOIN})
 public class TwUserCoinController {
 
     @Autowired

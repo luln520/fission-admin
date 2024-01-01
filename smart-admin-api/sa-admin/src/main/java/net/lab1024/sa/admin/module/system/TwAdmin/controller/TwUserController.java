@@ -1,7 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
@@ -14,12 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * 用户
  */
 @RestController
 @RequestMapping("/api/admin/user")
+@Api(tags = {AdminSwaggerTagConst.System.TW_USER})
 public class TwUserController {
 
     @Autowired
@@ -221,7 +225,7 @@ public class TwUserController {
     @GetMapping("/setMoney")
     @ApiOperation(value = "修改用户余额")
     @NoNeedLogin
-    public ResponseDTO setMoney(@RequestParam int uid,@RequestParam int type,@RequestParam double money,@RequestParam String bizhong) {
+    public ResponseDTO setMoney(@RequestParam int uid, @RequestParam int type, @RequestParam BigDecimal money, @RequestParam String bizhong) {
         return ResponseDTO.ok(twUserService.setMoney(uid,type,money,bizhong));
     }
 

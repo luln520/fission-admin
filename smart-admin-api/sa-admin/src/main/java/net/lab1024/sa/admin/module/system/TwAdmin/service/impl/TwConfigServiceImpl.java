@@ -26,7 +26,7 @@ import javax.annotation.Resource;
 public class TwConfigServiceImpl extends ServiceImpl<TwConfigDao, TwConfig> implements TwConfigService {
 
     @Override
-    public TwConfig find(int id) {
+    public TwConfig find() {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("id",1);
         return this.getOne(queryWrapper);

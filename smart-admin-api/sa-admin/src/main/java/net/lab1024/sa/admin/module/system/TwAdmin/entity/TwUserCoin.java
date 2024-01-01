@@ -1,48 +1,87 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
+
+import java.io.Serializable;
+
+import java.math.BigDecimal;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.io.Serializable;
+import org.hibernate.validator.constraints.Length;
 
 /**
- * 用户币种表(TwUserCoin)实体类
- *
- * @author makejava
- * @since 2023-12-23 18:28:58
- */
+* 用户币种表
+* @TableName tw_user_coin
+*/
 @Data
 @TableName("tw_user_coin")
 @ApiModel(value="广告图片表", description="")
 public class TwUserCoin implements Serializable {
-    private static final long serialVersionUID = -97030412396849313L;
 
-    private String id;
-
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private Integer id;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
     private Integer userid;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private BigDecimal usdt;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private BigDecimal usdtd;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private String usdtb;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private BigDecimal btc;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private BigDecimal btcd;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private String btcb;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private BigDecimal eth;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private BigDecimal ethd;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private String ethb;
 
-    private double usdt;
+    @TableField(exist = false)
+    private  String username;
 
-    private double usdtd;
 
-    private double usdtb;
-
-    private double btc;
-
-    private double btcd;
-
-    private double btcb;
-
-    private double eth;
-
-    private double ethd;
-
-    private double ethb;
-
-    @TableField(exist = false) // 排除数据库字段
-    private String username;
 }
-

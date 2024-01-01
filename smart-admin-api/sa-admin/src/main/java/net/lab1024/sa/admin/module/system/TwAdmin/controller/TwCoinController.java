@@ -1,7 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinService;
@@ -24,6 +26,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api")
+@Api(tags = {AdminSwaggerTagConst.System.TW_COIN})
 public class TwCoinController {
     /**
      * 服务对象
@@ -58,7 +61,7 @@ public class TwCoinController {
     @PostMapping("/updateStatus")
     @ApiOperation(value = "币种禁用启用")
     @NoNeedLogin
-    public ResponseDTO updateStatus(@RequestParam int id,@RequestParam String status) {
+    public ResponseDTO updateStatus(@RequestParam int id,@RequestParam Integer status) {
         return ResponseDTO.ok(twCoinService.updateStatus(id,status));
     }
 
@@ -66,14 +69,14 @@ public class TwCoinController {
      * 删除币 表Coin   where id=？
      */
     @GetMapping("/delete")
-    @ApiOperation(value = "删除公告")
+    @ApiOperation(value = "删除币")
     @NoNeedLogin
     public ResponseDTO delete(@RequestParam int id) {
         return ResponseDTO.ok(twCoinService.delete(id));
     }
 
     @GetMapping("/find")
-    @ApiOperation(value = "查询公告")
+    @ApiOperation(value = "删除币")
     @NoNeedLogin
     public ResponseDTO find(@RequestParam int id) {
         return ResponseDTO.ok(twCoinService.find(id));

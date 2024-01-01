@@ -1,6 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
@@ -18,6 +21,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/admin/trade")
+@Api(tags = {AdminSwaggerTagConst.System.TW_TRADE})
 public class TwTradeController {
 
     @Autowired
@@ -30,6 +34,7 @@ public class TwTradeController {
      * 合约,平仓订单 查询列表 并返回   表hyorder where status=1  order by id desc
      */
     @PostMapping("/hyorderlist")
+    @ApiOperation(value = "合约,平仓订单 查询列表")
     @ResponseBody
     @NoNeedLogin
     public ResponseDTO<IPage<TwHyorder>> hyorderlist(@Valid @RequestBody TwHyorderVo twHyorderVo) {
@@ -41,6 +46,7 @@ public class TwTradeController {
      */
     @GetMapping("/hyorderId")
     @ResponseBody
+    @ApiOperation(value = "合约,平仓订单 查询单个")
     @NoNeedLogin
     public ResponseDTO hyorderId(@RequestParam int id) {
         return ResponseDTO.ok(twHyorderService.hyorderId(id));
@@ -51,6 +57,7 @@ public class TwTradeController {
      */
     @GetMapping("/hysettingId")
     @ResponseBody
+    @ApiOperation(value = "合约设置")
     @NoNeedLogin
     public ResponseDTO hysettingId() {
         return ResponseDTO.ok(twHysettingService.hysettingId());
@@ -61,6 +68,7 @@ public class TwTradeController {
      */
     @PostMapping("/edit")
     @ResponseBody
+    @ApiOperation(value = "合约设置 编辑")
     @NoNeedLogin
     public ResponseDTO edit(@RequestBody TwHysetting twHysetting) {
         return ResponseDTO.ok(twHysettingService.edit(twHysetting));
@@ -130,6 +138,7 @@ public class TwTradeController {
      */
     @GetMapping("/editKongyK")
     @ResponseBody
+    @ApiOperation(value = "合约单控盈亏 设置")
     @NoNeedLogin
     public ResponseDTO editKongyK(@RequestParam Integer kongyk,@RequestParam int id) {
         return ResponseDTO.ok(twHyorderService.editKongyK(kongyk,id));

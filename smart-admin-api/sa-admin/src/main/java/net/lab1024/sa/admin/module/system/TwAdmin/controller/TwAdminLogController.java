@@ -1,7 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
@@ -20,6 +22,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/admin/adminlog")
+@Api(tags = {AdminSwaggerTagConst.System.TW_ADMINLOG})
 public class TwAdminLogController {
 
     @Autowired

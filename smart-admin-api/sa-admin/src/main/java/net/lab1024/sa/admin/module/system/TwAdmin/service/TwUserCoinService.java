@@ -9,6 +9,8 @@ import net.lab1024.sa.common.common.domain.PageParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.math.BigDecimal;
+
 /**
  * 用户币种表(TwUserCoin)表服务接口
  *
@@ -23,7 +25,7 @@ public interface TwUserCoinService extends IService<TwUserCoin> {
      * @param num
      * @return
      */
-     int incre(Integer uid,double num,String coinname);
+     int incre(Integer uid, BigDecimal num, String coinname);
 
     /**
      * 减少用户资产
@@ -32,11 +34,13 @@ public interface TwUserCoinService extends IService<TwUserCoin> {
      * @param coinname
      * @return
      */
-     int decre(Integer uid,double num,String coinname);
+     int decre(Integer uid,BigDecimal num,String coinname);
 
      double afternum(Integer uid,String coinname);
 
 
     IPage<TwUserCoin> listpage(TwUserVo twUserVo);
+
+    TwUserCoin userCoin(int uid);
 
 }

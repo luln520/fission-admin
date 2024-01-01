@@ -42,12 +42,15 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
 
     @Autowired
     private TwBillService twBillService;
+
+    @Autowired
+    private TwUserService twUserService;
     @Override
     public BigDecimal sumDayRecharge(String startTime, String endTime) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as dayRecharge")
-                .ge("startTime", startTime)
-                .le("endTime", endTime)
+                .ge("addtime", startTime)
+                .le("addtime", endTime)
                 .eq("status", 2);
 
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
@@ -99,6 +102,19 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
+    public List<TwRecharge> listRecharge(int uid) {
+        QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid",uid);
+        // 按照 ID 倒序排列
+        queryWrapper.orderByDesc("id");
+        // 设置查询条数限制
+        queryWrapper.last("LIMIT 15");
+
+        // 调用 MyBatis-Plus 提供的方法进行查询
+        return this.list(queryWrapper);
+    }
+
+    @Override
     public ResponseDTO reject(int id) {
 
         try{
@@ -141,7 +157,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             if(one != null){
                 Integer uid = one.getUid();
                 String coinname = one.getCoin().toLowerCase();
-                Double num = one.getNum();
+                BigDecimal num = one.getNum();
                 one.setUpdatetime(new Date());
                 one.setStatus(2);
                 this.updateById(one); //修改订单状态
@@ -181,6 +197,32 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             return ResponseDTO.userErrorParam("处理失败");
         }
         return null;
+    }
+
+    @Override
+    public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline) {
+        try{
+            QueryWrapper<TwUser> query = new QueryWrapper<>();
+            query.eq("id", uid);
+            TwUser one = twUserService.getOne(query);
+
+            TwRecharge twRecharge = new TwRecharge();
+            twRecharge.setUid(uid);
+            twRecharge.setUsername(one.getUsername());
+            twRecharge.setCoin(coinname);
+            twRecharge.setNum(zznum);
+            twRecharge.setAddtime(new Date());
+            twRecharge.setStatus(1);
+            twRecharge.setPayimg(payimg);
+            twRecharge.setAddress(czaddress);
+            twRecharge.setCzline(czline);
+            twRecharge.setMsg("");
+            this.save(twRecharge);
+
+            return ResponseDTO.ok("凭证提交成功");
+        }catch (Exception e){
+            return ResponseDTO.userErrorParam("凭证提交失败");
+        }
     }
 
 }

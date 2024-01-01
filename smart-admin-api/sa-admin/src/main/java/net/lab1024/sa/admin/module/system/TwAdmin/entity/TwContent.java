@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 @Data
 @TableName("tw_content")
-@ApiModel(value="广告图片表", description="")
+@ApiModel(value="公告内容", description="")
 public class TwContent implements Serializable {
     private static final long serialVersionUID = -47261435617866204L;
 

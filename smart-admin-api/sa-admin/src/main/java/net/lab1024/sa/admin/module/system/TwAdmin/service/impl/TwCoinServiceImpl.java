@@ -47,7 +47,7 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
     }
 
     @Override
-    public boolean updateStatus(int id, String status) {
+    public boolean updateStatus(int id, Integer status) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("id",id);
         TwCoin one = this.getOne(queryWrapper);

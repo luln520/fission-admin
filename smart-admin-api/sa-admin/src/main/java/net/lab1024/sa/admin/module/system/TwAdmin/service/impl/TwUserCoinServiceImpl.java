@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -36,11 +37,11 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
     @Lazy
     private TwUserService twUserService;
     @Override
-    public int incre(Integer uid, double num,String coinname) {
+    public int incre(Integer uid, BigDecimal num, String coinname) {
         return this.baseMapper.incre(uid,num,coinname);
     }
 
-    public int decre(Integer uid, double num,String coinname) {
+    public int decre(Integer uid, BigDecimal num,String coinname) {
         return this.baseMapper.decre(uid,num,coinname);
     }
 
@@ -65,5 +66,12 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
         }
         objectPage.setRecords(list);
         return objectPage;
+    }
+
+    @Override
+    public TwUserCoin userCoin(int uid) {
+        QueryWrapper<TwUserCoin> query = new QueryWrapper<>();
+        query.eq("userid", uid);
+        return this.getOne(query);
     }
 }

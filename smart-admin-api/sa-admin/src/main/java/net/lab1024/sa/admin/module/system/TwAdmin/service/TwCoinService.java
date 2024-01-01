@@ -26,7 +26,7 @@ public interface TwCoinService extends IService<TwCoin> {
 
     boolean addOrUpdate(TwCoin twCoin);
 
-    boolean updateStatus(int id, String status);
+    boolean updateStatus(int id, Integer status);
 
     boolean delete(int id);
 

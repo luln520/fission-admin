@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -98,8 +99,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Override
     public Integer countLineUsers(String startTime, String endTime) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.ge("startTime", startTime);
-        queryWrapper.le("endTime", endTime);
+        queryWrapper.ge("addtime", startTime);
+        queryWrapper.le("addtime", endTime);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
@@ -235,7 +236,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public boolean setMoney(int uid, int type, double money, String bizhong) {
+    public boolean setMoney(int uid, int type, BigDecimal money, String bizhong) {
         String remark = "";
         String coinname = bizhong.toLowerCase();
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();

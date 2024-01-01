@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -123,9 +124,9 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         queryUserCoin.eq("userid",uid);
         TwUserCoin twUserCoin = twUserCoinService.getOne(queryUserCoin);
 
-        double usdt = twUserCoin.getUsdt();  //默认取usdt
-        Double pricenum = kuangji.getPricenum();
-        if(usdt < pricenum ){
+        BigDecimal usdt = twUserCoin.getUsdt();  //默认取usdt
+        BigDecimal pricenum = kuangji.getPricenum();
+        if(usdt.compareTo(pricenum) < 0 ){
             return ResponseDTO.userErrorParam("账户余额不足");
         }
 
@@ -133,7 +134,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         TwKjorder twKjorder = new TwKjorder();
         twKjorder.setKid(kuangji.getId());
         twKjorder.setType(1);
-        twKjorder.setSharebl("");
+        twKjorder.setSharebl(0.0);
         twKjorder.setUid(uid);
         twKjorder.setUsername(user.getUsername());
         twKjorder.setKjtitle(kuangji.getTitle());

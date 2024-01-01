@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import cn.hutool.core.date.DateUtil;
+import io.swagger.annotations.Api;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -20,6 +22,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/admin/index")
+@Api(tags = {AdminSwaggerTagConst.System.TW_INDEX})
 public class TwIndexController {
 
     @Autowired
@@ -55,16 +58,16 @@ public class TwIndexController {
 
         // 查询全网总人数 M("user")->count()
         int allUser = 0;//userDao.countAllUsers();
-        twUserService.countAllUsers();
+        allUser = twUserService.countAllUsers();
         // 查询秒合约未平仓记录数 M("hyorder")->where 'status' => 1 ->count();
         int allHyOrders = 0;//hyOrderDao.countUnClosedOrders();
-        twHyorderService.countUnClosedOrders();
+        allHyOrders = twHyorderService.countUnClosedOrders();
         // 查询全网矿机总数 M("kjorder")->where(array('status' => 1))->count();
         int allKjOrders = 0;//kjOrderDao.countAllOrders();
-        twKjorderService.countAllOrders();
+        allKjOrders = twKjorderService.countAllOrders();
         // 查询认购总数  M("issue_log")->where(array('status' => 1))->count();
         int allIssueLogs = 0;//issueLogDao.countAllIssueLogs();
-        twIssueLogService.countAllIssueLogs();
+        allIssueLogs = twIssueLogService.countAllIssueLogs();
         // 查询今日充值数量 $daywhere['addtime'] = ['between', [$statime, $endtime]];
         //        $daycz = M("recharge")->where($daywhere)->where(array('status' => 2))->sum("num");
         BigDecimal dayRecharge = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
@@ -80,7 +83,7 @@ public class TwIndexController {
         allWithdraw = twMyzcService.sumAllWithdraw();
         // 查询今日该客量  M("user")->where($linewhere)->count();  查询今天的
         int allLineUsers = 0;//userDao.countLineUsers(nowDate);
-        twUserService.countLineUsers(startTime , endTime);
+        allLineUsers = twUserService.countLineUsers(startTime, endTime);
         // 将结果放入Map返回
         result.put("allUser", allUser);
         result.put("allHyOrders", allHyOrders);

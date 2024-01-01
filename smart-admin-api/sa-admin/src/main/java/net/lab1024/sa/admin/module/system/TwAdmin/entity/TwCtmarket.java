@@ -1,60 +1,74 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
+
+import java.io.Serializable;
+
+import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.util.Date;
-import java.io.Serializable;
+import org.hibernate.validator.constraints.Length;
 
 /**
- * 合约交易对配置(TwCtmarket)实体类
- *
- * @author makejava
- * @since 2023-12-23 18:21:46
- */
+* 合约交易对配置
+* @TableName tw_ctmarket
+*/
 @Data
 @TableName("tw_ctmarket")
-@ApiModel(value="广告图片表", description="")
+@ApiModel(value="合约交易对配置", description="")
 public class TwCtmarket implements Serializable {
-    private static final long serialVersionUID = 382879047322962604L;
-/**
-     * ID
-     */
-    private String id;
-
+    @ApiModelProperty("ID")
+    private Integer id;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
     private String coinname;
-/**
-     * 市场名称
-     */
+    /**
+    * 市场名称
+    */
+    @ApiModelProperty("市场名称")
     private String name;
-/**
-     * 交易对
-     */
+    /**
+    * 交易对
+    */
+    @ApiModelProperty("交易对")
     private String symbol;
-/**
-     * BTC/USDT格式
-     */
+    /**
+    * BTC/USDT格式
+    */
+    @ApiModelProperty("BTC/USDT格式")
     private String title;
-/**
-     * 状态1正常2禁用
-     */
+    /**
+    * 状态1正常2禁用
+    */
+    @ApiModelProperty("状态1正常2禁用")
     private Integer status;
-/**
-     * 交易状态1正常2禁止
-     */
+    /**
+    * 交易状态1正常2禁止
+    */
+    @ApiModelProperty("交易状态1正常2禁止")
     private Integer state;
-/**
-     * 排序
-     */
+    /**
+    * 排序
+    */
+    @ApiModelProperty("排序")
     private Integer sort;
-/**
-     * 添加时间
-     */
+    /**
+    * 添加时间
+    */
+    @ApiModelProperty("添加时间")
     private Date addtime;
-
+    /**
+    * 
+    */
+    @ApiModelProperty("")
     private String logo;
 
-}
 
+}

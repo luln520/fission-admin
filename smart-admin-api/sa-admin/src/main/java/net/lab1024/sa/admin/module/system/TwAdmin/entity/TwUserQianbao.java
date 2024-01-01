@@ -1,64 +1,79 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
+
+import java.io.Serializable;
+
+import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.util.Date;
-import java.io.Serializable;
+import org.hibernate.validator.constraints.Length;
 
 /**
- * 用户钱包表(TwUserQianbao)实体类
- *
- * @author makejava
- * @since 2023-12-23 18:29:25
- */
+* 用户钱包表
+* @TableName tw_user_qianbao
+*/
+
 @Data
 @TableName("tw_user_qianbao")
-@ApiModel(value="广告图片表", description="")
+@ApiModel(value="用户钱包表", description="")
 public class TwUserQianbao implements Serializable {
-    private static final long serialVersionUID = -55634165593268324L;
-/**
-     * ID
-     */
-    private int id;
-/**
-     * 会员ID
-     */
-    private int userid;
-/**
-     * 会员账号
-     */
+
+    /**
+    * ID
+    */
+    @ApiModelProperty("ID")
+    private Integer id;
+    /**
+    * 会员ID
+    */
+    @ApiModelProperty("会员ID")
+    private Integer userid;
+    /**
+    * 会员账号
+    */
+    @ApiModelProperty("会员账号")
     private String coinname;
-/**
-     * 币名称
-     */
+    /**
+    * 币名称
+    */
+    @ApiModelProperty("币名称")
     private String name;
-/**
-     * 地址备注
-     */
+    /**
+    * 地址备注
+    */
+    @ApiModelProperty("地址备注")
     private String remark;
-/**
-     * 充值网络
-     */
+    /**
+    * 充值网络
+    */
+    @ApiModelProperty("充值网络")
     private String czline;
-/**
-     * 提币地址
-     */
+    /**
+    * 提币地址
+    */
+    @ApiModelProperty("提币地址")
     private String addr;
-/**
-     * 排序
-     */
-    private int sort;
-/**
-     * 添加时间
-     */
+    /**
+    * 排序
+    */
+    @ApiModelProperty("排序")
+    private Integer sort;
+    /**
+    * 添加时间
+    */
+    @ApiModelProperty("添加时间")
     private Date addtime;
-/**
-     * 状态
-     */
+    /**
+    * 状态
+    */
+    @ApiModelProperty("状态")
     private Integer status;
 
-}
 
+}

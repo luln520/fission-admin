@@ -14,9 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +43,18 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     @Autowired
     private TwNoticeService twNoticeService;
 
+    @Autowired
+    private TwUserService twUserService;
+
+    @Autowired
+    private TwCoinService twCoinService;
+
     @Override
     public BigDecimal sumDayWithdraw(String startTime, String endTime) {
         QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as dayWithdraw")
-                .ge("startTime", startTime)
-                .le("endTime", endTime)
+                .ge("addtime", startTime)
+                .le("addtime", endTime)
                 .eq("status", 2);
 
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
@@ -98,6 +107,19 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     }
 
     @Override
+    public List<TwMyzc> listPcpage(int uid) {
+        QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userid",uid);
+        // 按照 ID 倒序排列
+        queryWrapper.orderByDesc("id");
+        // 设置查询条数限制
+        queryWrapper.last("LIMIT 15");
+
+        // 调用 MyBatis-Plus 提供的方法进行查询
+        return this.list(queryWrapper);
+    }
+
+    @Override
     public ResponseDTO rejectCoin(int id) {
         try{
             QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
@@ -114,7 +136,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
 
                 int uid = one.getUserid();
                 String coinname = one.getCoinname();
-                double num = one.getNum();
+                BigDecimal num = one.getNum();
 
                 one.setEndtime(new Date());
                 one.setStatus(3);
@@ -190,6 +212,83 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         }catch (Exception e){
             return ResponseDTO.userErrorParam("充值驳回失败");
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num) {
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", uid);
+        TwUser twUser = twUserService.getOne(queryWrapper);
+
+        QueryWrapper<TwCoin> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id", uid);
+        TwCoin twCoin = twCoinService.getOne(queryWrapper1);
+
+        QueryWrapper<TwUserCoin> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("userid", uid);
+        TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper2);
+
+        if(twUser.getRzstatus() != 2){
+            return ResponseDTO.userErrorParam("请先完成实名认证");
+        }
+
+        if(twUser.getTxstate() == 2){
+            return ResponseDTO.userErrorParam("已禁止提现");
+        }
+
+        if(num.compareTo(twCoin.getTxminnum()) < 0){
+            return ResponseDTO.userErrorParam("不能低于最小提币值");
+        }
+
+        if(num.compareTo(twCoin.getTxmaxnum())> 0){
+            return ResponseDTO.userErrorParam("不能高于最大提币值");
+        }
+
+        BigDecimal sxf = new BigDecimal(0);
+        if(twCoin.getSxftype() == 1){
+            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
+             sxf = num.multiply(twCoin.getTxsxf()).divide(new BigDecimal(100),mathContext);
+        }
+
+        if(twCoin.getSxftype() == 2) {
+            sxf = twCoin.getTxsxfN();
+        }
+
+        if(sxf.compareTo(new BigDecimal(0)) == 0) {
+            sxf = new BigDecimal(0);
+        }
+
+        BigDecimal tnum = num.subtract(sxf).setScale(2,RoundingMode.HALF_UP);
+        if(twUserCoin.getUsdt().compareTo(tnum) < 0){
+            return ResponseDTO.userErrorParam("账户余额不足");
+        }
+
+        twUserCoinService.decre(uid,num,"usdt");
+
+        TwMyzc twMyzc = new TwMyzc();
+        twMyzc.setUserid(uid);
+        twMyzc.setUsername(twUser.getUsername());
+        twMyzc.setCoinname(twCoin.getName());
+        twMyzc.setNum(num);
+        twMyzc.setAddress(address);
+        twMyzc.setSort(1);
+        twMyzc.setAddtime(new Date());
+        twMyzc.setStatus(1);
+        this.save(twMyzc);
+
+        TwBill twBill = new TwBill();
+        twBill.setUid(uid);
+        twBill.setUsername(twUser.getUsername());
+        twBill.setNum(num);
+        twBill.setCoinname(twCoin.getName());
+        twBill.setAfternum(twUserCoinService.afternum(uid,"usdt"));
+        twBill.setType(2);
+        twBill.setAddtime(new Date());
+        twBill.setSt(2);
+        twBill.setRemark("提币申请");
+        twBillService.save(twBill);
+        return ResponseDTO.ok();
     }
 
 
