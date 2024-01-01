@@ -53,8 +53,8 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     public BigDecimal sumDayWithdraw(String startTime, String endTime) {
         QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as dayWithdraw")
-                .ge("startTime", startTime)
-                .le("endTime", endTime)
+                .ge("addtime", startTime)
+                .le("addtime", endTime)
                 .eq("status", 2);
 
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);

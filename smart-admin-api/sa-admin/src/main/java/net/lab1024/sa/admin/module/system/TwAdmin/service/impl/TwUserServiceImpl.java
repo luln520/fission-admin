@@ -99,8 +99,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Override
     public Integer countLineUsers(String startTime, String endTime) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.ge("startTime", startTime);
-        queryWrapper.le("endTime", endTime);
+        queryWrapper.ge("addtime", startTime);
+        queryWrapper.le("addtime", endTime);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
