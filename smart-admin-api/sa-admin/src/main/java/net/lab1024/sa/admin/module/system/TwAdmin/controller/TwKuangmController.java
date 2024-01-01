@@ -2,6 +2,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji;
@@ -39,6 +40,7 @@ public class TwKuangmController {
      * 矿机收益列表
      */
     @PostMapping("/kjsylist")
+    @ApiOperation(value = "矿机收益列表")
     @ResponseBody
     @NoNeedLogin
     public ResponseDTO kjsylist(@Valid @RequestBody TwKjprofitVo twKjprofitVo) {
@@ -51,6 +53,7 @@ public class TwKuangmController {
      */
     @PostMapping("/userkjStatus")
     @ResponseBody
+    @ApiOperation(value = "启用会员矿机收益，停用会员矿机收益，删除会员矿机收益")
     @NoNeedLogin
     public ResponseDTO userkjStatus(Integer id, Integer type) {
         switch (type) {
@@ -73,11 +76,12 @@ public class TwKuangmController {
 
 
     /**
-     * 会员运行中的矿机列表
+     * 会员矿机列表
      */
     @PostMapping("/kjlist")
     @ResponseBody
     @NoNeedLogin
+    @ApiOperation(value = "会员矿机列表")
     public ResponseDTO<IPage<TwKjorder>>  kjlist(@Valid @RequestBody TwKjorderVo twKjorderVo) {
         return ResponseDTO.ok(twKjorderService.listpage(twKjorderVo));
     }
@@ -88,6 +92,7 @@ public class TwKuangmController {
      */
     @GetMapping("/kuangjStatus")
     @ResponseBody
+    @ApiOperation(value = "启用，停用矿机，删除矿机")
     @NoNeedLogin
     public ResponseDTO kuangjStatus(@RequestParam Integer id,@RequestParam Integer type) {
         switch (type) {
@@ -113,6 +118,7 @@ public class TwKuangmController {
      */
     @PostMapping("/getkuangjiList")
     @ResponseBody
+    @ApiOperation(value = "矿机列表")
     @NoNeedLogin
     public ResponseDTO<IPage<TwKuangji>>  getkuangjiList(@Valid @RequestBody PageParam pageParam) {
         //查询列表 并返回  M('kuangji')->order('id desc')->select();
@@ -124,6 +130,7 @@ public class TwKuangmController {
      */
     @PostMapping("/addkj")
     @ResponseBody
+    @ApiOperation(value = "新增/编辑矿机")
     @NoNeedLogin
     public ResponseDTO addkj(@RequestBody TwKuangji twKuangji) {
        return ResponseDTO.ok(twKuangjiService.addkj(twKuangji));

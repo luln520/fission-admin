@@ -225,8 +225,8 @@ public class TwUserController {
     @GetMapping("/setMoney")
     @ApiOperation(value = "修改用户余额")
     @NoNeedLogin
-    public ResponseDTO setMoney(@RequestParam int uid, @RequestParam int type, @RequestParam BigDecimal money, @RequestParam String bizhong) {
-        return ResponseDTO.ok(twUserService.setMoney(uid,type,money,bizhong));
+    public ResponseDTO setMoney(@RequestParam int uid, @RequestParam int type, @RequestParam BigDecimal money) {
+        return ResponseDTO.ok(twUserService.setMoney(uid,type,money));
     }
 
 

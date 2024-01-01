@@ -4,8 +4,8 @@
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge">
         select * from tw_recharge where 1=1
-        <if test="obj.userName != null and obj.userName !=''">
-            and username = #{obj.userName}
+        <if test="obj.username != null and obj.username !=''">
+            and username = #{obj.username}
         </if>
         <if test="obj.startTime != null and obj.startTime !=''">
             and addtime >= #{obj.startTime}

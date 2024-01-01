@@ -12,6 +12,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.code.ErrorCode;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +45,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     private TwBillService twBillService;
 
     @Autowired
+    @Lazy
     private TwUserService twUserService;
     @Override
     public BigDecimal sumDayRecharge(String startTime, String endTime) {

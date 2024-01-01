@@ -45,6 +45,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
@@ -106,36 +107,60 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public IPage<TwUser> listpage(TwUserVo twUserVo) {
+            List<TwUser>  list1 = new ArrayList<>();
             Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twUserVo));
+            List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
+            for(TwUser twUser:list){
+
+            }
+            objectPage.setRecords(list1);
             return objectPage;
     }
 
     @Override
     public IPage<TwUser> listUserpage(TwUserVo twUserVo) {
+        List<TwUser>  list1 = new ArrayList<>();
         Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
         List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
         for(TwUser twUser:list){
             String invit1 = twUser.getInvit1();
-            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("invit_1", invit1);
-            TwUser one1 = this.getOne(queryWrapper1);
-            String username1 = one1.getUsername();
-            twUser.setInvit1(username1);
-            String invit2 = twUser.getInvit2();
-            QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("invit_2", invit2);
-            TwUser one2 = this.getOne(queryWrapper2);
-            String username2 = one2.getUsername();
-            twUser.setInvit2(username2);
-            String invit3 = twUser.getInvit3();
-            QueryWrapper<TwUser> queryWrapper3 = new QueryWrapper<>();
-            queryWrapper3.eq("invit_3", invit3);
-            TwUser one3 = this.getOne(queryWrapper3);
-            String username3 = one3.getUsername();
-            twUser.setInvit3(username3);
+                QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper1.eq("id", invit1);
+                TwUser user1 = this.getOne(queryWrapper1);
+                if(user1 == null){
+                    twUser.setInvit1("");
+                }else{
+                    String username1 = user1.getUsername();
+                    twUser.setInvit1(username1);
+                }
+
+                String invit2 = twUser.getInvit2();
+                QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
+                queryWrapper2.eq("id", invit2);
+                TwUser user2 = this.getOne(queryWrapper2);
+                if(user2 == null){
+                    twUser.setInvit2("");
+                }else{
+                    String username2 = user2.getUsername();
+                    twUser.setInvit2(username2);
+                }
+
+                String invit3 = twUser.getInvit3();
+                QueryWrapper<TwUser> queryWrapper3 = new QueryWrapper<>();
+                queryWrapper3.eq("id", invit3);
+                TwUser user3= this.getOne(queryWrapper3);
+                if(user3 == null){
+                    twUser.setInvit3("");
+                }else{
+                    String username3 = user3.getUsername();
+                    twUser.setInvit3(username3);
+                }
+
+            list1.add(twUser);
+
         }
-        objectPage.setRecords(list);
+        objectPage.setRecords(list1);
         return objectPage;
     }
 
@@ -236,15 +261,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public boolean setMoney(int uid, int type, BigDecimal money, String bizhong) {
+    public boolean setMoney(int uid, int type, BigDecimal money) {
         String remark = "";
-        String coinname = bizhong.toLowerCase();
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", uid);
         TwUser one = this.getOne(queryWrapper);
 
         if(type == 2){
-            twUserCoinService.decre(uid,money,coinname);
+            twUserCoinService.decre(uid,money,"usdt");
             remark = "管理员手动减少";
 
 
@@ -261,11 +285,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         }
 
         if(type == 1){   //增加
-            twUserCoinService.incre(uid,money,coinname);
+            twUserCoinService.incre(uid,money,"usdt");
             TwRecharge twRecharge = new TwRecharge();
             twRecharge.setUid(uid);
             twRecharge.setUsername(one.getUsername());
-            twRecharge.setCoin(coinname);
+            twRecharge.setCoin("usdt");
             twRecharge.setNum(money);
             twRecharge.setAddtime(new Date());
             twRecharge.setUpdatetime(new Date());
@@ -288,11 +312,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLogService.save(twAdminLog);
         }
 
-        double afternum = twUserCoinService.afternum(uid, coinname);
+        double afternum = twUserCoinService.afternum(uid, "usdt");
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
         twBill.setUsername(one.getUsername());
-        twBill.setCoinname(coinname);
+        twBill.setCoinname("usdt");
         twBill.setNum(money);
         twBill.setAfternum(afternum);
         twBill.setType(1);

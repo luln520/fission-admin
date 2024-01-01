@@ -62,7 +62,7 @@ public class TwFinanceController {
      * 提币列表  表myzc  order by id desc
      */
     @PostMapping("/list")
-    @ApiOperation(value = "充币列表")
+    @ApiOperation(value = "提币列表")
     @NoNeedLogin
     public ResponseDTO<IPage<TwMyzc>> listpage(@Valid @RequestBody TwMyzcVo twMyzcVo) {
         return ResponseDTO.ok(twMyzcService.listpage(twMyzcVo));

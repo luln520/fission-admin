@@ -16,11 +16,7 @@
 
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin">
-        select * from tw_user_coin where 1=1
-        <if test="obj.userName != null and obj.userName !=''">
-            and username = #{obj.userName}
-        </if>
-        order by id desc
+        select * from tw_user_coin where 1=1 order by id desc
     </select>
 
 </mapper>
