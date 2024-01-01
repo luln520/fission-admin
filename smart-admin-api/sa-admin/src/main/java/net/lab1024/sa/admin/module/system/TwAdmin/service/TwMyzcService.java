@@ -10,8 +10,10 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 提币表(TwMyzc)表服务接口
@@ -27,7 +29,11 @@ public interface TwMyzcService extends IService<TwMyzc> {
 
     IPage<TwMyzc> listpage(TwMyzcVo twMyzcVo);
 
+    List<TwMyzc> listPcpage(int uid);
+
     ResponseDTO rejectCoin(int id);
 
     ResponseDTO confirmCoin(int id);
+
+    ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num);
 }

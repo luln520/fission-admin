@@ -1,7 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCtmarketService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -17,6 +19,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/admin/ctmarketConfig")
+@Api(tags = {AdminSwaggerTagConst.System.TW_CTMARKET})
 public class TwCtmarketConfigController {
 
     @Autowired

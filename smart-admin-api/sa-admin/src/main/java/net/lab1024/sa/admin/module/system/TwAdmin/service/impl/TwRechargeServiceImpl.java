@@ -99,6 +99,19 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
+    public List<TwRecharge> listRecharge(int uid) {
+        QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid",uid);
+        // 按照 ID 倒序排列
+        queryWrapper.orderByDesc("id");
+        // 设置查询条数限制
+        queryWrapper.last("LIMIT 15");
+
+        // 调用 MyBatis-Plus 提供的方法进行查询
+        return this.list(queryWrapper);
+    }
+
+    @Override
     public ResponseDTO reject(int id) {
 
         try{

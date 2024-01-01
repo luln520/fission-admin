@@ -1,6 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwOnlineService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -17,6 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/admin/online")
+@Api(tags = {AdminSwaggerTagConst.System.TW_ONLINE})
 public class TwOnlineController {
 
 
@@ -28,6 +32,7 @@ public class TwOnlineController {
      *  字段 id,uid,username,count(username)as nor,addtime   where state=0 group by username order by addtime desc
      */
     @PostMapping("/list")
+    @ApiOperation(value = "获取所有用户的聊天列表")
     @ResponseBody
     @NoNeedLogin
     public ResponseDTO<IPage<TwOnline>> list(@Valid @RequestBody PageParam pageParam) {
@@ -42,9 +47,10 @@ public class TwOnlineController {
      */
     @PostMapping("/getId")
     @ResponseBody
+    @ApiOperation(value = "获取单个用户的对话信息")
     @NoNeedLogin
-    public ResponseDTO<List<TwOnline>> getId(@RequestParam int id) {
-        return ResponseDTO.ok(twOnlineService.getId(id));
+    public ResponseDTO<List<TwOnline>> getId(@RequestParam int uid) {
+        return ResponseDTO.ok(twOnlineService.getId(uid));
     }
 
     /**
@@ -70,6 +76,7 @@ public class TwOnlineController {
      */
     @PostMapping("/backOnline")
     @ResponseBody
+    @ApiOperation(value = "客服回复")
     @NoNeedLogin
     public ResponseDTO backOnline(@RequestParam int uid, @RequestParam String content) {
         return twOnlineService.backOnline(uid,content);

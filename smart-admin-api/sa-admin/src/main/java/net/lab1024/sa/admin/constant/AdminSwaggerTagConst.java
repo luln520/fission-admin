@@ -50,7 +50,41 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String SYSTEM_DATA_TRACER = "系统-";
 
-        public static final String TW_CONTENT = "内容管理";
+        public static final String TW_CONTENT = "后台-内容管理";
+
+        public static final String TW_ADMINLOG = "后台-管理员操作日志";
+
+        public static final String TW_AGENT = "后台-代理管理";
+
+        public static final String TW_AMOUNTLOG = "后台-资金流水";
+
+        public static final String TW_COIN = "后台-币种配置表";
+
+        public static final String TW_FILE = "后台-文件";
+
+        public static final String TW_CTMARKET = "后台-市场配置";
+
+        public static final String TW_FINANCE = "后台-财务记录";
+
+        public static final String TW_INDEX = "后台-首页";
+
+        public static final String TW_KUANGM = "后台-矿机";
+
+        public static final String TW_NOTICE = "后台-通知管理";
+
+        public static final String TW_ONLINE = "后台-在线客服";
+
+        public static final String TW_TRADE = "后台-交易中心";
+
+        public static final String TW_USERCOIN = "后台-用户财产";
+
+        public static final String TW_USER = "后台-用户";
+
+        public static final String TW_USERLOG = "后台-会员登录日志";
+
+        public static final String TW_USERQIANBAO = "后台-用户钱包";
+
+        public static final String TW_WEBCONFIG = "后台-网站信息/系统配置 ";
 
         public static final String PC_CONTENT = "行情";
 

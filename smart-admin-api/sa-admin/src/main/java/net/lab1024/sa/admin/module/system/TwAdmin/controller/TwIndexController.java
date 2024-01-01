@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import cn.hutool.core.date.DateUtil;
+import io.swagger.annotations.Api;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -20,6 +22,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/admin/index")
+@Api(tags = {AdminSwaggerTagConst.System.TW_INDEX})
 public class TwIndexController {
 
     @Autowired

@@ -1,7 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
@@ -17,6 +19,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/admin/agent")
+@Api(tags = {AdminSwaggerTagConst.System.TW_AGENT})
 public class TwAgentController {
 
 

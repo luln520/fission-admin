@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjorderVo;
@@ -21,6 +23,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/admin/kuangm")
+@Api(tags = {AdminSwaggerTagConst.System.TW_KUANGM})
 public class TwKuangmController {
 
      @Autowired

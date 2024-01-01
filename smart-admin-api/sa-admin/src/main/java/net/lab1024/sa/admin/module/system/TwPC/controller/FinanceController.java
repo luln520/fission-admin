@@ -1,7 +1,20 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMyzcService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwRechargeService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 钱包
@@ -10,12 +23,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/pc/finance")
 public class FinanceController {
 
+    @Autowired
+    private TwMyzcService twMyzcService;
+
+    @Autowired
+    private TwRechargeService twRechargeService;
     /**
      * 提币列表
      * 表：myzc
      * 参数：id（用户id）
      * select myzc where userid=? order by id desc limit 15
      */
+    @GetMapping("/listPcpage")
+    @ApiOperation(value = "提币列表")
+    @NoNeedLogin
+    public ResponseDTO<List<TwMyzc>> listPcpage(@RequestParam int uid) {
+        return ResponseDTO.ok(twMyzcService.listPcpage(uid));
+    }
 
 
     /**
@@ -24,6 +48,13 @@ public class FinanceController {
      * 参数：id（用户id）
      * select recharge where uid=? order by id desc limit 15
      */
+    @GetMapping("/listRecharge")
+    @ApiOperation(value = "充币列表")
+    @NoNeedLogin
+    public ResponseDTO<List<TwRecharge>> listRecharge(@RequestParam int uid) {
+        return ResponseDTO.ok(twRechargeService.listRecharge(uid));
+    }
+
 
     /**
      * 申请提币
@@ -101,7 +132,18 @@ public class FinanceController {
      *             $this->ajaxReturn(['code' => 0, 'info' => L('提交失败')]);
      *         }
      *     }
+     *
+     *     uid（用户id）cid（币种 id） address( 提币地址) num 提现数量
      */
+    @GetMapping("/tbhandle")
+    @ApiOperation(value = "申请提币")
+    @NoNeedLogin
+    public ResponseDTO tbhandle(@RequestParam int uid,
+                                @RequestParam int cid,
+                                @RequestParam String address,
+                                @RequestParam BigDecimal num) {
+        return ResponseDTO.ok(twMyzcService.tbhandle(uid,cid,address,num));
+    }
 
     /**
      * 上传转账号凭证

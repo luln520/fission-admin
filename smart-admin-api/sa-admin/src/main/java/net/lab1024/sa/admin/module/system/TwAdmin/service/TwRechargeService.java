@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 充值记录(TwRecharge)表服务接口
@@ -25,6 +26,8 @@ public interface TwRechargeService extends IService<TwRecharge> {
     BigDecimal sumAllRecharge();
 
     IPage<TwRecharge> listpage(TwRechargeVo twRechargeVo);
+
+    List<TwRecharge> listRecharge(int uid);
 
     ResponseDTO reject(int id);
 
