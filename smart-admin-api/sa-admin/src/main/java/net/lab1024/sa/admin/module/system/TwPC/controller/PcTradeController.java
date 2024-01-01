@@ -3,10 +3,7 @@ package net.lab1024.sa.admin.module.system.TwPC.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMarket;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCtmarketService;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMarketService;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Res.AllsymbolRes;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Res.CoinpriceRes;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -24,7 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/pc/trade")
 @Api(tags = {AdminSwaggerTagConst.System.PC_CONTENT})
-public class TradeController {
+public class PcTradeController {
 
     @Autowired
     private TwCtmarketService twCtmarketService;

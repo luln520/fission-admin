@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/kuangji")
-public class KuangJiController {
+public class PcKuangJiController {
 
     @Autowired
     private TwKuangjiService twKuangjiService;
