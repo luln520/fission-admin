@@ -27,8 +27,35 @@ public class TwAgentController {
      * 然后遍历得到的list
      * 查询 一二三级代理的人数
      * 参考代码：
-     *  $where['is_agent'] = 1;
-     *         $list = M('User')->where($where)->order('id desc')->select(); （代理列表）
+     *  public function agent()
+     *     {
+     *         $where['is_agent'] = 1;
+     *         $list = M('User')->where($where)->order('id desc')->select();
+     *         foreach ($list as $k => $v) {
+     *             $uid = $v['id'];
+     *             $one = M('User')->where(array('invit_1' => $uid))->count();
+     *             if ($one <= 0) {
+     *                 $one = 0;
+     *             }
+     *             $two = M('User')->where(array('invit_2' => $uid))->count();
+     *             if ($two <= 0) {
+     *                 $two = 0;
+     *             }
+     *             $three = M('User')->where(array('invit_3' => $uid))->count();
+     *             if ($three <= 0) {
+     *                 $three = 0;
+     *             }
+     *
+     *             $all = $one + $two + $three;
+     *             if ($all <= 0) {
+     *                 $all = 0;
+     *             }
+     *             $list[$k]['all'] = $all;
+     *             $list[$k]['one'] = $one;
+     *             $list[$k]['two'] = $two;
+     *             $list[$k]['three'] = $three;
+     *         }
+     *     }
      * */
     @PostMapping("/list")
     @ApiOperation(value = "管理员操作日志列表")
