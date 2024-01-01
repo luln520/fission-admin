@@ -26,8 +26,8 @@ public class TwWebConfigController {
     @GetMapping("/find")
     @ApiOperation(value = "查询网站信息，系统配置")
     @NoNeedLogin
-    public ResponseDTO find(@RequestParam int id) {
-        return ResponseDTO.ok(twConfigService.find(id));
+    public ResponseDTO<TwConfig> find() {
+        return ResponseDTO.ok(twConfigService.find());
     }
 
     @GetMapping("/addOrUpdate")

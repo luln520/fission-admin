@@ -42,6 +42,9 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
 
     @Autowired
     private TwBillService twBillService;
+
+    @Autowired
+    private TwUserService twUserService;
     @Override
     public BigDecimal sumDayRecharge(String startTime, String endTime) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
@@ -194,6 +197,32 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             return ResponseDTO.userErrorParam("处理失败");
         }
         return null;
+    }
+
+    @Override
+    public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline) {
+        try{
+            QueryWrapper<TwUser> query = new QueryWrapper<>();
+            query.eq("id", uid);
+            TwUser one = twUserService.getOne(query);
+
+            TwRecharge twRecharge = new TwRecharge();
+            twRecharge.setUid(uid);
+            twRecharge.setUsername(one.getUsername());
+            twRecharge.setCoin(coinname);
+            twRecharge.setNum(zznum);
+            twRecharge.setAddtime(new Date());
+            twRecharge.setStatus(1);
+            twRecharge.setPayimg(payimg);
+            twRecharge.setAddress(czaddress);
+            twRecharge.setCzline(czline);
+            twRecharge.setMsg("");
+            this.save(twRecharge);
+
+            return ResponseDTO.ok("凭证提交成功");
+        }catch (Exception e){
+            return ResponseDTO.userErrorParam("凭证提交失败");
+        }
     }
 
 }

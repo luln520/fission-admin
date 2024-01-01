@@ -41,4 +41,6 @@ public interface TwUserCoinService extends IService<TwUserCoin> {
 
     IPage<TwUserCoin> listpage(TwUserVo twUserVo);
 
+    TwUserCoin userCoin(int uid);
+
 }

@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMyzcService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwRechargeService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class FinanceController {
 
     @Autowired
     private TwRechargeService twRechargeService;
+    @Autowired
+    private TwUserCoinService twUserCoinService;
     /**
      * 提币列表
      * 表：myzc
@@ -181,46 +185,22 @@ public class FinanceController {
      *             $this->ajaxReturn(['code' => 0, 'info' => L('凭证提交失败')]);
      *         }
      *     }
+     *
+     *     参数：id（用户id）coinname（币种 名称） czaddress( 地址) payimg （支付图片）  zznum（充值数量） czline（充值网络）
      */
+    @GetMapping("/paycoin")
+    @ApiOperation(value = "上传转账号凭证")
+    @NoNeedLogin
+    public ResponseDTO paycoin(@RequestParam int uid,
+                               @RequestParam String coinname,
+                               @RequestParam String czaddress,
+                               @RequestParam String  payimg,
+                               @RequestParam BigDecimal zznum,
+                               @RequestParam String czline
+                                ) {
+        return ResponseDTO.ok(twRechargeService.paycoin(uid,coinname,czaddress,payimg,zznum,czline));
+    }
 
-
-    /**
-     * 上传转账号凭证
-     * 表：user,recharge
-     * 参数：id（用户id）coinname（币种 名称） czaddress( 地址) payimg （支付图片）  zznum（充值数量） czline（充值网络）
-     * 大致逻辑：
-     *      1、查询用户 写入recharge表时需要user信息 user where id=?
-     *      2、拼接参数  写入 recharge
-     * 参考代码：
-     *     //上传转账号凭证 (完成)
-     *     public function paycoin()
-     *     {
-     *         $uid = userid();
-     *         $uinfo = M("user")->where(array('id' => $uid))->field("id,username")->find();
-     *         $zznum = trim(I('post.zznum'));
-     *         $payimg = trim(I('post.payimg'));
-     *         $coinname = trim(I('post.coinname'));
-     *         $czaddress = trim(I('post.czaddress'));
-     *         $czline = trim(I('post.czline'));
-     *         $data['uid'] = $uid;
-     *         $data['username'] = $uinfo['username'];
-     *         $data['coin'] = strtoupper($coinname);
-     *         $data['num'] = $zznum;
-     *         $data['addtime'] = date("Y-m-d H:i:s", time());
-     *         $data['updatetime'] = '';
-     *         $data['status'] = 1;
-     *         $data['payimg'] = $payimg;
-     *         $data['address'] = $czaddress;
-     *         $data['czline'] = $czline;
-     *         $data['msg'] = '';
-     *         $result = M("recharge")->add($data);
-     *         if ($result) {
-     *             $this->ajaxReturn(['code' => 1, 'info' => L('凭证提交成功')]);
-     *         } else {
-     *             $this->ajaxReturn(['code' => 0, 'info' => L('凭证提交失败')]);
-     *         }
-     *     }
-     */
 
     /**
      * 获取折合资产
@@ -235,6 +215,13 @@ public class FinanceController {
      *        $this->ajaxReturn(['code' => 1, 'allzhehe' => $usdt]);
      *
      */
+    @GetMapping("/userCoin")
+    @ApiOperation(value = "获取折合资产")
+    @NoNeedLogin
+    public ResponseDTO<TwUserCoin> userCoin(@RequestParam int uid) {
+        return ResponseDTO.ok(twUserCoinService.userCoin(uid));
+    }
+
 
     /**
      * 获取单个币种资产(usdz) （本地数据库查询计算）

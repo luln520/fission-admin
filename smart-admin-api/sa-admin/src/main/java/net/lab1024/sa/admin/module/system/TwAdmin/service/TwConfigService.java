@@ -14,7 +14,7 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwConfigService extends IService<TwConfig> {
 
-    TwConfig find(int id);
+    TwConfig find();
 
     boolean addOrUpdate(TwConfig twConfig);
 

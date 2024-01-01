@@ -8,6 +8,7 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -40,6 +41,12 @@ public class PcCoinController {
      * 参数：id(币种 id)
      * select coin  where  id=？
      * */
+    @GetMapping("/find")
+    @ApiOperation(value = "获取单个币种信息")
+    @NoNeedLogin
+    public ResponseDTO<TwCoin> find(@RequestParam int id) {
+        return ResponseDTO.ok(twCoinService.find(id));
+    }
 
 }
 

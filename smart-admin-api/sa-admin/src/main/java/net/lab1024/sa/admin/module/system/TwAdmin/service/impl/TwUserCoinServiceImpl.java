@@ -67,4 +67,11 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
         objectPage.setRecords(list);
         return objectPage;
     }
+
+    @Override
+    public TwUserCoin userCoin(int uid) {
+        QueryWrapper<TwUserCoin> query = new QueryWrapper<>();
+        query.eq("userid", uid);
+        return this.getOne(query);
+    }
 }
