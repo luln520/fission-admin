@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * 用户
@@ -221,7 +222,7 @@ public class TwUserController {
     @GetMapping("/setMoney")
     @ApiOperation(value = "修改用户余额")
     @NoNeedLogin
-    public ResponseDTO setMoney(@RequestParam int uid,@RequestParam int type,@RequestParam double money,@RequestParam String bizhong) {
+    public ResponseDTO setMoney(@RequestParam int uid, @RequestParam int type, @RequestParam BigDecimal money, @RequestParam String bizhong) {
         return ResponseDTO.ok(twUserService.setMoney(uid,type,money,bizhong));
     }
 

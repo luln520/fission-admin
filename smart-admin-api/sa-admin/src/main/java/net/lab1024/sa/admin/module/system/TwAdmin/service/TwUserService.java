@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * 用户信息表(TwUser)表服务接口
@@ -43,7 +44,7 @@ public interface TwUserService extends IService<TwUser> {
 
     boolean setUser(int id,int type,int uid);
 
-    boolean setMoney(int uid,int type,double money, String bizhong);
+    boolean setMoney(int uid, int type, BigDecimal money, String bizhong);
 
     boolean userNotice(int uid,int type,String title, String content,String imgs);
 

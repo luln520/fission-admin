@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/pc/config")
-public class ConfigController {
+public class PcConfigController {
 
 
     /**

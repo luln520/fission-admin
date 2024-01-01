@@ -51,6 +51,10 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
         public static final String SYSTEM_DATA_TRACER = "系统-";
 
         public static final String TW_CONTENT = "内容管理";
+
+        public static final String PC_CONTENT = "行情";
+
+
     }
 
 

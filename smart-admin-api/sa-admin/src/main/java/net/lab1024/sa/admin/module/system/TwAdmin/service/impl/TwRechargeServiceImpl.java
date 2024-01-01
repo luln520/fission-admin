@@ -141,7 +141,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             if(one != null){
                 Integer uid = one.getUid();
                 String coinname = one.getCoin().toLowerCase();
-                Double num = one.getNum();
+                BigDecimal num = one.getNum();
                 one.setUpdatetime(new Date());
                 one.setStatus(2);
                 this.updateById(one); //修改订单状态

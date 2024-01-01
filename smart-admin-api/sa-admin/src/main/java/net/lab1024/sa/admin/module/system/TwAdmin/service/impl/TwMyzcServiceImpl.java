@@ -114,7 +114,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
 
                 int uid = one.getUserid();
                 String coinname = one.getCoinname();
-                double num = one.getNum();
+                BigDecimal num = one.getNum();
 
                 one.setEndtime(new Date());
                 one.setStatus(3);

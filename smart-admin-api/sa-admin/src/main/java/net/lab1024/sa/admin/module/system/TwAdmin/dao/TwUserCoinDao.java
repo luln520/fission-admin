@@ -10,6 +10,8 @@ import net.lab1024.sa.common.common.domain.PageParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -24,9 +26,9 @@ public interface TwUserCoinDao extends BaseMapper<TwUserCoin> {
     /**
      * 增加用户资产
      */
-    Integer incre(@Param("uid") int uid,@Param("num") double num,@Param("coinname") String coinname);
+    Integer incre(@Param("uid") int uid, @Param("num") BigDecimal num, @Param("coinname") String coinname);
 
-    Integer decre(@Param("uid") int uid,@Param("num") double num,@Param("coinname") String coinname);
+    Integer decre(@Param("uid") int uid,@Param("num") BigDecimal num,@Param("coinname") String coinname);
 
     double afternum(@Param("uid") int uid,@Param("coinname") String coinname);
 

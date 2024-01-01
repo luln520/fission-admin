@@ -1,9 +1,21 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMarket;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCtmarketService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMarketService;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Res.AllsymbolRes;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Res.CoinpriceRes;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.CommonUtil;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,7 +23,11 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/pc/trade")
+@Api(tags = {AdminSwaggerTagConst.System.PC_CONTENT})
 public class TradeController {
+
+    @Autowired
+    private TwCtmarketService twCtmarketService;
     //api接口基础地址()
     public String basePath = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol=";
 
@@ -51,6 +67,14 @@ public class TradeController {
      *     }
      *
      * */
+    @GetMapping("/getcoinprice")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "获取当前最新价格")
+    public ResponseDTO<CoinpriceRes> getcoinprice(@RequestParam String symbol) {
+        return ResponseDTO.ok(twCtmarketService.getcoinprice(symbol));
+    }
+
 
     //btc，eth，eos，doge，bch，ltc，iota，fil，flow，jst，itc，ht
     public static void main(String[] args) {
@@ -319,6 +343,14 @@ public class TradeController {
      *     }
      *
      */
+
+    @GetMapping("/getallsymbol")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "获取所有获取市场行情")
+    public ResponseDTO<List<AllsymbolRes>> getallsymbol() {
+        return ResponseDTO.ok(twCtmarketService.getallsymbol());
+    }
 
 
     /**
