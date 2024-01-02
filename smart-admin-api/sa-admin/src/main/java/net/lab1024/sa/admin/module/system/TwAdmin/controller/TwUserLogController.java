@@ -21,7 +21,7 @@ import javax.validation.Valid;
  * 会员登录日志
  */
 @RestController
-@RequestMapping("/api/admin/adminUserlog")
+@RequestMapping("/api/admin/userlog")
 @Api(tags = {AdminSwaggerTagConst.System.TW_USERLOG})
 public class TwUserLogController {
 
