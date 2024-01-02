@@ -92,7 +92,6 @@ public class CommonUtil {
     /**
      * Get方式请求
      * @param charset 编码方式
-     * @param proxyIp 代理IP
      * @return
      */
     public static Map<String, Object> doGet(String url, String charset) {
@@ -119,8 +118,13 @@ public class CommonUtil {
         return map;
     }
 
-
-
+    public static void main(String[] args) {
+        long start = System.currentTimeMillis();
+        long end = start + (20 * 60 * 1000); // 20分钟的毫秒数
+        String str = "https://apilist.tronscanapi.com/api/new/token_trc20/transfers?limit=20&start=0&contract_address=TWxjzcUnA8weSCVdtwL4WzR2qyQFDP7xK1&start_timestamp="+start+"&end_timestamp="+end+"&confirm=&filterTokenValue=1";
+        Map<String, Object> stringObjectMap = doGet(str,null);
+        System.out.println(stringObjectMap);
+    }
     /**
      * doPost 表单方式请求
      * @param charset 编码方式
