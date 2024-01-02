@@ -30,7 +30,7 @@ public interface TwUserCoinDao extends BaseMapper<TwUserCoin> {
 
     Integer decre(@Param("uid") int uid,@Param("num") BigDecimal num,@Param("coinname") String coinname);
 
-    double afternum(@Param("uid") int uid,@Param("coinname") String coinname);
+    BigDecimal afternum(@Param("uid") int uid,@Param("coinname") String coinname);
 
     List<TwUserCoin> listpage(@Param("objectPage") Page<TwUserCoin> objectPage, @Param("obj") TwUserVo twUserVo);
 }

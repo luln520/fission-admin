@@ -312,13 +312,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLogService.save(twAdminLog);
         }
 
-        double afternum = twUserCoinService.afternum(uid, "usdt");
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
         twBill.setUsername(one.getUsername());
         twBill.setCoinname("usdt");
         twBill.setNum(money);
-        twBill.setAfternum(afternum);
+        twBill.setAfternum(twUserCoinService.afternum(uid, "usdt"));
         twBill.setType(1);
         twBill.setAddtime(new Date());
         twBill.setSt(1);

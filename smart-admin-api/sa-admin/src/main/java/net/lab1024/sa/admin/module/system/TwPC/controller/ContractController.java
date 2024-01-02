@@ -1,7 +1,20 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserQianbao;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Res.HyorderOneRes;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 合约
@@ -10,6 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/pc/contract")
 public class ContractController {
 
+    @Autowired
+    private TwHyorderService twHyorderService;
+
+    @Autowired
+    private TwHysettingService twHysettingService;
     /**
      *合约倒计时
      * 表：hyorder
@@ -72,6 +90,13 @@ public class ContractController {
      *         }
      *     }
      */
+    @GetMapping("/getHyorderOne")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "合约倒计时")
+    public ResponseDTO<HyorderOneRes> getHyorderOne(@RequestParam int id) {
+        return twHyorderService.getHyorderOne(id);
+    }
 
 
     /**
@@ -91,18 +116,6 @@ public class ContractController {
      *             $data[$k]['id'] = $v['id'];
      *             $data[$k]['coinanme'] = $v['coinname'];
      *             $data[$k]['num'] = $v['num'];
-     *             if ($v['status'] == 1) {
-     *                 $data[$k]['statusstr'] = L("待结算");
-     *             } elseif ($v['status'] == 2) {
-     *                 $data[$k]['statusstr'] = L("已结算");
-     *             } elseif ($v['status'] == 3) {
-     *                 $data[$k]['statusstr'] = L("无效结算");
-     *             }
-     *             if ($v['hyzd'] == 1) {
-     *                 $data[$k]['hyzdstr'] = L("买涨");
-     *             } elseif ($v['hyzd'] == 2) {
-     *                 $data[$k]['hyzdstr'] = L("买跌");
-     *             }
      *             $data[$k]['buyprice'] = $v['buyprice'];
      *             $data[$k]['buytime'] = $v['buytime'];
      *             $endtime = strtotime($v['selltime']);
@@ -158,6 +171,14 @@ public class ContractController {
      *         $this->ajaxReturn(['code' => 1, 'data' => $data]);
      *     }
      */
+    @GetMapping("/gethyorder")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "获取合约记录")
+    public ResponseDTO<List<TwHyorder>> gethyorder(@RequestParam int uid) {
+        return twHyorderService.gethyorder(uid);
+    }
+
 
 
     /**
@@ -191,6 +212,13 @@ public class ContractController {
      *         $this->assign("list", $hylist);
      *     }
      */
+    @GetMapping("/contractTy")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "合约未平仓、已平仓订单")
+    public ResponseDTO<List<TwHyorder>> contractTy(@RequestParam int uid ,@RequestParam int type) {
+        return twHyorderService.contractTy(uid,type);
+    }
 
     /**
      *购买合约详情
@@ -207,13 +235,26 @@ public class ContractController {
      *         $this->assign('info', $info);
      *     }
      */
-
+    @GetMapping("/cbillinfo")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "购买合约详情")
+    public ResponseDTO<TwHyorder> cbillinfo(@RequestParam int uid ,@RequestParam int id) {
+        return twHyorderService.cbillinfo(uid,id);
+    }
 
     /**
      *获取合约设置
      * 表：hysetting
      *  hysetting  where  id=1
      */
+    @GetMapping("/hysetInfo")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "获取合约设置")
+    public ResponseDTO<TwHysetting> hysetInfo() {
+        return ResponseDTO.ok(twHysettingService.hysettingId());
+    }
 
     /**
      *合约购买记录
@@ -230,7 +271,13 @@ public class ContractController {
      *         $this->assign('info', $info);
      *     }
      */
-
+    @GetMapping("/cbillList")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "合约购买记录")
+    public ResponseDTO<List<TwHyorder>> cbillList(@RequestParam int uid) {
+        return twHyorderService.cbillList(uid);
+    }
 
     /**
      *体验秒合约建仓
@@ -408,7 +455,21 @@ public class ContractController {
      *             $this->ajaxReturn(['code' => 0, 'msg' => L('建仓失败')]);
      *         }
      *     }
+     *
+     *     uid （用户的 id） ctime（结算时间） ctzed （投资额度） ccoinname (交易对) ctzfx(合约涨跌1买涨2买跌) cykbl（盈亏比例）
      */
+    @GetMapping("/creatorder")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "秒合约建仓")
+    public ResponseDTO creatorder(@RequestParam int uid,
+                                  @RequestParam int ctime,
+                                  @RequestParam BigDecimal ctzed,
+                                  @RequestParam String ccoinname,
+                                  @RequestParam int ctzfx,
+                                  @RequestParam BigDecimal cykbl) {
+        return twHyorderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl);
+    }
 
 }
 

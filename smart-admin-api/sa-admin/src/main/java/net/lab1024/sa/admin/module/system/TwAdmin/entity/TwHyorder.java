@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -43,7 +44,7 @@ public class TwHyorder implements Serializable {
     * 投资金额
     */
     @ApiModelProperty("投资金额")
-    private Double num;
+    private BigDecimal num;
     /**
     * 买后余额
     */
@@ -53,7 +54,7 @@ public class TwHyorder implements Serializable {
     * 盈亏比例
     */
     @ApiModelProperty("盈亏比例")
-    private Double hybl;
+    private BigDecimal hybl;
     /**
     * 合约涨跌1买涨2买跌
     */
@@ -125,5 +126,8 @@ public class TwHyorder implements Serializable {
     @ApiModelProperty("0未通知，1已通知")
     private Integer tznum;
 
+    @TableField(exist = false)
+    @ApiModelProperty("剩余秒数")
+    private int timeResidue;
 
 }

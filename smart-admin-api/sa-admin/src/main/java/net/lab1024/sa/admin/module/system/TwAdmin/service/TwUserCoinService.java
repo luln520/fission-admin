@@ -36,7 +36,7 @@ public interface TwUserCoinService extends IService<TwUserCoin> {
      */
      int decre(Integer uid,BigDecimal num,String coinname);
 
-     double afternum(Integer uid,String coinname);
+     BigDecimal afternum(Integer uid,String coinname);
 
 
     IPage<TwUserCoin> listpage(TwUserVo twUserVo);

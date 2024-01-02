@@ -10,7 +10,7 @@
         UPDATE tw_user_coin SET ${coinname} = ${coinname} - #{num} WHERE userid = #{uid}
     </select>
 
-    <select id="afternum" resultType="double">
+    <select id="afternum" resultType="java.math.BigDecimal">
         SELECT ${coinname} FROM tw_user_coin WHERE ${coinname} = #{coinname} AND userid = #{uid}
     </select>
 

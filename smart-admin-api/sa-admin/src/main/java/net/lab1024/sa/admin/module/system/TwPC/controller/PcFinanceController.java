@@ -1,11 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMyzcService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwRechargeService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
@@ -14,7 +12,6 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -23,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/finance")
-public class FinanceController {
+public class PcFinanceController {
 
     @Autowired
     private TwMyzcService twMyzcService;

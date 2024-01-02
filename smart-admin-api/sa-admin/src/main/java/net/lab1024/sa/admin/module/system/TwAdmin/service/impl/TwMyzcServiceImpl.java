@@ -153,7 +153,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                     twBill.setUsername(one.getUsername());
                     twBill.setNum(num);
                     twBill.setCoinname(coinname);
-                    twBill.setAfternum(twUserCoinService.afternum(uid,coinname));
+                    twBill.setAfternum(twUserCoinService.afternum(uid,"usdt"));
                     twBill.setType(16);
                     twBill.setAddtime(new Date());
                     twBill.setSt(1);

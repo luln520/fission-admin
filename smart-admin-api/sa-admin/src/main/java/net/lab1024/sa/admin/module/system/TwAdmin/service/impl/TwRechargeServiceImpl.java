@@ -175,7 +175,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                     twBill.setUsername(one.getUsername());
                     twBill.setNum(one.getNum());
                     twBill.setCoinname(one.getCoin());
-                    twBill.setAfternum(twUserCoinService.afternum(uid,coinname));
+                    twBill.setAfternum(twUserCoinService.afternum(uid,"usdt"));
                     twBill.setType(17);
                     twBill.setAddtime(new Date());
                     twBill.setSt(1);

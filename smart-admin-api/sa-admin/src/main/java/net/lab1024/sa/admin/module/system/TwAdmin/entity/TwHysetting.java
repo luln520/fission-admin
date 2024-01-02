@@ -5,6 +5,7 @@ import javax.validation.constraints.Size;
 import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -30,7 +31,7 @@ public class TwHysetting implements Serializable {
     * 交易手续费
     */
     @ApiModelProperty("交易手续费")
-    private Double hySxf;
+    private BigDecimal hySxf;
     /**
     * 合约时间组
     */
@@ -70,7 +71,7 @@ public class TwHysetting implements Serializable {
     * 合约最低投资额
     */
     @ApiModelProperty("合约最低投资额")
-    private Double hyMin;
+    private BigDecimal hyMin;
 
 
 }

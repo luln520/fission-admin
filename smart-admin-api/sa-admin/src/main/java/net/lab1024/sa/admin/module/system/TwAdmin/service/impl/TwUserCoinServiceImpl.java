@@ -46,7 +46,7 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
     }
 
     @Override
-    public double afternum(Integer uid, String coinname) {
+    public BigDecimal afternum(Integer uid, String coinname) {
         return this.baseMapper.afternum(uid,coinname);
     }
 
