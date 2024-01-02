@@ -3,7 +3,6 @@ package net.lab1024.sa.admin.module.system.TwPC.controller;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserQianbao;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Res.HyorderOneRes;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,7 +19,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/contract")
-public class ContractController {
+public class PcContractController {
 
     @Autowired
     private TwHyorderService twHyorderService;
