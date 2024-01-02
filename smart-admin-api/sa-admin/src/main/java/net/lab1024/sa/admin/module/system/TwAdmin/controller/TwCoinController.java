@@ -25,7 +25,7 @@ import javax.validation.Valid;
  * @since 2023-12-23 18:20:37
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin/coin")
 @Api(tags = {AdminSwaggerTagConst.System.TW_COIN})
 public class TwCoinController {
     /**
