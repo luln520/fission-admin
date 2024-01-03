@@ -1,7 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwContentService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -17,6 +19,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/pc/content")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_CONTENT})
 public class PcContentController {
 
     @Autowired

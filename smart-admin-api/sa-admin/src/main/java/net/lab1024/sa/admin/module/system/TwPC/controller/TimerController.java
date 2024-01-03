@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Component
 @Slf4j
-
 public class TimerController {
     @Autowired
     private TimerServiceImpl timerService;

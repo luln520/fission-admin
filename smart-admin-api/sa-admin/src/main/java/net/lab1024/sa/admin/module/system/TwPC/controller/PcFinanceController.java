@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
@@ -20,6 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/finance")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_FINANCE})
 public class PcFinanceController {
 
     @Autowired

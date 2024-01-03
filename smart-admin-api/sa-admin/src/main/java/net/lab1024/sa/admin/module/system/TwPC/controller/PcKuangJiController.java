@@ -1,7 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjprofit;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji;
@@ -22,6 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/kuangji")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_KUANGJI})
 public class PcKuangJiController {
 
     @Autowired

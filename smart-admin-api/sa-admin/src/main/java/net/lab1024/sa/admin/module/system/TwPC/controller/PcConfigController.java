@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwConfig;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwConfigService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/pc/config")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_CONFIG})
 public class PcConfigController {
 
     @Autowired

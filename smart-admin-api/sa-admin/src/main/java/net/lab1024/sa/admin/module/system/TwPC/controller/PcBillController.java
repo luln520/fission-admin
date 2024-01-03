@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwBillService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -15,6 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/bill")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_BILL})
 public class PcBillController {
 
     @Autowired

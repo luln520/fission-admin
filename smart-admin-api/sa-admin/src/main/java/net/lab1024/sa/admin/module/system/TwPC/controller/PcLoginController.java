@@ -1,7 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
 import cn.hutool.extra.servlet.ServletUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
@@ -23,6 +25,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/pc/userLoginOrRegister")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_LOGIN})
 public class PcLoginController {
 
     @Autowired

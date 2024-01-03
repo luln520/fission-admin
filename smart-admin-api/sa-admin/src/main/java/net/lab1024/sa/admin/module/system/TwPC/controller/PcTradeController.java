@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/pc/trade")
-@Api(tags = {AdminSwaggerTagConst.System.PC_CONTENT})
+@Api(tags = {AdminSwaggerTagConst.PC.PC_TRADE})
 public class PcTradeController {
 
     @Autowired

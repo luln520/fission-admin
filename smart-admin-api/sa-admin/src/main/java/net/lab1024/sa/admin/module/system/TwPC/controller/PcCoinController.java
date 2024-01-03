@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -18,6 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/coin")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_COIN})
 public class PcCoinController {
 
     @Autowired
