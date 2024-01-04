@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,6 +28,7 @@ public class TwHysetting implements Serializable {
     * ID
     */
     @ApiModelProperty("ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
     * 交易手续费

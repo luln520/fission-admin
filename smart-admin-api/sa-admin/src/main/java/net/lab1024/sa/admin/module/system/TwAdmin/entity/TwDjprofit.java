@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -17,50 +19,51 @@ import java.io.Serializable;
 
 @Data
 @TableName("tw_djprofit")
-@ApiModel(value="广告图片表", description="")
+@ApiModel(value = "广告图片表", description = "")
 public class TwDjprofit implements Serializable {
     private static final long serialVersionUID = 705256414817684774L;
-/**
+    /**
      * 记录ID
      */
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-/**
+    /**
      * 会员ID
      */
     private Integer uid;
-/**
+    /**
      * 会员账号
      */
     private String username;
-/**
+    /**
      * 冻结额度
      */
     private Double num;
-/**
+    /**
      * 币名称
      */
     private String coin;
-/**
+    /**
      * 状态1冻结中2已释放
      */
     private Integer status;
-/**
+    /**
      * 冻结时间
      */
-    private Date addtime;
-/**
+    private Date addtime=new Date();
+    /**
      * 冻结日期
      */
     private Date addday;
-/**
+    /**
      * 解冻结时间
      */
     private Date thawtime;
-/**
+    /**
      * 解冻日期
      */
     private Date thawday;
-/**
+    /**
      * 冻结说明
      */
     private String remark;

@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,63 +17,65 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 /**
-* 用户钱包表
-* @TableName tw_user_qianbao
-*/
+ * 用户钱包表
+ *
+ * @TableName tw_user_qianbao
+ */
 
 @Data
 @TableName("tw_user_qianbao")
-@ApiModel(value="用户钱包表", description="")
+@ApiModel(value = "用户钱包表", description = "")
 public class TwUserQianbao implements Serializable {
 
     /**
-    * ID
-    */
+     * ID
+     */
     @ApiModelProperty("ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
-    * 会员ID
-    */
+     * 会员ID
+     */
     @ApiModelProperty("会员ID")
     private Integer userid;
     /**
-    * 会员账号
-    */
+     * 会员账号
+     */
     @ApiModelProperty("会员账号")
     private String coinname;
     /**
-    * 币名称
-    */
+     * 币名称
+     */
     @ApiModelProperty("币名称")
     private String name;
     /**
-    * 地址备注
-    */
+     * 地址备注
+     */
     @ApiModelProperty("地址备注")
     private String remark;
     /**
-    * 充值网络
-    */
+     * 充值网络
+     */
     @ApiModelProperty("充值网络")
     private String czline;
     /**
-    * 提币地址
-    */
+     * 提币地址
+     */
     @ApiModelProperty("提币地址")
     private String addr;
     /**
-    * 排序
-    */
+     * 排序
+     */
     @ApiModelProperty("排序")
     private Integer sort;
     /**
-    * 添加时间
-    */
+     * 添加时间
+     */
     @ApiModelProperty("添加时间")
-    private Date addtime;
+    private Date addtime=new Date();
     /**
-    * 状态
-    */
+     * 状态
+     */
     @ApiModelProperty("状态")
     private Integer status;
 

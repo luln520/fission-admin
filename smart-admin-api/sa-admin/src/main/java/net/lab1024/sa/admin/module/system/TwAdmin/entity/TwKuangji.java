@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +30,7 @@ public class TwKuangji implements Serializable {
     * ID
     */
     @ApiModelProperty("ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
     * 矿机类型1独资2共享  只有独资
@@ -158,6 +161,6 @@ public class TwKuangji implements Serializable {
     * 添加时间
     */
     @ApiModelProperty("添加时间")
-    private Date addtime;
+    private Date addtime=new Date();
 
 }

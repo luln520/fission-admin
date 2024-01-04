@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.math.BigDecimal;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,6 +30,7 @@ public class TwCoin implements Serializable {
     * ID
     */
     @ApiModelProperty("ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
     * 币种代码
@@ -58,7 +61,7 @@ public class TwCoin implements Serializable {
     * 添加时间
     */
     @ApiModelProperty("添加时间")
-    private Date addtime;
+    private Date addtime=new Date();
     /**
     * 状态：1可用2禁用
     */

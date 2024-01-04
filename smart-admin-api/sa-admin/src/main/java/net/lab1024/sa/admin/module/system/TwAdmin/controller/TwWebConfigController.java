@@ -30,7 +30,7 @@ public class TwWebConfigController {
         return ResponseDTO.ok(twConfigService.find());
     }
 
-    @GetMapping("/addOrUpdate")
+    @PostMapping("/addOrUpdate")
     @ApiOperation(value = "修改网站信息，系统配置")
     @NoNeedLogin
     public ResponseDTO addOrUpdate(@RequestBody TwConfig twConfig) {

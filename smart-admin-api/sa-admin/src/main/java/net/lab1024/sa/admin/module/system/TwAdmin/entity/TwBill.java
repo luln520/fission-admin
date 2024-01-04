@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,6 +26,7 @@ public class TwBill implements Serializable {
     private static final long serialVersionUID = -11575939499653388L;
 
     @ApiModelProperty(value = "记录ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @ApiModelProperty(value = "会员ID")
@@ -45,7 +48,7 @@ public class TwBill implements Serializable {
     private Integer type;
 
     @ApiModelProperty(value = "操作时间")
-    private Date addtime;
+    private Date addtime=new Date();
 
     @ApiModelProperty(value = "1增加2减少")
     private Integer st;

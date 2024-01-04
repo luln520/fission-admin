@@ -1,5 +1,7 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,6 +23,7 @@ public class TwAdminLog implements Serializable {
     private static final long serialVersionUID = -75349395372140753L;
 
     @ApiModelProperty(value = "主键ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private String id;
 
     @ApiModelProperty(value = "管理员ID")

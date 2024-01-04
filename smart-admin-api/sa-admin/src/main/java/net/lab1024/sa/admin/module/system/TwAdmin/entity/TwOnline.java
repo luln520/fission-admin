@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -27,6 +29,7 @@ public class TwOnline implements Serializable {
     * ID
     */
     @ApiModelProperty("ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
     * 会员ID
@@ -52,7 +55,7 @@ public class TwOnline implements Serializable {
     * 发送时间
     */
     @ApiModelProperty("发送时间")
-    private Date addtime;
+    private Date addtime=new Date();
     /**
     * 后台查看状态0未查看2已查看
     */

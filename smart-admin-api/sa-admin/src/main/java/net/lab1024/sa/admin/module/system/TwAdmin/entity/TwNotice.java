@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -27,6 +29,7 @@ public class TwNotice implements Serializable {
     * 记录ID
     */
     @ApiModelProperty("记录ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
     * 会员ID
@@ -57,7 +60,7 @@ public class TwNotice implements Serializable {
     * 发送时间
     */
     @ApiModelProperty("发送时间")
-    private Date addtime;
+    private Date addtime=new Date();
     /**
     * 1未读2已读
     */

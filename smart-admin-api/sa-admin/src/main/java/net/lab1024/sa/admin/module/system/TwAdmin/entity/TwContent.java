@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,6 +24,7 @@ public class TwContent implements Serializable {
     private static final long serialVersionUID = -47261435617866204L;
 
     @ApiModelProperty("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
      @ApiModelProperty("标题")
@@ -34,7 +37,7 @@ public class TwContent implements Serializable {
     private String content;
 
     @ApiModelProperty("添加时间")
-    private Date addtime;
+    private Date addtime=new Date();
 
     @ApiModelProperty("状态1显示2隐藏")
     private Integer status;

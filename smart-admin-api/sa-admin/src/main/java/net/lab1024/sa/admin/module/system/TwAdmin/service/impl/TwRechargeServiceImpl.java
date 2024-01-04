@@ -47,6 +47,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     @Autowired
     @Lazy
     private TwUserService twUserService;
+
     @Override
     public BigDecimal sumDayRecharge(String startTime, String endTime) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
@@ -77,7 +78,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     public BigDecimal sumAllRecharge() {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as allRecharge")
-                    .eq("status", 2);
+                .eq("status", 2);
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
             return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -106,7 +107,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     @Override
     public List<TwRecharge> listRecharge(int uid) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("uid",uid);
+        queryWrapper.eq("uid", uid);
         // 按照 ID 倒序排列
         queryWrapper.orderByDesc("id");
         // 设置查询条数限制
@@ -119,22 +120,21 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     @Override
     public ResponseDTO reject(int id) {
 
-        try{
+        try {
             QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", id);
             TwRecharge one = this.getOne(queryWrapper);
-            if(one == null ){
-                return  ResponseDTO.userErrorParam("充币订单不存在");
+            if (one == null) {
+                return ResponseDTO.userErrorParam("充币订单不存在");
             }
 
-            if(one.getStatus() != 1){
-                return  ResponseDTO.userErrorParam("此订单已处理");
+            if (one.getStatus() != 1) {
+                return ResponseDTO.userErrorParam("此订单已处理");
             }
 
             one.setUpdatetime(new Date());
-            one .setStatus(3);
+            one.setStatus(3);
             this.updateById(one);
-
             TwNotice twNotice = new TwNotice();
             twNotice.setUid(one.getUid());
             twNotice.setAccount(one.getUsername());
@@ -143,67 +143,61 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNoticeService.save(twNotice);
-
             return ResponseDTO.okMsg("充值驳回成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseDTO.userErrorParam("充值驳回失败");
         }
     }
 
     @Override
     public ResponseDTO confirm(int id) {
-        try{
-            QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("id", id);
-            TwRecharge one = this.getOne(queryWrapper);
-            if(one != null){
-                Integer uid = one.getUid();
-                String coinname = one.getCoin().toLowerCase();
-                BigDecimal num = one.getNum();
-                one.setUpdatetime(new Date());
-                one.setStatus(2);
-                this.updateById(one); //修改订单状态
+        QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        TwRecharge one = this.getOne(queryWrapper);
+        if (one != null) {
+            Integer uid = one.getUid();
+            String coinname = one.getCoin().toLowerCase();
+            BigDecimal num = one.getNum();
+            one.setUpdatetime(new Date());
+            one.setStatus(2);
+            this.updateById(one); //修改订单状态
 
-                QueryWrapper<TwUserCoin> queryCoin = new QueryWrapper<>();
-                queryCoin.eq("userid", uid);
-                TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
-                if(twUserCoin != null){
-                    twUserCoinService.incre(uid,num,coinname);//增加用户资产
+            QueryWrapper<TwUserCoin> queryCoin = new QueryWrapper<>();
+            queryCoin.eq("userid", uid);
+            TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
+            if (twUserCoin != null) {
+                twUserCoinService.incre(uid, num, coinname);//增加用户资产
 
-                    TwBill twBill = new TwBill();
-                    twBill.setUid(uid);
-                    twBill.setUsername(one.getUsername());
-                    twBill.setNum(one.getNum());
-                    twBill.setCoinname(one.getCoin());
-                    twBill.setAfternum(twUserCoinService.afternum(uid,"usdt"));
-                    twBill.setType(17);
-                    twBill.setAddtime(new Date());
-                    twBill.setSt(1);
-                    twBill.setRemark("充币到账");
-                    twBillService.save(twBill);
+                TwBill twBill = new TwBill();
+                twBill.setUid(uid);
+                twBill.setUsername(one.getUsername());
+                twBill.setNum(one.getNum());
+                twBill.setCoinname(one.getCoin());
+                twBill.setAfternum(twUserCoinService.afternum(uid, "usdt"));
+                twBill.setType(17);
+                twBill.setAddtime(new Date());
+                twBill.setSt(1);
+                twBill.setRemark("充币到账");
+                twBillService.save(twBill);
 
-                    TwNotice twNotice = new TwNotice();
-                    twNotice.setUid(one.getUid());
-                    twNotice.setAccount(one.getUsername());
-                    twNotice.setTitle("充币审核");
-                    twNotice.setContent("您的充值金额已到账，请注意查收");
-                    twNotice.setAddtime(new Date());
-                    twNotice.setStatus(1);
-                    twNoticeService.save(twNotice);
+                TwNotice twNotice = new TwNotice();
+                twNotice.setUid(one.getUid());
+                twNotice.setAccount(one.getUsername());
+                twNotice.setTitle("充币审核");
+                twNotice.setContent("您的充值金额已到账，请注意查收");
+                twNotice.setAddtime(new Date());
+                twNotice.setStatus(1);
+                twNoticeService.save(twNotice);
 
-                    return ResponseDTO.okMsg("充值驳回成功");
-                }
+                return ResponseDTO.okMsg("充值驳回成功");
             }
-
-        }catch (Exception e){
-            return ResponseDTO.userErrorParam("处理失败");
         }
         return null;
     }
 
     @Override
     public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline) {
-        try{
+        try {
             QueryWrapper<TwUser> query = new QueryWrapper<>();
             query.eq("id", uid);
             TwUser one = twUserService.getOne(query);
@@ -222,7 +216,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             this.save(twRecharge);
 
             return ResponseDTO.ok("凭证提交成功");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseDTO.userErrorParam("凭证提交失败");
         }
     }

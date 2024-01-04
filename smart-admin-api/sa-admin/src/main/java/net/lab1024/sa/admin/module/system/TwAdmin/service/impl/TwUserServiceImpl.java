@@ -114,7 +114,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             for(TwUser twUser:list){
 
             }
-            objectPage.setRecords(list1);
+            objectPage.setRecords(list);
             return objectPage;
     }
 

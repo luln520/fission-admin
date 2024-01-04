@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -19,6 +21,7 @@ import java.io.Serializable;
 public class TwFooter implements Serializable {
     private static final long serialVersionUID = -98326543815443005L;
 
+    @TableId(value = "id", type = IdType.AUTO)
     private String id;
 
     private String lang;

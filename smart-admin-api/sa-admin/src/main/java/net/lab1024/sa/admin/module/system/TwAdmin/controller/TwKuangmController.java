@@ -27,14 +27,14 @@ import javax.validation.Valid;
 @Api(tags = {AdminSwaggerTagConst.System.TW_KUANGM})
 public class TwKuangmController {
 
-     @Autowired
-     private TwKuangjiService twKuangjiService;
+    @Autowired
+    private TwKuangjiService twKuangjiService;
 
-     @Autowired
-     private TwKjorderService twKjorderService;
+    @Autowired
+    private TwKjorderService twKjorderService;
 
-     @Autowired
-     private TwKjprofitService twKjprofitService;
+    @Autowired
+    private TwKjprofitService twKjprofitService;
 
     /**
      * 矿机收益列表
@@ -55,7 +55,7 @@ public class TwKuangmController {
     @ResponseBody
     @ApiOperation(value = "启用会员矿机收益，停用会员矿机收益，删除会员矿机收益")
     @NoNeedLogin
-    public ResponseDTO userkjStatus(Integer id, Integer type) {
+    public ResponseDTO userkjStatus(@RequestParam Integer id, @RequestParam Integer type) {
         switch (type) {
             case 1:
                 //修改status M("kjorder")->where($where)->save(array('status' => 1)); 启用
@@ -82,7 +82,7 @@ public class TwKuangmController {
     @ResponseBody
     @NoNeedLogin
     @ApiOperation(value = "会员矿机列表")
-    public ResponseDTO<IPage<TwKjorder>>  kjlist(@Valid @RequestBody TwKjorderVo twKjorderVo) {
+    public ResponseDTO<IPage<TwKjorder>> kjlist(@Valid @RequestBody TwKjorderVo twKjorderVo) {
         return ResponseDTO.ok(twKjorderService.listpage(twKjorderVo));
     }
 
@@ -94,7 +94,7 @@ public class TwKuangmController {
     @ResponseBody
     @ApiOperation(value = "启用，停用矿机，删除矿机")
     @NoNeedLogin
-    public ResponseDTO kuangjStatus(@RequestParam Integer id,@RequestParam Integer type) {
+    public ResponseDTO kuangjStatus(@RequestParam Integer id, @RequestParam Integer type) {
         switch (type) {
             case 1:
                 //修改status M("kuangji")->where($where)->save(array('status' => 1)); 启用
@@ -120,9 +120,9 @@ public class TwKuangmController {
     @ResponseBody
     @ApiOperation(value = "矿机列表")
     @NoNeedLogin
-    public ResponseDTO<IPage<TwKuangji>>  getkuangjiList(@Valid @RequestBody PageParam pageParam) {
+    public ResponseDTO<IPage<TwKuangji>> getkuangjiList(@Valid @RequestBody PageParam pageParam) {
         //查询列表 并返回  M('kuangji')->order('id desc')->select();
-         return ResponseDTO.ok(twKuangjiService.listpage(pageParam));
+        return ResponseDTO.ok(twKuangjiService.listpage(pageParam));
     }
 
     /**
@@ -133,7 +133,7 @@ public class TwKuangmController {
     @ApiOperation(value = "新增/编辑矿机")
     @NoNeedLogin
     public ResponseDTO addkj(@RequestBody TwKuangji twKuangji) {
-       return ResponseDTO.ok(twKuangjiService.addkj(twKuangji));
+        return ResponseDTO.ok(twKuangjiService.addkj(twKuangji));
     }
 
 }

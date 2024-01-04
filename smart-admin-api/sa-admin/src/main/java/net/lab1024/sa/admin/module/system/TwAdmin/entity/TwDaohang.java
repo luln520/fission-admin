@@ -1,5 +1,7 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -14,40 +16,41 @@ import java.io.Serializable;
  */
 @Data
 @TableName("tw_daohang")
-@ApiModel(value="广告图片表", description="")
+@ApiModel(value = "广告图片表", description = "")
 public class TwDaohang implements Serializable {
     private static final long serialVersionUID = 671502362450027220L;
-/**
+    /**
      * 自增id
      */
+    @TableId(value = "id", type = IdType.AUTO)
     private String id;
 
     private String lang;
-/**
+    /**
      * 名称
      */
     private String name;
-/**
+    /**
      * 名称
      */
     private String title;
-/**
+    /**
      * url
      */
     private String url;
-/**
+    /**
      * 排序
      */
     private String sort;
-/**
+    /**
      * 添加时间
      */
     private String addtime;
-/**
+    /**
      * 编辑时间
      */
     private String endtime;
-/**
+    /**
      * 状态
      */
     private Integer status;

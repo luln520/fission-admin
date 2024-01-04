@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,6 +25,7 @@ import org.hibernate.validator.constraints.Length;
 @ApiModel(value="合约交易对配置", description="")
 public class TwCtmarket implements Serializable {
     @ApiModelProperty("ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
     * 
@@ -63,7 +66,7 @@ public class TwCtmarket implements Serializable {
     * 添加时间
     */
     @ApiModelProperty("添加时间")
-    private Date addtime;
+    private Date addtime=new Date();
     /**
     * 
     */

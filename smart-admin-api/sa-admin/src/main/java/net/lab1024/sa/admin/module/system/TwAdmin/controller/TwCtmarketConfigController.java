@@ -38,7 +38,7 @@ public class TwCtmarketConfigController {
     /**
      * 设置 币状态 表Coin   修改status 1或者 2
      */
-    @PostMapping("/updateStatus")
+    @GetMapping("/updateStatus")
     @ApiOperation(value = "市场配置禁用启用")
     @NoNeedLogin
     public ResponseDTO updateStatus(@RequestParam int id, @RequestParam int status) {

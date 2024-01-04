@@ -45,7 +45,7 @@ public class TwOnlineController {
      * 接收： 用户 id
      *  where uid=？and type =2  order by id asc
      */
-    @PostMapping("/getId")
+    @GetMapping("/getId")
     @ResponseBody
     @ApiOperation(value = "获取单个用户的对话信息")
     @NoNeedLogin
@@ -74,7 +74,7 @@ public class TwOnlineController {
      *             $this->error("回复失败");
      *         }
      */
-    @PostMapping("/backOnline")
+    @GetMapping("/backOnline")
     @ResponseBody
     @ApiOperation(value = "客服回复")
     @NoNeedLogin

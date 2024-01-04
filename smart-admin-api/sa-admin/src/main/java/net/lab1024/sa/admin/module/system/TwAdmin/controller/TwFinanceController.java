@@ -72,7 +72,7 @@ public class TwFinanceController {
     /**
      * 驳回充值
      */
-    @PostMapping("/reject")
+    @GetMapping("/reject")
     @ApiOperation(value = "驳回充值")
     @NoNeedLogin
     public ResponseDTO reject(@RequestParam int  id) {
@@ -113,7 +113,7 @@ public class TwFinanceController {
      */
 
 
-    @PostMapping("/confirm")
+    @GetMapping("/confirm")
     @ApiOperation(value = "确认充币")
     @NoNeedLogin
     public ResponseDTO confirm(@RequestParam int  id) {
@@ -165,7 +165,7 @@ public class TwFinanceController {
      */
 
 
-    @PostMapping("/rejectCoin")
+    @GetMapping("/rejectCoin")
     @ApiOperation(value = "驳回提币")
     @NoNeedLogin
     public ResponseDTO rejectCoin(@RequestParam int  id) {
@@ -228,7 +228,7 @@ public class TwFinanceController {
      *         }
      */
 
-    @PostMapping("/confirmCoin")
+    @GetMapping("/confirmCoin")
     @ApiOperation(value = "通过提币")
     @NoNeedLogin
     public ResponseDTO confirmCoin(@RequestParam int  id) {

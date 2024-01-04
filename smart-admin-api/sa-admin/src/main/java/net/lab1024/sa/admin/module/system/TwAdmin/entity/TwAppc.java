@@ -1,5 +1,7 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -16,6 +18,7 @@ import java.io.Serializable;
 public class TwAppc implements Serializable {
     private static final long serialVersionUID = 856903459258396029L;
 
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     private String webName;

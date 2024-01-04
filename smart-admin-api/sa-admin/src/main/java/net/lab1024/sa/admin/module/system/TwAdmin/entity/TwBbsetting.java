@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -16,11 +18,12 @@ import java.io.Serializable;
 @TableName("tw_bbsetting")
 public class TwBbsetting implements Serializable {
     private static final long serialVersionUID = 155043243530210350L;
-/**
+    /**
      * 记录ID
      */
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-/**
+    /**
      * 开市时间
      */
     private String bbKstime;

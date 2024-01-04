@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -17,6 +19,7 @@ import java.io.Serializable;
 public class TwAuthGroupAccess implements Serializable {
     private static final long serialVersionUID = -65797593883299135L;
 
+    @TableId(value = "id", type = IdType.AUTO)
     private String id;
 
     private String uid;

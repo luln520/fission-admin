@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 import java.math.BigDecimal;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -27,6 +29,7 @@ public class TwMarket implements Serializable {
     * 
     */
     @ApiModelProperty("")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
     * 市场名称
