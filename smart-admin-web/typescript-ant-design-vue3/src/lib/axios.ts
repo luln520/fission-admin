@@ -57,10 +57,10 @@ smartAxios.interceptors.response.use(
         setTimeout(() => {
           location.href = '/';
         }, 300);
-        return Promise.reject(response);
+        return Promise.resolve(response);
       }
-      message.error(res.msg);
-      return Promise.reject(response);
+      // message.error(res.msg);
+      return Promise.resolve(response);
     } else {
       return Promise.resolve(res);
     }
