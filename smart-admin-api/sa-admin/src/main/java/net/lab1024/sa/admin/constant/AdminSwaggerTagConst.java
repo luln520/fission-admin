@@ -91,5 +91,39 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
     }
 
+    public static class PC {
+        public static final String PC_CONFIG = "PC-配置";
+
+        public static final String PC_COIN = "PC-币种";
+
+        public static final String PC_BILL = "PC-账单";
+
+        public static final String PC_CONTENT = "PC-公告";
+
+        public static final String PC_CONTRACT = "PC-合约";
+
+        public static final String PC_FILE = "PC-文件";
+
+        public static final String PC_FINANCE = "PC-钱包";
+
+        public static final String PC_INDEX = "PC-首页";
+
+        public static final String PC_KUANGJI = "PC-矿机";
+
+        public static final String PC_LOGIN = "PC-用户登陆/注册";
+
+        public static final String PC_NOTICE = "PC-通知";
+
+        public static final String PC_ONLINE = "PC-客服聊天";
+
+        public static final String PC_QIANBAO = "PC-钱包";
+
+        public static final String PC_TRADE = "PC-行情";
+
+        public static final String PC_USER = "PC-用户";
+
+
+    }
+
 
 }

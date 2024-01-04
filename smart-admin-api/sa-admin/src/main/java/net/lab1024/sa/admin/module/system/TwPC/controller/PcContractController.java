@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
@@ -19,6 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/contract")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_CONTRACT})
 public class PcContractController {
 
     @Autowired

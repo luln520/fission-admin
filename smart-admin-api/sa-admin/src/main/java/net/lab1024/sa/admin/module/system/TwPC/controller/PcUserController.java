@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -15,6 +17,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/pc/user")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_USER})
 public class PcUserController {
 
     @Autowired

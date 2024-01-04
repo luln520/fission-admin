@@ -112,6 +112,9 @@ public class DateUtil {
     public static Date str2DateTime(String date) {
         return str2DateTime(date, FORMAT_YYYY_MM_DD_HH_MM_SS);
     }
+    public static Date str2DateDay(String date) {
+        return str2DateTime(date, FORMAT_YYYY_MM_DD);
+    }
 
     public static Date str2DateTime(String date, String format) {
         try {

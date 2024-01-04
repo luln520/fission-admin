@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.TwPC.controller;
 import cn.hutool.extra.servlet.ServletUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.controller.SupportBaseController;
@@ -27,7 +28,7 @@ import javax.validation.Valid;
  *
  */
 @RestController
-@Api(tags = {SwaggerTagConst.Support.FILE})
+@Api(tags = {AdminSwaggerTagConst.PC.PC_FILE})
 @RequestMapping("/api/pc/file")
 public class PcFileController extends SupportBaseController {
 

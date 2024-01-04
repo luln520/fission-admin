@@ -77,7 +77,8 @@ public class TwCtmarketServiceImpl extends ServiceImpl<TwCtmarketDao, TwCtmarket
 
     @Override
     public CoinpriceRes getcoinprice(String symbol) {
-        String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
+        String symbol1 = symbol.toLowerCase().replace("/", "");
+        String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol1;
         Map<String, Object> map = CommonUtil.doGet(str, null);
         JSONObject res = JSONObject.parseObject(map.get("res").toString());
         JSONArray data = JSONArray.parseArray(res.get("data").toString());
@@ -111,8 +112,7 @@ public class TwCtmarketServiceImpl extends ServiceImpl<TwCtmarketDao, TwCtmarket
         queryWrapper.eq("status",1);
         List<TwCtmarket> list = this.list(queryWrapper);
         for (TwCtmarket twCtmarket:list){
-            String symbol = twCtmarket.getSymbol();
-
+            String symbol = twCtmarket.getSymbol().toLowerCase().replace("/", "");
             String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
             Map<String, Object> map = CommonUtil.doGet(str, null);
             JSONObject res = JSONObject.parseObject(map.get("res").toString());

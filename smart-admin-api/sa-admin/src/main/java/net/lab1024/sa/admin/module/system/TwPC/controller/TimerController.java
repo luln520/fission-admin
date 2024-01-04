@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 定时器
  */
+
+//缺一个矿机是否过期的任务
+
 @Component
 @Slf4j
-
 public class TimerController {
     @Autowired
     private TimerServiceImpl timerService;
@@ -72,13 +74,7 @@ public class TimerController {
      *         return $result;
      *     }
      * */
-    /**
-     * 获取足球赛程  每隔一分钟执行一次
-     */
-    @Scheduled(cron = "0 */1 * * * ?")
-    public void getTransferInList() {
-//        timerService.getTransferInList();
-    }
+
 
 
     /**
@@ -157,7 +153,10 @@ public class TimerController {
      *         }
      *     }
      * */
-
+    @Scheduled(cron = "0 */1 * * * ?")
+    public void autokjsy() {
+        timerService.autokjsy();
+    }
 
     /**
      * 自动按风控比例设置订单的盈亏比例  5秒执行一次
@@ -391,6 +390,9 @@ public class TimerController {
      *
      * */
 
-
+    @Scheduled(cron = "0 */1 * * * ?")
+    public void hycarryout() {
+        timerService.hycarryout();
+    }
 }
 

@@ -1,7 +1,9 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwContentService;
@@ -22,6 +24,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/pc/index")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_INDEX})
 public class PcIndexController {
 
     @Autowired

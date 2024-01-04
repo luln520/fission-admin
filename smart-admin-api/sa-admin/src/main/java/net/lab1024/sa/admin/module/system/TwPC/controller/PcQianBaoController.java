@@ -1,6 +1,8 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserQianbao;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserQianbaoService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -11,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 币种
+ * 钱包
  */
 @RestController
 @RequestMapping("/api/pc/qianbao")
+@Api(tags = {AdminSwaggerTagConst.PC.PC_QIANBAO})
 public class PcQianBaoController {
 
     @Autowired
