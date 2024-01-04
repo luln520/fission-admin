@@ -37,6 +37,7 @@
     "mitt": "^3.0.0",
     "nprogress": "^0.2.0",
     "pinia": "~2.0.14",
+    "qs": "^6.11.2",
     "sortablejs": "^1.15.0",
     "ua-parser-js": "^1.0.2",
     "v-viewer": "~1.6.4",

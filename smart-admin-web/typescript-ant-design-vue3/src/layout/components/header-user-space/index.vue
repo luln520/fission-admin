@@ -10,13 +10,13 @@
 <template>
   <a-space :size="10">
     <div class="setting">
-      <a-input-search
+      <!-- <a-input-search
         @click="search"
         style="margin-right: 30px; width: 250px"
         placeholder="1024创新实验室、小镇程序员"
         enter-button="搜索"
         size="small"
-      />
+      /> -->
       <!---消息通知--->
       <HeaderMessage ref="headerMessage" />
       <!---国际化--->
