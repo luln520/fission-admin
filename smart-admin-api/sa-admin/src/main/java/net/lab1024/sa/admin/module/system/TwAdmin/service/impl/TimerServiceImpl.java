@@ -110,10 +110,10 @@ public class TimerServiceImpl {
         //创建财务日志
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
-        twBill.setUsername(twUserCoin.getUsername());
+        twBill.setUsername(username);
         twBill.setNum(money);
         twBill.setCoinname("usdt");
-        twBill.setAfternum(twUserCoinService.afternum(uid,"usdt"));
+        twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(4);
         twBill.setAddtime(new Date());
         twBill.setSt(1);
@@ -122,7 +122,7 @@ public class TimerServiceImpl {
 
         TwNotice twNotice = new TwNotice();
         twNotice.setUid(uid);
-        twNotice.setAccount(twUserCoin.getUsername());
+        twNotice.setAccount(username);
         twNotice.setTitle("秒合约交易");
         twNotice.setContent("秒合约已平仓，请及时加仓");
         twNotice.setAddtime(new Date());
@@ -172,7 +172,7 @@ public class TimerServiceImpl {
                 twKjprofit1.setDay(DateUtil.str2DateDay(nowdate));
                 twKjprofitService.save(twKjprofit1);
 
-                twUserCoinService.incre(uid,tcoinnum,"usdt");
+                twUserCoinService.incre(uid,tcoinnum,twUserCoin.getUsdt());
 
                 //写资金日志
                 TwBill twBill = new TwBill();
@@ -180,7 +180,7 @@ public class TimerServiceImpl {
                 twBill.setUsername(username);
                 twBill.setNum(tcoinnum);
                 twBill.setCoinname("usdt");
-                twBill.setAfternum(twUserCoinService.afternum(uid,"usdt"));
+                twBill.setAfternum(twUserCoinService.afternum(uid));
                 twBill.setType(8);
                 twBill.setAddtime(new Date());
                 twBill.setSt(1);
@@ -233,6 +233,10 @@ public class TimerServiceImpl {
             BigDecimal ylnum = num.multiply(hybl.divide(new BigDecimal(100), mathContext));
             BigDecimal money = num.add(ylnum);  //盈利金额
             BigDecimal sellprice = twHyorder.getSellprice();
+
+            QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
+            queryWrapper3.eq("userid",uid);
+            TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
             //买涨
             if(hyzd == 1){
                 boolean isWinArray = false;
@@ -260,7 +264,7 @@ public class TimerServiceImpl {
                              sellprice = buyprice.add(randnum);
                          }
                     //增加资产
-                    twUserCoinService.incre(uuid,money,"usdt");
+                    twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
 
                     //修改订单状态
                     twHyorder.setStatus(2);
@@ -291,7 +295,7 @@ public class TimerServiceImpl {
                     twHyorderService.updateById(twHyorder);
 
                     //减少资产
-                    twUserCoinService.decre(uuid,money,"usdt");
+                    twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
 
                     //写财务日志
                     addlog(uuid,username,money);
@@ -309,7 +313,7 @@ public class TimerServiceImpl {
                             sellprice = buyprice.add(randnum);
                         }
                         //减少资产
-                        twUserCoinService.incre(uuid,money,"usdt");
+                        twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
 
                         //修改订单状态
                         twHyorder.setStatus(2);
@@ -339,7 +343,7 @@ public class TimerServiceImpl {
                         twHyorderService.updateById(twHyorder);
 
                         //减少资产
-                        twUserCoinService.decre(uuid,money,"usdt");
+                        twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
 
                         //写财务日志
                         addlog(uuid,username,money);
@@ -372,7 +376,7 @@ public class TimerServiceImpl {
                         sellprice = newprice;
                     }
                     //增加资产
-                    twUserCoinService.incre(uuid,money,"usdt");
+                    twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
 
                     //修改订单状态
                     twHyorder.setStatus(2);
@@ -402,7 +406,7 @@ public class TimerServiceImpl {
                     twHyorderService.updateById(twHyorder);
 
                     //减少资产
-                    twUserCoinService.decre(uuid,money,"usdt");
+                    twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
 
                     //写财务日志
                     addlog(uuid,username,money);
@@ -419,7 +423,7 @@ public class TimerServiceImpl {
                         }
 
                         //增加资产
-                        twUserCoinService.incre(uuid,money,"usdt");
+                        twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
 
                         //修改订单状态
                         twHyorder.setStatus(2);
@@ -449,7 +453,7 @@ public class TimerServiceImpl {
                         twHyorderService.updateById(twHyorder);
 
                         //减少资产
-                        twUserCoinService.decre(uuid,money,"usdt");
+                        twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
 
                         //写财务日志
                         addlog(uuid,username,money);

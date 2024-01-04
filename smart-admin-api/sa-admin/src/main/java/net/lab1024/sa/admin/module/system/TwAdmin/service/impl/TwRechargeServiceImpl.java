@@ -165,15 +165,16 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             QueryWrapper<TwUserCoin> queryCoin = new QueryWrapper<>();
             queryCoin.eq("userid", uid);
             TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
+            BigDecimal usdt = twUserCoin.getUsdt();
             if (twUserCoin != null) {
-                twUserCoinService.incre(uid, num, coinname);//增加用户资产
+                twUserCoinService.incre(uid, num, usdt);//增加用户资产
 
                 TwBill twBill = new TwBill();
                 twBill.setUid(uid);
                 twBill.setUsername(one.getUsername());
                 twBill.setNum(one.getNum());
                 twBill.setCoinname(one.getCoin());
-                twBill.setAfternum(twUserCoinService.afternum(uid, "usdt"));
+                twBill.setAfternum(twUserCoinService.afternum(uid));
                 twBill.setType(17);
                 twBill.setAddtime(new Date());
                 twBill.setSt(1);

@@ -269,7 +269,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             }
             this.save(twHyorder);
             //扣除USDT额度
-            twUserCoinService.decre(uid,tmoney,"usdt");
+            twUserCoinService.decre(uid,tmoney,twUserCoin.getUsdt());
 
             //创建财务日志
             TwBill twBill = new TwBill();
@@ -277,7 +277,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twBill.setUsername(twUser.getUsername());
             twBill.setNum(ctzed);
             twBill.setCoinname("usdt");
-            twBill.setAfternum(twUserCoinService.afternum(uid,"usdt"));
+            twBill.setAfternum(twUserCoinService.afternum(uid));
             twBill.setType(3);
             twBill.setAddtime(new Date());
             twBill.setSt(2);

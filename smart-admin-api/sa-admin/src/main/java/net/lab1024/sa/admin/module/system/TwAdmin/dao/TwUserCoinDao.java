@@ -26,11 +26,11 @@ public interface TwUserCoinDao extends BaseMapper<TwUserCoin> {
     /**
      * 增加用户资产
      */
-    Integer incre(@Param("uid") int uid, @Param("num") BigDecimal num, @Param("coinname") String coinname);
+    Integer incre(@Param("uid") int uid, @Param("num") BigDecimal num, @Param("usdt") BigDecimal usdt);
 
-    Integer decre(@Param("uid") int uid,@Param("num") BigDecimal num,@Param("coinname") String coinname);
+    Integer decre(@Param("uid") int uid,@Param("num") BigDecimal num,@Param("usdt") BigDecimal usdt);
 
-    BigDecimal afternum(@Param("uid") int uid,@Param("coinname") String coinname);
+    BigDecimal afternum(@Param("uid") int uid);
 
     List<TwUserCoin> listpage(@Param("objectPage") Page<TwUserCoin> objectPage, @Param("obj") TwUserVo twUserVo);
 }

@@ -146,14 +146,14 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                 queryCoin.eq("userid", uid);
                 TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
                 if(twUserCoin != null){
-                    twUserCoinService.incre(uid,num,coinname);//增加用户资产
+                    twUserCoinService.incre(uid,num,twUserCoin.getUsdt());//增加用户资产
 
                     TwBill twBill = new TwBill();
                     twBill.setUid(uid);
                     twBill.setUsername(one.getUsername());
                     twBill.setNum(num);
                     twBill.setCoinname(coinname);
-                    twBill.setAfternum(twUserCoinService.afternum(uid,"usdt"));
+                    twBill.setAfternum(twUserCoinService.afternum(uid));
                     twBill.setType(16);
                     twBill.setAddtime(new Date());
                     twBill.setSt(1);
@@ -264,7 +264,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             return ResponseDTO.userErrorParam("账户余额不足");
         }
 
-        twUserCoinService.decre(uid,num,"usdt");
+        twUserCoinService.decre(uid,num,twUserCoin.getUsdt());
 
         TwMyzc twMyzc = new TwMyzc();
         twMyzc.setUserid(uid);
@@ -282,7 +282,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         twBill.setUsername(twUser.getUsername());
         twBill.setNum(num);
         twBill.setCoinname(twCoin.getName());
-        twBill.setAfternum(twUserCoinService.afternum(uid,"usdt"));
+        twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(2);
         twBill.setAddtime(new Date());
         twBill.setSt(2);

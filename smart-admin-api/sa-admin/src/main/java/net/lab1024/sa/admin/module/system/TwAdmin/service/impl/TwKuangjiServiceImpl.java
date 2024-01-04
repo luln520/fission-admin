@@ -153,14 +153,14 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorderService.save(twKjorder);
 
         //扣除会员额度
-        twUserCoinService.decre(uid,pricenum,"usdt");
+        twUserCoinService.decre(uid,pricenum,twUserCoin.getUsdt());
 
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
         twBill.setUsername(user.getUsername());
         twBill.setNum(pricenum);
         twBill.setCoinname(kuangji.getOutcoin());
-        twBill.setAfternum(twUserCoinService.afternum(uid,"usdt"));
+        twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(5);
         twBill.setAddtime(new Date());
         twBill.setSt(2);

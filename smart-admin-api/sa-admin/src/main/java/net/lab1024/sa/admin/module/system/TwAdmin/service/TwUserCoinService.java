@@ -25,18 +25,17 @@ public interface TwUserCoinService extends IService<TwUserCoin> {
      * @param num
      * @return
      */
-     int incre(Integer uid, BigDecimal num, String coinname);
+     int incre(Integer uid, BigDecimal num, BigDecimal usdt);
 
     /**
      * 减少用户资产
      * @param uid
      * @param num
-     * @param coinname
      * @return
      */
-     int decre(Integer uid,BigDecimal num,String coinname);
+     int decre(Integer uid,BigDecimal num,BigDecimal usdt);
 
-     BigDecimal afternum(Integer uid,String coinname);
+     BigDecimal afternum(Integer uid);
 
 
     IPage<TwUserCoin> listpage(TwUserVo twUserVo);

@@ -267,8 +267,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         queryWrapper.eq("id", uid);
         TwUser one = this.getOne(queryWrapper);
 
+        QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id", uid);
+        TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
+
         if(type == 2){
-            twUserCoinService.decre(uid,money,"usdt");
+            twUserCoinService.decre(uid,money,twUserCoin.getUsdt());
             remark = "管理员手动减少";
 
 
@@ -285,7 +289,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         }
 
         if(type == 1){   //增加
-            twUserCoinService.incre(uid,money,"usdt");
+            twUserCoinService.incre(uid,money,twUserCoin.getUsdt());
             TwRecharge twRecharge = new TwRecharge();
             twRecharge.setUid(uid);
             twRecharge.setUsername(one.getUsername());
@@ -317,7 +321,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         twBill.setUsername(one.getUsername());
         twBill.setCoinname("usdt");
         twBill.setNum(money);
-        twBill.setAfternum(twUserCoinService.afternum(uid, "usdt"));
+        twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(1);
         twBill.setAddtime(new Date());
         twBill.setSt(1);

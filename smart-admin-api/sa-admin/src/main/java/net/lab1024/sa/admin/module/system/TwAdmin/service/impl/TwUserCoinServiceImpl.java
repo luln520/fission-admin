@@ -37,17 +37,17 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
     @Lazy
     private TwUserService twUserService;
     @Override
-    public int incre(Integer uid, BigDecimal num, String coinname) {
-        return this.baseMapper.incre(uid,num,coinname);
+    public int incre(Integer uid, BigDecimal num, BigDecimal usdt) {
+        return this.baseMapper.incre(uid,num,usdt);
     }
 
-    public int decre(Integer uid, BigDecimal num,String coinname) {
-        return this.baseMapper.decre(uid,num,coinname);
+    public int decre(Integer uid, BigDecimal num,BigDecimal usdt) {
+        return this.baseMapper.decre(uid,num,usdt);
     }
 
     @Override
-    public BigDecimal afternum(Integer uid, String coinname) {
-        return this.baseMapper.afternum(uid,coinname);
+    public BigDecimal afternum(Integer uid) {
+        return this.baseMapper.afternum(uid);
     }
 
     @Override
