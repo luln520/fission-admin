@@ -36,11 +36,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -277,5 +279,43 @@ public class FileService {
         }
         // 根据文件服务类 获取对应文件服务 删除文件
         return fileStorageService.delete(fileKey);
+    }
+
+
+    public ResponseDTO editMovieInfo(MultipartFile file){
+        String uploadDir = "upload";
+        try {
+           // 图片路径
+            String imgUrl = null;
+           //上传
+            String filename = upload(file,uploadDir, file.getOriginalFilename());
+            if (!StringUtils.isEmpty(filename)) {
+                imgUrl = new File(uploadDir).getName() + "/" + filename;
+            }
+
+            FileEntity fileEntity = new FileEntity();
+            fileEntity.setFolderType(1);
+            fileEntity.setFileName(filename);
+            fileEntity.setFileSize(file.getSize());
+            fileEntity.setFileKey(imgUrl);
+            fileDao.insert(fileEntity);
+            return ResponseDTO.ok();
+         } catch (Exception e) {
+            return ResponseDTO.userErrorParam("上传失败");
+     }
+    }
+
+    public String upload(MultipartFile file, String path, String fileName) throws Exception {
+        // 生成新的文件名
+//        String realPath = path + "/" + UUID.randomUUID().toString().replace("-", "")+fileName.substring(fileName.lastIndexOf("."));
+        String realPath = "C:\\Users\\1\\Desktop\\fsdownload" + "/" + UUID.randomUUID().toString().replace("-", "")+fileName.substring(fileName.lastIndexOf("."));
+        File dest = new File(realPath);
+              // 判断文件父目录是否存在
+        if (!dest.getParentFile().exists()) {
+           dest.getParentFile().mkdir();
+        }
+         // 保存文件
+       file.transferTo(dest);
+       return dest.getName();
     }
 }
