@@ -28,7 +28,7 @@
                             <a-input v-model:value="dataModel[formItem.name]" style="display: none;" />
                             <a-upload v-model:file-list="fileList" name="file" accept="image/*" :data="{
                                 folder: 1
-                            }" action="http://206.238.199.169:1024/api/admin/file/file/upload" :headers="headers"
+                            }" action="http://206.238.199.169:1024/api/admin/file/upload" :headers="headers"
                                 :dataName="formItem.name" @change="handleChange">
                                 <a-image height="60px" :preview="false" @click="preview(formItem.name)"
                                     :src="dataModel[formItem.name]?dataModel[formItem.name]:'xxx'"
