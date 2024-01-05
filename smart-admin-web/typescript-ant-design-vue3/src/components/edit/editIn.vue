@@ -23,7 +23,7 @@
                         <a-input v-model:value="dataModel[formItem.name]" style="display: none;" />
                         <a-upload v-model:file-list="fileList" name="file" accept="image/*" :data="{
                             folder: 1
-                        }" action="http://206.238.199.169:1024/api/admin/file/file/upload" :headers="headers"
+                        }" action="http://206.238.199.169:1024/api/admin/file/upload" :headers="headers"
                             :dataName="formItem.name" @change="handleChange">
                             <a-image height="60px" :preview="false" @click="preview(formItem.name)"
                             :src="dataModel[formItem.name]?dataModel[formItem.name]:'xxx'"
@@ -61,18 +61,16 @@ const preview = (name) => {
     fileNowName.value = name;
 }
 const handleChange = (info: UploadChangeParam) => {
-    console.info(info);
     if (info.file.status === 'done') {
         if (info.file.response && info.file.response.ok) {
             message.success(`${info.file.name} 上传成功`);
             const data=info.file.response;
             //替换原来图片
             dataModel[fileNowName.value].value = data.fileUrl;
+            fileList.value = [];
         } else {
             message.error(`上传失败`);
             fileList.value = [];
-            //替换原来图片  先写死
-            dataModel.value[fileNowName.value] = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png";
         }
     } else if (info.file.status === 'error') {
         message.error(`上传失败`);
