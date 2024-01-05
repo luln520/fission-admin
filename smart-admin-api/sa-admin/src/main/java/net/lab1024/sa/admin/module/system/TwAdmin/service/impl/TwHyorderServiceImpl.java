@@ -222,9 +222,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
                 ResponseDTO.userErrorParam("您的账户已被禁止交易，请联系客服");
             }
 
-            if(ctzed.compareTo(twHysetting.getHyMin()) < 0){
-                ResponseDTO.userErrorParam("不能小于最低投资额度");
-            }
+//            if(ctzed.compareTo(twHysetting.getHyMin()) < 0){
+//                ResponseDTO.userErrorParam("不能小于最低投资额度");
+//            }
 
             BigDecimal hySxf = twHysetting.getHySxf();
             MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
