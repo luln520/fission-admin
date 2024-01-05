@@ -51,7 +51,7 @@ public class TwKuangmController {
     /**
      * 启用会员矿机收益，停用会员矿机收益，删除会员矿机收益
      */
-    @PostMapping("/userkjStatus")
+    @GetMapping("/userkjStatus")
     @ResponseBody
     @ApiOperation(value = "启用会员矿机收益，停用会员矿机收益，删除会员矿机收益")
     @NoNeedLogin

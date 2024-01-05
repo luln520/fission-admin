@@ -35,7 +35,7 @@ export const userApi = {
     return getRequest('/api/admin/user/setUser', param);
   },
   /**
-   *指定必赢/指定必输/正常输赢
+   *指定必赢/指 定必输/正常输赢
    */
    setWin: (param) => {
     return getRequest('/api/admin/user/setWin', param);

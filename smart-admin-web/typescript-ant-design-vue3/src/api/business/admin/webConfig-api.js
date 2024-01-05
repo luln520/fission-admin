@@ -5,7 +5,7 @@ import { getRequest, postRequest } from '/@/lib/axios';
 
 export const webConfigApi = {
   /**
-  * 得到网站信息
+  * 得到网站信 息 
   */
   find: (param) => {
     return getRequest('/api/admin/webConfig/find', param);

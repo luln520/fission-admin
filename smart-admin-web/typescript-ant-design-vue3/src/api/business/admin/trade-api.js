@@ -17,10 +17,10 @@ export const tradeApi = {
     return postRequest('/api/admin/trade/edit', param);
   },
   /**
-  * 合约单控盈亏 设置
+  * 合约单控盈亏 设 置
   */
-  editKongK: (param) => {
-    return getRequest('/api/admin/trade/editKongK', param);
+  editKongyK: (param) => {
+    return getRequest('/api/admin/trade/editKongyK', param);
   },
   /**
   * 合约,平仓订单 查询单个
@@ -32,6 +32,6 @@ export const tradeApi = {
   * 合约设置
   */
   hysettingId: (param) => {
-    return getRequest('/api/admin/trade/hysettingid', param);
+    return getRequest('/api/admin/trade/hysettingId', param);
   },
 };

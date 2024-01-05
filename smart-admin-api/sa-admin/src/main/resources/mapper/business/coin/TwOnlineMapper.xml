@@ -7,7 +7,7 @@
     </select>
 
     <select id="getId" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline">
-        select * from tw_online  where uid= #{id} and type =2  order by id asc
+        select * from tw_online  where uid= #{id}  order by id asc
     </select>
 
     <select id="updateState" resultType="java.lang.Integer">
