@@ -11,7 +11,7 @@ export const kuangmApi = {
     return postRequest('/api/admin/kuangm/getkuangjiList', param);
   },
   /**
-  * 会员kuangm列表 分页
+  * 会员kuangm列表  分页
   */
   kjlist: (param) => {
     return postRequest('/api/admin/kuangm/kjlist', param);
@@ -24,7 +24,7 @@ export const kuangmApi = {
   },
 
   /**
-   * 启用禁用 删除
+   * 启用禁用 删除2
    */
   kuangjStatus: (param) => {
     return getRequest('/api/admin/kuangm/kuangjStatus', param);
@@ -40,6 +40,6 @@ export const kuangmApi = {
   * 启用会员kj收益，停用会员矿kj收益，删除会员kj收益
   */
   userkjStatus: (param) => {
-    return postRequest('/api/admin/kuangm/userkjStatus', param);
+    return getRequest('/api/admin/kuangm/userkjStatus', param);
   }
 };

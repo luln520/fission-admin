@@ -246,14 +246,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
              QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
              queryWrapper.eq("id", id);
              TwUser one = this.getOne(queryWrapper);
-             one.setStatus(1);
+             one.setTxstate(1);
              return this.updateById(one);
          }
          if(type == 4){         //禁止提币
              QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
              queryWrapper.eq("id", id);
              TwUser one = this.getOne(queryWrapper);
-             one.setStatus(2);
+             one.setTxstate(2);
              return this.updateById(one);
          }
 

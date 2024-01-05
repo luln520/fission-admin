@@ -61,10 +61,10 @@ public class TwUserController {
      * 参数：id buy_on
      * 说明：buy_on=2 禁止    buy_on=1 允许
      */
-    @GetMapping("/setBUy")
+    @GetMapping("/setBuy")
     @ApiOperation(value = "禁止/允许交易")
     @NoNeedLogin
-    public ResponseDTO setBUy(@RequestParam int id,@RequestParam int buyOn) {
+    public ResponseDTO setBuy(@RequestParam int id,@RequestParam int buyOn) {
         return ResponseDTO.ok(twUserService.setBUy(id,buyOn));
     }
 

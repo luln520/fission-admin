@@ -2,11 +2,6 @@
   <!-- 头部 -->
   <a-card style="height: 10%;min-height: 80px;">
     <a-space>
-      <!-- <a-button type="primary" :icon="h(PlusCircleOutlined)" @click="() => {
-        isOpenEdit = true;
-        addOrEditType = 1;
-        addOrEditData = {};
-      }">新增</a-button> -->
       <a-button type="" :icon="h(UndoOutlined)" @click="async () => {
         await loadData();
         message.success('刷新成功');
@@ -18,35 +13,37 @@
     <a-table :columns="columns" :data-source="tableData" @change="tableChange" :scroll="{ x: 1500 }"
       :pagination="pagination" :bordered="true">
       <template #bodyCell="{ column, record }">
-
-        <template v-if="column.key === 'agentId'">
-          <span v-if="record.defaultOn == 1" style="color: red;">系统默认通道</span>
-          <span v-if="record.defaultOn != 1" style="color: green;">{{ record.defaultOn }}</span>
+        <template v-if="column.key === 'hyzd'">
+          <div v-if="record.hyzd == 1" style="color: green;">买涨</div>
+          <div v-if="record.hyzd != 1" style="color: red;">买跌</div>
         </template>
-        <template v-if="column.key === 'action'">
-          <span>
-            <a @click="() => {
-              showInfo(record);
-            }">查看详情</a>
-          </span>
+
+        <template v-if="column.key === 'status'">
+          <div v-if="record.status == 1" style="color: red;">待结算</div>
+          <div v-if="record.status == 2" style="color: green;">已结算</div>
+          <div v-if="record.status == 3" style="">无效结算</div>
+        </template>
+        
+        <template v-if="column.key === 'ploss'">
+          <div v-if="record.isWin == 1" style="color: green;">+{{record.ploss}}</div>
+          <div v-if="record.isWin == 2" style="color: red;">-{{record.ploss}}</div>
         </template>
       </template>
     </a-table>
   </a-card>
-  <!-- 聊天框 -->
-  <Msg v-if="isOpenMsg" :isOpen="isOpenMsg" @close="() => {
-      isOpenMsg = false;
-    }" :username="username" :id="userId" />
 </template>
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
 import { h, ref, onMounted } from 'vue';
-import { UndoOutlined } from '@ant-design/icons-vue';
-import { onlineApi } from '/@/api/business/admin/online-api';
-import Msg from "./components/back/index.vue"
-const isOpenMsg = ref(false);
-const username = ref("");
-const userId = ref(0);
+import { PlusCircleOutlined, UndoOutlined } from '@ant-design/icons-vue';
+import { kuangmApi } from '/@/api/business/admin/kuangm-api';
+import AddOrEdit from "/@/components/edit/edit.vue"
+const addOrEditRef = ref();
+const isOpenEdit = ref(false);
+const addOrEditType = ref(1);
+const addOrEditData = ref({});
+const formItems = [];
+
 //分页数据
 const pagination = ref({
   total: 0,
@@ -62,32 +59,38 @@ const columns = [
     title: 'ID',
     dataIndex: 'id',
     key: 'id',
-    width: 50
+    width: 100
   },
   {
-    title: '会员号',
+    title: '会员账号',
     dataIndex: 'username',
     key: 'username',
+    width: 250
+  },
+  {
+    title: '矿机名称',
+    dataIndex: 'ktitle',
+    key: 'ktitle',
     width: 200
   },
   {
-    title: '未回复记录',
-    dataIndex: 'title',
-    key: 'title',
-    width: 100
+    title: '收益额度',
+    dataIndex: 'num',
+    key: 'num',
+    width: 200
   },
   {
-    title: '时间',
+    title: '收益币种',
+    dataIndex: 'coin',
+    key: 'coin',
+    width: 130
+  },
+  {
+    title: '收益时间',
     dataIndex: 'addtime',
     key: 'addtime',
     width: 100
-  },
-  {
-    title: '操作',
-    key: 'action',
-    width: 100,
-    fixed: 'right',
-  },
+  }
 ];
 
 //分页方法
@@ -97,17 +100,10 @@ async function tableChange(pag: { pageSize: number; current: number }) {
   loadData();
 
 }
-//启用禁用
-async function showInfo(userInfo) {
-  userId.value=userInfo.uid;
-  username.value=userInfo.username;
-  isOpenMsg.value=true;
-}
 //获取表格数据
 async function loadData() {
-  let data = await onlineApi.list({
-    pageNum: pagination.value.current, pageSize: pagination.value.pageSize
-  });
+  let data = await kuangmApi.kjsylist({
+    pageNum: pagination.value.current, pageSize: pagination.value.pageSize});
   if (data.ok) {
     data = data.data;
     tableData.value = data.records;

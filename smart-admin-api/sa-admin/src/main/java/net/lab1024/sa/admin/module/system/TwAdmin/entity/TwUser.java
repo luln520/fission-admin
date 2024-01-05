@@ -147,7 +147,7 @@ public class TwUser implements Serializable {
     * 登陆时间
     */
     @ApiModelProperty("登陆时间")
-    private Date logintime;
+    private Date logintime=new Date();
     /**
     * 认证提交时间
     */
