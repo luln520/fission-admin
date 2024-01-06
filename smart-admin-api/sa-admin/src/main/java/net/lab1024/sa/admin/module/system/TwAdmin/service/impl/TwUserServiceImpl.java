@@ -107,14 +107,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public IPage<TwUser> listpage(TwUserVo twUserVo) {
-            List<TwUser>  list1 = new ArrayList<>();
             Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twUserVo));
-            List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
-            for(TwUser twUser:list){
-
-            }
-            objectPage.setRecords(list);
             return objectPage;
     }
 
@@ -183,24 +177,36 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            if(one1 != null){
                return ResponseDTO.userErrorParam("手机号重复");
            }
+
            String encryptPwd = getEncryptPwd(password);
-           String invite = generateRandomString();
            String ip = CommonUtil.getClientIP(request);
-           String locationByIP = CommonUtil.getAddress(ip);
+           String locationByIP = CommonUtil.getAddress("206.238.199.169");
+
+           twUser.setUsername(username);
            twUser.setPassword(encryptPwd);
-           twUser.setInvit(invite);
+           twUser.setMoney(new BigDecimal(0));
+           twUser.setAreaCode("");
+           twUser.setAddip(ip);
            twUser.setAddr(locationByIP);
+           twUser.setRealName(locationByIP);
+           long timestampInSeconds = Instant.now().getEpochSecond();
+           twUser.setAddtime((int) timestampInSeconds);
+           twUser.setStatus(1);
+           twUser.setTxstate(1);
+           twUser.setRzstatus(2);
            this.save(twUser);
+
+           Integer uid = twUser.getId();
+           TwUserCoin twUserCoin = new TwUserCoin();
+           twUserCoin.setUserid(uid);
+           twUserCoin.setUsdt(new BigDecimal(0));
+           twUserCoinService.save(twUserCoin);
+
            return ResponseDTO.ok();
        }
 
        if(twUser.getId() != null){
-           Integer id = twUser.getId();
-           QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-           queryWrapper.eq("id", id);
-           TwUser one = this.getOne(queryWrapper);
-           one.setPassword(twUser.getPassword());
-           this.updateById(one);
+           this.updateById(twUser);
            return ResponseDTO.ok();
        }
            return ResponseDTO.ok();
@@ -266,9 +272,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", uid);
         TwUser one = this.getOne(queryWrapper);
+        BigDecimal money1 = one.getMoney();
+        one.setMoney(money1.add(money));
 
         QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("id", uid);
+        queryWrapper1.eq("userid", uid);
         TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
 
         if(type == 2){
@@ -311,7 +319,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 //                twAdminLog.setIp();
             Instant instant = Instant.now();
             long epochMilli = instant.toEpochMilli();
-            twAdminLog.setCreateTime((int) epochMilli);
+            twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setRemark("指定用户 "+uid+" 手动增加");
             twAdminLogService.save(twAdminLog);
         }
@@ -328,6 +336,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         twBill.setRemark(remark);
         twBillService.save(twBill);
 
+        this.updateById(one);
         return true;
     }
 
