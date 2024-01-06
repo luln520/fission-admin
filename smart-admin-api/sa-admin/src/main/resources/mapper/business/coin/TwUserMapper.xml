@@ -3,7 +3,7 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserDao">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser">
-        select * from tw_user where 1=1
+        select * from tw_user where 1=1  and is_agent=1
         <if test="obj.username != null and obj.username !=''">
             and username = #{obj.username}
         </if>
