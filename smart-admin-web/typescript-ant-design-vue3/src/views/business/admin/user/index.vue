@@ -87,13 +87,13 @@
               isOpenUserMoney = true;
               userMoneyData.id = record.id;
             }">操作余额</a>
-            <a-divider type="vertical" />
+            <!-- <a-divider type="vertical" />
             <a-popconfirm title="确认删除吗?" ok-text="确认" cancel-text="取消" @confirm="() => {
               setUser(record.id, 5);
             }
               ">
               <a>删除</a>
-            </a-popconfirm>
+            </a-popconfirm> -->
             <a-divider type="vertical" />
             <a @click="() => {
               setUser(record.id, 2)
@@ -294,6 +294,18 @@ const formItems = [{
     },
   ]
 }, {
+  name: "invit1",
+  label: "被邀请码",
+  placeholder: '请输入被邀请码',
+  type: "input",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
   name: "status",
   label: "登陆状态",
   placeholder: '',
@@ -359,9 +371,9 @@ const columns = [
     width: 250
   },
   {
-    title: 'USDT余额（ 存疑）',
-    dataIndex: 'ye',
-    key: 'ye',
+    title: 'USDT余额',
+    dataIndex: 'money',
+    key: 'money',
     width: 150
   }, {
     title: '信用积分',
@@ -492,7 +504,7 @@ async function addOrEditSubmit(submitData) {
 }
 //用户余额
 async function userMoneySubmit(submitData) {
-  submitData.uid=submitData.id;
+  submitData.uid = submitData.id;
   let data = await userApi.setMoney(submitData);
   if (data.ok) {
     message.success("操作成功！");
