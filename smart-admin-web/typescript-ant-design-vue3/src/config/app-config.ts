@@ -33,3 +33,10 @@ export const appDefaultConfig: AppConfig = {
   // 网站名称
   websiteName: 'SmartAdmin 2.X',
 };
+
+
+
+export const imageConfig = {
+  uploadUrl: 'http://206.238.199.169:1024/api/admin/file/upload',
+  baseImageUrl:"http://206.238.199.169/imgs/"
+};
