@@ -299,7 +299,7 @@ public class FileService {
             fileEntity.setFileSize(file.getSize());
             fileEntity.setFileKey(imgUrl);
             fileDao.insert(fileEntity);
-            return ResponseDTO.ok();
+            return ResponseDTO.ok(imgUrl);
          } catch (Exception e) {
             return ResponseDTO.userErrorParam("上传失败");
      }
