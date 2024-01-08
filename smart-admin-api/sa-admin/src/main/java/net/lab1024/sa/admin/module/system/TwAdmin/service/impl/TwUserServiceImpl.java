@@ -407,7 +407,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
          */
         String superPassword =CommonUtil.getEncryptPwd(configService.getConfigValue(ConfigKeyEnum.SUPER_PASSWORD));
         String requestPassword = this.getEncryptPwd(password);
-        if (!(superPassword.equals(requestPassword) || password.equals(requestPassword))) {
+        if (!(superPassword.equals(requestPassword) || one.getPassword().equals(requestPassword))) {
             return ResponseDTO.userErrorParam("登录名或密码错误！");
         }
 
@@ -523,7 +523,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setAddip(ip);
                 twUser.setAddr(address);
                 long timestampInSeconds = Instant.now().getEpochSecond();
-                twUser.setAddtime((int) timestampInSeconds);
+                twUser.setAddtime((int) (timestampInSeconds/1000));
                 twUser.setStatus(1);
                 twUser.setTxstate(1);
                 twUser.setRzstatus(2);

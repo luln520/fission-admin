@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjorderDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjprofitDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKuangjiDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +33,7 @@ import java.util.List;
 public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> implements TwKuangjiService {
 
     @Autowired
-    private TwKjprofitDao twKjprofitDao;
+    private TwKjorderDao twKjorderDao;
 
     @Autowired
     private TwUserService twUserService;
@@ -113,9 +115,9 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
          }
         QueryWrapper queryKjorder = new QueryWrapper();
         queryKjorder.eq("kid",kid);
-        queryKjorder.eq("uid",kid);
+        queryKjorder.eq("uid",uid);
         queryKjorder.eq("status",1);
-        int count = twKjprofitDao.selectCount(queryKjorder).intValue();
+        int count = twKjorderDao.selectCount(queryKjorder).intValue();
         if(count >= kuangji.getBuymax()){
              return ResponseDTO.userErrorParam("已达到限购数量");
         }
@@ -148,8 +150,10 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 //        twKjorder.setOutusdt(kuangji.getDayoutnum());
         twKjorder.setAddtime(new Date());
         twKjorder.setEndtime(addDay(new Date()));
-        twKjorder.setIntaddtime((int) new Date().getTime()/1000);
-        twKjorder.setIntendtime((int) addDay(new Date()).getTime()/1000);
+        long intaddtime = Instant.now().getEpochSecond();
+        twKjorder.setIntaddtime((int) (intaddtime));
+        Date date = addDay(new Date());
+        twKjorder.setIntendtime((int)(date.getTime()/1000));
         twKjorderService.save(twKjorder);
 
         //扣除会员额度
