@@ -3,15 +3,15 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwOnlineDao">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline">
-        select id,uid,username,count(username)as nor,addtime from tw_online  where state=0 group by username order by addtime desc
+        select id,uid,username,count(username) as noCount,addtime from tw_online  where state=0 group by username order by addtime desc
     </select>
 
     <select id="getId" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline">
         select * from tw_online  where uid= #{id}  order by id asc
     </select>
 
-    <select id="updateState" resultType="java.lang.Integer">
+    <update id="updateState">
         UPDATE tw_online SET  state = 1  WHERE uid = #{uid}
-    </select>
+    </update>
 
 </mapper>

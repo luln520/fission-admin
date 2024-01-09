@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -61,6 +62,10 @@ public class TwOnline implements Serializable {
     */
     @ApiModelProperty("后台查看状态0未查看2已查看")
     private Integer state;
+
+    @ApiModelProperty("未回复条数")
+    @TableField(exist = false)
+    private Integer noCount;
 
 
 }

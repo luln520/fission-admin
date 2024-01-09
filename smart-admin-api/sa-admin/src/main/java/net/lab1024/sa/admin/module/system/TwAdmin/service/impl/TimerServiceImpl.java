@@ -357,6 +357,27 @@ public class TimerServiceImpl {
                         //写财务日志
                         addlog(uuid,username,money);
                     }
+
+                    if(kongyk == 0){
+                        if (buyprice.compareTo(newprice) < 0) {   //盈利
+                            twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
+                            twHyorder.setStatus(2);
+                            twHyorder.setIsWin(1);
+                        } else if (newprice.compareTo(buyprice) == 0) {
+                            sellprice = buyprice.subtract(randnum);
+                        } else if (newprice.compareTo(buyprice) < 0) {   //亏损
+                            twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
+                            twHyorder.setStatus(2);
+                            twHyorder.setIsWin(2);
+                        }
+
+                        twHyorder.setSellprice(newprice);
+                        twHyorder.setPloss(ylnum);
+                        twHyorderService.updateById(twHyorder);
+
+                        //写财务日志
+                        addlog(uuid,username,money);
+                    }
                 }
 
             }
@@ -463,6 +484,28 @@ public class TimerServiceImpl {
 
                         //减少资产
                         twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
+
+                        //写财务日志
+                        addlog(uuid,username,money);
+                    }
+
+
+                    if(kongyk == 0){
+                        if (buyprice.compareTo(newprice) < 0) {   //亏损
+                            twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
+                            twHyorder.setStatus(2);
+                            twHyorder.setIsWin(1);
+                        } else if (newprice.compareTo(buyprice) == 0) {
+                            sellprice = buyprice.subtract(randnum);
+                        } else if (newprice.compareTo(buyprice) < 0) {   //盈利
+                            twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
+                            twHyorder.setStatus(2);
+                            twHyorder.setIsWin(1);
+                        }
+
+                        twHyorder.setSellprice(newprice);
+                        twHyorder.setPloss(ylnum);
+                        twHyorderService.updateById(twHyorder);
 
                         //写财务日志
                         addlog(uuid,username,money);

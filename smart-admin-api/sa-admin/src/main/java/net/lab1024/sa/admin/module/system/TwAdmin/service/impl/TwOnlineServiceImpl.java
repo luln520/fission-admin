@@ -86,7 +86,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     public ResponseDTO sendMsg(int uid, String content) {
         try{
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("uid",uid);
+            queryWrapper.eq("id",uid);
 
             TwUser one = twUserService.getOne(queryWrapper);
 

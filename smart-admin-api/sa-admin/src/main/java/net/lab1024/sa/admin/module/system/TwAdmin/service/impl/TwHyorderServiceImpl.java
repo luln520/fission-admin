@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -34,6 +35,7 @@ import java.util.*;
  * @since 2023-12-23 18:23:17
  */
 @Service("twHyorderService")
+@Transactional
 public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> implements TwHyorderService {
 
     @Autowired
@@ -127,7 +129,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         List<TwHyorder> list1 = new ArrayList<>();
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid", uid); // 添加查询条件
-        queryWrapper.eq("status", 1); // 添加查询条件
+//        queryWrapper.eq("status", 1); // 添加查询条件
         queryWrapper.orderByDesc("id");
         List<TwHyorder> list = this.list(queryWrapper);
         for(TwHyorder twHyorder:list){
@@ -195,13 +197,12 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
     @Override
     public ResponseDTO creatorder(int uid, int ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl) {
-        try{
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", uid); // 添加查询条件
             TwUser twUser = twUserService.getOne(queryWrapper);
 
             QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
-            queryWrapper4.eq("invit1", twUser.getInvit1()); // 添加查询条件
+            queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
             TwUser puser = twUserService.getOne(queryWrapper4);
 
             //获取会员资产
@@ -211,15 +212,15 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
             //获取合约手续费比例
             QueryWrapper<TwHysetting> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("userid", uid); // 添加查询条件
+            queryWrapper2.eq("id", 1); // 添加查询条件
             TwHysetting twHysetting = twHysettingService.getOne(queryWrapper2);
 
             if(twUser.getRzstatus() != 2){
-                ResponseDTO.userErrorParam("请先完成实名认证");
+                return ResponseDTO.userErrorParam("请先完成实名认证");
             }
 
             if(twUser.getBuyOn() == 2){
-                ResponseDTO.userErrorParam("您的账户已被禁止交易，请联系客服");
+                return ResponseDTO.userErrorParam("您的账户已被禁止交易，请联系客服");
             }
 
 //            if(ctzed.compareTo(twHysetting.getHyMin()) < 0){
@@ -231,7 +232,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             BigDecimal divide = ctzed.multiply(hySxf).divide(new BigDecimal(100), mathContext);
             BigDecimal tmoney = ctzed.add(divide);
             if(twUserCoin.getUsdt().compareTo(tmoney) < 0){
-                ResponseDTO.userErrorParam("USDT余额不足");
+               return ResponseDTO.userErrorParam("余额不足");
             }
 
             String symbol = ccoinname.toLowerCase().replace("/", "");
@@ -285,8 +286,5 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twBillService.save(twBill);
 
             return ResponseDTO.ok("建仓成功");
-        }catch (Exception e){
-            return ResponseDTO.userErrorParam("建仓失败");
-        }
     }
 }
