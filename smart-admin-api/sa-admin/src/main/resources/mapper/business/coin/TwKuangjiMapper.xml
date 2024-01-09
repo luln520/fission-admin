@@ -7,6 +7,6 @@
     </select>
 
     <select id="pcList" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji">
-        select * from tw_kuangji where  type=1  and status=1 and rtype=1 order by id asc
+        select * from tw_kuangji where  status=1  order by id asc
     </select>
 </mapper>

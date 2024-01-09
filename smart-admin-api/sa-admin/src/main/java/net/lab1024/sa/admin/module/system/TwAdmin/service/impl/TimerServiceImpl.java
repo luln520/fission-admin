@@ -193,7 +193,6 @@ public class TimerServiceImpl {
     public void endkjsy(){
         QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
-        queryWrapper.eq("type",1);
         List<TwKjorder> list = twKjorderService.list(queryWrapper);
         for(TwKjorder twKjorder:list){
             Integer intendtime = twKjorder.getIntendtime();
