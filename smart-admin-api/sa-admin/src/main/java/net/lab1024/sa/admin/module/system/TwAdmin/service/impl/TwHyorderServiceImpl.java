@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwFooterDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwHyorderDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
@@ -36,6 +37,7 @@ import java.util.*;
  */
 @Service("twHyorderService")
 @Transactional
+@Slf4j
 public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> implements TwHyorderService {
 
     @Autowired
@@ -237,6 +239,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
             String symbol = ccoinname.toLowerCase().replace("/", "");
             String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
+            log.info(str);
             Map<String, Object> map = CommonUtil.doGet(str, null);
             JSONObject res = JSONObject.parseObject(map.get("res").toString());
             JSONArray data = JSONArray.parseArray(res.get("data").toString());

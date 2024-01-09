@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Calendar;
@@ -141,7 +142,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorder.setSynum(kuangji.getCycle());
 //        twKjorder.setOuttype(kuangji.getOuttype());
         twKjorder.setOutcoin(kuangji.getOutcoin());
-        BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum()).multiply(BigDecimal.valueOf(kuangji.getCycle())).setScale(2, RoundingMode.HALF_UP);
+        MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
+        BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum().divide(new BigDecimal(100,mathContext))).multiply(BigDecimal.valueOf(kuangji.getCycle())).setScale(2, RoundingMode.HALF_UP);
         twKjorder.setOutnum(outnum);
 //        twKjorder.setOutusdt(kuangji.getDayoutnum());
         twKjorder.setAddtime(new Date());
