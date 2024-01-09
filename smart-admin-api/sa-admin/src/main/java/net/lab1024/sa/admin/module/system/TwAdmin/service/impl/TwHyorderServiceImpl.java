@@ -104,7 +104,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
                 //获取当前交易对的单价
                 String symbol = coinname.toLowerCase().replace("/", "");
                 String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
-                Map<String, Object> map = CommonUtil.doGet(str, null);
+                Map<String, Object> map = CommonUtil.executeGet(str);
                 JSONObject res = JSONObject.parseObject(map.get("res").toString());
                 JSONArray data = JSONArray.parseArray(res.get("data").toString());
                 JSONObject jsonObject = JSONObject.parseObject(data.get(0).toString());

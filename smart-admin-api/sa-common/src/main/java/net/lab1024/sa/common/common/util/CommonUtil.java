@@ -140,6 +140,19 @@ public class CommonUtil {
         return map;
     }
 
+
+    public static Map<String, Object> executeGet(String url){
+        Map<String, Object> map = new HashMap<String, Object>();
+        Request executeRequest = new Request.Builder()
+                .url(url)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .build();
+
+        String resp = ConnectionFactory.execute(executeRequest);
+        map.put("res", resp);
+        return map;
+    }
+
     /**
      * httpUtil   发送 get post 等请求（第三方接口请求需要）
      */
