@@ -37,21 +37,7 @@ public class TwKjorder implements Serializable {
     */
     @ApiModelProperty("矿机ID")
     private Integer kid;
-    /**
-    * 共享矿机识别号   删除
-    */
-    @ApiModelProperty("共享矿机识别号   删除")
-    private Integer sharbltxt;
-    /**
-    * 矿机类型1独资2共享  只有独资
-    */
-    @ApiModelProperty("矿机类型1独资2共享  只有独资")
-    private Integer type;
-    /**
-    * 共享的占有比例   删除
-    */
-    @ApiModelProperty("共享的占有比例   删除")
-    private Double sharebl;
+
     /**
     * 会员ID
     */
@@ -87,36 +73,13 @@ public class TwKjorder implements Serializable {
     */
     @ApiModelProperty("收益次数")
     private Integer synum;
-    /**
-    * 产出类型1按产值2按币  只按币量
-    */
-    @ApiModelProperty("产出类型1按产值2按币  只按币量")
-    private Integer outtype;
-    /**
-    * 产出币种  删除
-    */
-    @ApiModelProperty("产出币种  删除")
-    private String outcoin;
-    /**
-    * 产出的币量  删除
-    */
-    @ApiModelProperty("产出的币量  删除")
+
+    @ApiModelProperty("日收益")
     private BigDecimal outnum;
-    /**
-    * 按产币的量  删除
-    */
-    @ApiModelProperty("按产币的量  删除")
-    private BigDecimal outusdt;
-    /**
-    * 产币冻结1否2是  删除
-    */
-    @ApiModelProperty("产币冻结1否2是  删除")
-    private Integer djout;
-    /**
-    * 产币冻结天数   删除
-    */
-    @ApiModelProperty("产币冻结天数   删除")
-    private Integer djnum;
+
+    @ApiModelProperty("币种")
+    private String outcoin;
+
     /**
     * 购买日期
     */

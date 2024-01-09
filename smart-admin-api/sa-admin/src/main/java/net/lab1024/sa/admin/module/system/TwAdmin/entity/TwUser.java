@@ -218,9 +218,16 @@ public class TwUser implements Serializable {
     */
     @ApiModelProperty("1=正常用户 2=测试用户")
     private Integer userType;
-    /**
-    * 信用分
-    */
+
+    @ApiModelProperty("矿机购买次数")
+    private Integer kjNum;
+
+    @ApiModelProperty("矿机最低单价")
+    private BigDecimal kjMinnum;
+
+    @ApiModelProperty("矿机最高单价")
+    private BigDecimal kjMaxnum;
+
     @ApiModelProperty("信用分")
     private Integer jifen;
 

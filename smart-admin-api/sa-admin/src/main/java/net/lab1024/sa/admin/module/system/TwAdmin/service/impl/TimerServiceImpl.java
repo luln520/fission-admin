@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.models.auth.In;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.util.CommonUtil;
@@ -20,6 +22,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
+@Slf4j
 public class TimerServiceImpl {
 
     @Autowired
@@ -134,7 +137,6 @@ public class TimerServiceImpl {
     public void autokjsy(){
         QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
-        queryWrapper.eq("type",1);
         List<TwKjorder> list = twKjorderService.list(queryWrapper);
         for(TwKjorder twKjorder:list){
             String coinname="";
@@ -310,7 +312,7 @@ public class TimerServiceImpl {
                     addlog(uuid,username,num);
                 }
 
-                if(!isWinArray || !isLoseArray){
+                if(!isWinArray && !isLoseArray){
                     //如果未指定盈利和亏损，则按单控的计算
 
                     if(kongyk == 1){  //盈利
@@ -424,6 +426,7 @@ public class TimerServiceImpl {
 
                     //写财务日志
                     addlog(uuid,username,money);
+                    System.out.println("指定盈利ID======================================");
                 }
 
                 if (isLoseArray) { //如果有指定亏损ID，则按亏损结算
@@ -447,9 +450,11 @@ public class TimerServiceImpl {
 
                     //写财务日志
                     addlog(uuid,username,num);
+                    System.out.println("合约指定亏损成功======================================");
                 }
 
-                if(!isWinArray || !isLoseArray){ //如果未指定盈利和亏损，则按单控的计算
+                if(!isWinArray && !isLoseArray){ //如果未指定盈利和亏损，则按单控的计算
+                    System.out.println("未指定盈利和亏损，则按单控的计算======================================");
                     if(kongyk == 1){ //盈利
                         if (buyprice.compareTo(newprice) < 0) {
                             sellprice = buyprice.subtract(randnum);
@@ -494,6 +499,7 @@ public class TimerServiceImpl {
 
                         //写财务日志
                         addlog(uuid,username,num);
+                        log.info("合约指定亏损成功======================================");
                     }
 
 

@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
@@ -116,17 +117,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
          if(kuangji.getStatus() != 1){
              return ResponseDTO.userErrorParam("矿机暂停出售");
          }
-         if(kuangji.getSellnum() + kuangji.getYcnum() >= kuangji.getAllnum()){
-             return ResponseDTO.userErrorParam("矿机已售罄");
-         }
-        QueryWrapper queryKjorder = new QueryWrapper();
-        queryKjorder.eq("kid",kid);
-        queryKjorder.eq("uid",uid);
-        queryKjorder.eq("status",1);
-        int count = twKjorderDao.selectCount(queryKjorder).intValue();
-        if(count >= kuangji.getBuymax()){
-             return ResponseDTO.userErrorParam("已达到限购数量");
-        }
+
 
         QueryWrapper queryUserCoin = new QueryWrapper();
         queryUserCoin.eq("userid",uid);
@@ -140,19 +131,18 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         //建仓矿机订单数据
         TwKjorder twKjorder = new TwKjorder();
         twKjorder.setKid(kuangji.getId());
-        twKjorder.setType(1);
         twKjorder.setUid(uid);
         twKjorder.setUsername(user.getUsername());
         twKjorder.setKjtitle(kuangji.getTitle());
         twKjorder.setImgs(kuangji.getImgs());
         twKjorder.setStatus(1);
         twKjorder.setBuynum(buynum);
-        twKjorder.setOutcoin(kuangji.getOutcoin());
         twKjorder.setCycle(kuangji.getCycle());
         twKjorder.setSynum(kuangji.getCycle());
 //        twKjorder.setOuttype(kuangji.getOuttype());
-//        twKjorder.setOutcoin(kuangji.getOutcoin());
-        twKjorder.setOutnum(kuangji.getDayoutnum());
+        twKjorder.setOutcoin(kuangji.getOutcoin());
+        BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum()).multiply(BigDecimal.valueOf(kuangji.getCycle())).setScale(2, RoundingMode.HALF_UP);
+        twKjorder.setOutnum(outnum);
 //        twKjorder.setOutusdt(kuangji.getDayoutnum());
         twKjorder.setAddtime(new Date());
         twKjorder.setEndtime(addDay(new Date()));
@@ -200,14 +190,14 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
         Object totalNumObject = result.get(0).get("buynum");
         if (totalNumObject instanceof BigDecimal) {
-            buynum = ((BigDecimal) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+            buynum = ((BigDecimal) totalNumObject).setScale(2, RoundingMode.HALF_UP);
         } else if (totalNumObject instanceof Long) {
-            buynum = BigDecimal.valueOf((Long) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+            buynum = BigDecimal.valueOf((Long) totalNumObject).setScale(2, RoundingMode.HALF_UP);
         } else if (totalNumObject instanceof Integer) {
-            buynum = BigDecimal.valueOf((Integer) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+            buynum = BigDecimal.valueOf((Integer) totalNumObject).setScale(2, RoundingMode.HALF_UP);
         } else {
             // 处理其他可能的类型
-            buynum = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+            buynum = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
         }
 
         twPCKjprofitVo.setBuynum(buynum);
