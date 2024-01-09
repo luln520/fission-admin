@@ -105,50 +105,6 @@ const formItems = [{
     },
   ]
 }, {
-  name: "rtype",
-  label: "购买类型",
-  placeholder: '',
-  type: "select",
-  defaultValue: '',
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ],
-  selects: [
-    { name: "出售矿机", value: 1 },
-    { name: "赠送矿机", value: 0 }
-  ]
-}, {
-  name: "type",
-  label: "矿机类型",
-  placeholder: '',
-  type: "select",
-  defaultValue: '',
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ],
-  selects: [
-    { name: "独资", value: 1 },
-    { name: "共享", value: 0 }
-  ]
-}, {
-  name: "sharebl",
-  label: "分享比例",
-  placeholder: '独资请留空',
-  type: "input",
-  defaultValue: '',
-  rules: [
-    {
-      required: false,
-      message: '必填选项',
-    },
-  ]
-}, {
   name: "content",
   label: "矿机详情",
   placeholder: '请输入矿机详情',
@@ -189,25 +145,9 @@ const formItems = [{
     { name: "btcBTC", value: 'btc' }
   ]
 }, {
-  name: "outtype",
-  label: "日产量",
-  placeholder: '',
-  type: "select",
-  defaultValue: 1,
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ],
-  selects: [
-    { name: "按产值", value: 1 },
-    { name: "按币量", value: 2 }
-  ]
-}, {
   name: "dayoutnum",
-  label: "日产币数量",
-  placeholder: '请输入日产币数量',
+  label: "收益率",
+  placeholder: '设置数字（0-100）%',
   type: "input",
   defaultValue: '',
   rules: [
@@ -245,85 +185,9 @@ const formItems = [{
     },
   ]
 }, {
-  name: "buymax",
-  label: "购买上限",
-  placeholder: '请输入购买上限',
-  type: "input",
-  defaultValue: '',
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ]
-}, {
   name: "cycle",
   label: "矿机周期",
   placeholder: '请输入矿机周期',
-  type: "input",
-  defaultValue: '',
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ]
-}, {
-  name: "suanl",
-  label: "矿机算力",
-  placeholder: '请输入矿机算力',
-  type: "input",
-  defaultValue: '',
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ]
-}, {
-  name: "allnum",
-  label: "矿机库存总量",
-  placeholder: '请输入矿机库存总量',
-  type: "input",
-  defaultValue: '',
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ]
-}, {
-  name: "ycnum",
-  label: "预设出售量",
-  placeholder: '请输入预设出售量',
-  type: "input",
-  defaultValue: '',
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ]
-}, {
-  name: "jlcoin",
-  label: "参与奖励币种",
-  placeholder: '',
-  type: "select",
-  defaultValue: 1,
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ],
-  selects: [
-    { name: "usdtERC20", value: 'usdt' },
-    { name: "btcBTC", value: 'btc' }
-  ]
-}, {
-  name: "jlnum",
-  label: "参与奖励币量",
-  placeholder: '请输入参与奖励币种',
   type: "input",
   defaultValue: '',
   rules: [
@@ -348,62 +212,6 @@ const formItems = [{
     { name: "可用", value: 1 },
     { name: "禁用", value: 2 }
   ]
-}, {
-  name: "djout",
-  label: "产币冻结",
-  placeholder: '',
-  type: "select",
-  defaultValue: 1,
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ],
-  selects: [
-    { name: "是", value: 2 },
-    { name: "否", value: 1 }
-  ]
-}, {
-  name: "djday",
-  label: "产币冻结（天）",
-  placeholder: '空为不冻结',
-  type: "input",
-  defaultValue: '',
-  rules: [
-    {
-      required: false,
-      message: '必填选项',
-    },
-  ]
-}, {
-  name: "buyask",
-  label: "申购要求",
-  placeholder: '',
-  type: "select",
-  defaultValue: 1,
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ],
-  selects: [
-    { name: "按币量", value: 1 },
-    { name: "按团队", value: 2 }
-  ]
-}, {
-  name: "asknum",
-  label: "申购要求量",
-  placeholder: '请输入申购要求量',
-  type: "input",
-  defaultValue: '',
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ]
 }
 ];
 
@@ -425,18 +233,6 @@ const columns = [
     width: 100
   },
   {
-    title: '类型',
-    dataIndex: 'type',
-    key: 'type',
-    width: 70
-  },
-  {
-    title: '购买类型',
-    dataIndex: 'rtype',
-    key: 'rtype',
-    width: 100
-  },
-  {
     title: '矿机标题',
     dataIndex: 'title',
     key: 'title',
@@ -447,22 +243,11 @@ const columns = [
     dataIndex: 'imgs',
     key: 'imgs',
     width: 100
-  },
-  {
-    title: '矿机产出',
-    dataIndex: 'outtype',
-    key: 'outtype',
-    width: 150
   }, {
     title: '购买单价',
     dataIndex: 'pricenum',
     key: 'pricenum',
     width: 150
-  }, {
-    title: '购买上限',
-    dataIndex: 'buymax',
-    key: 'buymax',
-    width: 100
   },
   {
     title: '周期',

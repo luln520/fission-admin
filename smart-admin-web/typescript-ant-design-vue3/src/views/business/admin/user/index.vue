@@ -62,45 +62,33 @@
               sendMsgData.type = 1;
               sendMsgData.id = record.id;
             }">发通知</a>
-            <a-divider type="vertical" />
-            <a @click="setAgent(record.id)">设为代理</a>
-            <a-divider type="vertical" />
-            <a @click="setBuy(record.id, 2)">禁止交易</a>
-            <a-divider type="vertical" />
-            <a @click="setBuy(record.id, 1)">允许交易</a>
-            <a-divider type="vertical" />
-            <!--  -->
+            <a v-if="record.isAgent == 0" @click="setAgent(record.id)"><a-divider type="vertical" />设为代理</a>
+
             <div style="height: 10px;"></div>
-            <a @click="setUser(record.id, 4)">禁止提币</a>
-            <a-divider type="vertical" />
-            <a @click="setUser(record.id, 3)">允许提币</a>
-            <a-divider type="vertical" />
             <a @click="setWin(record.id, 2)">指定必输</a>
             <a-divider type="vertical" />
             <a @click="setWin(record.id, 1)">指定必赢</a>
             <a-divider type="vertical" />
             <a @click="setWin(record.id, 3)">正常交易</a>
-            <a-divider type="vertical" />
-            <!--  -->
-            <div style="height: 10px;"></div>
+          </div>
+        </template>
+        <template v-if="column.key === 'action1'">
+          <div>
             <a @click="() => {
               isOpenUserMoney = true;
               userMoneyData.id = record.id;
             }">操作余额</a>
-            <!-- <a-divider type="vertical" />
-            <a-popconfirm title="确认删除吗?" ok-text="确认" cancel-text="取消" @confirm="() => {
-              setUser(record.id, 5);
-            }
-              ">
-              <a>删除</a>
-            </a-popconfirm> -->
             <a-divider type="vertical" />
-            <a @click="() => {
+            <a v-if="record.buyOn == 1" @click="setBuy(record.id, 2)" style="color: red;">禁止交易</a>
+            <a v-if="record.buyOn == 2" @click="setBuy(record.id, 1)">允许交易</a>
+            <a-divider type="vertical" />
+            <a v-if="record.txstate == 1" @click="setUser(record.id, 4)" style="color: rgba(89, 0, 255, 0.623);">禁止提币</a>
+            <a v-if="record.txstate == 2" @click="setUser(record.id, 3)">允许提币</a>
+            <a-divider type="vertical" />
+            <a v-if="record.status == 2" @click="() => {
               setUser(record.id, 2)
-            }
-              ">解冻</a>
-            <a-divider type="vertical" />
-            <a @click="() => {
+            }">解冻</a>
+            <a v-if="record.status == 1" style="color: red;" @click="() => {
               setUser(record.id, 1)
             }
               ">冻结</a>
@@ -421,6 +409,12 @@ const columns = [
     dataIndex: 'invit',
     key: 'invit',
     width: 150
+  },
+  {
+    title: '资产操作',
+    key: 'action1',
+    width: 300,
+    fixed: 'right',
   },
   {
     title: '操作',
