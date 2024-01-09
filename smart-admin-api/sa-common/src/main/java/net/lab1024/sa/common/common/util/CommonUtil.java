@@ -2,8 +2,13 @@ package net.lab1024.sa.common.common.util;
 
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.HttpUtil;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.stereotype.Service;
+import cn.hutool.http.ssl.SSLSocketFactoryBuilder;
+
+import javax.net.ssl.SSLContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -118,11 +123,45 @@ public class CommonUtil {
             charset = "utf-8";
         }
         try {
-
             cn.hutool.http.HttpRequest httpRequest = HttpUtil.createGet(String.valueOf(url))           //设置代理端口
                     .timeout(10000);//发送GET请求
             String body = httpRequest.execute().body();
             map.put("res", body);
+        } catch (Exception e) {
+            map.put("res", "error");
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+            } catch (NullPointerException e) {
+                map.put("res", "error");
+            }
+        }
+
+        return map;
+    }
+
+    /**
+     * httpUtil   发送 get post 等请求（第三方接口请求需要）
+     */
+    /**
+     * Get方式请求
+     * @param charset 编码方式
+     * @return
+     */
+    public static Map<String, Object> doOKHGet(String url, String charset) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (null == charset) {
+            charset = "utf-8";
+        }
+        try {
+            OkHttpClient client = new OkHttpClient();
+            // 1.1 assemble params（组装参数）
+
+            Request request = new Request.Builder().url(url)
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded").build();
+            // 1.3 execute request and print result （执行请求并打印结果）
+                Response resp = client.newCall(request).execute();
+                map.put("res", resp.body().string());
         } catch (Exception e) {
             map.put("res", "error");
             System.out.println(e.getMessage());
