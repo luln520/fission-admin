@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Res.TwPCKjprofitVo;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -33,5 +35,7 @@ public interface TwKuangjiService extends IService<TwKuangji> {
     boolean close(int  id);
 
     boolean delete(int  id);
-    ResponseDTO buyKuangji(int uid, int kid);
+    ResponseDTO buyKuangji(int uid, int kid, BigDecimal buynum);
+
+    TwPCKjprofitVo kjprofitSum(int uid);
 }

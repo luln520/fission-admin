@@ -7,6 +7,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjprofit;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjorderVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Res.TwPCKjprofitVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -23,4 +24,5 @@ public interface TwKjprofitService extends IService<TwKjprofit> {
     IPage<TwKjprofit> listpage(TwKjprofitVo twKjprofitVo);
 
     List<TwKjprofit> kjprofit(int uid);
+
 }

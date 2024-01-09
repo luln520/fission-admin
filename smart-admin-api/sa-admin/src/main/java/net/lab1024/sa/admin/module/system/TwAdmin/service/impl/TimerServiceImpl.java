@@ -138,14 +138,10 @@ public class TimerServiceImpl {
         List<TwKjorder> list = twKjorderService.list(queryWrapper);
         for(TwKjorder twKjorder:list){
             String coinname="";
-            BigDecimal tcoinnum = new BigDecimal(0);
             Integer id = twKjorder.getId();
             Integer uid = twKjorder.getUid();
             String username = twKjorder.getUsername();
-            Integer outtype = twKjorder.getOuttype();
-            String outcoin = twKjorder.getOutcoin();
             BigDecimal outnum = twKjorder.getOutnum();
-
             QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
             queryWrapper1.eq("userid",uid);
             TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
@@ -157,28 +153,24 @@ public class TimerServiceImpl {
             queryWrapper2.eq("day",nowdate);
             TwKjprofit twKjprofit = twKjprofitService.getOne(queryWrapper2);
             if(twKjprofit == null){
-                if(outtype == 2){
-                    coinname = outcoin;
-                    tcoinnum = outnum;
-                }
                 TwKjprofit twKjprofit1 = new TwKjprofit();
                 twKjprofit1.setUid(uid);
                 twKjprofit1.setUsername(username);
                 twKjprofit1.setKid(id);
                 twKjprofit1.setKtitle(twKjorder.getKjtitle());
-                twKjprofit1.setNum(tcoinnum);
+                twKjprofit1.setNum(outnum);
                 twKjprofit1.setCoin(coinname);
                 twKjprofit1.setAddtime(new Date());
                 twKjprofit1.setDay(DateUtil.str2DateDay(nowdate));
                 twKjprofitService.save(twKjprofit1);
 
-                twUserCoinService.incre(uid,tcoinnum,twUserCoin.getUsdt());
+                twUserCoinService.incre(uid,outnum,twUserCoin.getUsdt());
 
                 //写资金日志
                 TwBill twBill = new TwBill();
                 twBill.setUid(uid);
                 twBill.setUsername(username);
-                twBill.setNum(tcoinnum);
+                twBill.setNum(outnum);
                 twBill.setCoinname("usdt");
                 twBill.setAfternum(twUserCoinService.afternum(uid));
                 twBill.setType(8);
@@ -192,6 +184,23 @@ public class TimerServiceImpl {
 
                 twKjorderService.updateById(twKjorder);
 
+            }
+        }
+    }
+
+    public void endkjsy(){
+        QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status",1);
+        queryWrapper.eq("type",1);
+        List<TwKjorder> list = twKjorderService.list(queryWrapper);
+        for(TwKjorder twKjorder:list){
+            Integer intendtime = twKjorder.getIntendtime();
+            //判断是否过期
+            Integer nowtime = (int) (System.currentTimeMillis()/1000);
+
+            if(nowtime>=intendtime){  //已过期
+                twKjorder.setStatus(3);
+                twKjorderService.updateById(twKjorder);
             }
         }
     }

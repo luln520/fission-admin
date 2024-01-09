@@ -158,6 +158,15 @@ public class TimerController {
         timerService.autokjsy();
     }
 
+
+    /**
+     * 矿机到期时间结算
+     */
+    @Scheduled(cron = "0 */1 * * * ?")
+    public void endkjsy() {
+        timerService.endkjsy();
+    }
+
     /**
      * 自动按风控比例设置订单的盈亏比例  5秒执行一次
      * 表：hyorder，hysetting

@@ -9,8 +9,10 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjprofitDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKuangjiDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Res.TwPCKjprofitVo;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.common.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +24,7 @@ import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 矿机列表(TwKuangji)表服务实现类
@@ -46,6 +49,9 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
     @Autowired
     private TwBillService twBillService;
+
+    @Autowired
+    private TwKjprofitService twKjprofitService;
     @Override
     public IPage<TwKuangji> listpage(PageParam pageParam) {
         Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
@@ -95,7 +101,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
     }
 
     @Override
-    public ResponseDTO buyKuangji(int uid, int kid) {
+    public ResponseDTO buyKuangji(int uid, int kid,BigDecimal buynum) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("id",uid);
         TwUser user = twUserService.getOne(queryWrapper);
@@ -127,8 +133,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         TwUserCoin twUserCoin = twUserCoinService.getOne(queryUserCoin);
 
         BigDecimal usdt = twUserCoin.getUsdt();  //默认取usdt
-        BigDecimal pricenum = kuangji.getPricenum();
-        if(usdt.compareTo(pricenum) < 0 ){
+        if(usdt.compareTo(buynum) < 0 ){
             return ResponseDTO.userErrorParam("账户余额不足");
         }
 
@@ -136,12 +141,13 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         TwKjorder twKjorder = new TwKjorder();
         twKjorder.setKid(kuangji.getId());
         twKjorder.setType(1);
-        twKjorder.setSharebl(0.0);
         twKjorder.setUid(uid);
         twKjorder.setUsername(user.getUsername());
         twKjorder.setKjtitle(kuangji.getTitle());
         twKjorder.setImgs(kuangji.getImgs());
         twKjorder.setStatus(1);
+        twKjorder.setBuynum(buynum);
+        twKjorder.setOutcoin(kuangji.getOutcoin());
         twKjorder.setCycle(kuangji.getCycle());
         twKjorder.setSynum(kuangji.getCycle());
 //        twKjorder.setOuttype(kuangji.getOuttype());
@@ -157,12 +163,12 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorderService.save(twKjorder);
 
         //扣除会员额度
-        twUserCoinService.decre(uid,pricenum,twUserCoin.getUsdt());
+        twUserCoinService.decre(uid,buynum,twUserCoin.getUsdt());
 
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
         twBill.setUsername(user.getUsername());
-        twBill.setNum(pricenum);
+        twBill.setNum(buynum);
         twBill.setCoinname(kuangji.getOutcoin());
         twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(5);
@@ -172,6 +178,61 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twBillService.save(twBill);
 
         return ResponseDTO.okMsg("购买成功");
+    }
+
+    @Override
+    public TwPCKjprofitVo kjprofitSum(int uid) {
+        TwPCKjprofitVo twPCKjprofitVo = new TwPCKjprofitVo();
+        QueryWrapper queryKjorder = new QueryWrapper();
+        queryKjorder.eq("uid",uid);
+        queryKjorder.eq("status",1);
+        int count = twKjorderDao.selectCount(queryKjorder).intValue();
+        twPCKjprofitVo.setCount(count);
+
+        BigDecimal buynum = new BigDecimal(0);
+        QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(buynum), 0) as buynum")
+                .eq("status", 1);
+        List<Map<String, Object>> result = twKjorderDao.selectMaps(queryWrapper);
+        if (result.isEmpty()) {
+            buynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object totalNumObject = result.get(0).get("buynum");
+        if (totalNumObject instanceof BigDecimal) {
+            buynum = ((BigDecimal) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Long) {
+            buynum = BigDecimal.valueOf((Long) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Integer) {
+            buynum = BigDecimal.valueOf((Integer) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            buynum = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        twPCKjprofitVo.setBuynum(buynum);
+
+        BigDecimal todaynum = new BigDecimal(0);
+        String nowdate = DateUtil.date2Str(new Date(), "yyyy-MM-dd");
+        QueryWrapper<TwKjprofit> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("uid",uid);
+        queryWrapper2.eq("day",nowdate);
+        List<TwKjprofit> list = twKjprofitService.list(queryWrapper2);
+        for(TwKjprofit twKjprofit:list){
+            todaynum = todaynum.add(twKjprofit.getNum());
+        }
+        twPCKjprofitVo.setTodaynum(todaynum);
+
+        BigDecimal sumnum = new BigDecimal(0);
+        QueryWrapper<TwKjprofit> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("uid",uid);
+        List<TwKjprofit> sumlist = twKjprofitService.list(queryWrapper3);
+        for(TwKjprofit twKjprofit:sumlist){
+            sumnum = sumnum.add(twKjprofit.getNum());
+        }
+        twPCKjprofitVo.setSumnum(sumnum);
+
+        return twPCKjprofitVo;
     }
 
     public Date addDay(Date date){

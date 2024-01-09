@@ -138,4 +138,7 @@ public class TwKjorder implements Serializable {
     @ApiModelProperty("到期时间戳")
     private Integer intendtime;
 
+    @ApiModelProperty("购买数量")
+    private BigDecimal buynum;
+
 }

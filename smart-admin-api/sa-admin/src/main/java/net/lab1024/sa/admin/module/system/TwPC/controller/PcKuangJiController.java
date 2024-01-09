@@ -10,6 +10,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKjorderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKjprofitService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKuangjiService;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Res.TwPCKjprofitVo;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -125,6 +127,18 @@ public class PcKuangJiController {
     public ResponseDTO<List<TwKjprofit>> kjprofit(@RequestParam int uid) {
         return ResponseDTO.ok(twKjprofitService.kjprofit(uid));
     }
+
+
+    @GetMapping("/kjprofitSum")
+    @ResponseBody
+    @ApiOperation(value = "统计矿机收益列表")
+    @NoNeedLogin
+    public ResponseDTO<TwPCKjprofitVo> kjprofitSum(@RequestParam int uid) {
+        return ResponseDTO.ok(twKuangjiService.kjprofitSum(uid));
+    }
+
+
+
 
     /**
      * 购买共享矿机 （很复杂）
@@ -398,12 +412,9 @@ public class PcKuangJiController {
     @ResponseBody
     @ApiOperation(value = "购买独资矿机")
     @NoNeedLogin
-    public ResponseDTO buyKuangji(@RequestParam int uid, @RequestParam int kid) {
-        return ResponseDTO.ok(twKuangjiService.buyKuangji(uid,kid));
+    public ResponseDTO buyKuangji(@RequestParam int uid, @RequestParam int kid, @RequestParam BigDecimal buynum) {
+        return ResponseDTO.ok(twKuangjiService.buyKuangji(uid,kid,buynum));
     }
-
-
-
 
 
 }
