@@ -30,9 +30,9 @@ public class PcNoticeController {
      * select notice  where  uid=？
      * */
     @NoNeedLogin
-    @GetMapping("/notice")
+    @GetMapping("/list")
     @ApiOperation("通知列表")
-    public ResponseDTO<List<TwNotice>> notice(@RequestParam int uid) {
+    public ResponseDTO<List<TwNotice>> list(@RequestParam int uid) {
         return twNoticeService.notice(uid);
     }
 

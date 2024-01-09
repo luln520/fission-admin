@@ -69,7 +69,7 @@ public class TwUserQianbaoServiceImpl extends ServiceImpl<TwUserQianbaoDao, TwUs
         TwUser twUser = twUserService.getOne(queryWrapper);
 
         QueryWrapper<TwCoin> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("id", uid);
+        queryWrapper1.eq("id", oid);
         TwCoin twCoin = twCoinService.getOne(queryWrapper1);
 
         TwUserQianbao twUserQianbao = new TwUserQianbao();
