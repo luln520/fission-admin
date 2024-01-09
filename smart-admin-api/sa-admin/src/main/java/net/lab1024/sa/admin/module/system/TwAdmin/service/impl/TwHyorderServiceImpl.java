@@ -257,7 +257,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twHyorder.setBuytime(new Date());
             Date selltime = DateUtil.secondsDateAddSeconds(new Date(), ctime * 60);
             twHyorder.setSelltime(selltime);
-            twHyorder.setIntselltime((int) selltime.getTime()/1000);
+            twHyorder.setIntselltime((int) (selltime.getTime()/1000));
             twHyorder.setBuyprice(close);
             twHyorder.setSellprice(new BigDecimal(0));
             twHyorder.setPloss(new BigDecimal(0));

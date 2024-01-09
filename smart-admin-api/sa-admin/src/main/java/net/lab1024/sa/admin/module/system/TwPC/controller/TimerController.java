@@ -399,7 +399,7 @@ public class TimerController {
      *
      * */
 
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "*/30 * * * * ?")
     public void hycarryout() {
         timerService.hycarryout();
     }

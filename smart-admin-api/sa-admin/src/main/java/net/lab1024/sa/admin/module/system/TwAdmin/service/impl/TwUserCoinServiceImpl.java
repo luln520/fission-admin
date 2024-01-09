@@ -4,23 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwTyhyorderDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserCoinDao;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwTyhyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwTradeService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
 

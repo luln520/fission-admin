@@ -1,7 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwDaohang;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwDjprofit;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

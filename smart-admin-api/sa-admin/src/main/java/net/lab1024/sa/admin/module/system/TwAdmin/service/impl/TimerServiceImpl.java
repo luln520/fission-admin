@@ -304,10 +304,10 @@ public class TimerServiceImpl {
                     twHyorderService.updateById(twHyorder);
 
                     //减少资产
-                    twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
+                    twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
 
                     //写财务日志
-                    addlog(uuid,username,money);
+                    addlog(uuid,username,num);
                 }
 
                 if(!isWinArray || !isLoseArray){
@@ -321,7 +321,7 @@ public class TimerServiceImpl {
                         } else if (newprice.compareTo(buyprice) < 0) {
                             sellprice = buyprice.add(randnum);
                         }
-                        //减少资产
+                        //增加资产
                         twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
 
                         //修改订单状态
@@ -352,10 +352,10 @@ public class TimerServiceImpl {
                         twHyorderService.updateById(twHyorder);
 
                         //减少资产
-                        twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
+                        twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
 
                         //写财务日志
-                        addlog(uuid,username,money);
+                        addlog(uuid,username,num);
                     }
 
                     if(kongyk == 0){
@@ -363,20 +363,27 @@ public class TimerServiceImpl {
                             twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
                             twHyorder.setStatus(2);
                             twHyorder.setIsWin(1);
+                            //写财务日志
+                            addlog(uuid,username,money);
+
                         } else if (newprice.compareTo(buyprice) == 0) {
-                            sellprice = buyprice.subtract(randnum);
-                        } else if (newprice.compareTo(buyprice) < 0) {   //亏损
-                            twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
+                            twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
                             twHyorder.setStatus(2);
                             twHyorder.setIsWin(2);
+                            //写财务日志
+                            addlog(uuid,username,num);
+                        } else if (newprice.compareTo(buyprice) < 0) {   //亏损
+                            twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
+                            twHyorder.setStatus(2);
+                            twHyorder.setIsWin(2);
+                            //写财务日志
+                            addlog(uuid,username,num);
                         }
 
                         twHyorder.setSellprice(newprice);
                         twHyorder.setPloss(ylnum);
                         twHyorderService.updateById(twHyorder);
 
-                        //写财务日志
-                        addlog(uuid,username,money);
                     }
                 }
 
@@ -436,10 +443,10 @@ public class TimerServiceImpl {
                     twHyorderService.updateById(twHyorder);
 
                     //减少资产
-                    twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
+                    twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
 
                     //写财务日志
-                    addlog(uuid,username,money);
+                    addlog(uuid,username,num);
                 }
 
                 if(!isWinArray || !isLoseArray){ //如果未指定盈利和亏损，则按单控的计算
@@ -483,32 +490,38 @@ public class TimerServiceImpl {
                         twHyorderService.updateById(twHyorder);
 
                         //减少资产
-                        twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
+                        twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
 
                         //写财务日志
-                        addlog(uuid,username,money);
+                        addlog(uuid,username,num);
                     }
 
 
                     if(kongyk == 0){
                         if (buyprice.compareTo(newprice) < 0) {   //亏损
-                            twUserCoinService.decre(uuid,money,twUserCoin.getUsdt());
+                            twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
                             twHyorder.setStatus(2);
-                            twHyorder.setIsWin(1);
+                            twHyorder.setIsWin(2);
+                            //写财务日志
+                            addlog(uuid,username,num);
                         } else if (newprice.compareTo(buyprice) == 0) {
-                            sellprice = buyprice.subtract(randnum);
+                            twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
+                            twHyorder.setStatus(2);
+                            twHyorder.setIsWin(2);
+                            //写财务日志
+                            addlog(uuid,username,num);
                         } else if (newprice.compareTo(buyprice) < 0) {   //盈利
                             twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
                             twHyorder.setStatus(2);
                             twHyorder.setIsWin(1);
+                            //写财务日志
+                            addlog(uuid,username,money);
                         }
 
                         twHyorder.setSellprice(newprice);
                         twHyorder.setPloss(ylnum);
                         twHyorderService.updateById(twHyorder);
 
-                        //写财务日志
-                        addlog(uuid,username,money);
                     }
                 }
             }

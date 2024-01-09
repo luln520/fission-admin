@@ -2,14 +2,10 @@ package net.lab1024.sa.admin.module.system.TwAdmin.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwTyhyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
-import net.lab1024.sa.common.common.domain.PageParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;

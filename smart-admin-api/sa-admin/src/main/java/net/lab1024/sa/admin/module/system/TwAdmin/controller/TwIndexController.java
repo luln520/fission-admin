@@ -34,9 +34,6 @@ public class TwIndexController {
     private TwKjorderService twKjorderService;
 
     @Autowired
-    private TwIssueLogService twIssueLogService;
-
-    @Autowired
     private TwRechargeService twRechargeService;
 
     @Autowired
@@ -65,9 +62,6 @@ public class TwIndexController {
         // 查询全网矿机总数 M("kjorder")->where(array('status' => 1))->count();
         int allKjOrders = 0;//kjOrderDao.countAllOrders();
         allKjOrders = twKjorderService.countAllOrders();
-        // 查询认购总数  M("issue_log")->where(array('status' => 1))->count();
-        int allIssueLogs = 0;//issueLogDao.countAllIssueLogs();
-        allIssueLogs = twIssueLogService.countAllIssueLogs();
         // 查询今日充值数量 $daywhere['addtime'] = ['between', [$statime, $endtime]];
         //        $daycz = M("recharge")->where($daywhere)->where(array('status' => 2))->sum("num");
         BigDecimal dayRecharge = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
@@ -88,7 +82,6 @@ public class TwIndexController {
         result.put("allUser", allUser);
         result.put("allHyOrders", allHyOrders);
         result.put("allKjOrders", allKjOrders);
-        result.put("allIssueLogs", allIssueLogs);
         result.put("dayRecharge", dayRecharge);
         result.put("allRecharge", allRecharge);
         result.put("dayWithdraw", dayWithdraw);
