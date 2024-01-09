@@ -413,7 +413,7 @@ public class PcKuangJiController {
     @ApiOperation(value = "购买独资矿机")
     @NoNeedLogin
     public ResponseDTO buyKuangji(@RequestParam int uid, @RequestParam int kid, @RequestParam BigDecimal buynum) {
-        return ResponseDTO.ok(twKuangjiService.buyKuangji(uid,kid,buynum));
+        return twKuangjiService.buyKuangji(uid,kid,buynum);
     }
 
 
