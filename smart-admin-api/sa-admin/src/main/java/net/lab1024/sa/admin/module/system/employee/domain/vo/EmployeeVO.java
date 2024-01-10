@@ -60,4 +60,8 @@ public class EmployeeVO {
     @ApiModelProperty("是否为主管  0否 1是")
     @NotNull(message = "是否为主管不能为空")
     private int supervisorFlag;
+
+    @ApiModelProperty("邀请码")
+    @NotNull(message = "邀请码")
+    private String invite;
 }
