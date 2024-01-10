@@ -53,4 +53,8 @@ public class EmployeeAddForm {
 
     @ApiModelProperty("角色列表")
     private List<Long> roleIdList;
+
+    @ApiModelProperty("是否为主管  0否 1是")
+    @NotNull(message = "是否为主管不能为空")
+    private int supervisorFlag;
 }

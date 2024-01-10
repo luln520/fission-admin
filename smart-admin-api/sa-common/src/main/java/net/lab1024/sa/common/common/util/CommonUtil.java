@@ -153,41 +153,6 @@ public class CommonUtil {
         return map;
     }
 
-    /**
-     * httpUtil   发送 get post 等请求（第三方接口请求需要）
-     */
-    /**
-     * Get方式请求
-     * @param charset 编码方式
-     * @return
-     */
-    public static Map<String, Object> doOKHGet(String url, String charset) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        if (null == charset) {
-            charset = "utf-8";
-        }
-        try {
-            OkHttpClient client = new OkHttpClient();
-            // 1.1 assemble params（组装参数）
-
-            Request request = new Request.Builder().url(url)
-                    .addHeader("Content-Type", "application/x-www-form-urlencoded").build();
-            // 1.3 execute request and print result （执行请求并打印结果）
-                Response resp = client.newCall(request).execute();
-                map.put("res", resp.body().string());
-        } catch (Exception e) {
-            map.put("res", "error");
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-            } catch (NullPointerException e) {
-                map.put("res", "error");
-            }
-        }
-
-        return map;
-    }
-
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         long end = start + (20 * 60 * 1000); // 20分钟的毫秒数

@@ -69,6 +69,16 @@ public class EmployeeEntity {
     private Boolean deletedFlag;
 
     /**
+     * 是否为主管  0否 1是
+     */
+    private int supervisorFlag;
+
+    /**
+     * 邀请码
+     */
+    private String invite;
+
+    /**
      * 备注
      */
     private String remark;
