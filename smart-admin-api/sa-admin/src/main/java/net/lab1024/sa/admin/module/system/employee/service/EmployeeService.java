@@ -26,6 +26,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -136,7 +137,8 @@ public class EmployeeService {
         // 设置密码 默认密码
         String password = randomPassword();
         entity.setLoginPwd(getEncryptPwd(password));
-
+        String invite = generateRandomString();
+        entity.setInvite(invite);
         // 保存数据
         entity.setDeletedFlag(Boolean.FALSE);
         employeeManager.saveEmployee(entity, employeeAddForm.getRoleIdList());
@@ -144,6 +146,19 @@ public class EmployeeService {
         return ResponseDTO.ok(password);
     }
 
+    private  String generateRandomString() {
+        String characterSet = "qwertyuiopasdfghjklzxcvbnmABCDEFGHIJKLMNPQRSTUVWXYZ";
+        SecureRandom random = new SecureRandom();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < 5; i++) {
+            int randomIndex = random.nextInt(characterSet.length());
+            char randomChar = characterSet.charAt(randomIndex);
+            stringBuilder.append(randomChar);
+        }
+
+        return stringBuilder.toString();
+    }
     /**
      * 更新员工
      *
