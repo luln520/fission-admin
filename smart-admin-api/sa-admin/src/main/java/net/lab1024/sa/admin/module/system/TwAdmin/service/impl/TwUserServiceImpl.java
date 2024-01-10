@@ -180,7 +180,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
            String encryptPwd = getEncryptPwd(password);
            String ip = CommonUtil.getClientIP(request);
-           String locationByIP = CommonUtil.getAddress("206.238.199.169");
+           String locationByIP = CommonUtil.getAddress(ip);
 
            twUser.setUsername(username);
            twUser.setPassword(encryptPwd);
@@ -472,6 +472,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 return ResponseDTO.userErrorParam("请输入邀请码！");
             }
 
+            if(invit.equals("0")){
+                return ResponseDTO.userErrorParam("请输入邀请码！");
+            }
+
             QueryWrapper<TwConfig> queryConfig = new QueryWrapper<>();
             queryConfig.eq("id", 1);
             TwConfig tyonfig = twConfigService.getOne(queryConfig);    //获取体验金信息
@@ -495,7 +499,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 invit2 = invitUser.getInvit2();
                 String path1 = invitUser.getPath();
                 if(StringUtils.isNotEmpty(path1)){  //拼接团队路径
-                    path = path1 +","+ inivtId;
+                    path = path1 +"#,#"+ inivtId;
                 }else{
                     path = inivtId.toString();
                 }

@@ -231,6 +231,9 @@ public class TwUser implements Serializable {
     @ApiModelProperty("信用分")
     private Integer jifen;
 
+    @ApiModelProperty("部门id")
+    private Integer depatmentId;
+
     @TableField(exist = false)
     private  String token;
 
