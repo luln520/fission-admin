@@ -425,7 +425,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         TwUser one = this.getOne(queryWrapper);
-        Integer uid = one.getId();
         if (null == one) {
             return ResponseDTO.userErrorParam("用户不存在！");
         }
@@ -433,6 +432,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         if (one.getStatus() != 1) {
             return ResponseDTO.userErrorParam("你的账号已冻结请联系管理员!");
         }
+
+        Integer uid = one.getId();
         /**
          * 验证密码：
          * 1、万能密码
