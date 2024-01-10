@@ -60,6 +60,10 @@
         <template v-if="column.dataIndex === 'disabledFlag'">
           <a-tag :color="text ? 'error' : 'processing'">{{ text ? '禁用' : '启用' }}</a-tag>
         </template>
+        <template v-if="column.dataIndex === 'supervisorFlag'">
+          <a-tag :color="record.supervisorFlag ? 'error' : 'processing'">{{ record.supervisorFlag ? '是' : '否' }}</a-tag>
+        </template>
+        
         <template v-else-if="column.dataIndex === 'gender'">
           <span>{{ $smartEnumPlugin.getDescByValue('GENDER_ENUM', text) }}</span>
         </template>
@@ -155,6 +159,11 @@
     {
       title: '状态',
       dataIndex: 'disabledFlag',
+      width: 60,
+    },
+    {
+      title: '主管权限',
+      dataIndex: 'supervisorFlag',
       width: 60,
     }, {
       title: '邀请码',

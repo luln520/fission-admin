@@ -5,6 +5,7 @@ import lombok.Data;
 import net.lab1024.sa.common.common.enumeration.GenderEnum;
 import net.lab1024.sa.common.common.swagger.ApiModelPropertyEnum;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -55,4 +56,8 @@ public class EmployeeVO {
 
     @ApiModelProperty("角色名称列表")
     private List<String> roleNameList;
+
+    @ApiModelProperty("是否为主管  0否 1是")
+    @NotNull(message = "是否为主管不能为空")
+    private int supervisorFlag;
 }
