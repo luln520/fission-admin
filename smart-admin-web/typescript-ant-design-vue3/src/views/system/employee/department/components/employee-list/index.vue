@@ -167,7 +167,7 @@
       width: 60,
     }, {
       title: '邀请码',
-      dataIndex: 'inivte',
+      dataIndex: 'invite',
       width: 100,
     },
     {
