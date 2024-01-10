@@ -156,6 +156,10 @@
       title: '状态',
       dataIndex: 'disabledFlag',
       width: 60,
+    }, {
+      title: '邀请码',
+      dataIndex: 'inivte',
+      width: 100,
     },
     {
       title: '角色',

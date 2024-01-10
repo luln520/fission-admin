@@ -44,6 +44,12 @@
           <a-select-option v-for="item in roleList" :key="item.roleId" :title="item.roleName">{{ item.roleName }}</a-select-option>
         </a-select>
       </a-form-item>
+      <a-form-item label="是否为主管" name="supervisorFlag">
+        <a-select v-model:value="form.supervisorFlag" placeholder="请选择是否为主管">
+          <a-select-option :value="0">否</a-select-option>
+          <a-select-option :value="1">是</a-select-option>
+        </a-select>
+      </a-form-item>
     </a-form>
     <div class="footer">
       <a-button style="margin-right: 8px" @click="onClose">取消</a-button>
@@ -108,6 +114,7 @@ import { smartSentry } from '/@/lib/smart-sentry';
     loginName: undefined,
     phone: undefined,
     roleIdList: undefined,
+    supervisorFlag:0,
   };
 
   let form = reactive(_.cloneDeep(formDefault));
