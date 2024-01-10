@@ -240,7 +240,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             String symbol = ccoinname.toLowerCase().replace("/", "");
             String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
             log.info(str);
-            Map<String, Object> map = CommonUtil.doOKHGet(str, null);
+            Map<String, Object> map = CommonUtil.executeGet(str);
             JSONObject res = JSONObject.parseObject(map.get("res").toString());
             JSONArray data = JSONArray.parseArray(res.get("data").toString());
             JSONObject jsonObject = JSONObject.parseObject(data.get(0).toString());
