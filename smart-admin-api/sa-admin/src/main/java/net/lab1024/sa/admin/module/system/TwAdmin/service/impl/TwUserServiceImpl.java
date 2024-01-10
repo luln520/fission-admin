@@ -292,7 +292,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         queryWrapper.eq("id", uid);
         TwUser one = this.getOne(queryWrapper);
         BigDecimal money1 = one.getMoney();
-        one.setMoney(money1.add(money));
+
 
         QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("userid", uid);
@@ -310,10 +310,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 //                twAdminLog.setIp();
             Instant instant = Instant.now();
             long epochMilli = instant.toEpochMilli();
-            twAdminLog.setCreateTime((int) epochMilli);
+            twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
             twAdminLog.setRemark("指定用户 "+uid+" 手动减少");
             twAdminLogService.save(twAdminLog);
+
+            one.setMoney(money1.subtract(money));
         }
 
         if(type == 1){   //增加
@@ -345,6 +347,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setDepartment(one.getDepatmentId());
             twAdminLog.setRemark("指定用户 "+uid+" 手动增加");
             twAdminLogService.save(twAdminLog);
+
+            one.setMoney(money1.add(money));
         }
 
         TwBill twBill = new TwBill();
@@ -457,7 +461,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         twUserLog.setDepartment(one.getDepatmentId());
         twUserLog.setPath(one.getPath());
         long timestampInSeconds = Instant.now().getEpochSecond();
-        twUserLog.setAddtime((int) timestampInSeconds);
+        twUserLog.setAddtime((int) (timestampInSeconds));
         twUserLog.setAddip(one.getAddip());
         twUserLog.setAddr(one.getAddr());
         twUserLog.setStatus(1);
@@ -655,7 +659,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             one.setRealName(realName);
             one.setRzstatus(1);
             long timestampInSeconds = Instant.now().getEpochSecond();
-            one.setRztime((int) timestampInSeconds);
+            one.setRztime((int) (timestampInSeconds));
             this.updateById(one);
 
             TwNotice twNotice = new TwNotice();
