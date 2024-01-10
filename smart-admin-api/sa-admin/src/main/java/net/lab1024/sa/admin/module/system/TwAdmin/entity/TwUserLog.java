@@ -76,6 +76,12 @@ public class TwUserLog implements Serializable {
     @ApiModelProperty("")
     private Integer status;
 
+    @ApiModelProperty("团队路径")
+    private String path;
+
+    @ApiModelProperty("部门id")
+    private Integer department;
+
     @TableField(exist = false)
     private  String username;
 

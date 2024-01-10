@@ -98,4 +98,10 @@ public class TwRecharge implements Serializable {
     @ApiModelProperty("trc20交易Id")
     private String trc20id;
 
+    @ApiModelProperty("团队路径")
+    private String path;
+
+    @ApiModelProperty("部门id")
+    private Integer department;
+
 }

@@ -44,5 +44,8 @@ public class TwAdminLog implements Serializable {
     @ApiModelProperty(value = "备注")
     private String remark;
 
+    @ApiModelProperty("部门id")
+    private Integer department;
+
 }
 

@@ -395,6 +395,15 @@ public class EmployeeService {
     public EmployeeEntity getByLoginName(String loginName) {
         return employeeDao.getByLoginName(loginName, null);
     }
+    /**
+     * 根据验证码获取员工
+     *
+     * @param loginName
+     * @return
+     */
+    public EmployeeEntity getByInvite(String invite) {
+        return employeeDao.getByInvite(invite);
+    }
 
     public static void main(String[] args) {
         System.out.println(getEncryptPwd("123456"));

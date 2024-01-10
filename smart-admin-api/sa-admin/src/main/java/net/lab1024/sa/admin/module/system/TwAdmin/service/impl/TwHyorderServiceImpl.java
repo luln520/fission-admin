@@ -13,6 +13,8 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Res.HyorderOneRes;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.CommonUtil;
 import net.lab1024.sa.common.common.util.DateUtil;
@@ -51,6 +53,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
     @Autowired
     private TwBillService twBillService;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     @Override
     public int countUnClosedOrders() {
@@ -203,11 +208,17 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             queryWrapper.eq("id", uid); // 添加查询条件
             TwUser twUser = twUserService.getOne(queryWrapper);
 
-            QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
-            queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
-            TwUser puser = twUserService.getOne(queryWrapper4);
+            String invite = "";
+            EmployeeEntity byInvite = employeeService.getById(Long.valueOf(twUser.getInvit1()));//获取代理人信息
+            if(byInvite == null){
+                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+                queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
+                TwUser puser = twUserService.getOne(queryWrapper4);
+                invite = puser.getInvit1();
+            }
+            invite = byInvite.getEmployeeId().toString();
 
-            //获取会员资产
+        //获取会员资产
             QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
             queryWrapper1.eq("userid", uid); // 添加查询条件
             TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
@@ -239,7 +250,6 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
             String symbol = ccoinname.toLowerCase().replace("/", "");
             String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
-            log.info(str);
             Map<String, Object> map = CommonUtil.executeGet(str);
             JSONObject res = JSONObject.parseObject(map.get("res").toString());
             JSONArray data = JSONArray.parseArray(res.get("data").toString());
@@ -257,6 +267,8 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twHyorder.setCoinname(ccoinname);
             twHyorder.setStatus(1);
             twHyorder.setIsWin(0);
+            twHyorder.setPath(twUser.getPath());
+            twHyorder.setDepartment(twUser.getDepatmentId());
             twHyorder.setBuytime(new Date());
             Date selltime = DateUtil.secondsDateAddSeconds(new Date(), ctime * 60);
             twHyorder.setSelltime(selltime);
@@ -266,11 +278,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twHyorder.setPloss(new BigDecimal(0));
             twHyorder.setTime(ctime);
             twHyorder.setKongyk(0);
-            if(StringUtils.isEmpty(puser.getInvit())){
-                twHyorder.setInvit("");
-            }else{
-                twHyorder.setInvit(puser.getInvit());
-            }
+            twHyorder.setInvit(invite);
             this.save(twHyorder);
             //扣除USDT额度
             twUserCoinService.decre(uid,tmoney,twUserCoin.getUsdt());
@@ -283,6 +291,8 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twBill.setCoinname("usdt");
             twBill.setAfternum(twUserCoinService.afternum(uid));
             twBill.setType(3);
+            twBill.setPath(twUser.getPath());
+            twBill.setDepartment(twUser.getDepatmentId());
             twBill.setAddtime(new Date());
             twBill.setSt(2);
             twBill.setRemark("购买"+ ccoinname + "秒合约");

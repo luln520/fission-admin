@@ -77,6 +77,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
     @Override
     public boolean addkj(TwKuangji twKuangji) {
+
        return this.saveOrUpdate(twKuangji);
     }
 
@@ -136,6 +137,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorder.setUsername(user.getUsername());
         twKjorder.setKjtitle(kuangji.getTitle());
         twKjorder.setImgs(kuangji.getImgs());
+        twKjorder.setPath(user.getPath());
+        twKjorder.setDepartment(user.getDepatmentId());
         twKjorder.setStatus(1);
         twKjorder.setBuynum(buynum);
         twKjorder.setCycle(kuangji.getCycle());
@@ -161,6 +164,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twBill.setUid(uid);
         twBill.setUsername(user.getUsername());
         twBill.setNum(buynum);
+        twBill.setDepartment(user.getDepatmentId());
+        twBill.setPath(user.getPath());
         twBill.setCoinname(kuangji.getOutcoin());
         twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(5);

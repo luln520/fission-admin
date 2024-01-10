@@ -58,6 +58,14 @@ public interface EmployeeDao extends BaseMapper<EmployeeEntity> {
     EmployeeEntity getByLoginName(@Param("loginName") String loginName,
                                   @Param("disabledFlag") Boolean disabledFlag);
 
+    /**
+     * 通过验证码查询
+     *
+     * @param invite
+     * @return
+     */
+    EmployeeEntity getByInvite(@Param("invite") String invite);
+
 
     /**
      * 通过姓名查询

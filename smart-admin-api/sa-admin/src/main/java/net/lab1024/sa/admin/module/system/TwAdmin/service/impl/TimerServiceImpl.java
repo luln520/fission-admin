@@ -46,6 +46,9 @@ public class TimerServiceImpl {
     @Autowired
     private TwHysettingService twHysettingService;
 
+    @Autowired
+    private TwUserService twUserService;
+
     /**
      * 工具方法：获取行情数据 （api调用）
      * 方法名：getnewprice
@@ -106,15 +109,17 @@ public class TimerServiceImpl {
      * */
 
     public void addlog(int uid, String username,BigDecimal money){
-        QueryWrapper<TwUserCoin> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userid",uid);
-        TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper);
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",uid);
+        TwUser twUser = twUserService.getOne(queryWrapper);
 
         //创建财务日志
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
         twBill.setUsername(username);
         twBill.setNum(money);
+        twBill.setDepartment(twUser.getDepatmentId());
+        twBill.setPath(twUser.getPath());
         twBill.setCoinname("usdt");
         twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(4);
@@ -125,6 +130,8 @@ public class TimerServiceImpl {
 
         TwNotice twNotice = new TwNotice();
         twNotice.setUid(uid);
+        twNotice.setPath(twUser.getPath());
+        twNotice.setDepartment(twUser.getDepatmentId());
         twNotice.setAccount(username);
         twNotice.setTitle("秒合约交易");
         twNotice.setContent("秒合约已平仓，请及时加仓");
@@ -148,6 +155,10 @@ public class TimerServiceImpl {
             queryWrapper1.eq("userid",uid);
             TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
 
+            QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+            queryWrapper4.eq("id",uid);
+            TwUser twUser = twUserService.getOne(queryWrapper4);
+
             String nowdate = DateUtil.date2Str(new Date(), "yyyy-MM-dd");
             QueryWrapper<TwKjprofit> queryWrapper2 = new QueryWrapper<>();
             queryWrapper2.eq("uid",uid);
@@ -158,6 +169,8 @@ public class TimerServiceImpl {
                 TwKjprofit twKjprofit1 = new TwKjprofit();
                 twKjprofit1.setUid(uid);
                 twKjprofit1.setUsername(username);
+                twKjprofit1.setPath(twUser.getPath());
+                twKjprofit1.setDepartment(twUser.getDepatmentId());
                 twKjprofit1.setKid(id);
                 twKjprofit1.setKtitle(twKjorder.getKjtitle());
                 twKjprofit1.setNum(outnum);
@@ -172,6 +185,8 @@ public class TimerServiceImpl {
                 TwBill twBill = new TwBill();
                 twBill.setUid(uid);
                 twBill.setUsername(username);
+                twBill.setPath(twUser.getPath());
+                twBill.setDepartment(twUser.getDepatmentId());
                 twBill.setNum(outnum);
                 twBill.setCoinname("usdt");
                 twBill.setAfternum(twUserCoinService.afternum(uid));
@@ -213,6 +228,7 @@ public class TimerServiceImpl {
         queryWrapper.le("intselltime", nowtime);
         List<TwHyorder> list = twHyorderService.list(queryWrapper);
 
+
         QueryWrapper<TwHysetting> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("id",1);
         TwHysetting twHysetting = twHysettingService.getOne(queryWrapper1);
@@ -247,6 +263,7 @@ public class TimerServiceImpl {
             QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
             queryWrapper3.eq("userid",uid);
             TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
+
             //买涨
             if(hyzd == 1){
                 boolean isWinArray = false;

@@ -104,4 +104,10 @@ public class TwKjorder implements Serializable {
     @ApiModelProperty("购买数量")
     private BigDecimal buynum;
 
+    @ApiModelProperty("团队路径")
+    private String path;
+
+    @ApiModelProperty("部门id")
+    private Integer department;
+
 }

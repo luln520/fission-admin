@@ -52,6 +52,11 @@
         </where>
     </select>
 
+    <select id="getByInvite" resultType="net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity">
+        SELECT * FROM t_employee where invite=#{invite}
+
+    </select>
+
     <select id="getByActualName" resultType="net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity">
         SELECT *
         FROM t_employee

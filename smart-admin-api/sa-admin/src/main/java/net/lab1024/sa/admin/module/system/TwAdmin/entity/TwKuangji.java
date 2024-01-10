@@ -86,4 +86,11 @@ public class TwKuangji implements Serializable {
     @ApiModelProperty("添加时间")
     private Date addtime=new Date();
 
+
+    @ApiModelProperty("团队路径")
+    private String path;
+
+    @ApiModelProperty("部门id")
+    private Integer department;
+
 }

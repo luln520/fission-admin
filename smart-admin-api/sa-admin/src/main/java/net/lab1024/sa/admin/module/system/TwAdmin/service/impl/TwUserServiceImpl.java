@@ -87,6 +87,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     private TwConfigService twConfigService;
 
     @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
     private ConfigService configService;
 
     @Autowired
@@ -164,6 +167,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            String username = twUser.getUsername();
            String phone = twUser.getPhone();
            String password = twUser.getPassword();
+           String invit = twUser.getInvit();
            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
            queryWrapper.eq("username", username);
            TwUser one = this.getOne(queryWrapper);
@@ -178,11 +182,26 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                return ResponseDTO.userErrorParam("手机号重复");
            }
 
+           EmployeeEntity byInvite = employeeService.getByInvite(invit);
+           if(byInvite == null){
+               return ResponseDTO.userErrorParam("没有此推荐人");
+           }
+           Long employeeId = byInvite.getEmployeeId();
+           Long departmentId = byInvite.getDepartmentId();
+
+           String path = "#"+employeeId +"#,";
+
+           String invitCode = generateRandomString();  //生成验证码
+
            String encryptPwd = getEncryptPwd(password);
            String ip = CommonUtil.getClientIP(request);
            String locationByIP = CommonUtil.getAddress(ip);
 
            twUser.setUsername(username);
+           twUser.setInvit(invitCode);
+           twUser.setInvit1(invit);
+           twUser.setPath(path);
+           twUser.setDepatmentId(departmentId.intValue());
            twUser.setPassword(encryptPwd);
            twUser.setMoney(new BigDecimal(0));
            twUser.setAreaCode("");
@@ -190,7 +209,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUser.setAddr(locationByIP);
            twUser.setRealName(locationByIP);
            long timestampInSeconds = Instant.now().getEpochSecond();
-           twUser.setAddtime((int) timestampInSeconds);
+           twUser.setAddtime((int) (timestampInSeconds/1000));
            twUser.setStatus(1);
            twUser.setTxstate(1);
            twUser.setRzstatus(2);
@@ -292,6 +311,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             Instant instant = Instant.now();
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) epochMilli);
+            twAdminLog.setDepartment(one.getDepatmentId());
             twAdminLog.setRemark("指定用户 "+uid+" 手动减少");
             twAdminLogService.save(twAdminLog);
         }
@@ -303,6 +323,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twRecharge.setUsername(one.getUsername());
             twRecharge.setCoin("usdt");
             twRecharge.setNum(money);
+            twRecharge.setDepartment(one.getDepatmentId());
+            twRecharge.setPath(one.getPath());
             twRecharge.setAddtime(new Date());
             twRecharge.setUpdatetime(new Date());
             twRecharge.setStatus(2);
@@ -320,6 +342,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             Instant instant = Instant.now();
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
+            twAdminLog.setDepartment(one.getDepatmentId());
             twAdminLog.setRemark("指定用户 "+uid+" 手动增加");
             twAdminLogService.save(twAdminLog);
         }
@@ -329,6 +352,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         twBill.setUsername(one.getUsername());
         twBill.setCoinname("usdt");
         twBill.setNum(money);
+        twBill.setPath(one.getPath());
+        twBill.setDepartment(one.getDepatmentId());
         twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(1);
         twBill.setAddtime(new Date());
@@ -351,6 +376,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twNotice.setUid(uid);
                 twNotice.setAccount(one.getUsername());
                 twNotice.setTitle(title);
+                twNotice.setDepartment(one.getDepatmentId());
+                twNotice.setPath(one.getPath());
                 twNotice.setContent(content);
                 twNotice.setImgs(imgs);
                 twNotice.setAddtime(new Date());
@@ -363,6 +390,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 for (TwUser twUser:list){
                     TwNotice twNotice = new TwNotice();
                     twNotice.setUid(uid);
+                    twNotice.setDepartment(twUser.getDepatmentId());
+                    twNotice.setPath(twUser.getPath());
                     twNotice.setAccount(twUser.getUsername());
                     twNotice.setTitle(title);
                     twNotice.setContent(content);
@@ -425,6 +454,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         twUserLog.setUserid(uid);
         twUserLog.setType("登录");
         twUserLog.setRemark("邮箱登录");
+        twUserLog.setDepartment(one.getDepatmentId());
+        twUserLog.setPath(one.getPath());
         long timestampInSeconds = Instant.now().getEpochSecond();
         twUserLog.setAddtime((int) timestampInSeconds);
         twUserLog.setAddip(one.getAddip());
@@ -472,10 +503,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 return ResponseDTO.userErrorParam("请输入邀请码！");
             }
 
-            if(invit.equals("0")){
-                return ResponseDTO.userErrorParam("请输入邀请码！");
-            }
-
             QueryWrapper<TwConfig> queryConfig = new QueryWrapper<>();
             queryConfig.eq("id", 1);
             TwConfig tyonfig = twConfigService.getOne(queryConfig);    //获取体验金信息
@@ -485,29 +512,39 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             String invit2 = "0";
             String invit3 = "0";
             String path = "";
+            String path1 = "";
+            Integer inivtId = 0;
+            Long departmentId = 0L;
+            Long employeeId = 0L;
+            EmployeeEntity byInvite = employeeService.getByInvite(invit);//获取代理人信息
 
-            if(!invit.equals("0")){
-                QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
-                queryWrapperInvite.eq("invit", invit);
-                TwUser invitUser = this.getOne(queryWrapperInvite);  //获取邀请人信息
+            QueryWrapper<TwUser> queryUser = new QueryWrapper<>();
+            queryUser.eq("invit", invit);
+            TwUser invitUser = this.getOne(queryUser);  //获取邀请人信息
+            if(byInvite == null){
                 if(invitUser == null){
                     return ResponseDTO.userErrorParam("推荐人不存在！");
-                }
-
-                Integer inivtId = invitUser.getId();
-                invit1 = invitUser.getInvit1();
-                invit2 = invitUser.getInvit2();
-                String path1 = invitUser.getPath();
-                if(StringUtils.isNotEmpty(path1)){  //拼接团队路径
-                    path = path1 +"#,#"+ inivtId;
                 }else{
-                    path = inivtId.toString();
+                    invit1 = invitUser.getInvit1();
+                    departmentId = Long.valueOf(invitUser.getDepatmentId());
+                    inivtId = invitUser.getId();
+                    path1 = invitUser.getPath();
+                    if(StringUtils.isNotEmpty(path1)){  //拼接团队路径
+                        path = path1 +"#"+ inivtId+"#,";
+                    }else{
+                        path = "#"+inivtId.toString()+"#,";
+                    }
                 }
+            }else{
+                 employeeId = byInvite.getEmployeeId();
+                 invit1 =employeeId.toString();
+                 departmentId = byInvite.getDepartmentId();
+                 path = "#"+employeeId.toString()+"#,";
             }
 
             String invitCode = generateRandomString();  //生成验证码
 
-            String address = CommonUtil.getAddress(ip);
+            String address = CommonUtil.getAddress("206.238.199.169");
 
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
@@ -525,9 +562,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setAreaCode("");
                 twUser.setPath(path);
                 twUser.setAddip(ip);
+                twUser.setDepatmentId(departmentId.intValue());
                 twUser.setAddr(address);
                 long timestampInSeconds = Instant.now().getEpochSecond();
-                twUser.setAddtime((int) (timestampInSeconds/1000));
+                twUser.setAddtime((int) (timestampInSeconds));
                 twUser.setStatus(1);
                 twUser.setTxstate(1);
                 twUser.setRzstatus(2);
@@ -556,7 +594,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             String username = userReq.getUsername();
             String password = userReq.getPassword();
             String encryptPwd = getEncryptPwd(password); //MD5密码加密
-            String regcode = userReq.getRegcode();
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("username", username);
             TwUser one = this.getOne(queryWrapper);
@@ -571,6 +608,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
             TwNotice twNotice = new TwNotice();
             twNotice.setUid(one.getId());
+            twNotice.setDepartment(one.getDepatmentId());
+            twNotice.setPath(one.getPath());
             twNotice.setAccount(one.getUsername());
             twNotice.setTitle("重置密码");
             twNotice.setContent("登陆密码重置成功");
@@ -622,6 +661,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             TwNotice twNotice = new TwNotice();
             twNotice.setUid(one.getId());
             twNotice.setAccount(one.getUsername());
+            twNotice.setDepartment(one.getDepatmentId());
+            twNotice.setPath(one.getPath());
             twNotice.setTitle("认证资料提交成功");
             twNotice.setContent("实名资料提成功，耐心等待管理员审核");
             twNotice.setAddtime(new Date());

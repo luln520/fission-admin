@@ -74,6 +74,12 @@ public class TwKjprofit implements Serializable {
     @ApiModelProperty("收益日期")
     private Date day;
 
+    @ApiModelProperty("团队路径")
+    private String path;
+
+    @ApiModelProperty("部门id")
+    private Integer department;
+
     @TableField(exist = false)
     private int status;
 

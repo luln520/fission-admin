@@ -67,4 +67,10 @@ public class TwNotice implements Serializable {
     @ApiModelProperty("1未读2已读")
     private Integer status;
 
+    @ApiModelProperty("团队路径")
+    private String path;
+
+    @ApiModelProperty("部门id")
+    private Integer department;
+
 }

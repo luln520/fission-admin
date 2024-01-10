@@ -132,6 +132,10 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 return ResponseDTO.userErrorParam("此订单已处理");
             }
 
+            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("id", one.getUid());
+            TwUser twUser = twUserService.getOne(queryWrapper1);
+
             one.setUpdatetime(new Date());
             one.setStatus(3);
             this.updateById(one);
@@ -142,6 +146,8 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twNotice.setContent("您的充币记录被系统驳回，请联系客服");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
+            twNotice.setDepartment(twUser.getDepatmentId());
+            twNotice.setPath(twUser.getPath());
             twNoticeService.save(twNotice);
             return ResponseDTO.okMsg("充值驳回成功");
         } catch (Exception e) {
@@ -162,6 +168,10 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             one.setStatus(2);
             this.updateById(one); //修改订单状态
 
+            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("id", uid);
+            TwUser twUser = twUserService.getOne(queryWrapper1);
+
             QueryWrapper<TwUserCoin> queryCoin = new QueryWrapper<>();
             queryCoin.eq("userid", uid);
             TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
@@ -179,6 +189,8 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 twBill.setAddtime(new Date());
                 twBill.setSt(1);
                 twBill.setRemark("充币到账");
+                twBill.setDepartment(twUser.getDepatmentId());
+                twBill.setPath(twUser.getPath());
                 twBillService.save(twBill);
 
                 TwNotice twNotice = new TwNotice();
@@ -188,6 +200,8 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 twNotice.setContent("您的充值金额已到账，请注意查收");
                 twNotice.setAddtime(new Date());
                 twNotice.setStatus(1);
+                twNotice.setDepartment(twUser.getDepatmentId());
+                twNotice.setPath(twUser.getPath());
                 twNoticeService.save(twNotice);
 
                 return ResponseDTO.okMsg("充值驳回成功");
@@ -210,6 +224,8 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twRecharge.setNum(zznum);
             twRecharge.setAddtime(new Date());
             twRecharge.setStatus(1);
+            twRecharge.setPath(one.getPath());
+            twRecharge.setDepartment(one.getDepatmentId());
             twRecharge.setPayimg(payimg);
             twRecharge.setAddress(czaddress);
             twRecharge.setCzline(czline);

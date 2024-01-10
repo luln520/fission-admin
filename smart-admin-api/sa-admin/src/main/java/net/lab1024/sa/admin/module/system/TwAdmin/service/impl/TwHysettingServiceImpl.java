@@ -7,9 +7,11 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwHysettingDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,9 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
 
     @Autowired
     private TwAdminLogService twAdminLogService;
+    @Autowired
+    private TwUserService twUserService;
+
     @Override
     public TwHysetting hysettingId() {
         QueryWrapper<TwHysetting> queryWrapper = new QueryWrapper<>();
@@ -40,6 +45,10 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
 
     @Override
     public boolean setWin(int id, int type,int uid) {
+        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id",uid);
+        TwUser twUser = twUserService.getOne(queryWrapper1);
+
         QueryWrapper<TwHysetting> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", 1); // 添加查询条件
         TwHysetting one = this.getOne(queryWrapper);
@@ -55,6 +64,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 this.updateById(one);
 
                 TwAdminLog twAdminLog = new TwAdminLog();
+                twAdminLog.setDepartment(twUser.getDepatmentId());
 //                twAdminLog.setAdminId();
 //                twAdminLog.setAdminUsername();
                 twAdminLog.setAction("指定必赢");
@@ -76,6 +86,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 this.updateById(one);
 
                 TwAdminLog twAdminLog = new TwAdminLog();
+                twAdminLog.setDepartment(twUser.getDepatmentId());
 //                twAdminLog.setAdminId();
 //                twAdminLog.setAdminUsername();
                 twAdminLog.setAction("指定必输");
@@ -97,6 +108,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 this.updateById(one);
 
                 TwAdminLog twAdminLog = new TwAdminLog();
+                twAdminLog.setDepartment(twUser.getDepatmentId());
 //                twAdminLog.setAdminId();
 //                twAdminLog.setAdminUsername();
                 twAdminLog.setAction("正常输赢");

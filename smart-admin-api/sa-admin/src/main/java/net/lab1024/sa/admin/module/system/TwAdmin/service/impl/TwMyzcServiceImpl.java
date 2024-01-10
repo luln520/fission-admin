@@ -144,10 +144,16 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                 if(twUserCoin != null){
                     twUserCoinService.incre(uid,num,twUserCoin.getUsdt());//增加用户资产
 
+                    QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
+                    queryWrapper2.eq("id", uid);
+                    TwUser twUser = twUserService.getOne(queryWrapper2);
+
                     TwBill twBill = new TwBill();
                     twBill.setUid(uid);
                     twBill.setUsername(one.getUsername());
                     twBill.setNum(num);
+                    twBill.setPath(twUser.getPath());
+                    twBill.setDepartment(twUser.getDepatmentId());
                     twBill.setCoinname(coinname);
                     twBill.setAfternum(twUserCoinService.afternum(uid));
                     twBill.setType(16);
@@ -163,6 +169,8 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                     twNotice.setContent("您的提币申请被驳回，请联系管理员");
                     twNotice.setAddtime(new Date());
                     twNotice.setStatus(1);
+                    twNotice.setPath(twUser.getPath());
+                    twNotice.setDepartment(twUser.getDepatmentId());
                     twNoticeService.save(twNotice);
                     return ResponseDTO.okMsg("操作成功");
                 }else {
@@ -195,6 +203,10 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             one .setStatus(2);
             this.updateById(one);
 
+            QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
+            queryWrapper2.eq("id", one.getUserid());
+            TwUser twUser = twUserService.getOne(queryWrapper2);
+
             TwNotice twNotice = new TwNotice();
             twNotice.setUid(one.getUserid());
             twNotice.setAccount(one.getUsername());
@@ -202,6 +214,8 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             twNotice.setContent("您的提币申请已通过，请及时查询");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
+            twNotice.setDepartment(twUser.getDepatmentId());
+            twNotice.setPath(twUser.getPath());
             twNoticeService.save(twNotice);
 
             return ResponseDTO.okMsg("充值驳回成功");
@@ -269,6 +283,8 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         twMyzc.setNum(num);
         twMyzc.setAddress(address);
         twMyzc.setSort(1);
+        twMyzc.setPath(twUser.getPath());
+        twMyzc.setDepartment(twUser.getDepatmentId());
         twMyzc.setAddtime(new Date());
         twMyzc.setStatus(1);
         this.save(twMyzc);
@@ -277,6 +293,8 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         twBill.setUid(uid);
         twBill.setUsername(twUser.getUsername());
         twBill.setNum(num);
+        twBill.setDepartment(twUser.getDepatmentId());
+        twBill.setPath(twUser.getPath());
         twBill.setCoinname(twCoin.getName());
         twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(2);

@@ -133,4 +133,10 @@ public class TwHyorder implements Serializable {
     @ApiModelProperty("剩余秒数")
     private int timeResidue;
 
+    @ApiModelProperty("团队路径")
+    private String path;
+
+    @ApiModelProperty("部门id")
+    private Integer department;
+
 }
