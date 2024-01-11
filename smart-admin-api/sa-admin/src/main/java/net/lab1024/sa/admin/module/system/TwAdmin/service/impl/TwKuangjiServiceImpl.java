@@ -189,7 +189,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         BigDecimal buynum = new BigDecimal(0);
         QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(buynum), 0) as buynum")
-                .eq("status", 1);
+                .eq("status", 1)
+                .eq("uid", uid);
         List<Map<String, Object>> result = twKjorderDao.selectMaps(queryWrapper);
         if (result.isEmpty()) {
             buynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
