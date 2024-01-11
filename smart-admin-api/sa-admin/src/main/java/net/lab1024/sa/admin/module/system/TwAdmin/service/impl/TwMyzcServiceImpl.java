@@ -142,7 +142,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                 queryCoin.eq("userid", uid);
                 TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
                 if(twUserCoin != null){
-                    twUserCoinService.incre(uid,num,twUserCoin.getUsdt());//增加用户资产
+//                    twUserCoinService.incre(uid,num,twUserCoin.getUsdt());//增加用户资产
 
                     QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
                     queryWrapper2.eq("id", uid);
