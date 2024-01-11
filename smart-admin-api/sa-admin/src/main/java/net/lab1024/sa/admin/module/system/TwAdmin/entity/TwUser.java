@@ -43,11 +43,7 @@ public class TwUser implements Serializable {
     */
     @ApiModelProperty("手机号码")
     private String phone;
-    /**
-    * 合约体验金
-    */
-    @ApiModelProperty("合约体验金")
-    private BigDecimal money;
+
     /**
     * 注册类型 1 手机  2 邮箱
     */
@@ -237,6 +233,8 @@ public class TwUser implements Serializable {
     @TableField(exist = false)
     private  String token;
 
-
+    @TableField(exist = false)
+    @ApiModelProperty("用户余额")
+    private BigDecimal money;
 
 }
