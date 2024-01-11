@@ -218,6 +218,12 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             twNotice.setPath(twUser.getPath());
             twNoticeService.save(twNotice);
 
+            QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
+            queryWrapper3.eq("userid", twUser.getId());
+            TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
+
+            twUserCoinService.decre(twUser.getId(),one.getNum(),twUserCoin.getUsdt());
+
             return ResponseDTO.okMsg("充值驳回成功");
         }catch (Exception e){
             return ResponseDTO.userErrorParam("充值驳回失败");
@@ -232,7 +238,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         TwUser twUser = twUserService.getOne(queryWrapper);
 
         QueryWrapper<TwCoin> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("id", uid);
+        queryWrapper1.eq("id", cid);
         TwCoin twCoin = twCoinService.getOne(queryWrapper1);
 
         QueryWrapper<TwUserCoin> queryWrapper2 = new QueryWrapper<>();
@@ -274,7 +280,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             return ResponseDTO.userErrorParam("账户余额不足");
         }
 
-        twUserCoinService.decre(uid,num,twUserCoin.getUsdt());
+//        twUserCoinService.decre(uid,num,twUserCoin.getUsdt());
 
         TwMyzc twMyzc = new TwMyzc();
         twMyzc.setUserid(uid);

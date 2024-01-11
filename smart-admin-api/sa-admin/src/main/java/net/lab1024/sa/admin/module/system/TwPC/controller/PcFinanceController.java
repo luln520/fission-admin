@@ -146,7 +146,7 @@ public class PcFinanceController {
                                 @RequestParam int cid,
                                 @RequestParam String address,
                                 @RequestParam BigDecimal num) {
-        return ResponseDTO.ok(twMyzcService.tbhandle(uid,cid,address,num));
+        return twMyzcService.tbhandle(uid,cid,address,num);
     }
 
     /**
@@ -198,7 +198,7 @@ public class PcFinanceController {
                                @RequestParam BigDecimal zznum,
                                @RequestParam String czline
                                 ) {
-        return ResponseDTO.ok(twRechargeService.paycoin(uid,coinname,czaddress,payimg,zznum,czline));
+        return twRechargeService.paycoin(uid,coinname,czaddress,payimg,zznum,czline);
     }
 
 
