@@ -637,37 +637,32 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public ResponseDTO auth(int uid, String phone, String realName, String cardzm, String cardfm) {
+    public ResponseDTO auth(TwUser twUser) {
         try{
-            if(StringUtils.isEmpty(phone)){
+            if(StringUtils.isEmpty(twUser.getPhone())){
                 return ResponseDTO.userErrorParam("手机号不能为空");
             }
-            if(StringUtils.isEmpty(realName)){
+            if(StringUtils.isEmpty(twUser.getRealName())){
                 return ResponseDTO.userErrorParam("真实姓名不能为空");
             }
-            if(StringUtils.isEmpty(cardzm)){
-                return ResponseDTO.userErrorParam("正面不能为空");
+            if(StringUtils.isEmpty(twUser.getCardzm())){
+                return ResponseDTO.userErrorParam("证件正面不能为空");
             }
-            if(StringUtils.isEmpty(cardfm)){
-                return ResponseDTO.userErrorParam("背面不能为空");
+            if(StringUtils.isEmpty(twUser.getCardfm())){
+                return ResponseDTO.userErrorParam("证件背面不能为空");
             }
 
-            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("id", uid);
-            TwUser one = this.getOne(queryWrapper);
-            one.setCardzm(cardzm);
-            one.setCardfm(cardfm);
-            one.setRealName(realName);
-            one.setRzstatus(1);
+
+            twUser.setRzstatus(1);
             long timestampInSeconds = Instant.now().getEpochSecond();
-            one.setRztime((int) (timestampInSeconds));
-            this.updateById(one);
+            twUser.setRztime((int) (timestampInSeconds));
+            this.updateById(twUser);
 
             TwNotice twNotice = new TwNotice();
-            twNotice.setUid(one.getId());
-            twNotice.setAccount(one.getUsername());
-            twNotice.setDepartment(one.getDepatmentId());
-            twNotice.setPath(one.getPath());
+            twNotice.setUid(twUser.getId());
+            twNotice.setAccount(twUser.getUsername());
+            twNotice.setDepartment(twUser.getDepatmentId());
+            twNotice.setPath(twUser.getPath());
             twNotice.setTitle("认证资料提交成功");
             twNotice.setContent("实名资料提成功，耐心等待管理员审核");
             twNotice.setAddtime(new Date());

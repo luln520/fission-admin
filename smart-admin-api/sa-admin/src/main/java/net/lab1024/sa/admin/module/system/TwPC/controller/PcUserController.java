@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.TwPC.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -101,16 +102,12 @@ public class PcUserController {
      * select user_coin where  userid =?
      * */
 
-    @GetMapping("/auth")
+    @PostMapping("/auth")
     @ResponseBody
     @NoNeedLogin
     @ApiOperation(value = "用户提交实名认证")
-    public ResponseDTO auth(@RequestParam int uid,
-                           @RequestParam String phone,
-                           @RequestParam String realName,
-                           @RequestParam String cardzm,
-                           @RequestParam String cardfm) {
-        return ResponseDTO.ok(twUserService.auth(uid,phone,realName,cardzm,cardfm));
+    public ResponseDTO auth(@RequestBody TwUser twUser) {
+        return ResponseDTO.ok(twUserService.auth(twUser));
     }
 }
 

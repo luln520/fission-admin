@@ -56,5 +56,5 @@ public interface TwUserService extends IService<TwUser> {
 
     ResponseDTO<TwUser> userInfo(String token);
 
-    ResponseDTO auth(int uid,String phone,String realName,String cardzm,String cardfm);
+    ResponseDTO auth(TwUser twUser);
 }
