@@ -210,13 +210,16 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twPCKjprofitVo.setBuynum(buynum);
 
         BigDecimal todaynum = new BigDecimal(0);
-        String nowdate = DateUtil.date2Str(new Date(), "yyyy-MM-dd");
-        QueryWrapper<TwKjprofit> queryWrapper2 = new QueryWrapper<>();
+        QueryWrapper<TwKjorder> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("uid",uid);
-        queryWrapper2.eq("day",nowdate);
-        List<TwKjprofit> list = twKjprofitService.list(queryWrapper2);
-        for(TwKjprofit twKjprofit:list){
-            todaynum = todaynum.add(twKjprofit.getNum());
+        List<TwKjorder> list = twKjorderService.list(queryWrapper2);
+        for(TwKjorder twKjorder:list){
+            QueryWrapper queryKuaji = new QueryWrapper();
+            queryKuaji.eq("id",twKjorder.getKid());
+            TwKuangji kuangji = this.getOne(queryKuaji);
+            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
+            BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum().divide(new BigDecimal(100,mathContext))).multiply(BigDecimal.valueOf(kuangji.getCycle())).setScale(2, RoundingMode.HALF_UP);
+            todaynum = todaynum.add(outnum);
         }
         twPCKjprofitVo.setTodaynum(todaynum);
 
