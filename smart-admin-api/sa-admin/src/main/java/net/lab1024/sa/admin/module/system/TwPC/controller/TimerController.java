@@ -162,7 +162,7 @@ public class TimerController {
     /**
      * 矿机到期时间结算
      */
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void endkjsy() {
         timerService.endkjsy();
     }
