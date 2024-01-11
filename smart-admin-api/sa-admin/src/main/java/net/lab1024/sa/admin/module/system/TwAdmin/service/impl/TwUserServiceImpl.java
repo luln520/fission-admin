@@ -146,7 +146,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
             queryWrapper1.eq("userid", twUser.getId());
             TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
-            twUser.setMoney(one.getUsdt());
+            if(null==one){
+                twUser.setMoney(new BigDecimal(0));
+            }else {
+                twUser.setMoney(one.getUsdt());
+            }
             twUser.setPath(paths);
             list1.add(twUser);
 
