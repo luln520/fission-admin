@@ -107,7 +107,7 @@ public class PcUserController {
     @NoNeedLogin
     @ApiOperation(value = "用户提交实名认证")
     public ResponseDTO auth(@RequestBody TwUser twUser) {
-        return ResponseDTO.ok(twUserService.auth(twUser));
+        return twUserService.auth(twUser);
     }
 }
 
