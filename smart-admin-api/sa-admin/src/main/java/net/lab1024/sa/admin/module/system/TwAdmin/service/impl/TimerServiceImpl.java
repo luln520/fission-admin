@@ -374,8 +374,6 @@ public class TimerServiceImpl {
                     twHyorder.setPloss(ylnum);
                     twHyorderService.updateById(twHyorder);
 
-                    //减少资产
-                    twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
 
                     //写财务日志
                     addlog(uuid,username,num);
@@ -422,8 +420,6 @@ public class TimerServiceImpl {
                         twHyorder.setPloss(ylnum);
                         twHyorderService.updateById(twHyorder);
 
-                        //减少资产
-                        twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
 
                         //写财务日志
                         addlog(uuid,username,num);
@@ -514,8 +510,6 @@ public class TimerServiceImpl {
                     twHyorder.setPloss(ylnum);
                     twHyorderService.updateById(twHyorder);
 
-                    //减少资产
-                    twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
 
                     //写财务日志
                     addlog(uuid,username,num);
@@ -563,8 +557,6 @@ public class TimerServiceImpl {
                         twHyorder.setPloss(ylnum);
                         twHyorderService.updateById(twHyorder);
 
-                        //减少资产
-                        twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
 
                         //写财务日志
                         addlog(uuid,username,num);
