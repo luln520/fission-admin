@@ -70,6 +70,10 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String TW_KUANGM = "后台-矿机";
 
+        public static final String TW_NEWS = "后台-新闻管理";
+
+        public static final String TW_NEWSTYPE = "后台-新闻类型";
+
         public static final String TW_NOTICE = "后台-通知管理";
 
         public static final String TW_ONLINE = "后台-在线客服";
