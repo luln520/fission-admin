@@ -673,6 +673,63 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     }
 
+    @Override
+    public  IPage<TwUser>  authList(TwUserVo twUserVo) {
+        Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
+        objectPage.setRecords(baseMapper.authList(objectPage, twUserVo));
+        return objectPage;
+    }
+
+    @Override
+    public boolean authProcess(int uid, int type) {
+
+        if(type == 1){  //审核通过
+            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", uid);
+            TwUser one = this.getOne(queryWrapper);
+            one.setRzstatus(2);
+            long timestampInSeconds = Instant.now().getEpochSecond();
+            one.setRztime((int) (timestampInSeconds));
+            this.updateById(one);
+
+            TwAdminLog twAdminLog = new TwAdminLog();
+//          twAdminLog.setAdminId();
+//          twAdminLog.setAdminUsername();
+            twAdminLog.setAction("认证资料审核通过");
+//          twAdminLog.setIp();
+            Instant instant = Instant.now();
+            long epochMilli = instant.toEpochMilli();
+            twAdminLog.setCreateTime((int) (epochMilli/1000));
+            twAdminLog.setDepartment(one.getDepatmentId());
+            twAdminLog.setRemark("用户 "+one.getRealName()+" 认证审核通过");
+            return twAdminLogService.save(twAdminLog);
+        }
+
+        if(type == 2){//审核不通过
+            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", uid);
+            TwUser one = this.getOne(queryWrapper);
+            one.setRzstatus(3);
+            long timestampInSeconds = Instant.now().getEpochSecond();
+            one.setRztime((int) (timestampInSeconds));
+            this.updateById(one);
+
+            TwAdminLog twAdminLog = new TwAdminLog();
+//          twAdminLog.setAdminId();
+//          twAdminLog.setAdminUsername();
+            twAdminLog.setAction("认证资料审核驳回");
+//          twAdminLog.setIp();
+            Instant instant = Instant.now();
+            long epochMilli = instant.toEpochMilli();
+            twAdminLog.setCreateTime((int) (epochMilli/1000));
+            twAdminLog.setDepartment(one.getDepatmentId());
+            twAdminLog.setRemark("用户 "+one.getRealName()+" 认证审核驳回");
+            return twAdminLogService.save(twAdminLog);
+        }
+
+            return true;
+    }
+
     /**
      * 获取 加密后 的密码
      *

@@ -57,4 +57,8 @@ public interface TwUserService extends IService<TwUser> {
     ResponseDTO<TwUser> userInfo(String token);
 
     ResponseDTO auth(TwUser twUser);
+
+    IPage<TwUser>  authList(TwUserVo twUserVo);
+
+    boolean authProcess(int uid,int type);
 }

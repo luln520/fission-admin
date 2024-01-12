@@ -10,4 +10,12 @@
          order by id desc
     </select>
 
+    <select id="authList" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser">
+        select * from tw_user where 1=1 and rzstatus IN (1, 2, 3)
+        <if test="obj.username != null and obj.username !=''">
+            and username = #{obj.username}
+        </if>
+         order by id desc
+    </select>
+
 </mapper>

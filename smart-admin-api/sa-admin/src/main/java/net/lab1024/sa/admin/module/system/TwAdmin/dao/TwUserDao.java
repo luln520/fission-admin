@@ -23,5 +23,7 @@ import java.util.List;
 public interface TwUserDao extends BaseMapper<TwUser> {
 
     List<TwUser> listpage(@Param("objectPage") Page<TwUser> objectPage, @Param("obj") TwUserVo twUserVo);
+
+    List<TwUser> authList(@Param("objectPage") Page<TwUser> objectPage, @Param("obj") TwUserVo twUserVo);
 }
 

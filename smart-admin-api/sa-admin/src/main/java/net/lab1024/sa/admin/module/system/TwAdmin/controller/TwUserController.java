@@ -253,5 +253,19 @@ public class TwUserController {
     }
 
 
+    @PostMapping("/authList")
+    @ApiOperation(value = "获取认证用户")
+    @NoNeedLogin
+    public ResponseDTO<IPage<TwUser>> authList(@Valid @RequestBody TwUserVo twUserVo) {
+        return ResponseDTO.ok(twUserService.authList(twUserVo));
+    }
+
+    @GetMapping("/authProcess")
+    @ApiOperation(value = "认证用户审核")
+    @NoNeedLogin
+    public ResponseDTO authProcess(@RequestParam int uid, @RequestParam int type) {
+        return ResponseDTO.ok(twUserService.authProcess(uid,type));
+    }
+
 }
 
