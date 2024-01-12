@@ -141,7 +141,7 @@ public class CommonUtil {
     }
 
 
-    public static Map<String, Object> executeGet(String url){
+    public static Map<String, Object> executeGet(String url) throws IOException {
         Map<String, Object> map = new HashMap<String, Object>();
         Request executeRequest = new Request.Builder()
                 .url(url)

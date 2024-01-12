@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,7 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     TwHyorder hyorderId(int id);
 
-    ResponseDTO<HyorderOneRes> getHyorderOne(int id);
+    ResponseDTO<HyorderOneRes> getHyorderOne(int id) throws IOException;
 
     ResponseDTO<List<TwHyorder>> gethyorder(int uid);
 
@@ -43,6 +44,6 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     boolean editKongyK(Integer kongyk, int id);
 
-    ResponseDTO creatorder(int uid,int ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl);
+    ResponseDTO creatorder(int uid,int ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl) throws IOException;
 
 }

@@ -13,6 +13,7 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class PcContractController {
     @ResponseBody
     @NoNeedLogin
     @ApiOperation(value = "合约倒计时")
-    public ResponseDTO<HyorderOneRes> getHyorderOne(@RequestParam int id) {
+    public ResponseDTO<HyorderOneRes> getHyorderOne(@RequestParam int id) throws IOException {
         return twHyorderService.getHyorderOne(id);
     }
 
@@ -468,7 +469,7 @@ public class PcContractController {
                                   @RequestParam BigDecimal ctzed,
                                   @RequestParam String ccoinname,
                                   @RequestParam int ctzfx,
-                                  @RequestParam BigDecimal cykbl) {
+                                  @RequestParam BigDecimal cykbl) throws IOException {
         return twHyorderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl);
     }
 

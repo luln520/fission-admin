@@ -53,11 +53,11 @@ public class ConnectionFactory {
 
   private static final Logger log = LoggerFactory.getLogger(ConnectionFactory.class);
 
-  public static String execute(Request request) {
+  public static String execute(Request request) throws IOException {
 
     Response response = null;
     String str = null;
-    try {
+//    try {
       log.debug("[Request URL]{}", request.url());
       response = client.newCall(request).execute();
       if (response.code() != 200) {
@@ -71,12 +71,12 @@ public class ConnectionFactory {
       }
       log.debug("[Response]{}", str);
       return str;
-    } catch (IOException e) {
-      e.printStackTrace();
-      log.info("error", "[Execute] Cannot get the response from server");
-    }
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//      log.info("error", "[Execute] Cannot get the response from server");
+//    }
 
-      return str;
+//      return str;
   }
 
   public static WebSocket createWebSocket(Request request, WebSocketListener listener) {
