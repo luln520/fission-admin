@@ -8,6 +8,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 /**
  * 定时器
  */
@@ -400,7 +402,7 @@ public class TimerController {
      * */
 
     @Scheduled(cron = "*/30 * * * * ?")
-    public void hycarryout() {
+    public void hycarryout() throws IOException {
         timerService.hycarryout();
     }
 }

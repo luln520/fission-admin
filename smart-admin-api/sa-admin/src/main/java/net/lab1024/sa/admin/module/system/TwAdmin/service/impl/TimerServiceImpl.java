@@ -14,6 +14,7 @@ import net.lab1024.sa.common.common.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -69,8 +70,8 @@ public class TimerServiceImpl {
      *
      * */
 
-    public BigDecimal getnewprice(String url){
-        Map<String, Object> map = CommonUtil.doGet(url, null);
+    public BigDecimal getnewprice(String url) throws IOException {
+        Map<String, Object> map = CommonUtil.executeGet(url);
         JSONObject res = JSONObject.parseObject(map.get("res").toString());
         JSONArray data = JSONArray.parseArray(res.get("data").toString());
         JSONObject jsonObject = JSONObject.parseObject(data.get(0).toString());
@@ -274,7 +275,7 @@ public class TimerServiceImpl {
         }
     }
 
-    public  void hycarryout(){
+    public  void hycarryout() throws IOException {
         long nowtime = System.currentTimeMillis()/1000;
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
