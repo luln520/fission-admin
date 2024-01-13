@@ -11,6 +11,11 @@
         await loadData();
         message.success('刷新成功');
       }">刷新</a-button>
+      <a-input-search v-model:value="searchUserName" placeholder="请输入用户名" enter-button @search="async () => {
+        pagination.current = 1;
+        await loadData();
+        message.success('查询成功');
+      }" />
     </a-space>
   </a-card>
   <!-- 表格 -->
@@ -58,6 +63,7 @@ const pagination = ref({
   current: 1,
   pageSize: 10
 });
+const searchUserName=ref("");
 const formItems=[];
 //表格数据
 const tableData = ref([] as any[]);
@@ -118,7 +124,7 @@ async function addOrEditSubmit(submitData) {
 //获取表格数据
 async function loadData() {
   let data = await userCoinApi.list({
-    pageNum: pagination.value.current, pageSize: pagination.value.pageSize
+    pageNum: pagination.value.current, pageSize: pagination.value.pageSize,username:searchUserName.value
   });
   if (data.ok) {
     data = data.data;

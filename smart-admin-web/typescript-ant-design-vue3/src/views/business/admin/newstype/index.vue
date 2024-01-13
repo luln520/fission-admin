@@ -2,20 +2,15 @@
   <!-- 头部 -->
   <a-card style="height: 10%;min-height: 80px;">
     <a-space>
-      <!-- <a-button type="primary" :icon="h(PlusCircleOutlined)" @click="() => {
+      <a-button type="primary" :icon="h(PlusCircleOutlined)" @click="() => {
         isOpenEdit = true;
         addOrEditType = 1;
         addOrEditData = {};
-      }">新增</a-button> -->
+      }">新增</a-button>
       <a-button type="" :icon="h(UndoOutlined)" @click="async () => {
         await loadData();
         message.success('刷新成功');
       }">刷新</a-button>
-      <a-input-search v-model:value="searchUserName" placeholder="请输入用户名" enter-button @search="async () => {
-        pagination.current = 1;
-        await loadData();
-        message.success('查询成功');
-      }" />
     </a-space>
   </a-card>
   <!-- 表格 -->
@@ -23,11 +18,9 @@
     <a-table :columns="columns" :data-source="tableData" @change="tableChange" :scroll="{ x: 1500 }"
       :pagination="pagination" :bordered="true">
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'coinname'">
-          {{ toUpper(record.coinname) }}
-        </template>
-        <template v-if="column.key === 'type'">
-          {{ typeStrs[record.type - 1] }}
+        <template v-if="column.key === 'status'">
+          <span v-if="record.status == 1" style="color: green;">启用</span>
+          <span v-if="record.status != 1" style="color: red;">禁用</span>
         </template>
         <template v-if="column.key === 'action'">
           <span>
@@ -38,14 +31,14 @@
             }">
               <a>删除</a>
             </a-popconfirm>
-            <a-divider type="vertical" />
+            <!-- <a-divider type="vertical" />
             <a @click="() => {
               updateStatus(record.id, 1);
             }">启用</a>
             <a-divider type="vertical" />
             <a @click="() => {
               updateStatus(record.id, 2);
-            }">禁用</a>
+            }">禁用</a> -->
           </span>
         </template>
       </template>
@@ -53,7 +46,7 @@
   </a-card>
   <!-- 编辑弹框 -->
   <AddOrEdit v-if="isOpenEdit" ref="addOrEditRef" :isOpen="isOpenEdit" :formItems="formItems" :type="addOrEditType"
-    :name="'币种'" :data="addOrEditData" @close="() => {
+    :name="'新闻类型'" :data="addOrEditData" @close="() => {
       isOpenEdit = false;
     }" @submit="addOrEditSubmit" />
 </template>
@@ -61,7 +54,7 @@
 import { message } from 'ant-design-vue';
 import { h, ref, onMounted } from 'vue';
 import { PlusCircleOutlined, UndoOutlined } from '@ant-design/icons-vue';
-import { financeApi } from '/@/api/business/admin/finance-api';
+import { newsTypeApi } from '/@/api/business/admin/newsType-api';
 import AddOrEdit from "/@/components/edit/edit.vue"
 import { toLower, toUpper } from 'lodash';
 const addOrEditRef = ref();
@@ -76,13 +69,50 @@ const pagination = ref({
   current: 1,
   pageSize: 10
 });
-const searchUserName = ref("");
-//状态
-const typeStrs = [
-  "充币", "提币", "购买合约", "出售合约", "购买矿机", "购机奖励", "矿机收益冻结", "释放冻结收益", "币币交易USDT", "币币交易币种", "认购扣除", "认购增加", "13一代认购奖励", "二代认购奖励", "三代认购奖励", "提币退回", "充币成功"
-]
 //编辑配置
-const formItems = [];
+const formItems = [{
+  name: "name",
+  label: "分类名称",
+  placeholder: '请输入分类名称',
+  type: "input",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "sort",
+  label: "排序",
+  placeholder: '请输入排序！',
+  type: "input",
+  defaultValue: '',
+  rows: 6,
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "status",
+  label: "状态",
+  placeholder: '',
+  type: "select",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ],
+  selects: [
+    { name: "启用", value: 1 },
+    { name: "禁用", value: 0 }
+  ]
+}
+];
 //行配置
 const columns = [
   {
@@ -90,55 +120,37 @@ const columns = [
     title: 'ID',
     dataIndex: 'id',
     key: 'id',
-    width: 50
-  },
-  {
-    title: '用户名',
-    dataIndex: 'username',
-    key: 'username',
     width: 150
   },
   {
-    title: '操作币种',
-    dataIndex: 'coinname',
-    key: 'coinname',
-    width: 70
+    title: '分类名称',
+    dataIndex: 'name',
+    key: 'name',
+    width: 250
   },
   {
-    title: '操作数量',
-    dataIndex: 'num',
-    key: 'num',
-    width: 70
+    title: '排序',
+    dataIndex: 'sort',
+    key: 'sort',
+    width: 250
   },
   {
-    title: '操作类型',
-    dataIndex: 'type',
-    key: 'type',
+    title: '创建时间',
+    dataIndex: 'createTime',
+    key: 'createTime',
+    width: 150
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    key: 'status',
     width: 80
   },
   {
-    title: '操作后',
-    dataIndex: 'afternum',
-    key: 'afternum',
-    width: 80
-  },
-  {
-    title: '操作说明',
-    dataIndex: 'remark',
-    key: 'remark',
-    width: 180
-  },
-  {
-    title: '操作时间',
-    dataIndex: 'addtime',
-    key: 'addtime',
-    width: 120
-  },
-  {
-    title: '状态（存疑）',
-    key: 'st',
+    title: '操作',
+    key: 'action',
     width: 200,
-    dataIndex: 'st',
+    fixed: 'right',
   },
 ];
 
@@ -151,14 +163,13 @@ async function tableChange(pag: { pageSize: number; current: number }) {
 //打开编辑
 async function openEdit(record) {
   //处理数据
-  record.name = toUpper(record.coinname);
   isOpenEdit.value = true;
   addOrEditType.value = 2;
   addOrEditData.value = record;
 }
 //删除数据
 async function deleteData(id) {
-  let data = await financeApi.delete({ id });
+  let data = await newsTypeApi.delete({ id });
   if (data.ok) {
     message.success("操作成功！")
   } else {
@@ -168,7 +179,7 @@ async function deleteData(id) {
 }
 //启用禁用
 async function updateStatus(id, status) {
-  let data = await financeApi.updateStatus({ id, status });
+  let data = await newsTypeApi.updateStatus({ id, status });
   if (data.ok) {
     message.success("操作成功！")
   } else {
@@ -178,7 +189,7 @@ async function updateStatus(id, status) {
 }
 //新增或者编辑
 async function addOrEditSubmit(submitData) {
-  let data = await financeApi.addOrUpdate(submitData);
+  let data = await newsTypeApi.addOrUpdate(submitData);
   if (data.ok) {
     message.success("操作成功！");
     addOrEditRef.value.close();
@@ -189,10 +200,10 @@ async function addOrEditSubmit(submitData) {
 }
 //获取表格数据
 async function loadData() {
-  let data = await financeApi.billList({ pageNum: pagination.value.current, pageSize: pagination.value.pageSize, username: searchUserName.value });
+  let data = await newsTypeApi.list({ pageNum: pagination.value.current, pageSize: pagination.value.pageSize });
   if (data.ok) {
     data = data.data;
-    tableData.value = data.records;
+    tableData.value = data;
     pagination.value.total = data.total;
     console.info(tableData.value)
   }

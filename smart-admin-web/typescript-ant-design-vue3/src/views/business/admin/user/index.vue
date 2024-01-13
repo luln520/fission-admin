@@ -16,6 +16,11 @@
         await loadData();
         message.success('刷新成功');
       }">刷新</a-button>
+      <a-input-search v-model:value="searchUserName" placeholder="请输入用户名" enter-button @search="async () => {
+        pagination.current = 1;
+        await loadData();
+        message.success('查询成功');
+      }" />
     </a-space>
   </a-card>
   <!-- 表格 -->
@@ -30,8 +35,8 @@
 
         <template v-if="column.key === 'addip'">
           <div>最后登录ip：{{ record.addip }}</div>
-          <div>注册时间：{{ record.addtime }}</div>
-          <div>最后登陆：{{ record.lgtime }}</div>
+          <div>注册时间：{{ timestampToStr(record.addtime * 1000) }}</div>
+          <div>最后登陆：{{ record.logintime }}</div>
         </template>
         <template v-if="column.key === 'status'">
           <div>登录：
@@ -55,15 +60,15 @@
         </template>
         <template v-if="column.key === 'action'">
           <div>
-            <a @click="openEdit(record)">编辑</a>
-            <a-divider type="vertical" />
+            <!-- <a @click="openEdit(record)">编辑</a>
+            <a-divider type="vertical" /> -->
             <a @click="() => {
               isOpenSendMsg = true;
               sendMsgData.type = 1;
               sendMsgData.id = record.id;
             }">发通知</a>
-            <a v-if="record.isAgent == 0" @click="setAgent(record.id)"><a-divider type="vertical" />设为代理</a>
-
+            <!-- <a v-if="record.isAgent == 0" @click="setAgent(record.id)"><a-divider type="vertical" />设为代理</a> -->
+            <a @click="openEditKJ(record)"><a-divider type="vertical" />矿机单控</a>
             <div style="height: 10px;"></div>
             <a @click="setWin(record.id, 2)">指定必输</a>
             <a-divider type="vertical" />
@@ -115,6 +120,12 @@
       isOpenUserMoney = false;
     }
       " @submit="userMoneySubmit" />
+  <!-- kj单控 -->
+  <KJEdit v-if="isOpenEditKJ" ref="addOrEditRefKJ" :isOpen="isOpenEditKJ" :formItems="userKJFormItems"
+    :data="addOrEditDataKJ" @close="() => {
+      isOpenEditKJ = false;
+    }
+      " @submit="editKJSubmit" />
 </template>
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
@@ -123,7 +134,9 @@ import { PlusCircleOutlined, UndoOutlined, CommentOutlined } from '@ant-design/i
 import { userApi } from '/@/api/business/admin/user-api';
 import { agentApi } from '/@/api/business/admin/agent-api';
 import AddOrEdit from "/@/components/edit/edit.vue"
+import KJEdit from "./components/kj/kj.vue"
 import { toLower, toUpper } from 'lodash';
+import { timestampToStr } from '/@/utils/util';
 const addOrEditRef = ref();
 const isOpenEdit = ref(false);
 const addOrEditType = ref(1);
@@ -132,6 +145,10 @@ const sendMsgRef = ref();
 const isOpenSendMsg = ref(false);
 const sendMsgType = ref(1);
 const sendMsgData = ref({} as any);
+//kj
+const isOpenEditKJ = ref(false);
+const addOrEditDataKJ = ref({});
+const addOrEditRefKJ = ref();
 
 const userMoneyRef = ref();
 const isOpenUserMoney = ref(false);
@@ -146,6 +163,7 @@ const pagination = ref({
   current: 1,
   pageSize: 10
 });
+const searchUserName = ref('');
 //用户余额配置
 const userMoneyFormItems = [{
   name: "money",
@@ -193,6 +211,48 @@ const userMoneyFormItems = [{
   ]
 }
 ];
+
+//矿机单控
+const userKJFormItems = [
+  {
+    name: "kjNum",
+    label: "矿机购买次数",
+    placeholder: '请输入数字',
+    type: "input",
+    defaultValue: '',
+    rules: [
+      {
+        required: true,
+        message: '必填选项',
+      },
+    ]
+  },
+  {
+    name: "kjMinnum",
+    label: "矿机最低单价",
+    placeholder: '请输入数字',
+    type: "input",
+    defaultValue: '',
+    rules: [
+      {
+        required: true,
+        message: '必填选项',
+      },
+    ]
+  }, {
+    name: "kjMaxnum",
+    label: "矿机最高单价",
+    placeholder: '请输入数字',
+    type: "input",
+    defaultValue: '',
+    rules: [
+      {
+        required: true,
+        message: '必填选项',
+      },
+    ]
+  }
+]
 //发送短信配置
 const sendMsgFormItems = [{
   name: "title",
@@ -419,7 +479,7 @@ const columns = [
   {
     title: '操作',
     key: 'action',
-    width: 400,
+    width: 250,
     fixed: 'right',
   },
 ];
@@ -438,6 +498,13 @@ async function openEdit(record) {
   isOpenEdit.value = true;
   addOrEditType.value = 2;
   addOrEditData.value = record;
+}
+
+//打开编辑
+async function openEditKJ(record) {
+  //处理数据
+  isOpenEditKJ.value = true;
+  addOrEditDataKJ.value = record;
 }
 
 //设置输赢
@@ -508,6 +575,24 @@ async function userMoneySubmit(submitData) {
   }
   loadData();
 }
+
+//kg单控
+async function editKJSubmit(submitData) {
+  const sendData={} as any;
+  sendData.kjNum = parseInt(submitData.kjNum);
+  sendData.kjMinnum = parseFloat(submitData.kjMinnum);
+  sendData.kjMaxnum = parseFloat(submitData.kjMaxnum);
+  sendData.id = submitData.id;
+  let data = await userApi.addOrUpdate(sendData);
+  if (data.ok) {
+    message.success("操作成功！");
+    addOrEditRefKJ.value.close();
+  } else {
+    message.error("操作失败！请重试~");
+  }
+  loadData();
+}
+
 //发送通知
 async function sendMsgSubmit(submitData) {
   submitData.imgs = " ";
@@ -529,7 +614,7 @@ async function sendMsgSubmit(submitData) {
 }
 //获取表格数据
 async function loadData() {
-  let data = await userApi.list({ pageNum: pagination.value.current, pageSize: pagination.value.pageSize });
+  let data = await userApi.list({ pageNum: pagination.value.current, pageSize: pagination.value.pageSize, username: searchUserName.value });
   if (data.ok) {
     data = data.data;
     tableData.value = data.records;

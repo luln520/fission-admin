@@ -6,6 +6,11 @@
         await loadData();
         message.success('刷新成功');
       }">刷新</a-button>
+      <a-input-search v-model:value="searchUserName" placeholder="请输入用户名" enter-button @search="async () => {
+        pagination.current = 1;
+        await loadData();
+        message.success('查询成功');
+      }" />
     </a-space>
   </a-card>
   <!-- 表格 -->
@@ -16,7 +21,7 @@
         <template v-if="column.key === 'hyzd'">
           <div v-if="record.hyzd == 1" style="color: green;">买涨</div>
           <div v-if="record.hyzd != 1" style="color: red;">买跌</div>
-          时间：{{record.intselltime }}
+          时间：{{ record.intselltime }}
         </template>
 
         <template v-if="column.key === 'status'">
@@ -29,10 +34,10 @@
           <div v-if="record.kongyk == 2" style="color: red;">亏损</div>
           <div v-if="record.kongyk == 0" style=";">未指定</div>
         </template>
-        
+
         <template v-if="column.key === 'ploss'">
-          <div v-if="record.isWin == 1" style="color: green;">+{{record.ploss}}</div>
-          <div v-if="record.isWin == 2" style="color: red;">-{{record.ploss}}</div>
+          <div v-if="record.isWin == 1" style="color: green;">+{{ record.ploss }}</div>
+          <div v-if="record.isWin == 2" style="color: red;">-{{ record.ploss }}</div>
         </template>
 
         <template v-if="column.key === 'action'">
@@ -79,6 +84,7 @@ const pagination = ref({
   current: 1,
   pageSize: 10
 });
+const searchUserName = ref("");
 //表格数据
 const tableData = ref([] as any[]);
 //行配置
@@ -119,7 +125,7 @@ const columns = [
     dataIndex: 'kongyk',
     key: 'kongyk',
     width: 130
-  }, 
+  },
   {
     title: '委托额度',
     dataIndex: 'num',
@@ -195,7 +201,8 @@ async function addOrEditSubmit(submitData) {
 //获取表格数据
 async function loadData() {
   let data = await tradeApi.hyorderlist({
-    pageNum: pagination.value.current, pageSize: pagination.value.pageSize});
+    pageNum: pagination.value.current, pageSize: pagination.value.pageSize, username: searchUserName.value
+  });
   if (data.ok) {
     data = data.data;
     tableData.value = data.records;
