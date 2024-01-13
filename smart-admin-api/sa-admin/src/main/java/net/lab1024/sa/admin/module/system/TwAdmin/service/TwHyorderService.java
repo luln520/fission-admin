@@ -30,7 +30,7 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     TwHyorder hyorderId(int id);
 
-    ResponseDTO<HyorderOneRes> getHyorderOne(int id) throws IOException;
+    ResponseDTO<HyorderOneRes> getHyorderOne(int id);
 
     ResponseDTO<List<TwHyorder>> gethyorder(int uid);
 
@@ -44,6 +44,6 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     boolean editKongyK(Integer kongyk, int id);
 
-    ResponseDTO creatorder(int uid,int ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl) throws IOException;
+    ResponseDTO creatorder(int uid,int ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl);
 
 }

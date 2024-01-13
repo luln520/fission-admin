@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class HuobiRestConnection {
 
-  public static String executeGet(String url) throws IOException {
+  public static String executeGet(String url){
 
     Request executeRequest = new Request.Builder()
         .url(url)

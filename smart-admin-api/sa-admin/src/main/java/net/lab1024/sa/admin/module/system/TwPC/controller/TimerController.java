@@ -155,7 +155,7 @@ public class TimerController {
      *         }
      *     }
      * */
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void autokjsy() {
         timerService.autokjsy();
     }
@@ -164,7 +164,7 @@ public class TimerController {
     /**
      * 矿机到期时间结算
      */
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void endkjsy() {
         timerService.endkjsy();
     }
@@ -402,7 +402,7 @@ public class TimerController {
      * */
 
     @Scheduled(cron = "*/30 * * * * ?")
-    public void hycarryout() throws IOException {
+    public void hycarryout()  {
         timerService.hycarryout();
     }
 }

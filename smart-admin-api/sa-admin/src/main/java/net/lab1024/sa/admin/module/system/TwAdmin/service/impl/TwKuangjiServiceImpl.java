@@ -41,6 +41,9 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
     private TwKjorderDao twKjorderDao;
 
     @Autowired
+    private TwKjprofitDao twKjprofitDao;
+
+    @Autowired
     private TwUserService twUserService;
 
     @Autowired
@@ -146,14 +149,14 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 //        twKjorder.setOuttype(kuangji.getOuttype());
         twKjorder.setOutcoin(kuangji.getOutcoin());
         MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
-        BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum().divide(new BigDecimal(100,mathContext))).multiply(BigDecimal.valueOf(kuangji.getCycle())).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum().divide(new BigDecimal(100),mathContext)).setScale(2, RoundingMode.HALF_UP);
         twKjorder.setOutnum(outnum);
 //        twKjorder.setOutusdt(kuangji.getDayoutnum());
         twKjorder.setAddtime(new Date());
-        twKjorder.setEndtime(addDay(new Date()));
+        twKjorder.setEndtime(addDay(new Date(),kuangji.getCycle()));
         long intaddtime = Instant.now().getEpochSecond();
         twKjorder.setIntaddtime((int) (intaddtime));
-        Date date = addDay(new Date());
+        Date date = addDay(new Date(),kuangji.getCycle());
         twKjorder.setIntendtime((int)(date.getTime()/1000));
         twKjorderService.save(twKjorder);
 
@@ -189,8 +192,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         BigDecimal buynum = new BigDecimal(0);
         QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(buynum), 0) as buynum")
-                .eq("status", 1)
-                .eq("uid", uid);
+                .eq("uid", uid)
+                .eq("status", 1);
         List<Map<String, Object>> result = twKjorderDao.selectMaps(queryWrapper);
         if (result.isEmpty()) {
             buynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -211,17 +214,28 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twPCKjprofitVo.setBuynum(buynum);
 
         BigDecimal todaynum = new BigDecimal(0);
-        QueryWrapper<TwKjorder> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.eq("uid",uid);
-        List<TwKjorder> list = twKjorderService.list(queryWrapper2);
-        for(TwKjorder twKjorder:list){
-            QueryWrapper queryKuaji = new QueryWrapper();
-            queryKuaji.eq("id",twKjorder.getKid());
-            TwKuangji kuangji = this.getOne(queryKuaji);
-            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
-            BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum().divide(new BigDecimal(100,mathContext))).multiply(BigDecimal.valueOf(kuangji.getCycle())).setScale(2, RoundingMode.HALF_UP);
-            todaynum = todaynum.add(outnum);
+        String nowdate = DateUtil.date2Str(new Date(), "yyyy-MM-dd");
+        QueryWrapper<TwKjorder> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.select("IFNULL(SUM(outnum), 0) as outnum")
+                .eq("uid", uid)
+                .eq("status", 1);
+        List<Map<String, Object>> result1 = twKjorderDao.selectMaps(queryWrapper1);
+        if (result1.isEmpty()) {
+            todaynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
         }
+
+        Object totalNumObject1 = result1.get(0).get("outnum");
+        if (totalNumObject1 instanceof BigDecimal) {
+            todaynum = ((BigDecimal) totalNumObject1).setScale(2, RoundingMode.HALF_UP);
+        } else if (totalNumObject1 instanceof Long) {
+            todaynum = BigDecimal.valueOf((Long) totalNumObject1).setScale(2, RoundingMode.HALF_UP);
+        } else if (totalNumObject1 instanceof Integer) {
+            todaynum = BigDecimal.valueOf((Integer) totalNumObject1).setScale(2, RoundingMode.HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            todaynum = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        }
+
         twPCKjprofitVo.setTodaynum(todaynum);
 
         BigDecimal sumnum = new BigDecimal(0);
@@ -236,14 +250,44 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         return twPCKjprofitVo;
     }
 
-    public Date addDay(Date date){
+    @Override
+    public TwPCKjprofitVo kjprofitOneSum(int uid, int kid) {
+        TwPCKjprofitVo twPCKjprofitVo = new TwPCKjprofitVo();
+        BigDecimal buynum = new BigDecimal(0);
+        QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(buynum), 0) as buynum")
+                .eq("uid", uid)
+                .eq("kid", kid)
+                .eq("status", 1);
+        List<Map<String, Object>> result = twKjorderDao.selectMaps(queryWrapper);
+        if (result.isEmpty()) {
+            buynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object totalNumObject = result.get(0).get("buynum");
+        if (totalNumObject instanceof BigDecimal) {
+            buynum = ((BigDecimal) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+        } else if (totalNumObject instanceof Long) {
+            buynum = BigDecimal.valueOf((Long) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+        } else if (totalNumObject instanceof Integer) {
+            buynum = BigDecimal.valueOf((Integer) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            buynum = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        }
+
+        twPCKjprofitVo.setBuynum(buynum);
+
+        return twPCKjprofitVo;
+    }
+
+    public Date addDay(Date date,int daysToAdd){
 
         // 将Date对象转换为Calendar对象
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
         // 增加天数
-        int daysToAdd = 5;
         calendar.add(Calendar.DAY_OF_YEAR, daysToAdd);
 
         // 获取增加天数后的Date对象

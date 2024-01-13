@@ -96,7 +96,7 @@ public class PcContractController {
     @ResponseBody
     @NoNeedLogin
     @ApiOperation(value = "合约倒计时")
-    public ResponseDTO<HyorderOneRes> getHyorderOne(@RequestParam int id) throws IOException {
+    public ResponseDTO<HyorderOneRes> getHyorderOne(@RequestParam int id) {
         return twHyorderService.getHyorderOne(id);
     }
 
@@ -469,7 +469,7 @@ public class PcContractController {
                                   @RequestParam BigDecimal ctzed,
                                   @RequestParam String ccoinname,
                                   @RequestParam int ctzfx,
-                                  @RequestParam BigDecimal cykbl) throws IOException {
+                                  @RequestParam BigDecimal cykbl){
         return twHyorderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl);
     }
 

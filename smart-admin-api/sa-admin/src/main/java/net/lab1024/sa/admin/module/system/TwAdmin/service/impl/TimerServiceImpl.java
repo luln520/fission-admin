@@ -7,6 +7,7 @@ import io.swagger.models.auth.In;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjorderDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjprofitDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.util.CommonUtil;
@@ -54,6 +55,9 @@ public class TimerServiceImpl {
     @Autowired
     private TwKjorderDao twKjorderDao;
 
+    @Autowired
+    private TwKjprofitDao twKjprofitDao;
+
     /**
      * 工具方法：获取行情数据 （api调用）
      * 方法名：getnewprice
@@ -70,7 +74,7 @@ public class TimerServiceImpl {
      *
      * */
 
-    public BigDecimal getnewprice(String url) throws IOException {
+    public BigDecimal getnewprice(String url){
         Map<String, Object> map = CommonUtil.executeGet(url);
         JSONObject res = JSONObject.parseObject(map.get("res").toString());
         JSONArray data = JSONArray.parseArray(res.get("data").toString());
@@ -211,71 +215,69 @@ public class TimerServiceImpl {
     }
 
     public void endkjsy(){
+        Integer nowtime = (int) (System.currentTimeMillis()/1000);
         QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
+        queryWrapper.le("intendtime", nowtime);
         List<TwKjorder> list = twKjorderService.list(queryWrapper);
-        for(TwKjorder twKjorder:list){
-            Integer intendtime = twKjorder.getIntendtime();
-            //判断是否过期
-            Integer nowtime = (int) (System.currentTimeMillis()/1000);
-
-            if(nowtime>=intendtime){  //已过期
+        if(list.size() > 0){
+            for(TwKjorder twKjorder:list){
                 twKjorder.setStatus(3);
                 twKjorderService.updateById(twKjorder);
+
+                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+                queryWrapper4.eq("id",twKjorder.getUid());
+                TwUser twUser = twUserService.getOne(queryWrapper4);
+
+                QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
+                queryWrapper3.eq("userid",twKjorder.getUid());
+                TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
+
+                Integer uid = twKjorder.getUid();
+                BigDecimal buynum = new BigDecimal(0);
+                QueryWrapper<TwKjprofit> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper.select("IFNULL(SUM(num), 0) as num")
+                        .eq("kid", 1)
+                        .eq("uid", twKjorder.getUid());
+                List<Map<String, Object>> result = twKjprofitDao.selectMaps(queryWrapper1);
+                if (result.isEmpty()) {
+                    buynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+                }
+
+                Object totalNumObject = result.get(0).get("num");
+                if (totalNumObject instanceof BigDecimal) {
+                    buynum = ((BigDecimal) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+                } else if (totalNumObject instanceof Long) {
+                    buynum = BigDecimal.valueOf((Long) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+                } else if (totalNumObject instanceof Integer) {
+                    buynum = BigDecimal.valueOf((Integer) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+                } else {
+                    // 处理其他可能的类型
+                    buynum = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+                }
+
+                //增加资产
+                twUserCoinService.incre(uid,buynum,twUserCoin.getUsdt());
+
+                //写资金日志
+                TwBill twBill = new TwBill();
+                twBill.setUid(uid);
+                twBill.setUsername(twKjorder.getUsername());
+                twBill.setPath(twUser.getPath());
+                twBill.setDepartment(twUser.getDepatmentId());
+                twBill.setNum(buynum);
+                twBill.setCoinname("usdt");
+                twBill.setAfternum(twUserCoinService.afternum(uid));
+                twBill.setType(8);
+                twBill.setAddtime(new Date());
+                twBill.setSt(1);
+                twBill.setRemark("矿机到期收益释放");
+                twBillService.save(twBill);
             }
-
-            QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
-            queryWrapper4.eq("id",twKjorder.getUid());
-            TwUser twUser = twUserService.getOne(queryWrapper4);
-
-            QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
-            queryWrapper3.eq("userid",twKjorder.getUid());
-            TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
-
-            Integer uid = twKjorder.getUid();
-            BigDecimal buynum = new BigDecimal(0);
-            QueryWrapper<TwKjorder> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper.select("IFNULL(SUM(buynum), 0) as buynum")
-                    .eq("status", 1)
-                    .eq("uid", twKjorder.getUid());
-            List<Map<String, Object>> result = twKjorderDao.selectMaps(queryWrapper);
-            if (result.isEmpty()) {
-                buynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
-            }
-
-            Object totalNumObject = result.get(0).get("buynum");
-            if (totalNumObject instanceof BigDecimal) {
-                buynum = ((BigDecimal) totalNumObject).setScale(2, RoundingMode.HALF_UP);
-            } else if (totalNumObject instanceof Long) {
-                buynum = BigDecimal.valueOf((Long) totalNumObject).setScale(2, RoundingMode.HALF_UP);
-            } else if (totalNumObject instanceof Integer) {
-                buynum = BigDecimal.valueOf((Integer) totalNumObject).setScale(2, RoundingMode.HALF_UP);
-            } else {
-                // 处理其他可能的类型
-                buynum = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
-            }
-
-            //增加资产
-            twUserCoinService.incre(uid,buynum,twUserCoin.getUsdt());
-
-            //写资金日志
-            TwBill twBill = new TwBill();
-            twBill.setUid(uid);
-            twBill.setUsername(twKjorder.getUsername());
-            twBill.setPath(twUser.getPath());
-            twBill.setDepartment(twUser.getDepatmentId());
-            twBill.setNum(buynum);
-            twBill.setCoinname("usdt");
-            twBill.setAfternum(twUserCoinService.afternum(uid));
-            twBill.setType(8);
-            twBill.setAddtime(new Date());
-            twBill.setSt(1);
-            twBill.setRemark("矿机到期收益释放");
-            twBillService.save(twBill);
         }
     }
 
-    public  void hycarryout() throws IOException {
+    public  void hycarryout() {
         long nowtime = System.currentTimeMillis()/1000;
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
