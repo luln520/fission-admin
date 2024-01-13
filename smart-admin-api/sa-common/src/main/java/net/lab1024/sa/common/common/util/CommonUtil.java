@@ -156,7 +156,7 @@ public class CommonUtil {
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         long end = start + (20 * 60 * 1000); // 20分钟的毫秒数
-        String str = "https://apilist.tronscanapi.com/api/new/token_trc20/transfers?limit=20&start=0&contract_address=TWxjzcUnA8weSCVdtwL4WzR2qyQFDP7xK1&start_timestamp="+start+"&end_timestamp="+end+"&confirm=&filterTokenValue=1";
+        String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol=btcusdt";
         Map<String, Object> stringObjectMap = doGet(str,null);
         System.out.println(stringObjectMap);
     }

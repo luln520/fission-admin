@@ -219,7 +219,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             }
             invite = byInvite.getEmployeeId().toString();
 
-        //获取会员资产
+            //获取会员资产
             QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
             queryWrapper1.eq("userid", uid); // 添加查询条件
             TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
@@ -251,7 +251,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
             String symbol = ccoinname.toLowerCase().replace("/", "");
             String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
+            log.info("火币调用api路径：{}"+ str);
             Map<String, Object> map = CommonUtil.executeGet(str);
+            log.info("火币调用api 返回参数：{}" +map);
             JSONObject res = JSONObject.parseObject(map.get("res").toString());
             JSONArray data = JSONArray.parseArray(res.get("data").toString());
             JSONObject jsonObject = JSONObject.parseObject(data.get(0).toString());

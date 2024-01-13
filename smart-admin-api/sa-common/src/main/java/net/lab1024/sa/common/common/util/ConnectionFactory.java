@@ -56,10 +56,12 @@ public class ConnectionFactory {
   public static String execute(Request request) throws IOException {
 
     Response response = null;
+    log.info("火币调用api路径 request：{}"+ request.url());
     String str = null;
 //    try {
       log.debug("[Request URL]{}", request.url());
       response = client.newCall(request).execute();
+      log.info("火币调用api路径返回 response：{}"+ response);
       if (response.code() != 200) {
         log.info("error", "[Execute] Response Status Error : " + response.code() + " message:" + response.message());
       }
