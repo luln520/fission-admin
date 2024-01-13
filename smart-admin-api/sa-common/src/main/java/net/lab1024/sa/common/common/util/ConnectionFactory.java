@@ -29,7 +29,7 @@ public class ConnectionFactory {
       .connectTimeout(5000, TimeUnit.MILLISECONDS)
       .readTimeout(5000, TimeUnit.MILLISECONDS)
       .writeTimeout(5000, TimeUnit.MILLISECONDS)
-      .connectionPool(connectionPool)
+//      .connectionPool(connectionPool)
       .addNetworkInterceptor(new Interceptor() {
         @NotNull
         @Override
