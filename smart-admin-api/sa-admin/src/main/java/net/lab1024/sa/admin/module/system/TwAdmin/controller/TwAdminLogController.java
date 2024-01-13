@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMessageRep;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -40,8 +41,15 @@ public class TwAdminLogController {
     }
 
     /**
-     * 新增或者编辑 表 AdminLog   有id 编辑  无id 新增  对象直接存 （接口可以删，server要实现  管理员操作日志需要写入调取）
-     */
-
+     *
+     * 首页通知消息
+     *
+     * */
+    @PostMapping("/message")
+    @ApiOperation(value = "首页通知消息")
+    @NoNeedLogin
+    public ResponseDTO<TwMessageRep> message() {
+        return ResponseDTO.ok(twAdminLogService.message());
+    }
 }
 
