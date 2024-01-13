@@ -118,7 +118,7 @@ const formItems = [{
   name: "content",
   label: "新闻内容",
   placeholder: '请输入新闻内容',
-  type: "textarea",
+  type: "editor",
   defaultValue: '',
   rules: [
     {
