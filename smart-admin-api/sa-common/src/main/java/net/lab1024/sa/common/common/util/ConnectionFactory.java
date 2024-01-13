@@ -58,8 +58,8 @@ public class ConnectionFactory {
     Response response = null;
     log.info("火币调用api路径 request：{}"+ request.url());
     String str = null;
-//    try {
-      log.debug("[Request URL]{}", request.url());
+    try {
+      log.info("[Request URL]{}", request.url());
       response = client.newCall(request).execute();
       log.info("火币调用api路径返回 response：{}"+ response);
       if (response.code() != 200) {
@@ -71,14 +71,14 @@ public class ConnectionFactory {
       } else {
         log.info("error", "[Execute] Cannot get the response from server");
       }
-      log.debug("[Response]{}", str);
+      log.info("[Response]{}", str);
       return str;
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//      log.info("error", "[Execute] Cannot get the response from server");
-//    }
+    } catch (IOException e) {
+      e.printStackTrace();
+      log.info("error", e);
+    }
 
-//      return str;
+      return str;
   }
 
   public static WebSocket createWebSocket(Request request, WebSocketListener listener) {
