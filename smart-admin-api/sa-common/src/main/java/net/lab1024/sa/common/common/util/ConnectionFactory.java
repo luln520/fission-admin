@@ -23,38 +23,38 @@ public class ConnectionFactory {
   private static ConnectionPool connectionPool =
       new ConnectionPool(20, 300, TimeUnit.SECONDS);
 
-  private static final OkHttpClient client = new OkHttpClient.Builder()
-      .followSslRedirects(false)
-      .followRedirects(false)
-      .connectTimeout(5000, TimeUnit.MILLISECONDS)
-      .readTimeout(5000, TimeUnit.MILLISECONDS)
-      .writeTimeout(5000, TimeUnit.MILLISECONDS)
-//      .connectionPool(connectionPool)
-      .addNetworkInterceptor(new Interceptor() {
-        @NotNull
-        @Override
-        public Response intercept(@NotNull Chain chain) throws IOException {
-          Request request = chain.request();
-
-          Long startNano = System.nanoTime();
-
-          Response response = chain.proceed(request);
-
-          Long endNano = System.nanoTime();
-
-          if (LATENCY_DEBUG_SWATCH) {
-            LATENCY_DEBUG_QUEUE.add(new NetworkLatency(request.url().url().getPath(), startNano, endNano));
-          }
-
-          return response;
-        }
-      })
-      .build();
+//  private static final OkHttpClient client = new OkHttpClient.Builder()
+//      .followSslRedirects(false)
+//      .followRedirects(false)
+//      .connectTimeout(5000, TimeUnit.MILLISECONDS)
+//      .readTimeout(5000, TimeUnit.MILLISECONDS)
+//      .writeTimeout(5000, TimeUnit.MILLISECONDS)
+////      .connectionPool(connectionPool)
+//      .addNetworkInterceptor(new Interceptor() {
+//        @NotNull
+//        @Override
+//        public Response intercept(@NotNull Chain chain) throws IOException {
+//          Request request = chain.request();
+//
+//          Long startNano = System.nanoTime();
+//
+//          Response response = chain.proceed(request);
+//
+//          Long endNano = System.nanoTime();
+//
+//          if (LATENCY_DEBUG_SWATCH) {
+//            LATENCY_DEBUG_QUEUE.add(new NetworkLatency(request.url().url().getPath(), startNano, endNano));
+//          }
+//
+//          return response;
+//        }
+//      })
+//      .build();
 
   private static final Logger log = LoggerFactory.getLogger(ConnectionFactory.class);
 
   public static String execute(Request request) throws IOException {
-
+    OkHttpClient client = new OkHttpClient();
     Response response = null;
     log.info("火币调用api路径 request：{}"+ request.url());
     String str = null;
@@ -81,9 +81,9 @@ public class ConnectionFactory {
       return str;
   }
 
-  public static WebSocket createWebSocket(Request request, WebSocketListener listener) {
-    return client.newWebSocket(request, listener);
-  }
+//  public static WebSocket createWebSocket(Request request, WebSocketListener listener) {
+//    return client.newWebSocket(request, listener);
+//  }
 
   public static void setLatencyDebug() {
     LATENCY_DEBUG_SWATCH = Boolean.TRUE;
