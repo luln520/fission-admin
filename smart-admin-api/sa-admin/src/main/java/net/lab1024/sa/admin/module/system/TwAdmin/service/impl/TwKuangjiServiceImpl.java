@@ -149,7 +149,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 //        twKjorder.setOuttype(kuangji.getOuttype());
         twKjorder.setOutcoin(kuangji.getOutcoin());
         MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
-        BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum()).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum().divide(new BigDecimal(100),mathContext)).setScale(2, RoundingMode.HALF_UP);
         twKjorder.setOutnum(outnum);
 //        twKjorder.setOutusdt(kuangji.getDayoutnum());
         twKjorder.setAddtime(new Date());
