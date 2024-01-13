@@ -215,16 +215,16 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
         BigDecimal todaynum = new BigDecimal(0);
         String nowdate = DateUtil.date2Str(new Date(), "yyyy-MM-dd");
-        QueryWrapper<TwKjprofit> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.select("IFNULL(SUM(num), 0) as num")
+        QueryWrapper<TwKjorder> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.select("IFNULL(SUM(outnum), 0) as outnum")
                 .eq("uid", uid)
-                .eq("day", nowdate);
-        List<Map<String, Object>> result1 = twKjprofitDao.selectMaps(queryWrapper1);
+                .eq("status", 1);
+        List<Map<String, Object>> result1 = twKjorderDao.selectMaps(queryWrapper1);
         if (result1.isEmpty()) {
             todaynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
         }
 
-        Object totalNumObject1 = result1.get(0).get("num");
+        Object totalNumObject1 = result1.get(0).get("outnum");
         if (totalNumObject1 instanceof BigDecimal) {
             todaynum = ((BigDecimal) totalNumObject1).setScale(2, RoundingMode.HALF_UP);
         } else if (totalNumObject1 instanceof Long) {
