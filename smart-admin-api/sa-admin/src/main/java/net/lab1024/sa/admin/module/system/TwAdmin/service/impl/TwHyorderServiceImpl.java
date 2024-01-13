@@ -73,7 +73,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
-    public ResponseDTO getHyorderOne(int id) throws IOException {
+    public ResponseDTO getHyorderOne(int id){
 
         String timerType = "";
         HyorderOneRes hyorderOneRes = new HyorderOneRes();
@@ -204,7 +204,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
-    public ResponseDTO creatorder(int uid, int ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl) throws IOException {
+    public ResponseDTO creatorder(int uid, int ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl) {
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", uid); // 添加查询条件
             TwUser twUser = twUserService.getOne(queryWrapper);

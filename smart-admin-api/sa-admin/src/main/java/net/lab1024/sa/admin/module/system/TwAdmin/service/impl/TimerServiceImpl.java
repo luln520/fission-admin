@@ -70,7 +70,7 @@ public class TimerServiceImpl {
      *
      * */
 
-    public BigDecimal getnewprice(String url) throws IOException {
+    public BigDecimal getnewprice(String url){
         Map<String, Object> map = CommonUtil.executeGet(url);
         JSONObject res = JSONObject.parseObject(map.get("res").toString());
         JSONArray data = JSONArray.parseArray(res.get("data").toString());
@@ -275,7 +275,7 @@ public class TimerServiceImpl {
         }
     }
 
-    public  void hycarryout() throws IOException {
+    public  void hycarryout() {
         long nowtime = System.currentTimeMillis()/1000;
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);

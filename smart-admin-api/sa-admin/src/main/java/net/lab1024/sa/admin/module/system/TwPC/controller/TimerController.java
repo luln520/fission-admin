@@ -402,7 +402,7 @@ public class TimerController {
      * */
 
     @Scheduled(cron = "*/30 * * * * ?")
-    public void hycarryout() throws IOException {
+    public void hycarryout()  {
         timerService.hycarryout();
     }
 }

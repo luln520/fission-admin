@@ -53,7 +53,7 @@ public class ConnectionFactory {
 
   private static final Logger log = LoggerFactory.getLogger(ConnectionFactory.class);
 
-  public static String execute(Request request) throws IOException {
+  public static String execute(Request request){
     OkHttpClient client = new OkHttpClient();
     Response response = null;
     log.info("火币调用api路径 request：{}"+ request.url());
