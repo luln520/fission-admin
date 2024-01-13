@@ -54,6 +54,10 @@ public class TwNews implements Serializable {
     */
     @ApiModelProperty("类型")
     private String type;
+
+    @ApiModelProperty("语言")
+    private String language;
+
     /**
     * 创建时间
     */

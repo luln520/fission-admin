@@ -33,6 +33,10 @@ public class TwNewsType implements Serializable {
     */
     @ApiModelProperty("分类名称")
     private String name;
+
+
+    @ApiModelProperty("语言")
+    private String language;
     /**
     * 排序
     */

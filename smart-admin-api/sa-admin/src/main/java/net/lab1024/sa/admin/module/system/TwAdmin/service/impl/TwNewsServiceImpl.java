@@ -8,8 +8,11 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwNewsMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNews;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNewsService;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Req.TwNewsVo;
 import net.lab1024.sa.common.common.domain.PageParam;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author 1
@@ -21,9 +24,9 @@ public class TwNewsServiceImpl extends ServiceImpl<TwNewsMapper, TwNews>
     implements TwNewsService {
 
     @Override
-    public IPage<TwNews> listpage(PageParam pageParam) {
-        Page<TwNews> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-        objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+    public IPage<TwNews> listpage(TwNewsVo twNewsVo) {
+        Page<TwNews> objectPage = new Page<>(twNewsVo.getPageNum(), twNewsVo.getPageSize());
+        objectPage.setRecords(baseMapper.listpage(objectPage, twNewsVo));
         return objectPage;
     }
 
@@ -42,6 +45,13 @@ public class TwNewsServiceImpl extends ServiceImpl<TwNewsMapper, TwNews>
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("id",id);
         return this.getOne(queryWrapper);
+    }
+
+    @Override
+    public List<TwNews> listType(String type) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("type",type);
+        return this.list(queryWrapper);
     }
 
 }

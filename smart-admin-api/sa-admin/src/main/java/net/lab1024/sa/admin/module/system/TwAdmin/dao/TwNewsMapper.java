@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNews;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Req.TwNewsVo;
 import net.lab1024.sa.common.common.domain.PageParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,7 +19,7 @@ import java.util.List;
 */
 @Mapper
 public interface TwNewsMapper extends BaseMapper<TwNews> {
-    List<TwNews> listpage(@Param("objectPage") Page<TwNews> objectPage, @Param("obj") PageParam pageParam);
+    List<TwNews> listpage(@Param("objectPage") Page<TwNews> objectPage, @Param("obj") TwNewsVo twNewsVo);
 }
 
 

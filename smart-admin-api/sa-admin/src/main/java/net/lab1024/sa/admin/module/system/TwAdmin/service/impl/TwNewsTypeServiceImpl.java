@@ -29,6 +29,11 @@ public class TwNewsTypeServiceImpl extends ServiceImpl<TwNewsTypeMapper, TwNewsT
     }
 
     @Override
+    public List<TwNewsType> listType() {
+        return this.list();
+    }
+
+    @Override
     public boolean addOrUpdate(TwNewsType twNewsType) {
         return this.saveOrUpdate(twNewsType);
     }
