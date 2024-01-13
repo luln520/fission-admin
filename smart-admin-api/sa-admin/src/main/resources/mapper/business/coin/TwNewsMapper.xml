@@ -5,7 +5,11 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwNewsMapper">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNews">
-        select * from tw_news order by create_time desc
+        select * from tw_news where 1=1
+        <if test="obj.type != null and obj.type !=''">
+            and type = #{obj.type}
+        </if>
+         order by create_time desc
     </select>
 
 </mapper>

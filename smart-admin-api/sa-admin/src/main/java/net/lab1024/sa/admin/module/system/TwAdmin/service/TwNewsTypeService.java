@@ -16,6 +16,8 @@ import java.util.List;
 public interface TwNewsTypeService extends IService<TwNewsType> {
     List<TwNewsType> listpage();
 
+    List<TwNewsType> listType();
+
     boolean addOrUpdate(TwNewsType twNewsType);
 
     boolean delete(int id);

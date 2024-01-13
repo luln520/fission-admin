@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNews;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Req.TwNewsVo;
 import net.lab1024.sa.common.common.domain.PageParam;
+
+import java.util.List;
 
 /**
 * @author 1
@@ -13,11 +16,13 @@ import net.lab1024.sa.common.common.domain.PageParam;
 */
 public interface TwNewsService extends IService<TwNews> {
 
-    IPage<TwNews> listpage(PageParam pageParam);
+    IPage<TwNews> listpage(TwNewsVo twNewsVo);
 
     boolean addOrUpdate(TwNews twNews);
 
     boolean delete(int id);
 
     TwNews find(int id);
+
+    List<TwNews> listType(String type);
 }

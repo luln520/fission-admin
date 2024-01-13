@@ -126,6 +126,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String PC_USER = "PC-用户";
 
+        public static final String TW_NEWS = "PC-新闻";
+
 
     }
 

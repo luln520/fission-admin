@@ -8,6 +8,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNews;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwContentService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNewsService;
+import net.lab1024.sa.admin.module.system.TwPC.controller.Req.TwNewsVo;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -31,8 +32,8 @@ public class TwNewsController {
     @PostMapping("/list")
     @ApiOperation(value = "新闻列表")
     @NoNeedLogin
-    public ResponseDTO<IPage<TwNews>> listpage(@Valid @RequestBody PageParam pageParam) {
-        return ResponseDTO.ok(twNewsService.listpage(pageParam));
+    public ResponseDTO<IPage<TwNews>> listpage(@Valid @RequestBody TwNewsVo twNewsVo) {
+        return ResponseDTO.ok(twNewsService.listpage(twNewsVo));
     }
 
     @PostMapping("/addOrUpdate")
