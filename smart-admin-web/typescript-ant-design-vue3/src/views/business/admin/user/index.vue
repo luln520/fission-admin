@@ -479,7 +479,7 @@ const columns = [
   {
     title: '操作',
     key: 'action',
-    width: 400,
+    width: 250,
     fixed: 'right',
   },
 ];
@@ -578,18 +578,18 @@ async function userMoneySubmit(submitData) {
 
 //kg单控
 async function editKJSubmit(submitData) {
-  submitData.kjNum = parseInt(submitData.kjNum);
-  submitData.kjMinnum = parseInt(submitData.kjMinnum);
-  submitData.kjMaxnum = parseInt(submitData.kjMaxnum);
-  submitData.uid = submitData.id;
-  alert("缺少接口");
-  // let data = await userApi.addOrUpdate(submitData);
-  // if (data.ok) {
-  //   message.success("操作成功！");
-  //   addOrEditRefKJ.value.close();
-  // } else {
-  //   message.error("操作失败！请重试~");
-  // }
+  const sendData={} as any;
+  sendData.kjNum = parseInt(submitData.kjNum);
+  sendData.kjMinnum = parseFloat(submitData.kjMinnum);
+  sendData.kjMaxnum = parseFloat(submitData.kjMaxnum);
+  sendData.uid = submitData.id;
+  let data = await userApi.addOrUpdate(sendData);
+  if (data.ok) {
+    message.success("操作成功！");
+    addOrEditRefKJ.value.close();
+  } else {
+    message.error("操作失败！请重试~");
+  }
   loadData();
 }
 
