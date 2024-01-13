@@ -38,4 +38,6 @@ public interface TwKuangjiService extends IService<TwKuangji> {
     ResponseDTO buyKuangji(int uid, int kid, BigDecimal buynum);
 
     TwPCKjprofitVo kjprofitSum(int uid);
+
+    TwPCKjprofitVo kjprofitOneSum(int uid,int kid);
 }

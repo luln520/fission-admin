@@ -137,6 +137,14 @@ public class PcKuangJiController {
         return ResponseDTO.ok(twKuangjiService.kjprofitSum(uid));
     }
 
+    @GetMapping("/kjprofitOneSum")
+    @ResponseBody
+    @ApiOperation(value = "统计单个矿机托管资金")
+    @NoNeedLogin
+    public ResponseDTO<TwPCKjprofitVo> kjprofitOneSum(@RequestParam int uid,@RequestParam int kid) {
+        return ResponseDTO.ok(twKuangjiService.kjprofitOneSum(uid,kid));
+    }
+
 
 
 

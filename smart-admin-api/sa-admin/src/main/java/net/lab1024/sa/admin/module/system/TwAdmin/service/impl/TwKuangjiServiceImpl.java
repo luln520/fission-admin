@@ -149,8 +149,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 //        twKjorder.setOuttype(kuangji.getOuttype());
         twKjorder.setOutcoin(kuangji.getOutcoin());
         MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
-        BigDecimal bigDecimal = buynum.multiply(kuangji.getDayoutnum().divide(new BigDecimal(100, mathContext))).multiply(BigDecimal.valueOf(kuangji.getCycle())).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal outnum = bigDecimal.divide(new BigDecimal(kuangji.getCycle()),mathContext);
+        BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum()).setScale(2, RoundingMode.HALF_UP);
         twKjorder.setOutnum(outnum);
 //        twKjorder.setOutusdt(kuangji.getDayoutnum());
         twKjorder.setAddtime(new Date());
@@ -247,6 +246,37 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
             sumnum = sumnum.add(twKjprofit.getNum());
         }
         twPCKjprofitVo.setSumnum(sumnum);
+
+        return twPCKjprofitVo;
+    }
+
+    @Override
+    public TwPCKjprofitVo kjprofitOneSum(int uid, int kid) {
+        TwPCKjprofitVo twPCKjprofitVo = new TwPCKjprofitVo();
+        BigDecimal buynum = new BigDecimal(0);
+        QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(buynum), 0) as buynum")
+                .eq("uid", uid)
+                .eq("kid", kid)
+                .eq("status", 1);
+        List<Map<String, Object>> result = twKjorderDao.selectMaps(queryWrapper);
+        if (result.isEmpty()) {
+            buynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object totalNumObject = result.get(0).get("buynum");
+        if (totalNumObject instanceof BigDecimal) {
+            buynum = ((BigDecimal) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+        } else if (totalNumObject instanceof Long) {
+            buynum = BigDecimal.valueOf((Long) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+        } else if (totalNumObject instanceof Integer) {
+            buynum = BigDecimal.valueOf((Integer) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            buynum = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        }
+
+        twPCKjprofitVo.setBuynum(buynum);
 
         return twPCKjprofitVo;
     }
