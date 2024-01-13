@@ -83,6 +83,26 @@ const formItems = [{
     },
   ]
 }, {
+  name: "language",
+  label: "语言",
+  placeholder: '请输入语言',
+  type: "select",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ],
+  selects: [
+    { name: "英语", value: "英语" },
+    { name: "中文", value: "中文" },
+    { name: "阿拉伯语", value: "阿拉伯语" },
+    { name: "日语", value: "日语" },
+    { name: "越南语", value: "越南语" },
+    { name: "西班牙语", value: "西班牙语" },
+  ]
+}, {
   name: "sort",
   label: "排序",
   placeholder: '请输入排序！',
@@ -126,6 +146,12 @@ const columns = [
     title: '分类名称',
     dataIndex: 'name',
     key: 'name',
+    width: 250
+  },
+  {
+    title: '语言',
+    dataIndex: 'language',
+    key: 'language',
     width: 250
   },
   {
