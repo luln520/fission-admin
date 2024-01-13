@@ -153,10 +153,10 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorder.setOutnum(outnum);
 //        twKjorder.setOutusdt(kuangji.getDayoutnum());
         twKjorder.setAddtime(new Date());
-        twKjorder.setEndtime(addDay(new Date()));
+        twKjorder.setEndtime(addDay(new Date(),kuangji.getCycle()));
         long intaddtime = Instant.now().getEpochSecond();
         twKjorder.setIntaddtime((int) (intaddtime));
-        Date date = addDay(new Date());
+        Date date = addDay(new Date(),kuangji.getCycle());
         twKjorder.setIntendtime((int)(date.getTime()/1000));
         twKjorderService.save(twKjorder);
 
@@ -281,14 +281,13 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         return twPCKjprofitVo;
     }
 
-    public Date addDay(Date date){
+    public Date addDay(Date date,int daysToAdd){
 
         // 将Date对象转换为Calendar对象
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
         // 增加天数
-        int daysToAdd = 5;
         calendar.add(Calendar.DAY_OF_YEAR, daysToAdd);
 
         // 获取增加天数后的Date对象
