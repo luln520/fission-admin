@@ -582,7 +582,7 @@ async function editKJSubmit(submitData) {
   sendData.kjNum = parseInt(submitData.kjNum);
   sendData.kjMinnum = parseFloat(submitData.kjMinnum);
   sendData.kjMaxnum = parseFloat(submitData.kjMaxnum);
-  sendData.uid = submitData.id;
+  sendData.id = submitData.id;
   let data = await userApi.addOrUpdate(sendData);
   if (data.ok) {
     message.success("操作成功！");
