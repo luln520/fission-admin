@@ -8,6 +8,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.service.TwConfigService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -33,6 +34,7 @@ public class TwWebConfigController {
     @PostMapping("/addOrUpdate")
     @ApiOperation(value = "修改网站信息，系统配置")
     @NoNeedLogin
+    @PreAuthorize("@saAuth.checkPermission('system:webConfig:add')")
     public ResponseDTO addOrUpdate(@RequestBody TwConfig twConfig) {
         return ResponseDTO.ok(twConfigService.addOrUpdate(twConfig));
     }

@@ -61,5 +61,6 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
         messageRep.setRechargeCount(twRechargeDao.selectCount(queryWrapper2).intValue());
 
         return messageRep;
+
     }
 }
