@@ -46,8 +46,8 @@ public class TwAdminLogController {
     @PostMapping("/list")
     @ApiOperation(value = "管理员操作日志列表")
     @NoNeedLogin
-    public ResponseDTO<IPage<TwAdminLog>> listpage(@Valid @RequestBody TwBillVo twBillVo) {
-        return ResponseDTO.ok(twAdminLogService.listpage(twBillVo));
+    public ResponseDTO<IPage<TwAdminLog>> listpage(@Valid @RequestBody TwBillVo twBillVo,HttpServletRequest request) {
+        return ResponseDTO.ok(twAdminLogService.listpage(twBillVo,request));
     }
 
     /**

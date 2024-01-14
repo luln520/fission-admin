@@ -11,6 +11,8 @@ import net.lab1024.sa.common.common.domain.PageParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 后台管理员操作日志表(TwAdminLog)表服务接口
  *
@@ -19,7 +21,7 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwAdminLogService extends IService<TwAdminLog> {
 
-    IPage<TwAdminLog> listpage(TwBillVo twBillVo);
+    IPage<TwAdminLog> listpage(TwBillVo twBillVo, HttpServletRequest request);
 
     /**
      * 日志新增记录

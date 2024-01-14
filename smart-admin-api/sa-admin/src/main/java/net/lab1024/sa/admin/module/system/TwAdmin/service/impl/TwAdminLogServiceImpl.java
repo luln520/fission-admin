@@ -12,8 +12,12 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMessageRep;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinCommentService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.module.support.jwe.JweUserKey;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -41,12 +46,13 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
     @Autowired
     private TwRechargeDao twRechargeDao;
 
-    private Function<HttpServletRequest, JweUserKey> userFunction;
+    private BiFunction<String,HttpServletRequest, UserDetails> userFunction;
     @Override
-    public IPage<TwAdminLog> listpage(TwBillVo twBillVo) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        JweUserKey user = this.userFunction.apply(request);
-        log.info("登陆人信息{}"+user);
+    public IPage<TwAdminLog> listpage(TwBillVo twBillVo,HttpServletRequest request) {
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        //清理spring security
+        log.info("登陆人信息{}"+xHeaderToken);
         Page<TwAdminLog> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
         objectPage.setRecords(baseMapper.listpage(objectPage, twBillVo));
         return objectPage;
