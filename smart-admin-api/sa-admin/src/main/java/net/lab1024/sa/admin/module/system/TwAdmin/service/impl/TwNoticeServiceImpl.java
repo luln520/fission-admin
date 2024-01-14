@@ -57,10 +57,12 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+                pageParam.setDepartmentId(byId.getDepartmentId());
                 objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
                 return objectPage;
             }else{
                 Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+                pageParam.setEmployeeId(byId.getEmployeeId());
                 objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
                 return objectPage;
             }
