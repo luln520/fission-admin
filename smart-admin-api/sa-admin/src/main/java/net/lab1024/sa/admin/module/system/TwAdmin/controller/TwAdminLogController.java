@@ -9,14 +9,23 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMessageRep;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
+import net.lab1024.sa.common.common.domain.RequestUser;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.module.support.jwe.JweAspect;
+import net.lab1024.sa.common.module.support.jwe.JweUserKey;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.function.Function;
 
 /**
  * 管理员操作日志
@@ -29,6 +38,7 @@ public class TwAdminLogController {
     @Autowired
     private TwAdminLogService twAdminLogService;
 
+    private Function<HttpServletRequest, JweUserKey> userFunction;
     /**
      * 查询操作日志列表 表 AdminLog
      * order by id desc
@@ -37,7 +47,6 @@ public class TwAdminLogController {
     @ApiOperation(value = "管理员操作日志列表")
     @NoNeedLogin
     public ResponseDTO<IPage<TwAdminLog>> listpage(@Valid @RequestBody TwBillVo twBillVo) {
-
         return ResponseDTO.ok(twAdminLogService.listpage(twBillVo));
     }
 
