@@ -61,4 +61,8 @@ public interface TwUserService extends IService<TwUser> {
     IPage<TwUser>  authList(TwUserVo twUserVo);
 
     boolean authProcess(int uid,int type);
+
+    ResponseDTO code(String phone,int type,String email);
+
+    ResponseDTO codeResp() throws IOException;
 }

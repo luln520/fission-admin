@@ -322,69 +322,7 @@ public class TimerServiceImpl {
 
             //买涨
             if(hyzd == 1){
-                boolean isWinArray = false;
-                boolean isLoseArray = false;
-                for (String win : winarr) {
-                    if (win.equals(uid)) {
-                        isWinArray = true;
-                        break; // 如果找到匹配，可以提前退出循环
-                    }
-                }
-                for (String win : lossarr) {
-                    if (win.equals(uid)) {
-                        isLoseArray = true;
-                        break; // 如果找到匹配，可以提前退出循环
-                    }
-                }
-
-                if (isWinArray) {
-                    //如果有指定盈利ID，则按盈利结算
-                    if (buyprice.compareTo(newprice) < 0) {
-                             sellprice = newprice;
-                         } else if (newprice.compareTo(buyprice) == 0) {
-                             sellprice = newprice.add(randnum);
-                         } else if (newprice.compareTo(buyprice) < 0) {
-                             sellprice = buyprice.add(randnum);
-                         }
-                    //增加资产
-                    twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
-
-                    //修改订单状态
-                    twHyorder.setStatus(2);
-                    twHyorder.setIsWin(1);
-                    twHyorder.setSellprice(sellprice);
-                    twHyorder.setPloss(ylnum);
-                    twHyorderService.updateById(twHyorder);
-
-                    //写财务日志
-                    addlog(uuid,username,money);
-                }
-
-                if (isLoseArray) {
-                    //买涨,指定亏损,结算价格要低于买入价格
-                    if (buyprice.compareTo(newprice) < 0) {
-                              sellprice = buyprice.subtract(randnum);
-                    } else if (newprice.compareTo(buyprice) == 0) {
-                              sellprice = buyprice.subtract(randnum);
-                    } else if (newprice.compareTo(buyprice) < 0) {
-                              sellprice = newprice;
-                    }
-
-                    //修改订单状态
-                    twHyorder.setStatus(2);
-                    twHyorder.setIsWin(2);
-                    twHyorder.setSellprice(sellprice);
-                    twHyorder.setPloss(ylnum);
-                    twHyorderService.updateById(twHyorder);
-
-
-                    //写财务日志
-                    addlog(uuid,username,num);
-                }
-
-                if(!isWinArray && !isLoseArray){
-                    //如果未指定盈利和亏损，则按单控的计算
-
+                if(kongyk != 0){   //已控
                     if(kongyk == 1){  //盈利
                         if (buyprice.compareTo(newprice) < 0) {
                             sellprice = newprice;
@@ -420,7 +358,69 @@ public class TimerServiceImpl {
                         twHyorder.setStatus(2);
                         twHyorder.setIsWin(2);
                         twHyorder.setSellprice(sellprice);
+                        twHyorder.setPloss(num);
+                        twHyorderService.updateById(twHyorder);
+
+
+                        //写财务日志
+                        addlog(uuid,username,num);
+                    }
+                }
+
+                if(kongyk == 0){   //未控
+                    boolean isWinArray = false;
+                    boolean isLoseArray = false;
+                    for (String win : winarr) {
+                        if (win.equals(uid)) {
+                            isWinArray = true;
+                            break; // 如果找到匹配，可以提前退出循环
+                        }
+                    }
+                    for (String win : lossarr) {
+                        if (win.equals(uid)) {
+                            isLoseArray = true;
+                            break; // 如果找到匹配，可以提前退出循环
+                        }
+                    }
+
+                    if (isWinArray) {
+                        //如果有指定盈利ID，则按盈利结算
+                        if (buyprice.compareTo(newprice) < 0) {
+                            sellprice = newprice;
+                        } else if (newprice.compareTo(buyprice) == 0) {
+                            sellprice = newprice.add(randnum);
+                        } else if (newprice.compareTo(buyprice) < 0) {
+                            sellprice = buyprice.add(randnum);
+                        }
+                        //增加资产
+                        twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
+
+                        //修改订单状态
+                        twHyorder.setStatus(2);
+                        twHyorder.setIsWin(1);
+                        twHyorder.setSellprice(sellprice);
                         twHyorder.setPloss(ylnum);
+                        twHyorderService.updateById(twHyorder);
+
+                        //写财务日志
+                        addlog(uuid,username,money);
+                    }
+
+                    if (isLoseArray) {
+                        //买涨,指定亏损,结算价格要低于买入价格
+                        if (buyprice.compareTo(newprice) < 0) {
+                            sellprice = buyprice.subtract(randnum);
+                        } else if (newprice.compareTo(buyprice) == 0) {
+                            sellprice = buyprice.subtract(randnum);
+                        } else if (newprice.compareTo(buyprice) < 0) {
+                            sellprice = newprice;
+                        }
+
+                        //修改订单状态
+                        twHyorder.setStatus(2);
+                        twHyorder.setIsWin(2);
+                        twHyorder.setSellprice(sellprice);
+                        twHyorder.setPloss(num);
                         twHyorderService.updateById(twHyorder);
 
 
@@ -428,99 +428,95 @@ public class TimerServiceImpl {
                         addlog(uuid,username,num);
                     }
 
-                    if(kongyk == 0){
-                        if (buyprice.compareTo(newprice) < 0) {   //盈利
+                    if(!isWinArray && !isLoseArray){
+                        //如果未指定盈利和亏损，则按单控的计算
+
+                        if(kongyk == 1){  //盈利
+                            if (buyprice.compareTo(newprice) < 0) {
+                                sellprice = newprice;
+                            } else if (newprice.compareTo(buyprice) == 0) {
+                                sellprice = newprice.add(randnum);
+                            } else if (newprice.compareTo(buyprice) < 0) {
+                                sellprice = buyprice.add(randnum);
+                            }
+                            //增加资产
                             twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
+
+                            //修改订单状态
                             twHyorder.setStatus(2);
                             twHyorder.setIsWin(1);
+                            twHyorder.setSellprice(sellprice);
+                            twHyorder.setPloss(ylnum);
+                            twHyorderService.updateById(twHyorder);
+
                             //写财务日志
                             addlog(uuid,username,money);
 
-                        } else if (newprice.compareTo(buyprice) == 0) {
-                            twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
+                        }
+
+                        if(kongyk == 2){ //亏损
+                            if (buyprice.compareTo(newprice) < 0) {
+                                sellprice = buyprice.subtract(randnum);
+                            } else if (newprice.compareTo(buyprice) == 0) {
+                                sellprice = buyprice.subtract(randnum);
+                            } else if (newprice.compareTo(buyprice) < 0) {
+                                sellprice = newprice;
+                            }
+                            //修改订单状态
                             twHyorder.setStatus(2);
                             twHyorder.setIsWin(2);
-                            //写财务日志
-                            addlog(uuid,username,num);
-                        } else if (newprice.compareTo(buyprice) < 0) {   //亏损
-                            twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
-                            twHyorder.setStatus(2);
-                            twHyorder.setIsWin(2);
+                            twHyorder.setSellprice(sellprice);
+                            twHyorder.setPloss(num);
+                            twHyorderService.updateById(twHyorder);
+
+
                             //写财务日志
                             addlog(uuid,username,num);
                         }
 
-                        twHyorder.setSellprice(newprice);
-                        twHyorder.setPloss(ylnum);
-                        twHyorderService.updateById(twHyorder);
+                        if(kongyk == 0){
+                            if (buyprice.compareTo(newprice) < 0) {   //盈利
+                                twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
+                                twHyorder.setStatus(2);
+                                twHyorder.setIsWin(1);
+                                //写财务日志
+                                addlog(uuid,username,money);
 
+                                twHyorder.setSellprice(newprice);
+                                twHyorder.setPloss(ylnum);
+                                twHyorderService.updateById(twHyorder);
+
+
+                            } else if (newprice.compareTo(buyprice) == 0) {
+                                twHyorder.setStatus(2);
+                                twHyorder.setIsWin(2);
+                                //写财务日志
+                                addlog(uuid,username,num);
+
+                                twHyorder.setSellprice(newprice);
+                                twHyorder.setPloss(num);
+                                twHyorderService.updateById(twHyorder);
+
+                            } else if (newprice.compareTo(buyprice) < 0) {   //亏损
+                                twHyorder.setStatus(2);
+                                twHyorder.setIsWin(2);
+                                //写财务日志
+                                addlog(uuid,username,num);
+
+                                twHyorder.setSellprice(newprice);
+                                twHyorder.setPloss(num);
+                                twHyorderService.updateById(twHyorder);
+                            }
+
+                        }
                     }
                 }
 
             }
             //买跌
             if(hyzd == 2){
-                boolean isWinArray = false;
-                boolean isLoseArray = false;
-                for (String win : winarr) {
-                    if (win.equals(uid)) {
-                        isWinArray = true;
-                        break; // 如果找到匹配，可以提前退出循环
-                    }
-                }
-                for (String win : lossarr) {
-                    if (win.equals(uid)) {
-                        isLoseArray = true;
-                        break; // 如果找到匹配，可以提前退出循环
-                    }
-                }
-                if (isWinArray) { //如果有指定盈利ID，则按盈利结算
-                    if (buyprice.compareTo(newprice) < 0) {
-                        sellprice = buyprice.subtract(randnum);
-                    } else if (newprice.compareTo(buyprice) == 0) {
-                        sellprice = buyprice.add(randnum);
-                    } else if (newprice.compareTo(buyprice) < 0) {
-                        sellprice = newprice;
-                    }
-                    //增加资产
-                    twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
 
-                    //修改订单状态
-                    twHyorder.setStatus(2);
-                    twHyorder.setIsWin(1);
-                    twHyorder.setSellprice(sellprice);
-                    twHyorder.setPloss(ylnum);
-                    twHyorderService.updateById(twHyorder);
-
-                    //写财务日志
-                    addlog(uuid,username,money);
-                    System.out.println("指定盈利ID======================================");
-                }
-
-                if (isLoseArray) { //如果有指定亏损ID，则按亏损结算
-                    if (buyprice.compareTo(newprice) < 0) {
-                        sellprice = newprice;
-                    } else if (newprice.compareTo(buyprice) == 0) {
-                        sellprice = buyprice.add(randnum);
-                    } else if (newprice.compareTo(buyprice) < 0) {
-                        sellprice = buyprice.add(randnum);
-                    }
-
-                    //修改订单状态
-                    twHyorder.setStatus(2);
-                    twHyorder.setIsWin(2);
-                    twHyorder.setSellprice(sellprice);
-                    twHyorder.setPloss(ylnum);
-                    twHyorderService.updateById(twHyorder);
-
-
-                    //写财务日志
-                    addlog(uuid,username,num);
-                    System.out.println("合约指定亏损成功======================================");
-                }
-
-                if(!isWinArray && !isLoseArray){ //如果未指定盈利和亏损，则按单控的计算
-                    System.out.println("未指定盈利和亏损，则按单控的计算======================================");
+                if(kongyk != 0 ){
                     if(kongyk == 1){ //盈利
                         if (buyprice.compareTo(newprice) < 0) {
                             sellprice = buyprice.subtract(randnum);
@@ -557,7 +553,7 @@ public class TimerServiceImpl {
                         twHyorder.setStatus(2);
                         twHyorder.setIsWin(2);
                         twHyorder.setSellprice(sellprice);
-                        twHyorder.setPloss(ylnum);
+                        twHyorder.setPloss(num);
                         twHyorderService.updateById(twHyorder);
 
 
@@ -565,33 +561,149 @@ public class TimerServiceImpl {
                         addlog(uuid,username,num);
                         log.info("合约指定亏损成功======================================");
                     }
+                }
 
-
-                    if(kongyk == 0){
-                        if (buyprice.compareTo(newprice) < 0) {   //亏损
-                            twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
-                            twHyorder.setStatus(2);
-                            twHyorder.setIsWin(2);
-                            //写财务日志
-                            addlog(uuid,username,num);
+                if(kongyk == 0 ){
+                    boolean isWinArray = false;
+                    boolean isLoseArray = false;
+                    for (String win : winarr) {
+                        if (win.equals(uid)) {
+                            isWinArray = true;
+                            break; // 如果找到匹配，可以提前退出循环
+                        }
+                    }
+                    for (String win : lossarr) {
+                        if (win.equals(uid)) {
+                            isLoseArray = true;
+                            break; // 如果找到匹配，可以提前退出循环
+                        }
+                    }
+                    if (isWinArray) { //如果有指定盈利ID，则按盈利结算
+                        if (buyprice.compareTo(newprice) < 0) {
+                            sellprice = buyprice.subtract(randnum);
                         } else if (newprice.compareTo(buyprice) == 0) {
-                            twUserCoinService.decre(uuid,num,twUserCoin.getUsdt());
-                            twHyorder.setStatus(2);
-                            twHyorder.setIsWin(2);
-                            //写财务日志
-                            addlog(uuid,username,num);
-                        } else if (newprice.compareTo(buyprice) < 0) {   //盈利
+                            sellprice = buyprice.add(randnum);
+                        } else if (newprice.compareTo(buyprice) < 0) {
+                            sellprice = newprice;
+                        }
+                        //增加资产
+                        twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
+
+                        //修改订单状态
+                        twHyorder.setStatus(2);
+                        twHyorder.setIsWin(1);
+                        twHyorder.setSellprice(sellprice);
+                        twHyorder.setPloss(ylnum);
+                        twHyorderService.updateById(twHyorder);
+
+                        //写财务日志
+                        addlog(uuid,username,money);
+                        System.out.println("指定盈利ID======================================");
+                    }
+
+                    if (isLoseArray) { //如果有指定亏损ID，则按亏损结算
+                        if (buyprice.compareTo(newprice) < 0) {
+                            sellprice = newprice;
+                        } else if (newprice.compareTo(buyprice) == 0) {
+                            sellprice = buyprice.add(randnum);
+                        } else if (newprice.compareTo(buyprice) < 0) {
+                            sellprice = buyprice.add(randnum);
+                        }
+
+                        //修改订单状态
+                        twHyorder.setStatus(2);
+                        twHyorder.setIsWin(2);
+                        twHyorder.setSellprice(sellprice);
+                        twHyorder.setPloss(num);
+                        twHyorderService.updateById(twHyorder);
+
+
+                        //写财务日志
+                        addlog(uuid,username,num);
+                        System.out.println("合约指定亏损成功======================================");
+                    }
+
+                    if(!isWinArray && !isLoseArray){ //如果未指定盈利和亏损，则按单控的计算
+                        System.out.println("未指定盈利和亏损，则按单控的计算======================================");
+                        if(kongyk == 1){ //盈利
+                            if (buyprice.compareTo(newprice) < 0) {
+                                sellprice = buyprice.subtract(randnum);
+                            } else if (newprice.compareTo(buyprice) == 0) {
+                                sellprice = buyprice.subtract(randnum);
+                            } else if (newprice.compareTo(buyprice) < 0) {
+                                sellprice = newprice;
+                            }
+
+                            //增加资产
                             twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
+
+                            //修改订单状态
                             twHyorder.setStatus(2);
                             twHyorder.setIsWin(1);
+                            twHyorder.setSellprice(sellprice);
+                            twHyorder.setPloss(ylnum);
+                            twHyorderService.updateById(twHyorder);
+
                             //写财务日志
                             addlog(uuid,username,money);
                         }
 
-                        twHyorder.setSellprice(newprice);
-                        twHyorder.setPloss(ylnum);
-                        twHyorderService.updateById(twHyorder);
+                        if(kongyk == 2){ //亏损
+                            if (buyprice.compareTo(newprice) < 0) {
+                                sellprice = newprice;
+                            } else if (newprice.compareTo(buyprice) == 0) {
+                                sellprice = buyprice.add(randnum);
+                            } else if (newprice.compareTo(buyprice) < 0) {
+                                sellprice = buyprice.add(randnum);
+                            }
 
+                            //修改订单状态
+                            twHyorder.setStatus(2);
+                            twHyorder.setIsWin(2);
+                            twHyorder.setSellprice(sellprice);
+                            twHyorder.setPloss(num);
+                            twHyorderService.updateById(twHyorder);
+
+
+                            //写财务日志
+                            addlog(uuid,username,num);
+                            log.info("合约指定亏损成功======================================");
+                        }
+
+
+                        if(kongyk == 0){
+                            if (buyprice.compareTo(newprice) < 0) {   //亏损
+                                twHyorder.setStatus(2);
+                                twHyorder.setIsWin(2);
+                                //写财务日志
+                                addlog(uuid,username,num);
+
+                                twHyorder.setSellprice(newprice);
+                                twHyorder.setPloss(num);
+                                twHyorderService.updateById(twHyorder);
+
+                            } else if (newprice.compareTo(buyprice) == 0) {
+                                twHyorder.setStatus(2);
+                                twHyorder.setIsWin(2);
+                                //写财务日志
+                                addlog(uuid,username,num);
+
+                                twHyorder.setSellprice(newprice);
+                                twHyorder.setPloss(num);
+                                twHyorderService.updateById(twHyorder);
+
+                            } else if (newprice.compareTo(buyprice) < 0) {   //盈利
+                                twUserCoinService.incre(uuid,money,twUserCoin.getUsdt());
+                                twHyorder.setStatus(2);
+                                twHyorder.setIsWin(1);
+                                //写财务日志
+                                addlog(uuid,username,money);
+
+                                twHyorder.setSellprice(newprice);
+                                twHyorder.setPloss(ylnum);
+                                twHyorderService.updateById(twHyorder);
+                            }
+                        }
                     }
                 }
             }

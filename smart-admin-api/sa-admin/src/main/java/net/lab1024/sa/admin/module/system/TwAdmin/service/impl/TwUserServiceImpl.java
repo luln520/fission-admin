@@ -18,6 +18,8 @@ import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.admin.module.system.login.domain.LoginEmployeeDetail;
 import net.lab1024.sa.admin.module.system.login.domain.LoginForm;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
+import net.lab1024.sa.common.common.Email.SendEmailLib;
+import net.lab1024.sa.common.common.SMS.SendSmsLib;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -27,6 +29,7 @@ import net.lab1024.sa.common.module.support.config.ConfigKeyEnum;
 import net.lab1024.sa.common.module.support.config.ConfigService;
 import net.lab1024.sa.common.module.support.loginlog.LoginLogResultEnum;
 import net.lab1024.sa.common.module.support.token.TokenService;
+import okhttp3.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
@@ -830,6 +833,36 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         }
 
             return true;
+    }
+
+    @Override
+    public ResponseDTO code(String phone,int type,String email) {
+        if(type == 1){   //手机
+            SendSmsLib.phone(phone);
+            return ResponseDTO.ok();
+        }
+
+        if(type == 2){    //邮箱
+            SendEmailLib.email(email);
+            return ResponseDTO.ok();
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseDTO codeResp() throws IOException {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = RequestBody.create(mediaType, "");
+        Request request = new Request.Builder()
+                .url("https://pp8nge.api.infobip.com/sms/1/bulks?bulkId=639627665869")
+//                .method("GET", body)
+                .addHeader("Authorization", "{authorization}")
+                .addHeader("Accept", "application/json")
+                .build();
+        Response response = client.newCall(request).execute();
+        return null;
     }
 
     /**

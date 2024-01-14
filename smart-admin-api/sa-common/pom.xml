@@ -225,11 +225,11 @@
             <artifactId>velocity-tools-generic</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.infobip</groupId>-->
-<!--            <artifactId>infobip-api-java-client</artifactId>-->
-<!--            <version>4.0.0</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.infobip</groupId>
+            <artifactId>infobip-api-java-client</artifactId>
+            <version>4.0.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>

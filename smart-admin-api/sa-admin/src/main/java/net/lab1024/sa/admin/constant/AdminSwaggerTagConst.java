@@ -102,6 +102,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String PC_BILL = "PC-账单";
 
+        public static final String PC_CODE = "PC-发送手机/邮箱验证码";
+
         public static final String PC_CONTENT = "PC-公告";
 
         public static final String PC_CONTRACT = "PC-合约";
