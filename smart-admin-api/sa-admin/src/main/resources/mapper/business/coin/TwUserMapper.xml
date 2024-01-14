@@ -8,7 +8,7 @@
             and username = #{obj.username}
         </if>
         <if test="obj.departmentId != null">
-            and department = #{obj.departmentId}
+            and depatment_id = #{obj.departmentId}
         </if>
         <if test="obj.employeeId != null and obj.employeeId !=''">
             and path like concat('%',#{obj.employeeId},'%')
