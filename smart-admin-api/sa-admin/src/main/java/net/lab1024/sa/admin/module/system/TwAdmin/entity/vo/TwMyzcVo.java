@@ -10,4 +10,8 @@ public class TwMyzcVo extends PageParam {
         private String startTime;
 
         private String endTime;
+
+        private Long employeeId;
+
+        private Long departmentId;
 }

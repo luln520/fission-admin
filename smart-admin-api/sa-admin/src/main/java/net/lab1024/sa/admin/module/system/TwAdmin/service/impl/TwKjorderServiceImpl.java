@@ -5,11 +5,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjorderDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjorderVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKjorderService;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
+import net.lab1024.sa.common.module.support.token.TokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -20,13 +28,39 @@ import java.util.List;
  */
 @Service("twKjorderService")
 public class TwKjorderServiceImpl extends ServiceImpl<TwKjorderDao, TwKjorder> implements TwKjorderService {
-
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private EmployeeService employeeService;
     @Override
-    public IPage<TwKjorder> listpage(TwKjorderVo twKjorderVo) {
+    public IPage<TwKjorder> listpage(TwKjorderVo twKjorderVo, HttpServletRequest request) {
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+        RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
+        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
             Page<TwKjorder> objectPage = new Page<>(twKjorderVo.getPageNum(), twKjorderVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twKjorderVo));
             return objectPage;
+        }
+        if(roleEmployeeVO.getKey().equals("agent")){
+            int supervisorFlag = byId.getSupervisorFlag();
+            if(supervisorFlag == 1){
+                Page<TwKjorder> objectPage = new Page<>(twKjorderVo.getPageNum(), twKjorderVo.getPageSize());
+                twKjorderVo.setDepartmentId(byId.getDepartmentId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twKjorderVo));
+                return objectPage;
+            }else{
+                Page<TwKjorder> objectPage = new Page<>(twKjorderVo.getPageNum(), twKjorderVo.getPageSize());
+                twKjorderVo.setEmployeeId(byId.getEmployeeId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twKjorderVo));
+                return objectPage;
+            }
+        }
+
+        return null;
     }
 
     @Override

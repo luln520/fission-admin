@@ -55,8 +55,8 @@ public class TwFinanceController {
     @PostMapping("/rechargeList")
     @ApiOperation(value = "充币列表")
     @NoNeedLogin
-    public ResponseDTO<IPage<TwRecharge>> listpage(@Valid @RequestBody TwRechargeVo twRechargeVo) {
-        return ResponseDTO.ok(twRechargeService.listpage(twRechargeVo));
+    public ResponseDTO<IPage<TwRecharge>> listpage(@Valid @RequestBody TwRechargeVo twRechargeVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twRechargeService.listpage(twRechargeVo,request));
     }
 
     /**
@@ -65,8 +65,8 @@ public class TwFinanceController {
     @PostMapping("/list")
     @ApiOperation(value = "提币列表")
     @NoNeedLogin
-    public ResponseDTO<IPage<TwMyzc>> listpage(@Valid @RequestBody TwMyzcVo twMyzcVo) {
-        return ResponseDTO.ok(twMyzcService.listpage(twMyzcVo));
+    public ResponseDTO<IPage<TwMyzc>> listpage(@Valid @RequestBody TwMyzcVo twMyzcVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twMyzcService.listpage(twMyzcVo,request));
     }
 
 

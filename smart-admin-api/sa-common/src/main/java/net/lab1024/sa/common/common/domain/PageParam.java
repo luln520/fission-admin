@@ -60,5 +60,5 @@ public class PageParam {
     private Long employeeId;
 
     @ApiModelProperty(value = "部门id")
-    private Long departmentId;
+    private Long department;
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public interface TwMyzcService extends IService<TwMyzc> {
 
     BigDecimal sumAllWithdraw();
 
-    IPage<TwMyzc> listpage(TwMyzcVo twMyzcVo);
+    IPage<TwMyzc> listpage(TwMyzcVo twMyzcVo, HttpServletRequest request);
 
     List<TwMyzc> listPcpage(int uid);
 

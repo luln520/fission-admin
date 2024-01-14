@@ -8,4 +8,8 @@ public class TwUserVo extends PageParam {
 
      private String username;
 
+     private Long employeeId;
+
+     private Long departmentId;
+
 }

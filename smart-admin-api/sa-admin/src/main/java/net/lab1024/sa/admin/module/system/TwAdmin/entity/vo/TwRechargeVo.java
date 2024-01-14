@@ -12,5 +12,9 @@ public class TwRechargeVo extends PageParam {
 
         private String endTime;
 
+        private Long employeeId;
+
+        private Long departmentId;
+
 
 }

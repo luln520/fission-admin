@@ -13,7 +13,7 @@
         <if test="obj.st != null">
             and st = #{obj.st}
         </if>
-        <if test="obj.department != null and obj.department !=''">
+        <if test="obj.departmentId != null and obj.departmentId !=''">
             and department = #{obj.departmentId}
         </if>
         <if test="obj.employeeId != null and obj.employeeId !=''">

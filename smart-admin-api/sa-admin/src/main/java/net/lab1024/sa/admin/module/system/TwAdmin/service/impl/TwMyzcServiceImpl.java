@@ -8,11 +8,17 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMyzcDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -44,6 +50,13 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
 
     @Autowired
     private TwCoinService twCoinService;
+
+    @Autowired
+    private EmployeeService employeeService;
+
+
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     public BigDecimal sumDayWithdraw(String startTime, String endTime) {
@@ -96,10 +109,35 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     }
 
     @Override
-    public IPage<TwMyzc> listpage(TwMyzcVo twMyzcVo) {
-        Page<TwMyzc> objectPage = new Page<>(twMyzcVo.getPageNum(), twMyzcVo.getPageSize());
-        objectPage.setRecords(baseMapper.listpage(objectPage, twMyzcVo));
-        return objectPage;
+    public IPage<TwMyzc> listpage(TwMyzcVo twMyzcVo, HttpServletRequest request) {
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+        RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+            Page<TwMyzc> objectPage = new Page<>(twMyzcVo.getPageNum(), twMyzcVo.getPageSize());
+            objectPage.setRecords(baseMapper.listpage(objectPage, twMyzcVo));
+            return objectPage;
+        }
+
+        if(roleEmployeeVO.getKey().equals("agent")){
+            int supervisorFlag = byId.getSupervisorFlag();
+            if(supervisorFlag == 1){
+                Page<TwMyzc> objectPage = new Page<>(twMyzcVo.getPageNum(), twMyzcVo.getPageSize());
+                twMyzcVo.setDepartmentId(byId.getDepartmentId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twMyzcVo));
+                return objectPage;
+            }else{
+                Page<TwMyzc> objectPage = new Page<>(twMyzcVo.getPageNum(), twMyzcVo.getPageSize());
+                twMyzcVo.setEmployeeId(byId.getEmployeeId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twMyzcVo));
+                return objectPage;
+            }
+        }
+
+        return null;
+
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface TwRechargeService extends IService<TwRecharge> {
 
     BigDecimal sumAllRecharge();
 
-    IPage<TwRecharge> listpage(TwRechargeVo twRechargeVo);
+    IPage<TwRecharge> listpage(TwRechargeVo twRechargeVo, HttpServletRequest request);
 
     List<TwRecharge> listRecharge(int uid);
 

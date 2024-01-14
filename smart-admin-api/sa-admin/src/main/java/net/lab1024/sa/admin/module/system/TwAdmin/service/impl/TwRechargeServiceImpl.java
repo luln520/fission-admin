@@ -9,8 +9,13 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwRechargeDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.code.ErrorCode;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -47,6 +53,13 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     @Autowired
     @Lazy
     private TwUserService twUserService;
+
+    @Autowired
+    private EmployeeService employeeService;
+
+
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     public BigDecimal sumDayRecharge(String startTime, String endTime) {
@@ -98,10 +111,35 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
-    public IPage<TwRecharge> listpage(TwRechargeVo twRechargeVo) {
-        Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
-        objectPage.setRecords(baseMapper.listpage(objectPage, twRechargeVo));
-        return objectPage;
+    public IPage<TwRecharge> listpage(TwRechargeVo twRechargeVo, HttpServletRequest request) {
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+        RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+            Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
+            objectPage.setRecords(baseMapper.listpage(objectPage, twRechargeVo));
+            return objectPage;
+        }
+
+        if(roleEmployeeVO.getKey().equals("agent")){
+            int supervisorFlag = byId.getSupervisorFlag();
+            if(supervisorFlag == 1){
+                Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
+                twRechargeVo.setDepartmentId(byId.getDepartmentId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twRechargeVo));
+                return objectPage;
+            }else{
+                Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
+                twRechargeVo.setEmployeeId(byId.getEmployeeId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twRechargeVo));
+                return objectPage;
+            }
+        }
+
+        return null;
     }
 
     @Override

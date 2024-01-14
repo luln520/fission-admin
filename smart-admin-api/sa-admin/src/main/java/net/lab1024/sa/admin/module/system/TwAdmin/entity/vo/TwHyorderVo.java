@@ -11,4 +11,8 @@ public class TwHyorderVo extends PageParam {
     private String username;
 
     private Integer status;  //为2 的时候就是 平仓体验列表
+
+    private Long employeeId;
+
+    private Long departmentId;
 }

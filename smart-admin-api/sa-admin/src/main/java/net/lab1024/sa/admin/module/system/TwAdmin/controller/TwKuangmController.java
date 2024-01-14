@@ -17,6 +17,7 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -43,8 +44,8 @@ public class TwKuangmController {
     @ApiOperation(value = "矿机收益列表")
     @ResponseBody
     @NoNeedLogin
-    public ResponseDTO kjsylist(@Valid @RequestBody TwKjprofitVo twKjprofitVo) {
-        return ResponseDTO.ok(twKjprofitService.listpage(twKjprofitVo));
+    public ResponseDTO kjsylist(@Valid @RequestBody TwKjprofitVo twKjprofitVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twKjprofitService.listpage(twKjprofitVo,request));
     }
 
 
@@ -82,8 +83,8 @@ public class TwKuangmController {
     @ResponseBody
     @NoNeedLogin
     @ApiOperation(value = "会员矿机列表")
-    public ResponseDTO<IPage<TwKjorder>> kjlist(@Valid @RequestBody TwKjorderVo twKjorderVo) {
-        return ResponseDTO.ok(twKjorderService.listpage(twKjorderVo));
+    public ResponseDTO<IPage<TwKjorder>> kjlist(@Valid @RequestBody TwKjorderVo twKjorderVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twKjorderService.listpage(twKjorderVo,request));
     }
 
 

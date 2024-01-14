@@ -15,4 +15,8 @@ public class TwMessageRep {
     @ApiModelProperty("提现消息")
     private int myzcCount;
 
+    private Long employeeId;
+
+    private Long departmentId;
+
 }

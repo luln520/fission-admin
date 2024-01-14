@@ -11,6 +11,7 @@ import net.lab1024.sa.admin.module.system.TwPC.controller.Res.TwPCKjprofitVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public interface TwKjprofitService extends IService<TwKjprofit> {
 
-    IPage<TwKjprofit> listpage(TwKjprofitVo twKjprofitVo);
+    IPage<TwKjprofit> listpage(TwKjprofitVo twKjprofitVo, HttpServletRequest request);
 
     List<TwKjprofit> kjprofit(int uid);
 

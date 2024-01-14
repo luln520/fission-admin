@@ -10,6 +10,7 @@ import net.lab1024.sa.common.common.domain.PageParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
  * @since 2023-12-23 18:24:16
  */
 public interface TwKjorderService extends IService<TwKjorder> {
-    IPage<TwKjorder> listpage(TwKjorderVo twKjorderVo);
+    IPage<TwKjorder> listpage(TwKjorderVo twKjorderVo, HttpServletRequest request);
 
     List<TwKjorder> uidList(int uid);
     int countAllOrders();

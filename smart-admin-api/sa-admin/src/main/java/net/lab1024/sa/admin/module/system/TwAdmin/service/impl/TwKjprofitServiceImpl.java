@@ -6,17 +6,25 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjorderDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjprofitDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjprofit;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKjorderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKjprofitService;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Res.TwPCKjprofitVo;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
+import net.lab1024.sa.common.module.support.token.TokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -31,12 +39,42 @@ import java.util.List;
  */
 @Service("twKjprofitService")
 public class TwKjprofitServiceImpl extends ServiceImpl<TwKjprofitDao, TwKjprofit> implements TwKjprofitService {
+    @Autowired
+    private EmployeeService employeeService;
 
+
+    @Autowired
+    private TokenService tokenService;
     @Override
-    public IPage<TwKjprofit> listpage(TwKjprofitVo twKjprofitVo) {
-        Page<TwKjprofit> objectPage = new Page<>(twKjprofitVo.getPageNum(), twKjprofitVo.getPageSize());
-        objectPage.setRecords(baseMapper.listpage(objectPage, twKjprofitVo));
-        return objectPage;
+    public IPage<TwKjprofit> listpage(TwKjprofitVo twKjprofitVo, HttpServletRequest request) {
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+        RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+            Page<TwKjprofit> objectPage = new Page<>(twKjprofitVo.getPageNum(), twKjprofitVo.getPageSize());
+            objectPage.setRecords(baseMapper.listpage(objectPage, twKjprofitVo));
+            return objectPage;
+        }
+
+        if(roleEmployeeVO.getKey().equals("agent")){
+            int supervisorFlag = byId.getSupervisorFlag();
+            if(supervisorFlag == 1){
+                Page<TwKjprofit> objectPage = new Page<>(twKjprofitVo.getPageNum(), twKjprofitVo.getPageSize());
+                twKjprofitVo.setDepartmentId(byId.getDepartmentId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twKjprofitVo));
+                return objectPage;
+            }else{
+                Page<TwKjprofit> objectPage = new Page<>(twKjprofitVo.getPageNum(), twKjprofitVo.getPageSize());
+                twKjprofitVo.setEmployeeId(byId.getEmployeeId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twKjprofitVo));
+                return objectPage;
+            }
+        }
+
+        return null;
     }
 
     @Override

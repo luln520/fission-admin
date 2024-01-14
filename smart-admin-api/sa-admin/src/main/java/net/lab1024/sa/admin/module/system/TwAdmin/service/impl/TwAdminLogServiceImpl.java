@@ -71,7 +71,7 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwAdminLog> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
-                twBillVo.setDepartmentId(byId.getDepartmentId());
+                twBillVo.setDepartment(byId.getDepartmentId());
                 objectPage.setRecords(baseMapper.listpage(objectPage, twBillVo));
                 return objectPage;
             }else{
