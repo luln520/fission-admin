@@ -56,9 +56,7 @@ public class PageParam {
         private String column;
     }
 
-    @ApiModelProperty(value = "代理id")
     private Long employeeId;
 
-    @ApiModelProperty(value = "部门id")
-    private Long department;
+    private Long departmentId;
 }

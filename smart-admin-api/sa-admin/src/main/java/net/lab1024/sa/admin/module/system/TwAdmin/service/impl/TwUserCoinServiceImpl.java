@@ -44,11 +44,6 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
     }
 
     @Override
-
-
-
-
-
     public IPage<TwUserCoin> listpage(TwUserVo twUserVo) {
         Page<TwUserCoin> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
         List<TwUserCoin> list = baseMapper.listpage(objectPage, twUserVo);
@@ -57,10 +52,10 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", userid);
             TwUser one = twUserService.getOne(queryWrapper);
-
-            String username = one.getUsername();
-
-            twUserCoin.setUsername(username);
+            if(one !=null){
+                String username = one.getUsername();
+                twUserCoin.setUsername(username);
+            }
         }
         objectPage.setRecords(list);
         return objectPage;

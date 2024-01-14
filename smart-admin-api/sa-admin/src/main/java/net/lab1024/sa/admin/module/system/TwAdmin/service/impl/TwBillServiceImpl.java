@@ -51,7 +51,7 @@ public class TwBillServiceImpl extends ServiceImpl<TwBillDao, TwBill> implements
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwBill> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
-                twBillVo.setEmployeeId(byId.getDepartmentId());
+                twBillVo.setDepartmentId(byId.getDepartmentId());
                 objectPage.setRecords(baseMapper.listpage(objectPage, twBillVo));
                 return objectPage;
             }else{

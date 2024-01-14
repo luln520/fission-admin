@@ -17,5 +17,5 @@ public class TwBillVo extends PageParam {
     private Long employeeId;
 
     @ApiModelProperty(value = "部门id")
-    private Long department;
+    private Long departmentId;
 }
