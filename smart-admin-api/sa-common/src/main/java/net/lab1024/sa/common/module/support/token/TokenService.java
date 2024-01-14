@@ -183,10 +183,6 @@ public class TokenService {
      */
     public Long getUIDToken(String token) {
         Map<String, Object> parseJwtData = this.decryptTokenData(token);
-        boolean isValid = this.checkUidRedisToken(parseJwtData, token);
-        if (!isValid) {
-            return null;
-        }
         Long userId = Long.valueOf(parseJwtData.get(JwtConst.CLAIM_ID_KEY).toString());
         return userId;
     }

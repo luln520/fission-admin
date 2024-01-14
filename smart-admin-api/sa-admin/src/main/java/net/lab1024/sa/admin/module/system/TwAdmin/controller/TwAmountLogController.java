@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -35,8 +36,8 @@ public class TwAmountLogController {
     @PostMapping("/list")
     @ApiOperation(value = "资金流水列表")
     @NoNeedLogin
-    public ResponseDTO<IPage<TwBill>> listpage(@Valid @RequestBody TwBillVo twBillVo) {
-        return ResponseDTO.ok(twBillService.listpage(twBillVo));
+    public ResponseDTO<IPage<TwBill>> listpage(@Valid @RequestBody TwBillVo twBillVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twBillService.listpage(twBillVo,request));
     }
 
 

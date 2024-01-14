@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
  * @since 2023-12-23 18:27:16
  */
 public interface TwOnlineService extends IService<TwOnline> {
-    IPage<TwOnline> listpage(PageParam pageParam);
+    IPage<TwOnline> listpage(PageParam pageParam, HttpServletRequest request);
 
     List<TwOnline> lists(int uid);
 

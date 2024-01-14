@@ -51,8 +51,8 @@ public class TwUserController {
     @PostMapping("/list")
     @ApiOperation(value = "获取所有用户")
     @NoNeedLogin
-    public ResponseDTO<IPage<TwUser>> listUserpage(@Valid @RequestBody TwUserVo twUserVo) {
-        return ResponseDTO.ok(twUserService.listUserpage(twUserVo));
+    public ResponseDTO<IPage<TwUser>> listUserpage(@Valid @RequestBody TwUserVo twUserVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twUserService.listUserpage(twUserVo,request));
     }
 
 

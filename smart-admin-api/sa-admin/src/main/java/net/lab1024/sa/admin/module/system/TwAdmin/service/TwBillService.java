@@ -9,6 +9,7 @@ import net.lab1024.sa.common.common.domain.PageParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public interface TwBillService extends IService<TwBill> {
 
-    IPage<TwBill> listpage(TwBillVo twBillVo);
+    IPage<TwBill> listpage(TwBillVo twBillVo, HttpServletRequest request);
 
     List<TwBill> lists(int uid);
 

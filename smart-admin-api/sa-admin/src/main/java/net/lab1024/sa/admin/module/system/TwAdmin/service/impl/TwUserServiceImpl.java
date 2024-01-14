@@ -17,6 +17,8 @@ import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.admin.module.system.login.domain.LoginEmployeeDetail;
 import net.lab1024.sa.admin.module.system.login.domain.LoginForm;
+import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.enumeration.UserTypeEnum;
@@ -116,47 +118,143 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public IPage<TwUser> listUserpage(TwUserVo twUserVo) {
+    public IPage<TwUser> listUserpage(TwUserVo twUserVo,HttpServletRequest request) {
         List<TwUser>  list1 = new ArrayList<>();
-        Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
-        List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
-        for(TwUser twUser:list){
-            String paths = "";
-            String path = twUser.getPath();
-            String[] numberStrings = path.replace("#", "").split(",");
-            int[] numbers = new int[numberStrings.length];
-            for (int i = 0; i < numberStrings.length; i++) {
-                numbers[i] = Integer.parseInt(numberStrings[i]);
-            }
-            for (int num : numbers) {
-                EmployeeEntity byId = employeeService.getById(Long.valueOf(num));
-                if(byId == null){
-                    QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                    queryWrapper1.eq("id", twUser.getId());
-                    TwUser one = this.getOne(queryWrapper1);
-                    if(one != null){
-                        String realName = one.getRealName();
-                        paths += realName +",";
-                    }
-                }else{
-                    String actualName = byId.getActualName();
-                    paths += actualName +",";
-                }
-            }
-            QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("userid", twUser.getId());
-            TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
-            if(null==one){
-                twUser.setMoney(new BigDecimal(0));
-            }else {
-                twUser.setMoney(one.getUsdt());
-            }
-            twUser.setPath(paths);
-            list1.add(twUser);
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId1 = employeeService.getById(uidToken);
+        RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
+        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+            Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
+            List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
+            for(TwUser twUser:list){
+                String paths = "";
+                String path = twUser.getPath();
+                String[] numberStrings = path.replace("#", "").split(",");
+                int[] numbers = new int[numberStrings.length];
+                for (int i = 0; i < numberStrings.length; i++) {
+                    numbers[i] = Integer.parseInt(numberStrings[i]);
+                }
+                for (int num : numbers) {
+                    EmployeeEntity byId = employeeService.getById(Long.valueOf(num));
+                    if(byId == null){
+                        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+                        queryWrapper1.eq("id", twUser.getId());
+                        TwUser one = this.getOne(queryWrapper1);
+                        if(one != null){
+                            String realName = one.getRealName();
+                            paths += realName +",";
+                        }
+                    }else{
+                        String actualName = byId.getActualName();
+                        paths += actualName +",";
+                    }
+                }
+                QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper1.eq("userid", twUser.getId());
+                TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
+                if(null==one){
+                    twUser.setMoney(new BigDecimal(0));
+                }else {
+                    twUser.setMoney(one.getUsdt());
+                }
+                twUser.setPath(paths);
+                list1.add(twUser);
+
+            }
+            objectPage.setRecords(list1);
+            return objectPage;
         }
-        objectPage.setRecords(list1);
-        return objectPage;
+
+        if(roleEmployeeVO.getKey().equals("agent")){
+            int supervisorFlag = byId1.getSupervisorFlag();
+            if(supervisorFlag == 1){
+                Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
+                twUserVo.setDepartmentId(byId1.getDepartmentId());
+                List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
+                for(TwUser twUser:list){
+                    String paths = "";
+                    String path = twUser.getPath();
+                    String[] numberStrings = path.replace("#", "").split(",");
+                    int[] numbers = new int[numberStrings.length];
+                    for (int i = 0; i < numberStrings.length; i++) {
+                        numbers[i] = Integer.parseInt(numberStrings[i]);
+                    }
+                    for (int num : numbers) {
+                        EmployeeEntity byId = employeeService.getById(Long.valueOf(num));
+                        if(byId == null){
+                            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+                            queryWrapper1.eq("id", twUser.getId());
+                            TwUser one = this.getOne(queryWrapper1);
+                            if(one != null){
+                                String realName = one.getRealName();
+                                paths += realName +",";
+                            }
+                        }else{
+                            String actualName = byId.getActualName();
+                            paths += actualName +",";
+                        }
+                    }
+                    QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
+                    queryWrapper1.eq("userid", twUser.getId());
+                    TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
+                    if(null==one){
+                        twUser.setMoney(new BigDecimal(0));
+                    }else {
+                        twUser.setMoney(one.getUsdt());
+                    }
+                    twUser.setPath(paths);
+                    list1.add(twUser);
+
+                }
+                objectPage.setRecords(list1);
+                return objectPage;
+            }else{
+                Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
+                twUserVo.setEmployeeId(byId1.getEmployeeId());
+                List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
+                for(TwUser twUser:list){
+                    String paths = "";
+                    String path = twUser.getPath();
+                    String[] numberStrings = path.replace("#", "").split(",");
+                    int[] numbers = new int[numberStrings.length];
+                    for (int i = 0; i < numberStrings.length; i++) {
+                        numbers[i] = Integer.parseInt(numberStrings[i]);
+                    }
+                    for (int num : numbers) {
+                        EmployeeEntity byId = employeeService.getById(Long.valueOf(num));
+                        if(byId == null){
+                            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+                            queryWrapper1.eq("id", twUser.getId());
+                            TwUser one = this.getOne(queryWrapper1);
+                            if(one != null){
+                                String realName = one.getRealName();
+                                paths += realName +",";
+                            }
+                        }else{
+                            String actualName = byId.getActualName();
+                            paths += actualName +",";
+                        }
+                    }
+                    QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
+                    queryWrapper1.eq("userid", twUser.getId());
+                    TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
+                    if(null==one){
+                        twUser.setMoney(new BigDecimal(0));
+                    }else {
+                        twUser.setMoney(one.getUsdt());
+                    }
+                    twUser.setPath(paths);
+                    list1.add(twUser);
+
+                }
+                objectPage.setRecords(list1);
+                return objectPage;
+            }
+        }
+         return null;
     }
 
     @Override
@@ -308,6 +406,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
+            twAdminLog.setPath(one.getPath());
             twAdminLog.setRemark("指定用户 "+uid+" 手动减少");
             twAdminLogService.save(twAdminLog);
 
@@ -340,6 +439,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
+            twAdminLog.setPath(one.getPath());
             twAdminLog.setRemark("指定用户 "+uid+" 手动增加");
             twAdminLogService.save(twAdminLog);
 
@@ -701,6 +801,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
+            twAdminLog.setPath(one.getPath());
             twAdminLog.setRemark("用户 "+one.getRealName()+" 认证审核通过");
             return twAdminLogService.save(twAdminLog);
         }
@@ -723,6 +824,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
+            twAdminLog.setPath(one.getPath());
             twAdminLog.setRemark("用户 "+one.getRealName()+" 认证审核驳回");
             return twAdminLogService.save(twAdminLog);
         }

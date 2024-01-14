@@ -15,9 +15,12 @@ import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Res.HyorderOneRes;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.CommonUtil;
 import net.lab1024.sa.common.common.util.DateUtil;
+import net.lab1024.sa.common.module.support.token.TokenService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -57,6 +61,10 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
     @Autowired
     private EmployeeService employeeService;
+
+
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     public int countUnClosedOrders() {
@@ -188,10 +196,34 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
-    public IPage<TwHyorder> listpage(TwHyorderVo twHyorderVo) {
-        Page<TwHyorder> objectPage = new Page<>(twHyorderVo.getPageNum(), twHyorderVo.getPageSize());
-        objectPage.setRecords(baseMapper.listpage(objectPage, twHyorderVo));
-        return objectPage;
+    public IPage<TwHyorder> listpage(TwHyorderVo twHyorderVo, HttpServletRequest request) {
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+        RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+            Page<TwHyorder> objectPage = new Page<>(twHyorderVo.getPageNum(), twHyorderVo.getPageSize());
+            objectPage.setRecords(baseMapper.listpage(objectPage, twHyorderVo));
+            return objectPage;
+        }
+
+        if(roleEmployeeVO.getKey().equals("agent")){
+            int supervisorFlag = byId.getSupervisorFlag();
+            if(supervisorFlag == 1){
+                Page<TwHyorder> objectPage = new Page<>(twHyorderVo.getPageNum(), twHyorderVo.getPageSize());
+                twHyorderVo.setDepartmentId(byId.getDepartmentId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twHyorderVo));
+                return objectPage;
+            }else{
+                Page<TwHyorder> objectPage = new Page<>(twHyorderVo.getPageNum(), twHyorderVo.getPageSize());
+                twHyorderVo.setEmployeeId(byId.getEmployeeId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twHyorderVo));
+                return objectPage;
+            }
+        }
+        return null;
     }
 
     @Override

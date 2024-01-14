@@ -55,4 +55,10 @@ public class PageParam {
         @Length(max = 30, message = "排序字段最多30")
         private String column;
     }
+
+    @ApiModelProperty(value = "代理id")
+    private Long employeeId;
+
+    @ApiModelProperty(value = "部门id")
+    private Long departmentId;
 }

@@ -9,6 +9,10 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwNoticeDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMyzcService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNoticeService;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.module.support.token.TokenService;
@@ -18,6 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -31,11 +36,36 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private EmployeeService employeeService;
     @Override
-    public IPage<TwNotice> listpage(PageParam pageParam) {
-        Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-        objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
-        return objectPage;
+    public IPage<TwNotice> listpage(PageParam pageParam, HttpServletRequest request) {
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+        RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+            Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+            objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+            return objectPage;
+        }
+
+        if(roleEmployeeVO.getKey().equals("agent")){
+            int supervisorFlag = byId.getSupervisorFlag();
+            if(supervisorFlag == 1){
+                Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+                objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+                return objectPage;
+            }else{
+                Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+                objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+                return objectPage;
+            }
+        }
+        return null;
     }
 
     @Override

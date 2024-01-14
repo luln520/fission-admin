@@ -100,6 +100,20 @@
         </foreach>
     </select>
 
+    <select id="selectRoleByEmployeeId"
+            resultType="net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO">
+        SELECT
+        t_role_employee.role_id,
+        t_role_employee.employee_id,
+        t_role.role_name,
+        t_role.key
+        FROM
+        t_role_employee
+        LEFT JOIN t_role  ON t_role.role_id = t_role_employee.role_id
+        WHERE
+        employee_id  = #{employeeId}
+    </select>
+
 
 
 

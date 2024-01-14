@@ -35,7 +35,7 @@ public interface TwUserService extends IService<TwUser> {
 
     IPage<TwUser> listpage(TwUserVo twUserVo);
 
-    IPage<TwUser> listUserpage(TwUserVo twUserVo);
+    IPage<TwUser> listUserpage(TwUserVo twUserVo,HttpServletRequest request);
 
     ResponseDTO addOrUpdate(TwUser twUser, HttpServletRequest request) throws IOException;
     boolean setAgent(int isAgent, int id);

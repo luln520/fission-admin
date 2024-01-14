@@ -11,6 +11,7 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
  * @since 2023-12-23 18:27:04
  */
 public interface TwNoticeService extends IService<TwNotice> {
-    IPage<TwNotice> listpage(PageParam pageParam);
+    IPage<TwNotice> listpage(PageParam pageParam, HttpServletRequest request);
 
     ResponseDTO<List<TwNotice>>  notice(int uid);
 

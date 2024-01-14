@@ -6,20 +6,27 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwNoticeDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwOnlineDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNoticeService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwOnlineService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.List;
@@ -35,11 +42,37 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
 
     @Autowired
     private TwUserService twUserService;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private EmployeeService employeeService;
     @Override
-    public IPage<TwOnline> listpage(PageParam pageParam) {
-        Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-        objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
-        return objectPage;
+    public IPage<TwOnline> listpage(PageParam pageParam, HttpServletRequest request) {
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+        RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+            Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+            objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+            return objectPage;
+        }
+
+        if(roleEmployeeVO.getKey().equals("agent")){
+            int supervisorFlag = byId.getSupervisorFlag();
+            if(supervisorFlag == 1){
+                Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+                objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+                return objectPage;
+            }else{
+                Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+                objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+                return objectPage;
+            }
+        }
+        return null;
     }
 
     @Override

@@ -12,8 +12,12 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMessageRep;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinCommentService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.module.support.jwe.JweUserKey;
+import net.lab1024.sa.common.module.support.token.TokenService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,17 +49,40 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
     private TwMyzcDao twMyzcDao;
     @Autowired
     private TwRechargeDao twRechargeDao;
-
-    private BiFunction<String,HttpServletRequest, UserDetails> userFunction;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private EmployeeService employeeService;
     @Override
     public IPage<TwAdminLog> listpage(TwBillVo twBillVo,HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
         String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
-        //清理spring security
-        log.info("登陆人信息{}"+xHeaderToken);
-        Page<TwAdminLog> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
-        objectPage.setRecords(baseMapper.listpage(objectPage, twBillVo));
-        return objectPage;
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+        RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+            Page<TwAdminLog> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
+            objectPage.setRecords(baseMapper.listpage(objectPage, twBillVo));
+            return objectPage;
+        }
+
+        if(roleEmployeeVO.getKey().equals("agent")){
+            int supervisorFlag = byId.getSupervisorFlag();
+            if(supervisorFlag == 1){
+                Page<TwAdminLog> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
+                twBillVo.setDepartmentId(byId.getDepartmentId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twBillVo));
+                return objectPage;
+            }else{
+                Page<TwAdminLog> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
+                twBillVo.setEmployeeId(byId.getEmployeeId());
+                objectPage.setRecords(baseMapper.listpage(objectPage, twBillVo));
+                return objectPage;
+            }
+        }
+
+        return null;
     }
 
     @Override

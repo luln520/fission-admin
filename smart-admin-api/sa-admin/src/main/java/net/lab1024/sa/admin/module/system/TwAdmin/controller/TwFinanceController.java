@@ -18,6 +18,7 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -43,8 +44,8 @@ public class TwFinanceController {
     @PostMapping("/billList")
     @ApiOperation(value = "账务明细列表")
     @NoNeedLogin
-    public ResponseDTO<IPage<TwBill>> listpage(@Valid @RequestBody TwBillVo twBillVo) {
-        return ResponseDTO.ok(twBillService.listpage(twBillVo));
+    public ResponseDTO<IPage<TwBill>> listpage(@Valid @RequestBody TwBillVo twBillVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twBillService.listpage(twBillVo,request));
     }
 
 

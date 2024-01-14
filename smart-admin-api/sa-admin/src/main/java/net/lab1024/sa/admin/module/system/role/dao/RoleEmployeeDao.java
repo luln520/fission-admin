@@ -47,6 +47,8 @@ public interface RoleEmployeeDao extends BaseMapper<RoleEmployeeEntity> {
      */
     List<RoleEmployeeVO> selectRoleByEmployeeIdList(@Param("employeeIdList") List<Long> employeeIdList);
 
+    RoleEmployeeVO selectRoleByEmployeeId(@Param("employeeId") Long employeeId);
+
     /**
      * 查询角色下的人员id
      * @param roleIdList

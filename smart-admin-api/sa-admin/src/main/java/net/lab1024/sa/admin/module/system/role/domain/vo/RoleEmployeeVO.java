@@ -19,4 +19,6 @@ public class RoleEmployeeVO {
     private Long employeeId;
 
     private String roleName;
+
+    private String key;
 }

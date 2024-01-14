@@ -104,6 +104,10 @@ public class EmployeeService {
         return ResponseDTO.ok(PageResult);
     }
 
+    public RoleEmployeeVO selectRoleByEmployeeId(Long employeeId){
+        return roleEmployeeDao.selectRoleByEmployeeId(employeeId);
+    }
+
     /**
      * 新增员工
      *

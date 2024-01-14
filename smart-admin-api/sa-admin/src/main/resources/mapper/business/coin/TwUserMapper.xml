@@ -7,6 +7,12 @@
         <if test="obj.username != null and obj.username !=''">
             and username = #{obj.username}
         </if>
+        <if test="obj.department != null and obj.department !=''">
+            and department = #{obj.departmentId}
+        </if>
+        <if test="obj.employeeId != null and obj.employeeId !=''">
+            and path like concat('%',#{obj.employeeId},'%')
+        </if>
          order by id desc
     </select>
 

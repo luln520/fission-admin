@@ -9,6 +9,8 @@ import net.lab1024.sa.common.common.domain.PageParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 用户记录表(TwUserLog)表服务接口
  *
@@ -17,6 +19,6 @@ import org.springframework.data.domain.PageRequest;
  */
 public interface TwUserLogService extends IService<TwUserLog> {
 
-    IPage<TwUserLog> listpage(TwUserVo twUserVo);
+    IPage<TwUserLog> listpage(TwUserVo twUserVo, HttpServletRequest request);
 
 }

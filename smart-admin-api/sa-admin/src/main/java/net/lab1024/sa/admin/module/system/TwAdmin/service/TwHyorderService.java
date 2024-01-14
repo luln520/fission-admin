@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -40,7 +41,7 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     ResponseDTO<TwHyorder> cbillinfo(int uid,int id);
 
-    IPage<TwHyorder> listpage(TwHyorderVo twHyorderVo);
+    IPage<TwHyorder> listpage(TwHyorderVo twHyorderVo, HttpServletRequest request);
 
     boolean editKongyK(Integer kongyk, int id);
 

@@ -14,6 +14,7 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -37,8 +38,8 @@ public class TwTradeController {
     @ApiOperation(value = "合约,平仓订单 查询列表")
     @ResponseBody
     @NoNeedLogin
-    public ResponseDTO<IPage<TwHyorder>> hyorderlist(@Valid @RequestBody TwHyorderVo twHyorderVo) {
-        return ResponseDTO.ok(twHyorderService.listpage(twHyorderVo));
+    public ResponseDTO<IPage<TwHyorder>> hyorderlist(@Valid @RequestBody TwHyorderVo twHyorderVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twHyorderService.listpage(twHyorderVo,request));
     }
 
     /**

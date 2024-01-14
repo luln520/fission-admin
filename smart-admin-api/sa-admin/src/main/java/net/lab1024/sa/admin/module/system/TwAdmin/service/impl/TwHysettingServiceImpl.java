@@ -65,6 +65,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
 
                 TwAdminLog twAdminLog = new TwAdminLog();
                 twAdminLog.setDepartment(twUser.getDepatmentId());
+                twAdminLog.setPath(twUser.getPath());
 //                twAdminLog.setAdminId();
 //                twAdminLog.setAdminUsername();
                 twAdminLog.setAction("指定必赢");
@@ -87,6 +88,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
 
                 TwAdminLog twAdminLog = new TwAdminLog();
                 twAdminLog.setDepartment(twUser.getDepatmentId());
+                twAdminLog.setPath(twUser.getPath());
 //                twAdminLog.setAdminId();
 //                twAdminLog.setAdminUsername();
                 twAdminLog.setAction("指定必输");
@@ -109,6 +111,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
 
                 TwAdminLog twAdminLog = new TwAdminLog();
                 twAdminLog.setDepartment(twUser.getDepatmentId());
+                twAdminLog.setPath(twUser.getPath());
 //                twAdminLog.setAdminId();
 //                twAdminLog.setAdminUsername();
                 twAdminLog.setAction("正常输赢");

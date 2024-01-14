@@ -12,6 +12,7 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -35,8 +36,8 @@ public class TwOnlineController {
     @ApiOperation(value = "获取所有用户的聊天列表")
     @ResponseBody
     @NoNeedLogin
-    public ResponseDTO<IPage<TwOnline>> list(@Valid @RequestBody PageParam pageParam) {
-        return ResponseDTO.ok(twOnlineService.listpage(pageParam));
+    public ResponseDTO<IPage<TwOnline>> list(@Valid @RequestBody PageParam pageParam, HttpServletRequest request) {
+        return ResponseDTO.ok(twOnlineService.listpage(pageParam,request));
     }
 
 
