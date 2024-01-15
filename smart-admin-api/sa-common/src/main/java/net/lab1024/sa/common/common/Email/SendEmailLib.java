@@ -57,7 +57,7 @@ public class SendEmailLib {
 //        }
 //    }
 
-    public static final void email(){
+    public static final void email(String email){
 
             final String baseUrl = "https://api.itniotech.com/email";
 
