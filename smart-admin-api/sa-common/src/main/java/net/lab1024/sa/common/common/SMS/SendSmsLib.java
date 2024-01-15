@@ -6,11 +6,21 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
+import com.infobip.ApiClient;
+import com.infobip.ApiException;
+import com.infobip.ApiKey;
+import com.infobip.BaseUrl;
+import com.infobip.api.SmsApi;
+import com.infobip.model.SmsAdvancedTextualRequest;
+import com.infobip.model.SmsDestination;
+import com.infobip.model.SmsTextualMessage;
+import lombok.var;
 
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +44,7 @@ public class SendSmsLib {
 //                .addDestinationsItem(new SmsDestination().to(phone))
 //                .entityId("4575A374484F5CC8C67609C2F745DB5A")
 //                .applicationId("111907")
-//                .text("26356");
+//                .text("Your verification code is: 56565 . Please pay attention to account security and do not disclose your account password, verification code and other security information to anyone. Please be vigilant to avoid asset losses");
 //
 //        // Create a send message request.
 //        var smsMessageRequest = new SmsAdvancedTextualRequest()
