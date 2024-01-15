@@ -10,7 +10,7 @@ public class SendEmailBasic {
     private static final String BASE_URL = "https://pp8nge.api.infobip.com";
     private static final String API_KEY = "App a74fae415d4519486835cc44dabf84f9-9602cc5b-b798-4fae-8f9a-c6c785080d75";
 
-    private static final String SENDER_EMAIL_ADDRESS = "LULN1@selfserviceib.com";
+    private static final String SENDER_EMAIL_ADDRESS = "1119076443luln@gmail.com";
     private static final String RECIPIENT_EMAIL_ADDRESS = "1119076443luln@gmail.com";
 
     private static final String EMAIL_SUBJECT = "This is a sample email subject";

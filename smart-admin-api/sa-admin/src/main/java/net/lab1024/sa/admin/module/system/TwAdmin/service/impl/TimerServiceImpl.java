@@ -156,7 +156,7 @@ public class TimerServiceImpl {
         List<TwKjorder> list = twKjorderService.list(queryWrapper);
         for(TwKjorder twKjorder:list){
             String coinname="";
-            Integer id = twKjorder.getId();
+            Integer kid = twKjorder.getKid();
             Integer uid = twKjorder.getUid();
             String username = twKjorder.getUsername();
             BigDecimal outnum = twKjorder.getOutnum();
@@ -171,7 +171,7 @@ public class TimerServiceImpl {
             String nowdate = DateUtil.date2Str(new Date(), "yyyy-MM-dd");
             QueryWrapper<TwKjprofit> queryWrapper2 = new QueryWrapper<>();
             queryWrapper2.eq("uid",uid);
-            queryWrapper2.eq("kid",id);
+            queryWrapper2.eq("kid",kid);
             queryWrapper2.eq("day",nowdate);
             TwKjprofit twKjprofit = twKjprofitService.getOne(queryWrapper2);
             if(twKjprofit == null){
@@ -180,7 +180,7 @@ public class TimerServiceImpl {
                 twKjprofit1.setUsername(username);
                 twKjprofit1.setPath(twUser.getPath());
                 twKjprofit1.setDepartment(twUser.getDepatmentId());
-                twKjprofit1.setKid(id);
+                twKjprofit1.setKid(twKjorder.getKid());
                 twKjprofit1.setKtitle(twKjorder.getKjtitle());
                 twKjprofit1.setNum(outnum);
                 twKjprofit1.setCoin(coinname);
@@ -222,8 +222,6 @@ public class TimerServiceImpl {
         List<TwKjorder> list = twKjorderService.list(queryWrapper);
         if(list.size() > 0){
             for(TwKjorder twKjorder:list){
-                twKjorder.setStatus(3);
-                twKjorderService.updateById(twKjorder);
 
                 QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
                 queryWrapper4.eq("id",twKjorder.getUid());
@@ -273,6 +271,10 @@ public class TimerServiceImpl {
                 twBill.setSt(1);
                 twBill.setRemark("矿机到期收益释放");
                 twBillService.save(twBill);
+
+
+                twKjorder.setStatus(3);
+                twKjorderService.updateById(twKjorder);
             }
         }
     }

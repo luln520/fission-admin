@@ -836,7 +836,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public ResponseDTO code(String phone,int type,String email) {
+    public ResponseDTO code(String phone,int type,String email) throws IOException {
         if(type == 1){   //手机
             SendSmsLib.phone(phone);
             return ResponseDTO.ok();
@@ -856,13 +856,13 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = RequestBody.create(mediaType, "");
         Request request = new Request.Builder()
-                .url("https://pp8nge.api.infobip.com/sms/1/bulks?bulkId=639627665869")
+                .url("https://pp8nge.api.infobip.com/sms/1/inbox/reports?limit=10&applicationId=111907&entityId=4575A374484F5CC8C67609C2F745DB5A")
 //                .method("GET", body)
-                .addHeader("Authorization", "{authorization}")
+                .addHeader("Authorization", "a74fae415d4519486835cc44dabf84f9-9602cc5b-b798-4fae-8f9a-c6c785080d75")
                 .addHeader("Accept", "application/json")
                 .build();
         Response response = client.newCall(request).execute();
-        return null;
+        return ResponseDTO.ok(response);
     }
 
     /**
