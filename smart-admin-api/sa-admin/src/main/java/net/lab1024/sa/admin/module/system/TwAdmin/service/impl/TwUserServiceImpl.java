@@ -754,7 +754,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             }
 
 
-            twUser.setRzstatus(2);
+            twUser.setRzstatus(1);
             long timestampInSeconds = Instant.now().getEpochSecond();
             twUser.setRztime((int) (timestampInSeconds));
             this.updateById(twUser);

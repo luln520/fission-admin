@@ -61,8 +61,7 @@ public class SendSmsLib {
             final String apiPwd = "CalQJycyXBDZXA5P4wmO9kD8pSC5F9Oz";
             final String appId = "3GRpJ47I";
 
-            final String numbers = phone;
-            final String content = "23565";
+            final String content = "Your verification code is: 56565 . Please pay attention to account security and do not disclose your account password, verification code and other security information to anyone. Please be vigilant to avoid asset losses";
             final String senderId = "";
 
             final String url = baseUrl.concat("/sendSms");
