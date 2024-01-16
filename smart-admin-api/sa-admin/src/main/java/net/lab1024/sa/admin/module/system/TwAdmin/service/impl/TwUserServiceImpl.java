@@ -914,7 +914,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         if(type == 2){    //邮箱
             String code = this.codeRandom();
-            SendEmailLib.email(email);
+            SendEmailLib.email(email,code);
             captchaMap.put(username, code);
             if(language.equals("zh")){
                 return ResponseDTO.ok("验证码已发送");
@@ -981,5 +981,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         return stringBuilder.toString();
     }
+
 
 }

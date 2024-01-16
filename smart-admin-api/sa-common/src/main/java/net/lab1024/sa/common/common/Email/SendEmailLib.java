@@ -11,135 +11,97 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 
 
-
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.time.LocalDateTime;
 
 import java.time.ZoneId;
+import java.util.Date;
+import java.util.Properties;
 
 public class SendEmailLib {
 
-    private static final String BASE_URL = "https://pp8nge.api.infobip.com";
-    private static final String API_KEY = "a74fae415d4519486835cc44dabf84f9-9602cc5b-b798-4fae-8f9a-c6c785080d75";
-
-    private static final String SENDER_EMAIL_ADDRESS = "lilin li <1119076443luln@gmail.com>";
-//    private static final String RECIPIENT_EMAIL_ADDRESS = "1119076443luln@gmail.com";
-
-    private static final String EMAIL_SUBJECT = "26335";
-    private static final String EMAIL_TEXT = "26335";
-
-//    public static void email(String email) {
-////         Create the API client and the Email API instances.
-//        var apiClient = ApiClient.forApiKey(ApiKey.from(API_KEY))
-//                .withBaseUrl(BaseUrl.from(BASE_URL))
-//                .build();
-//        var sendEmailApi = new EmailApi(apiClient);
-//
-//        try {
-//            // Create the email and send it.
-////            var to = new ArrayList<>(List.of(RECIPIENT_EMAIL_ADDRESS));
-//            var to = new ArrayList<String>();
-//            to.add(email);
-//            var emailResponse = sendEmailApi
-//                    .sendEmail(to)
-//                    .from(SENDER_EMAIL_ADDRESS)
-//                    .subject(EMAIL_SUBJECT)
-//                    .text(EMAIL_TEXT)
-//                    .execute();
-//
-//            System.out.println("Response body: " + emailResponse);
-//
-//            // Get delivery reports. It may take a few seconds to show the above-sent message.
-//            var reportsResponse = sendEmailApi.getEmailDeliveryReports().execute();
-//            System.out.println(reportsResponse.getResults());
-//        } catch (ApiException e) {
-//            System.out.println("HTTP status code: " + e.responseStatusCode());
-//            System.out.println("Response body: " + e.rawResponseBody());
-//        }
-//    }
-
-    public static final void email(String email){
-
-            final String baseUrl = "https://api.itniotech.com/email";
-
-            final String apiKey = "83kYOpti6Sh9l5u8q1ncuDoD6M2dhsOO";
-
-            final String apiPwd = "CalQJycyXBDZXA5P4wmO9kD8pSC5F9Oz";
-
-            final String appId = "appId";
-
-            final String fromEmailAddress = "fromEmailAddress"; // The Mail address configured in the ITNIO
-
-            final String toAddress = "toAddress";  //Recipient Address
-
-            final String subject = "subject"; //Send Message Subject
-
-            final String templateID = "templateID"; //Send Template ID
-
-            final String templateData = "templateData"; //Template variable parameters
-
-//            final int adFlag = adFlag; //Whether to add the advertising logo
-
-            final String language = "language"; //language
-
-//            final boolean checkEmailAddress = checkEmailAddress; //Enable email address validity check
+    /*
+     * gmail邮箱SSL方式
+     */
+    private static void gmailssl(Properties props) {
+        final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+        props.put("mail.debug", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
+        props.put("mail.smtp.port", "465");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.auth", "true");
+    }
 
 
+    //gmail邮箱的TLS方式
+    private static void gmailtls(Properties props) {
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+    }
+    public static void email(String email,String code){
+        try{
+            //1.创建一封邮件的实例对象
+            Properties props = new Properties();
+            //选择ssl方式
+            gmailtls(props);
 
-            final String url = baseUrl.concat("/sendEmail");
+            final String username = "1119076443luln@gmail.com";// gmail 邮箱
+            final String password = "phfe xdpx iinq nvyr";// Google应用专用密码
+            // 当做多商户的时候需要使用getInstance, 如果只是一个邮箱发送的话就用getDefaultInstance
+            // Session.getDefaultInstance 会将username,password保存在session会话中
+            // Session.getInstance 不进行保存
+            Session session = Session.getInstance(props,
+                    new Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password);
+                        }
+                    });
 
-            HttpRequest request = HttpRequest.post(url);
+            MimeMessage msg = new MimeMessage(session);
+            //2.设置发件人地址
+            msg.setFrom(new InternetAddress(email));
+            /**
+             * 3.设置收件人地址（可以增加多个收件人、抄送、密送），即下面这一行代码书写多行
+             * MimeMessage.RecipientType.TO:发送
+             * MimeMessage.RecipientType.CC：抄送
+             * MimeMessage.RecipientType.BCC：密送
+             */
+            msg.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(email));
+            //4.设置邮件主题
+            msg.setSubject("To reset your password!", "UTF-8");
 
-            // currentTime
-            final String datetime = String.valueOf(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond());
+            // 6. 创建文本"节点"
+            MimeBodyPart text = new MimeBodyPart();
+            // 这里添加图片的方式是将整个图片包含到邮件内容中, 实际上也可以以 http 链接的形式添加网络图片
+            text.setContent("<p>Your login verification code: "+code+"</p>",
+                    "text/html;charset=UTF-8");
 
-            // generate md5 key
-            final String sign = SecureUtil.md5(apiKey.concat(apiPwd).concat(datetime));
-
-            request.header(Header.CONNECTION, "Keep-Alive")
-
-                    .header(Header.CONTENT_TYPE, "application/json;charset=UTF-8")
-
-                    .header("Sign", sign)  //Signature with encryption
-
-                    .header("Timestamp", datetime) //Current system time stamp (second)
-
-                    .header("Api-Key", apiKey); //API KEY（Home-Developer options）
-
-
-
-            final String params = JSONUtil.createObj()
-
-                    .set("appId", appId)
-
-                    .set("fromEmailAddress", fromEmailAddress)
-
-                    .set("toAddress", toAddress)
-
-                    .set("subject", subject)
-
-                    .set("templateID", templateID)
-
-                    .set("templateData", templateData)
-
-//                    .set("adFlag", adFlag)
-
-                    .set("language", language)
-
-//                    .put("checkEmailAddress", checkEmailAddress)
-
-                    .toString();
+            // 7. （文本+图片）设置 文本 和 图片"节点"的关系（将 文本 和 图片"节点"合成一个混合"节点"）
+            MimeMultipart mm_text_image = new MimeMultipart();
+            mm_text_image.addBodyPart(text);
+            mm_text_image.setSubType("related");    // 关联关系
 
 
+            // 11. 设置整个邮件的关系（将最终的混合"节点"作为邮件的内容添加到邮件对象）
+            msg.setContent(mm_text_image);
+            //设置邮件的发送时间,默认立即发送
+            msg.setSentDate(new Date());
+            Transport.send(msg);
 
-            HttpResponse response = request.body(params).execute();
+        }catch (Exception e){
 
-            if (response.isOk()) {
-
-                String result = response.body();
-
-                System.out.println(result);
-
-            }
+        }
     }
 }
 
