@@ -44,7 +44,7 @@ public interface TwUserService extends IService<TwUser> {
 
     boolean setUser(int id,int type,int uid);
 
-    boolean setMoney(int uid, int type, BigDecimal money);
+    boolean setMoney(int uid, int type, BigDecimal money,HttpServletRequest request);
 
     boolean userNotice(int uid,int type,String title, String content,String imgs);
 
@@ -60,7 +60,7 @@ public interface TwUserService extends IService<TwUser> {
 
     IPage<TwUser>  authList(TwUserVo twUserVo);
 
-    boolean authProcess(int uid,int type);
+    boolean authProcess(int uid,int type, HttpServletRequest request);
 
     ResponseDTO code(String phone,int type,String email) throws IOException;
 

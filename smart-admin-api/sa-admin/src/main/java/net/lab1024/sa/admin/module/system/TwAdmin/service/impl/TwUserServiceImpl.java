@@ -50,9 +50,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -70,6 +68,9 @@ import java.util.concurrent.ConcurrentMap;
 public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements TwUserService {
 
     private static final String PASSWORD_SALT_FORMAT = "smart_%s_admin_$^&*";
+
+    // 使用一个静态的 Map 存储验证码，以便在整个应用程序中共享
+    private static final Map<String, String> captchaMap = new HashMap<>();
 
     /**
      * 登录信息二级缓存
@@ -384,12 +385,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public boolean setMoney(int uid, int type, BigDecimal money) {
+    public boolean setMoney(int uid, int type, BigDecimal money,HttpServletRequest request) {
         String remark = "";
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", uid);
         TwUser one = this.getOne(queryWrapper);
 
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
 
         QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("userid", uid);
@@ -401,10 +405,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
 
             TwAdminLog twAdminLog = new TwAdminLog();
-//                twAdminLog.setAdminId();
-//                twAdminLog.setAdminUsername();
+            twAdminLog.setAdminId((int) byId.getEmployeeId());
+            twAdminLog.setAdminUsername(byId.getActualName());
             twAdminLog.setAction("管理员手动减少");
-//                twAdminLog.setIp();
             Instant instant = Instant.now();
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
@@ -434,10 +437,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             remark = "管理员手动增加";
 
             TwAdminLog twAdminLog = new TwAdminLog();
-//                twAdminLog.setAdminId();
-//                twAdminLog.setAdminUsername();
+            twAdminLog.setAdminId((int) byId.getEmployeeId());
+            twAdminLog.setAdminUsername(byId.getActualName());
             twAdminLog.setAction("管理员手动增加");
-//                twAdminLog.setIp();
             Instant instant = Instant.now();
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
@@ -590,9 +592,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
              */
             String username = userReq.getUsername();
             String password = userReq.getPassword();
+            String phoneEmail = userReq.getPhoneEmail();   //手机号，验证码
             String encryptPwd = getEncryptPwd(password); //MD5密码加密
             String invit = userReq.getInvit();
             int type = userReq.getType();
+            String regcode = userReq.getRegcode();   //验证码
+
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("username", username);
             TwUser one = this.getOne(queryWrapper);
@@ -601,6 +606,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             }
 
             //验证码
+            String storedCaptcha = captchaMap.get(phoneEmail);
+
+            if (storedCaptcha == null && !storedCaptcha.equals(regcode)) {
+                // 验证码正确，移除验证码以防止重复使用
+                return ResponseDTO.userErrorParam("验证码错误或过期！");
+            }
 
             if(StringUtils.isEmpty(password)){
                 return ResponseDTO.userErrorParam("请输入密码！");
@@ -683,6 +694,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUserCoin.setUsdt(tyonfig.getTymoney());
                 twUserCoinService.save(twUserCoin);
 
+                captchaMap.remove(phoneEmail);
                 return ResponseDTO.ok("注册成功");
             }
         }catch (Exception e){
@@ -784,7 +796,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public boolean authProcess(int uid, int type) {
+    public boolean authProcess(int uid, int type, HttpServletRequest request) {
+
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
 
         if(type == 1){  //审核通过
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -796,10 +812,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             this.updateById(one);
 
             TwAdminLog twAdminLog = new TwAdminLog();
-//          twAdminLog.setAdminId();
-//          twAdminLog.setAdminUsername();
+            twAdminLog.setAdminId((int) byId.getEmployeeId());
+            twAdminLog.setAdminUsername(byId.getActualName());
             twAdminLog.setAction("认证资料审核通过");
-//          twAdminLog.setIp();
             Instant instant = Instant.now();
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
@@ -819,10 +834,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             this.updateById(one);
 
             TwAdminLog twAdminLog = new TwAdminLog();
-//          twAdminLog.setAdminId();
-//          twAdminLog.setAdminUsername();
+            twAdminLog.setAdminId((int) byId.getEmployeeId());
+            twAdminLog.setAdminUsername(byId.getActualName());
             twAdminLog.setAction("认证资料审核驳回");
-//          twAdminLog.setIp();
             Instant instant = Instant.now();
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
@@ -838,7 +852,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Override
     public ResponseDTO code(String phone,int type,String email) throws IOException {
         if(type == 1){   //手机
-            SendSmsLib.phone(phone);
+            String code = this.codeRandom();
+            SendSmsLib.phone(phone,code);
+            captchaMap.put(phone, code);
             return ResponseDTO.ok();
         }
 
@@ -891,5 +907,19 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         return stringBuilder.toString();
     }
 
+
+    private  String codeRandom() {
+        String characterSet = "0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < 5; i++) {
+            int randomIndex = random.nextInt(characterSet.length());
+            char randomChar = characterSet.charAt(randomIndex);
+            stringBuilder.append(randomChar);
+        }
+
+        return stringBuilder.toString();
+    }
 
 }

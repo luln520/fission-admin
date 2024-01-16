@@ -62,7 +62,6 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     @Autowired
     private EmployeeService employeeService;
 
-
     @Autowired
     private TokenService tokenService;
 
@@ -249,7 +248,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
                 TwUser puser = twUserService.getOne(queryWrapper4);
                 invite = puser.getInvit1();
             }
-            invite = byInvite.getEmployeeId().toString();
+            invite = String.valueOf(byInvite.getEmployeeId());
 
             //获取会员资产
             QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();

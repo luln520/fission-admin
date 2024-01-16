@@ -85,8 +85,8 @@ public class TwUserController {
     @GetMapping("/setWin")
     @ApiOperation(value = "指定必赢/指定必输/正常输赢")
     @NoNeedLogin
-    public ResponseDTO setWin(@RequestParam int id,@RequestParam int type,@RequestParam int uid) {
-        return ResponseDTO.ok(twHysettingService.setWin(id,type,uid));
+    public ResponseDTO setWin(@RequestParam int id,@RequestParam int type,@RequestParam int uid, HttpServletRequest request) {
+        return ResponseDTO.ok(twHysettingService.setWin(id,type,uid,request));
     }
 
     /**
@@ -225,8 +225,8 @@ public class TwUserController {
     @GetMapping("/setMoney")
     @ApiOperation(value = "修改用户余额")
     @NoNeedLogin
-    public ResponseDTO setMoney(@RequestParam int uid, @RequestParam int type, @RequestParam BigDecimal money) {
-        return ResponseDTO.ok(twUserService.setMoney(uid,type,money));
+    public ResponseDTO setMoney(@RequestParam int uid, @RequestParam int type, @RequestParam BigDecimal money,HttpServletRequest request) {
+        return ResponseDTO.ok(twUserService.setMoney(uid,type,money,request));
     }
 
 
@@ -263,8 +263,8 @@ public class TwUserController {
     @GetMapping("/authProcess")
     @ApiOperation(value = "认证用户审核")
     @NoNeedLogin
-    public ResponseDTO authProcess(@RequestParam int uid, @RequestParam int type) {
-        return ResponseDTO.ok(twUserService.authProcess(uid,type));
+    public ResponseDTO authProcess(@RequestParam int uid, @RequestParam int type, HttpServletRequest request) {
+        return ResponseDTO.ok(twUserService.authProcess(uid,type,request));
     }
 
 }

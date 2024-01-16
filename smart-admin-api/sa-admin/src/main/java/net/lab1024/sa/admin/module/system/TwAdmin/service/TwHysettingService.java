@@ -6,6 +6,8 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 合约参数(TwHysetting)表服务接口
  *
@@ -16,7 +18,7 @@ public interface TwHysettingService extends IService<TwHysetting> {
 
     TwHysetting hysettingId();
 
-    boolean setWin(int id,int type,int uid);
+    boolean setWin(int id, int type, int uid, HttpServletRequest request);
 
     boolean edit(TwHysetting twHysetting);
 

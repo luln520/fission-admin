@@ -65,13 +65,13 @@ public class SendSmsLib {
 //
 //    }
 
-    public static void phone(String phone){
+    public static void phone(String phone,String code){
             final String baseUrl = "https://api.itniotech.com/sms";
             final String apiKey = "83kYOpti6Sh9l5u8q1ncuDoD6M2dhsOO";
             final String apiPwd = "CalQJycyXBDZXA5P4wmO9kD8pSC5F9Oz";
             final String appId = "3GRpJ47I";
 
-            final String content = "Your verification code is: 56565 . Please pay attention to account security and do not disclose your account password, verification code and other security information to anyone. Please be vigilant to avoid asset losses";
+            final String content = "Your verification code is: "+code+" . Please pay attention to account security and do not disclose your account password, verification code and other security information to anyone. Please be vigilant to avoid asset losses";
             final String senderId = "";
 
             final String url = baseUrl.concat("/sendSms");

@@ -12,6 +12,10 @@ import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
+import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -19,6 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 
 /**
@@ -30,6 +35,11 @@ import java.time.Instant;
 @Service("twHysettingService")
 public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysetting> implements TwHysettingService {
 
+    @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired
     private TwAdminLogService twAdminLogService;
@@ -44,7 +54,12 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
     }
 
     @Override
-    public boolean setWin(int id, int type,int uid) {
+    public boolean setWin(int id, int type, int uid, HttpServletRequest request) {
+
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+
         QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("id",uid);
         TwUser twUser = twUserService.getOne(queryWrapper1);
@@ -66,11 +81,9 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 TwAdminLog twAdminLog = new TwAdminLog();
                 twAdminLog.setDepartment(twUser.getDepatmentId());
                 twAdminLog.setPath(twUser.getPath());
-//                twAdminLog.setAdminId();
-//                twAdminLog.setAdminUsername();
+                twAdminLog.setAdminId((int) byId.getEmployeeId());
+                twAdminLog.setAdminUsername(byId.getActualName());
                 twAdminLog.setAction("指定必赢");
-//                twAdminLog.setIp();
-                Instant instant = Instant.now();
                 long timestampInSeconds = Instant.now().getEpochSecond();
                 twAdminLog.setCreateTime((int) timestampInSeconds);
                 twAdminLog.setRemark("指定用户 "+uid+" 必赢");
@@ -89,11 +102,9 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 TwAdminLog twAdminLog = new TwAdminLog();
                 twAdminLog.setDepartment(twUser.getDepatmentId());
                 twAdminLog.setPath(twUser.getPath());
-//                twAdminLog.setAdminId();
-//                twAdminLog.setAdminUsername();
+                twAdminLog.setAdminId((int) byId.getEmployeeId());
+                twAdminLog.setAdminUsername(byId.getActualName());
                 twAdminLog.setAction("指定必输");
-//                twAdminLog.setIp();
-                Instant instant = Instant.now();
                 long timestampInSeconds = Instant.now().getEpochSecond();
                 twAdminLog.setCreateTime((int) timestampInSeconds);
                 twAdminLog.setRemark("指定用户 "+uid+" 必输");
@@ -112,11 +123,9 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 TwAdminLog twAdminLog = new TwAdminLog();
                 twAdminLog.setDepartment(twUser.getDepatmentId());
                 twAdminLog.setPath(twUser.getPath());
-//                twAdminLog.setAdminId();
-//                twAdminLog.setAdminUsername();
+                twAdminLog.setAdminId((int) byId.getEmployeeId());
+                twAdminLog.setAdminUsername(byId.getActualName());
                 twAdminLog.setAction("正常输赢");
-//                twAdminLog.setIp();
-                Instant instant = Instant.now();
                 long timestampInSeconds = Instant.now().getEpochSecond();
                 twAdminLog.setCreateTime((int) timestampInSeconds);
                 twAdminLog.setRemark("指定用户 "+uid+" 正常输赢");

@@ -27,7 +27,7 @@ public class TwAdminLog implements Serializable {
     private String id;
 
     @ApiModelProperty(value = "管理员ID")
-    private String adminId;
+    private Integer adminId;
 
     @ApiModelProperty(value = "管理员用户名")
     private String adminUsername;

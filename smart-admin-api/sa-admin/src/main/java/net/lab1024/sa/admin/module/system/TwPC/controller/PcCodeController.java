@@ -42,21 +42,5 @@ public class PcCodeController {
         return twUserService.codeResp();
     }
 
-    private  final String BASE_URL = "https://pp8nge.api.infobip.com";
-    private  final String API_KEY = "a74fae415d4519486835cc44dabf84f9-9602cc5b-b798-4fae-8f9a-c6c785080d75";
 
-    @PostMapping("/delivery-reports")
-    @NoNeedLogin
-    public void receiveDeliveryReports(HttpServletRequest request) throws IOException, ApiException {
-        var apiClient = ApiClient.forApiKey(ApiKey.from(API_KEY))
-                .withBaseUrl(BaseUrl.from(BASE_URL))
-                .build();
-        var sendSmsApi = new SmsApi(apiClient);
-        SmsDeliveryResult deliveryReports = sendSmsApi.getOutboundSmsMessageDeliveryReports()
-                .execute();
-        for (SmsReport report : deliveryReports.getResults()) {
-            System.out.println(report);
-
-        }
-    }
 }

@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class EmployeeEntity {
 
     @TableId(type = IdType.AUTO)
-    private Long employeeId;
+    private long employeeId;
 
     /**
      * 登录账号

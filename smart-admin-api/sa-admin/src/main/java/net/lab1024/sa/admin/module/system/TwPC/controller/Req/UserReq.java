@@ -12,6 +12,7 @@ public class UserReq {
 
      private String password;
 
+     private String phoneEmail;
      //验证码
      private String regcode;
 
