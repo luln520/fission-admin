@@ -592,7 +592,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
              */
             String username = userReq.getUsername();
             String password = userReq.getPassword();
-            String phoneEmail = userReq.getPhoneEmail();   //手机号，验证码
             String encryptPwd = getEncryptPwd(password); //MD5密码加密
             String invit = userReq.getInvit();
             int type = userReq.getType();
@@ -606,7 +605,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             }
 
             //验证码
-            String storedCaptcha = captchaMap.get(phoneEmail);
+            String storedCaptcha = captchaMap.get(username);
 
             if (storedCaptcha == null && !storedCaptcha.equals(regcode)) {
                 // 验证码正确，移除验证码以防止重复使用
@@ -671,6 +670,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 TwUser twUser = new TwUser();
                 twUser.setUsername(username);
                 twUser.setPassword(encryptPwd);
+                if(type == 1){
+                    twUser.setPhone(username);
+                }
                 twUser.setInvit(invitCode);
                 twUser.setInvit1(invit1);
                 twUser.setInvit2(invit2);
@@ -694,7 +696,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUserCoin.setUsdt(tyonfig.getTymoney());
                 twUserCoinService.save(twUserCoin);
 
-                captchaMap.remove(phoneEmail);
+                captchaMap.remove(username);
                 return ResponseDTO.ok("注册成功");
             }
         }catch (Exception e){
