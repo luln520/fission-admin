@@ -74,12 +74,6 @@ public class PcTradeController {
 
 
     //btc，eth，eos，doge，bch，ltc，iota，fil，flow，jst，itc，ht
-    public static void main(String[] args) {
-        String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol=btcusdt";
-        Map<String, Object> stringObjectMap = CommonUtil.doGet(str, null);
-        System.out.println(stringObjectMap);
-    }
-
     /**
      * 获取当前最新价格 （和上面逻辑基本相同 返回参数少点，先保留）
      * 表 market

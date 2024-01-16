@@ -305,6 +305,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUser.setPassword(encryptPwd);
            twUser.setAreaCode("");
            twUser.setAddip(ip);
+           twUser.setKjMinnum(new BigDecimal(1000));
+           twUser.setKjMaxnum(new BigDecimal(5000));
+           twUser.setKjNum(1);
            twUser.setAddr(locationByIP);
            twUser.setRealName(locationByIP);
            long timestampInSeconds = Instant.now().getEpochSecond();
@@ -521,15 +524,24 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
          */
         String username = userReq.getUsername();
         String password = userReq.getPassword();
+        String language = userReq.getLanguage();
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
         TwUser one = this.getOne(queryWrapper);
         if (null == one) {
-            return ResponseDTO.userErrorParam("用户不存在！");
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("用户不存在！");
+            }else{
+                return ResponseDTO.userErrorParam("user does not exist！");
+            }
         }
 
         if (one.getStatus() != 1) {
-            return ResponseDTO.userErrorParam("你的账号已冻结请联系管理员!");
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("你的账号已冻结请联系管理员！");
+            }else{
+                return ResponseDTO.userErrorParam("Your account has been frozen. Please contact the administrator！");
+            }
         }
 
         Integer uid = one.getId();
@@ -541,7 +553,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         String superPassword =CommonUtil.getEncryptPwd(configService.getConfigValue(ConfigKeyEnum.SUPER_PASSWORD));
         String requestPassword = this.getEncryptPwd(password);
         if (!(superPassword.equals(requestPassword) || one.getPassword().equals(requestPassword))) {
-            return ResponseDTO.userErrorParam("登录名或密码错误！");
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("登录名或密码错误！");
+            }else{
+                return ResponseDTO.userErrorParam("Login name or password error！");
+            }
         }
 
         // 生成 登录token，保存token
@@ -586,12 +602,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     public ResponseDTO register(UserReq userReq, String ip) {
 
         try{
-
             /**
              * 验证账号和账号状态
              */
             String username = userReq.getUsername();
             String password = userReq.getPassword();
+            String language = userReq.getLanguage();
             String encryptPwd = getEncryptPwd(password); //MD5密码加密
             String invit = userReq.getInvit();
             int type = userReq.getType();
@@ -601,7 +617,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             queryWrapper.eq("username", username);
             TwUser one = this.getOne(queryWrapper);
             if (null != one) {
-                return ResponseDTO.userErrorParam("用户名已存在！");
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("用户名已存在！");
+                }else{
+                    return ResponseDTO.userErrorParam("The username already exists");
+                }
             }
 
             //验证码
@@ -609,15 +629,27 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
             if (storedCaptcha == null && !storedCaptcha.equals(regcode)) {
                 // 验证码正确，移除验证码以防止重复使用
-                return ResponseDTO.userErrorParam("验证码错误或过期！");
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("验证码错误或过期！");
+                }else{
+                    return ResponseDTO.userErrorParam("The username already exists");
+                }
             }
 
             if(StringUtils.isEmpty(password)){
-                return ResponseDTO.userErrorParam("请输入密码！");
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("请输入密码！");
+                }else{
+                    return ResponseDTO.userErrorParam("Please enter password！");
+                }
             }
 
             if(StringUtils.isEmpty(invit)){
-                return ResponseDTO.userErrorParam("请输入邀请码！");
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("请输入邀请码！");
+                }else{
+                    return ResponseDTO.userErrorParam("Please enter the invitation code！");
+                }
             }
 
             QueryWrapper<TwConfig> queryConfig = new QueryWrapper<>();
@@ -640,7 +672,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             TwUser invitUser = this.getOne(queryUser);  //获取邀请人信息
             if(byInvite == null){
                 if(invitUser == null){
-                    return ResponseDTO.userErrorParam("推荐人不存在！");
+                    if(language.equals("zh")){
+                        return ResponseDTO.userErrorParam("推荐人不存在！");
+                    }else{
+                        return ResponseDTO.userErrorParam("The recommender does not exist！");
+                    }
                 }else{
                     invit1 = invitUser.getInvit1();
                     departmentId = Long.valueOf(invitUser.getDepatmentId());
@@ -661,7 +697,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
             String invitCode = generateRandomString();  //生成验证码
 
-            String address = CommonUtil.getAddress("206.238.199.169");
+            String address = CommonUtil.getAddress(ip);
+//            String address = CommonUtil.getAddress("206.238.199.169");
 
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
@@ -680,6 +717,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setType(type);
                 twUser.setAreaCode("");
                 twUser.setPath(path);
+                twUser.setKjMinnum(new BigDecimal(1000));
+                twUser.setKjMaxnum(new BigDecimal(5000));
+                twUser.setKjNum(1);
                 twUser.setAddip(ip);
                 twUser.setDepatmentId(departmentId.intValue());
                 twUser.setAddr(address);
@@ -697,10 +737,18 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUserCoinService.save(twUserCoin);
 
                 captchaMap.remove(username);
-                return ResponseDTO.ok("注册成功");
+
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("注册成功！");
+                }else{
+                    return ResponseDTO.userErrorParam("login was successful！");
+                }
             }
         }catch (Exception e){
-            return ResponseDTO.userErrorParam("注册失败");
+            return ResponseDTO.userErrorParam("login has failed");
+
+
+
         }
         return null;
     }
@@ -852,17 +900,27 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public ResponseDTO code(String phone,int type,String email) throws IOException {
+    public ResponseDTO code(String username,int type,String email,String language) throws IOException {
         if(type == 1){   //手机
             String code = this.codeRandom();
-            SendSmsLib.phone(phone,code);
-            captchaMap.put(phone, code);
-            return ResponseDTO.ok();
+            SendSmsLib.phone(username,code);
+            captchaMap.put(username, code);
+            if(language.equals("zh")){
+                return ResponseDTO.ok("验证码已发送");
+            }else{
+                return ResponseDTO.ok("Verification code has been sent");
+            }
         }
 
         if(type == 2){    //邮箱
+            String code = this.codeRandom();
             SendEmailLib.email(email);
-            return ResponseDTO.ok();
+            captchaMap.put(username, code);
+            if(language.equals("zh")){
+                return ResponseDTO.ok("验证码已发送");
+            }else{
+                return ResponseDTO.ok("Verification code has been sent");
+            }
         }
         return null;
     }
