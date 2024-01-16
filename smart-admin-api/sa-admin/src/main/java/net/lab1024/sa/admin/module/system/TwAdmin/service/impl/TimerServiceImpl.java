@@ -232,10 +232,11 @@ public class TimerServiceImpl {
                 TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
 
                 Integer uid = twKjorder.getUid();
+                BigDecimal buynum1 = twKjorder.getBuynum();
                 BigDecimal buynum = new BigDecimal(0);
                 QueryWrapper<TwKjprofit> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper.select("IFNULL(SUM(num), 0) as num")
-                        .eq("kid", 1)
+                        .eq("kid", twKjorder.getKid())
                         .eq("uid", twKjorder.getUid());
                 List<Map<String, Object>> result = twKjprofitDao.selectMaps(queryWrapper1);
                 if (result.isEmpty()) {
@@ -253,9 +254,9 @@ public class TimerServiceImpl {
                     // 处理其他可能的类型
                     buynum = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
                 }
-
+                BigDecimal add = buynum.add(buynum1);
                 //增加资产
-                twUserCoinService.incre(uid,buynum,twUserCoin.getUsdt());
+                twUserCoinService.incre(uid,add,twUserCoin.getUsdt());
 
                 //写资金日志
                 TwBill twBill = new TwBill();
