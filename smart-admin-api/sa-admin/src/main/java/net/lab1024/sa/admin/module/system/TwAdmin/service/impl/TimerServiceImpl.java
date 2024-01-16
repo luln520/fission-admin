@@ -235,7 +235,7 @@ public class TimerServiceImpl {
                 BigDecimal buynum1 = twKjorder.getBuynum();
                 BigDecimal buynum = new BigDecimal(0);
                 QueryWrapper<TwKjprofit> queryWrapper1 = new QueryWrapper<>();
-                queryWrapper.select("IFNULL(SUM(num), 0) as num")
+                queryWrapper1.select("IFNULL(SUM(num), 0) as num")
                         .eq("kid", twKjorder.getKid())
                         .eq("uid", twKjorder.getUid());
                 List<Map<String, Object>> result = twKjprofitDao.selectMaps(queryWrapper1);
