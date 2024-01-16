@@ -27,7 +27,7 @@ public class TwArea implements Serializable {
 
     private String nameAbbr;
 
-    private String internationalAreaCode;
+    private int internationalAreaCode;
 
 
 

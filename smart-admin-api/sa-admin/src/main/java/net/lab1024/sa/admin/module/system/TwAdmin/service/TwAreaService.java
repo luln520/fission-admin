@@ -5,6 +5,8 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwArea;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+
 /**
  * (TwArea)表服务接口
  *
@@ -14,5 +16,5 @@ import org.springframework.data.domain.PageRequest;
 public interface TwAreaService extends IService<TwArea> {
 
 
-
+   List<TwArea> lists();
 }
