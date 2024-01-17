@@ -344,9 +344,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twBill.setRemark("购买"+ ccoinname + "秒合约");
             twBillService.save(twBill);
         if(language.equals("zh")){
-            return ResponseDTO.userErrorParam("建仓成功！");
+            return ResponseDTO.ok("建仓成功！");
         }else{
-            return ResponseDTO.userErrorParam("Position opening successful！");
+            return ResponseDTO.ok("Position opening successful！");
         }
     }
 }

@@ -233,9 +233,9 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twBillService.save(twBill);
 
         if(language.equals("zh")){
-            return ResponseDTO.userErrorParam("购买成功！");
+            return ResponseDTO.ok("购买成功！");
         }else{
-            return ResponseDTO.userErrorParam("Purchase successful！");
+            return ResponseDTO.ok("Purchase successful！");
         }
     }
 
