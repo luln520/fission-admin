@@ -235,7 +235,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
-    public ResponseDTO creatorder(int uid, int ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl) {
+    public ResponseDTO creatorder(int uid, int ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language) {
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", uid); // 添加查询条件
             TwUser twUser = twUserService.getOne(queryWrapper);
@@ -261,11 +261,19 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             TwHysetting twHysetting = twHysettingService.getOne(queryWrapper2);
 
             if(twUser.getRzstatus() != 2){
-                return ResponseDTO.userErrorParam("请先完成实名认证");
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("请先完成实名认证！");
+                }else{
+                    return ResponseDTO.userErrorParam("Please complete real-name authentication first！");
+                }
             }
 
             if(twUser.getBuyOn() == 2){
-                return ResponseDTO.userErrorParam("您的账户已被禁止交易，请联系客服");
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("您的账户已被禁止交易，请联系客服！");
+                }else{
+                    return ResponseDTO.userErrorParam("Your account has been banned from trading, please contact customer service！");
+                }
             }
 
 //            if(ctzed.compareTo(twHysetting.getHyMin()) < 0){
@@ -277,7 +285,11 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             BigDecimal divide = ctzed.multiply(hySxf).divide(new BigDecimal(100), mathContext);
             BigDecimal tmoney = ctzed.add(divide);
             if(twUserCoin.getUsdt().compareTo(tmoney) < 0){
-               return ResponseDTO.userErrorParam("余额不足");
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("余额不足！");
+                }else{
+                    return ResponseDTO.userErrorParam("Insufficient balance！");
+                }
             }
 
             String symbol = ccoinname.toLowerCase().replace("/", "");
@@ -331,7 +343,10 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twBill.setSt(2);
             twBill.setRemark("购买"+ ccoinname + "秒合约");
             twBillService.save(twBill);
-
-            return ResponseDTO.ok("建仓成功");
+        if(language.equals("zh")){
+            return ResponseDTO.userErrorParam("建仓成功！");
+        }else{
+            return ResponseDTO.userErrorParam("Position opening successful！");
+        }
     }
 }

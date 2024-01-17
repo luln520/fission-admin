@@ -36,7 +36,7 @@ public interface TwKuangjiService extends IService<TwKuangji> {
     boolean close(int  id);
 
     boolean delete(int  id);
-    ResponseDTO buyKuangji(int uid, int kid, BigDecimal buynum);
+    ResponseDTO buyKuangji(int uid, int kid, BigDecimal buynum,String language);
 
     TwPCKjprofitVo kjprofitSum(int uid);
 

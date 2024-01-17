@@ -469,8 +469,9 @@ public class PcContractController {
                                   @RequestParam BigDecimal ctzed,
                                   @RequestParam String ccoinname,
                                   @RequestParam int ctzfx,
-                                  @RequestParam BigDecimal cykbl){
-        return twHyorderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl);
+                                  @RequestParam BigDecimal cykbl,
+                                  @RequestParam String language){
+        return twHyorderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl,language);
     }
 
 }

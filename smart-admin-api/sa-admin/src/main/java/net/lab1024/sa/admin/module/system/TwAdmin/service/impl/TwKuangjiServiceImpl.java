@@ -150,20 +150,28 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
     }
 
     @Override
-    public ResponseDTO buyKuangji(int uid, int kid,BigDecimal buynum) {
+    public ResponseDTO buyKuangji(int uid, int kid,BigDecimal buynum,String language) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("id",uid);
         TwUser user = twUserService.getOne(queryWrapper);
         Integer rzstatus = user.getRzstatus();
         if(rzstatus != 2){
-            return ResponseDTO.userErrorParam("请先完成实名认证");
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("请先完成实名认证！");
+            }else{
+                return ResponseDTO.userErrorParam("Please complete real-name authentication first！");
+            }
         }
 
         QueryWrapper queryKuaji = new QueryWrapper();
         queryKuaji.eq("id",kid);
         TwKuangji kuangji = this.getOne(queryKuaji);
          if(kuangji.getStatus() != 1){
-             return ResponseDTO.userErrorParam("矿机暂停出售");
+             if(language.equals("zh")){
+                 return ResponseDTO.userErrorParam("矿机暂停出售！");
+             }else{
+                 return ResponseDTO.userErrorParam("Mining machine sales suspended！");
+             }
          }
 
 
@@ -173,7 +181,11 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
         BigDecimal usdt = twUserCoin.getUsdt();  //默认取usdt
         if(usdt.compareTo(buynum) < 0 ){
-            return ResponseDTO.userErrorParam("账户余额不足");
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("账户余额不足！");
+            }else{
+                return ResponseDTO.userErrorParam("Insufficient account balance！");
+            }
         }
 
         //建仓矿机订单数据
@@ -220,7 +232,11 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twBill.setRemark("购买矿机");
         twBillService.save(twBill);
 
-        return ResponseDTO.okMsg("购买成功");
+        if(language.equals("zh")){
+            return ResponseDTO.userErrorParam("购买成功！");
+        }else{
+            return ResponseDTO.userErrorParam("Purchase successful！");
+        }
     }
 
     @Override
