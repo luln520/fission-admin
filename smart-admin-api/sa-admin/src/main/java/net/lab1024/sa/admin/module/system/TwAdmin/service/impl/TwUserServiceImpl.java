@@ -972,10 +972,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public ResponseDTO code(String username,int type,String language) throws IOException {
+    public ResponseDTO code(String username,String area,int type,String language) throws IOException {
         if(type == 1){   //手机
             String code = this.codeRandom();
-            SendSmsLib.phone(username,code);
+            String phone = area + username;
+            SendSmsLib.phone(phone,code);
             captchaMap.put(username, code);
             if(language.equals("zh")){
                 return ResponseDTO.ok("验证码已发送");
