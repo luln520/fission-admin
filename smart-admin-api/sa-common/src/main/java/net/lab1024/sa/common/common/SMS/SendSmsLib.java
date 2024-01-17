@@ -8,7 +8,15 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import lombok.var;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.*;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -57,42 +65,128 @@ public class SendSmsLib {
 //
 //    }
 
-    public static void phone(String phone,String code){
-            final String baseUrl = "https://api.itniotech.com/sms";
-            final String apiKey = "83kYOpti6Sh9l5u8q1ncuDoD6M2dhsOO";
-            final String apiPwd = "CalQJycyXBDZXA5P4wmO9kD8pSC5F9Oz";
-            final String appId = "3GRpJ47I";
+    public static void phone(String phone,String code) throws IOException {
+//            final String baseUrl = "https://api.itniotech.com/sms";
+//            final String apiKey = "83kYOpti6Sh9l5u8q1ncuDoD6M2dhsOO";
+//            final String apiPwd = "CalQJycyXBDZXA5P4wmO9kD8pSC5F9Oz";
+//            final String appId = "3GRpJ47I";
+//
+//            final String content = "Your verification code is: "+code+" . Please pay attention to account security and do not disclose your account password, verification code and other security information to anyone. Please be vigilant to avoid asset losses";
+//            final String senderId = "";
+//
+//            final String url = baseUrl.concat("/sendSms");
+//
+//            HttpRequest request = HttpRequest.post(url);
+//
+//            // currentTime
+//            final String datetime = String.valueOf(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond());
+//            // generate md5 key
+//            final String sign = SecureUtil.md5(apiKey.concat(apiPwd).concat(datetime));
+//            request.header(Header.CONNECTION, "Keep-Alive")
+//                    .header(Header.CONTENT_TYPE, "application/json;charset=UTF-8")
+//                    .header("Sign", sign)
+//                    .header("Timestamp", datetime)
+//                    .header("Api-Key", apiKey);
+//
+//
+//            final String params = JSONUtil.createObj()
+//                    .set("appId", appId)
+//                    .set("numbers", phone)
+//                    .set("content", content)
+//                    .set("senderId", senderId)
+//                    .toString();
+//
+//            HttpResponse response = request.body(params).execute();
+//            if (response.isOk()) {
+//                String result = response.body();
+//                System.out.println(result);
+//            }
 
-            final String content = "Your verification code is: "+code+" . Please pay attention to account security and do not disclose your account password, verification code and other security information to anyone. Please be vigilant to avoid asset losses";
-            final String senderId = "";
 
-            final String url = baseUrl.concat("/sendSms");
+        final String baseUrl = "https://api.itniotech.com/sms";
+        final String apiKey = "83kYOpti6Sh9l5u8q1ncuDoD6M2dhsOO";
+        final String apiPwd = "CalQJycyXBDZXA5P4wmO9kD8pSC5F9Oz";
+        final String appId = "3GRpJ47I";
 
-            HttpRequest request = HttpRequest.post(url);
+        final String content = "Your verification code is: "+code+" . Please pay attention to account security and do not disclose your account password, verification code and other security information to anyone. Please be vigilant to avoid asset losses";
+        final String url = baseUrl.concat("/sendSms");
 
-            // currentTime
-            final String datetime = String.valueOf(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond());
-            // generate md5 key
-            final String sign = SecureUtil.md5(apiKey.concat(apiPwd).concat(datetime));
-            request.header(Header.CONNECTION, "Keep-Alive")
-                    .setHttpProxy("127.0.0.1",7890)
-                    .header(Header.CONTENT_TYPE, "application/json;charset=UTF-8")
-                    .header("Sign", sign)
-                    .header("Timestamp", datetime)
-                    .header("Api-Key", apiKey);
+        // currentTime
+        final String datetime = String.valueOf(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond());
+        // generate md5 key
+        final String sign = SecureUtil.md5(apiKey.concat(apiPwd).concat(datetime));
 
+        final String params = JSONUtil.createObj()
+                .set("appId", appId)
+                .set("numbers", phone)
+                .set("content", content)
+                .toString();
 
-            final String params = JSONUtil.createObj()
-                    .set("appId", appId)
-                    .set("numbers", phone)
-                    .set("content", content)
-                    .set("senderId", senderId)
-                    .toString();
+        trustAllHosts();
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("POST");
+        connection.setUseCaches(false);
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setRequestProperty("Connection", "Keep-Alive");
+        connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+        connection.setRequestProperty("Sign", sign);
+        connection.setRequestProperty("Timestamp", datetime);
+        connection.setRequestProperty("Api-Key", apiKey);
 
-            HttpResponse response = request.body(params).execute();
-            if (response.isOk()) {
-                String result = response.body();
-                System.out.println(result);
+        connection.connect();
+        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+        writer.write(params);
+        writer.flush();
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode >= 200 && responseCode < 300) {
+            String result = getResponseBody(connection);
+            System.out.println(result);
+        }
+        connection.disconnect();
+    }
+
+    public static String getResponseBody(HttpsURLConnection connection) throws IOException {
+        int responseCode = connection.getResponseCode();
+        InputStream inputStream;
+        if (responseCode >= 200 && responseCode < 300) {
+            inputStream = connection.getInputStream();
+        } else {
+            inputStream = connection.getErrorStream();
+        }
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        StringBuilder response = new StringBuilder();
+
+        while ((line = bufferedReader.readLine()) != null) {
+            response.append(line);
+        }
+
+        bufferedReader.close();
+
+        return response.toString();
+    }
+
+    public static void trustAllHosts() {
+        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return new java.security.cert.X509Certificate[]{};
             }
+
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            }
+
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            }
+        }};
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
