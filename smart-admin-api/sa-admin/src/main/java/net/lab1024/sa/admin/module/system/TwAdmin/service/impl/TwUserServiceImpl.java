@@ -677,12 +677,21 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             //验证码
             String storedCaptcha = captchaMap.get(username);
 
-            if (storedCaptcha == null && !storedCaptcha.equals(regcode)) {
+            if (storedCaptcha == null) {
+                // 验证码正确，移除验证码以防止重复使用
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("验证码错误！");
+                }else{
+                    return ResponseDTO.userErrorParam("Verification code is wrong");
+                }
+            }
+
+            if (!storedCaptcha.equals(regcode)) {
                 // 验证码正确，移除验证码以防止重复使用
                 if(language.equals("zh")){
                     return ResponseDTO.userErrorParam("验证码错误或过期！");
                 }else{
-                    return ResponseDTO.userErrorParam("The username already exists");
+                    return ResponseDTO.userErrorParam("Verification code is wrong or expired");
                 }
             }
 
