@@ -802,9 +802,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }
 
                 if(language.equals("zh")){
-                    return ResponseDTO.userErrorParam("注册成功！");
+                    return ResponseDTO.ok("注册成功！");
                 }else{
-                    return ResponseDTO.userErrorParam("login was successful！");
+                    return ResponseDTO.ok("login was successful！");
                 }
             }
         }catch (Exception e){
