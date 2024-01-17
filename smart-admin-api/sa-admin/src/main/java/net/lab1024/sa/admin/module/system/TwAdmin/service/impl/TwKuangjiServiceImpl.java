@@ -71,8 +71,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
     public IPage<TwKuangji> pcList(PageParam pageParam, HttpServletRequest request) {
 
         //需要做token校验, 消息头的token优先于请求query参数的token
-        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
-        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        String token = pageParam.getToken();
+        Long uidToken = tokenService.getUIDToken(token);
 
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("id",uidToken);
