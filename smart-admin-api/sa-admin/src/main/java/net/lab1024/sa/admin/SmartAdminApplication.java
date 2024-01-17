@@ -28,7 +28,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class SmartAdminApplication {
 
     public static void main(String[] args) {
-        System.setProperty("https.protocols","TLSv1.2，TLSv1.3");
         SpringApplication.run(SmartAdminApplication.class, args);
     }
 }
