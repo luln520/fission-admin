@@ -17,6 +17,7 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
@@ -51,8 +52,8 @@ public class PcKuangJiController {
     @ResponseBody
     @ApiOperation(value = "获取矿机列表")
     @NoNeedLogin
-    public ResponseDTO<IPage<TwKuangji>> pcList(@Valid @RequestBody PageParam pageParam) {
-        return ResponseDTO.ok(twKuangjiService.pcList(pageParam));
+    public ResponseDTO<IPage<TwKuangji>> pcList(@Valid @RequestBody PageParam pageParam, HttpServletRequest request) {
+        return ResponseDTO.ok(twKuangjiService.pcList(pageParam,request));
     }
 
 

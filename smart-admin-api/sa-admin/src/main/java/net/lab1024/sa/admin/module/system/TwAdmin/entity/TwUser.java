@@ -237,4 +237,10 @@ public class TwUser implements Serializable {
     @ApiModelProperty("用户余额")
     private BigDecimal money;
 
+    @TableField(exist = false)
+    @ApiModelProperty("用户矿机单控")
+    private TwUserKuangji twUserKuangji;
+
+
+
 }

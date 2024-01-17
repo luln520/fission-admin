@@ -35,6 +35,7 @@ import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -100,6 +101,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private TwUserKuangjiService twUserKuangjiService;
+
+    @Autowired
+    @Lazy
+    private TwKuangjiService twKuangjiService;
+
     @Override
     public Integer countAllUsers() {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -116,8 +125,40 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public IPage<TwUser> listpage(TwUserVo twUserVo) {
+            List<TwUser> listUser = new ArrayList<>();
             Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
-            objectPage.setRecords(baseMapper.listpage(objectPage, twUserVo));
+            List<TwUser> listpage = baseMapper.listpage(objectPage, twUserVo);
+            for(TwUser twUser:listpage){
+                List<TwUserKuangji> kjList = new ArrayList<>();
+                List<TwKuangji> list = twKuangjiService.list();
+                for(TwKuangji twKuangji:list){
+                    Integer userid = twUser.getId();
+                    Integer kjid = twKuangji.getId();
+                    QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("kj_id", kjid);
+                    queryWrapper.eq("user_id", userid);
+                    TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper);
+                    if(one == null){
+                        TwUserKuangji twUserKuangji = new TwUserKuangji();
+                        twUserKuangji.setMin(new BigDecimal(1000));
+                        twUserKuangji.setMax(new BigDecimal(5000));
+                        twUserKuangji.setNum(1);
+                        twUserKuangji.setKjId(twKuangji.getId());
+                        twUserKuangji.setKjName(twKuangji.getTitle());
+                        twUserKuangji.setUserId(userid);
+                        twUserKuangji.setCreateTime(new Date());
+                        twUserKuangjiService.save(twUserKuangji);
+
+                        Integer id = twUserKuangji.getId();
+                        twUserKuangji.setId(id);
+                        kjList.add(twUserKuangji);
+                    }else{
+                        kjList.add(one);
+                    }
+                }
+                listUser.add(twUser);
+            }
+            objectPage.setRecords(listUser);
             return objectPage;
     }
 
@@ -322,6 +363,19 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUserCoin.setUserid(uid);
            twUserCoin.setUsdt(new BigDecimal(0));
            twUserCoinService.save(twUserCoin);
+
+           List<TwKuangji> list = twKuangjiService.list();
+           for(TwKuangji twKuangji:list){
+               TwUserKuangji twUserKuangji = new TwUserKuangji();
+               twUserKuangji.setMin(new BigDecimal(1000));
+               twUserKuangji.setMax(new BigDecimal(5000));
+               twUserKuangji.setNum(1);
+               twUserKuangji.setKjId(twKuangji.getId());
+               twUserKuangji.setKjName(twKuangji.getTitle());
+               twUserKuangji.setUserId(uid);
+               twUserKuangji.setCreateTime(new Date());
+               twUserKuangjiService.save(twUserKuangji);
+           }
 
            return ResponseDTO.ok();
        }
@@ -697,8 +751,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
             String invitCode = generateRandomString();  //生成验证码
 
-            String address = CommonUtil.getAddress(ip);
-//            String address = CommonUtil.getAddress("206.238.199.169");
+//            String address = CommonUtil.getAddress(ip);
+            String address = CommonUtil.getAddress("206.238.199.169");
 
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
@@ -737,6 +791,19 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUserCoinService.save(twUserCoin);
 
                 captchaMap.remove(username);
+
+                List<TwKuangji> list = twKuangjiService.list();
+                for(TwKuangji twKuangji:list){
+                    TwUserKuangji twUserKuangji = new TwUserKuangji();
+                    twUserKuangji.setMin(new BigDecimal(1000));
+                    twUserKuangji.setMax(new BigDecimal(5000));
+                    twUserKuangji.setNum(1);
+                    twUserKuangji.setKjId(twKuangji.getId());
+                    twUserKuangji.setKjName(twKuangji.getTitle());
+                    twUserKuangji.setUserId(uid);
+                    twUserKuangji.setCreateTime(new Date());
+                    twUserKuangjiService.save(twUserKuangji);
+                }
 
                 if(language.equals("zh")){
                     return ResponseDTO.userErrorParam("注册成功！");

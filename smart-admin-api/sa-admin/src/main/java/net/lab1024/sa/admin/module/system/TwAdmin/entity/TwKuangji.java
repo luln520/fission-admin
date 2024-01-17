@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -80,17 +81,25 @@ public class TwKuangji implements Serializable {
     @ApiModelProperty("状态1正常2禁用3过期")
     private Integer status;
 
-    /**
-    * 添加时间
-    */
     @ApiModelProperty("添加时间")
     private Date addtime=new Date();
-
 
     @ApiModelProperty("团队路径")
     private String path;
 
     @ApiModelProperty("部门id")
     private Integer department;
+
+    @TableField(exist = false)
+    @ApiModelProperty("最低投资价格")
+    private BigDecimal min;
+
+    @TableField(exist = false)
+    @ApiModelProperty("最高投资价格")
+    private BigDecimal max;
+
+    @TableField(exist = false)
+    @ApiModelProperty("购买次数")
+    private int num;
 
 }

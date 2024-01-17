@@ -10,23 +10,23 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKuangjiDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Res.TwPCKjprofitVo;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.DateUtil;
+import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 矿机列表(TwKuangji)表服务实现类
@@ -39,9 +39,6 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
     @Autowired
     private TwKjorderDao twKjorderDao;
-
-    @Autowired
-    private TwKjprofitDao twKjprofitDao;
 
     @Autowired
     private TwUserService twUserService;
@@ -57,6 +54,12 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
     @Autowired
     private TwKjprofitService twKjprofitService;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private TwUserKuangjiService twUserKuangjiService;
     @Override
     public IPage<TwKuangji> listpage(PageParam pageParam) {
         Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
@@ -65,9 +68,49 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
     }
 
     @Override
-    public IPage<TwKuangji> pcList(PageParam pageParam) {
+    public IPage<TwKuangji> pcList(PageParam pageParam, HttpServletRequest request) {
+
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("id",uidToken);
+        TwUser user = twUserService.getOne(queryWrapper);
+
+        List<TwKuangji> list = new ArrayList<>();
         Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-        objectPage.setRecords(baseMapper.pcList(objectPage, pageParam));
+        List<TwKuangji> twKuangjis = baseMapper.pcList(objectPage, pageParam);
+        for(TwKuangji twKuangji:twKuangjis){
+            Integer userid = user.getId();
+            Integer kjid = twKuangji.getId();
+            QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("kj_id", kjid);
+            queryWrapper1.eq("user_id", userid);
+            TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper1);
+            if(one == null){
+                TwUserKuangji twUserKuangji = new TwUserKuangji();
+                twUserKuangji.setMin(new BigDecimal(1000));
+                twUserKuangji.setMax(new BigDecimal(5000));
+                twUserKuangji.setNum(1);
+                twUserKuangji.setKjId(twKuangji.getId());
+                twUserKuangji.setKjName(twKuangji.getTitle());
+                twUserKuangji.setUserId(userid);
+                twUserKuangji.setCreateTime(new Date());
+                twUserKuangjiService.save(twUserKuangji);
+
+                twKuangji.setMin(new BigDecimal(1000));
+                twKuangji.setMax(new BigDecimal(5000));
+                twKuangji.setNum(1);
+                list.add(twKuangji);
+            }else{
+                twKuangji.setMin(one.getMin());
+                twKuangji.setMax(one.getMax());
+                twKuangji.setNum(one.getNum());
+                list.add(twKuangji);
+            }
+        }
+        objectPage.setRecords(list);
         return objectPage;
     }
 
