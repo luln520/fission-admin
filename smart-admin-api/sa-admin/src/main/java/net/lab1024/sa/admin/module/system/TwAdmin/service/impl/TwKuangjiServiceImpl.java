@@ -174,6 +174,39 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
              }
          }
 
+        QueryWrapper<TwUserKuangji> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("user_id", user.getId()); // 添加查询条件
+        queryWrapper3.eq("kj_id", kuangji.getId()); // 添加查询条件
+        TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper3);
+        if(buynum.compareTo(one.getMin()) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
+            }else{
+                return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
+            }
+        }
+
+        if(one.getMax().compareTo(buynum) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("投资金额不能高于最高投资额度！");
+            }else{
+                return ResponseDTO.userErrorParam("The investment amount cannot be higher than the maximum investment amount！");
+            }
+        }
+
+        QueryWrapper queryKjorder = new QueryWrapper();
+        queryKjorder.eq("uid",uid);
+        queryKjorder.eq("kid",kuangji.getId());
+        queryKjorder.eq("status",1);
+        int count = twKjorderDao.selectCount(queryKjorder).intValue();
+        if(one.getNum().compareTo(count) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("超出购买限制次数！");
+            }else{
+                return ResponseDTO.userErrorParam("Purchase limit exceeded！");
+            }
+        }
+
 
         QueryWrapper queryUserCoin = new QueryWrapper();
         queryUserCoin.eq("userid",uid);
