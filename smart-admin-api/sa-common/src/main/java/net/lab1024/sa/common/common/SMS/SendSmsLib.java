@@ -75,7 +75,6 @@ public class SendSmsLib {
             // generate md5 key
             final String sign = SecureUtil.md5(apiKey.concat(apiPwd).concat(datetime));
             request.header(Header.CONNECTION, "Keep-Alive")
-                    .setHttpProxy("127.0.0.1",7890)
                     .header(Header.CONTENT_TYPE, "application/json;charset=UTF-8")
                     .header("Sign", sign)
                     .header("Timestamp", datetime)
