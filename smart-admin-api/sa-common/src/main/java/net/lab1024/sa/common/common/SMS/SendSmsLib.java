@@ -6,14 +6,6 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
-import com.infobip.ApiClient;
-import com.infobip.ApiException;
-import com.infobip.ApiKey;
-import com.infobip.BaseUrl;
-import com.infobip.api.SmsApi;
-import com.infobip.model.SmsAdvancedTextualRequest;
-import com.infobip.model.SmsDestination;
-import com.infobip.model.SmsTextualMessage;
 import lombok.var;
 
 import java.net.URLEncoder;
@@ -83,6 +75,7 @@ public class SendSmsLib {
             // generate md5 key
             final String sign = SecureUtil.md5(apiKey.concat(apiPwd).concat(datetime));
             request.header(Header.CONNECTION, "Keep-Alive")
+                    .setHttpProxy("127.0.0.1",7890)
                     .header(Header.CONTENT_TYPE, "application/json;charset=UTF-8")
                     .header("Sign", sign)
                     .header("Timestamp", datetime)
