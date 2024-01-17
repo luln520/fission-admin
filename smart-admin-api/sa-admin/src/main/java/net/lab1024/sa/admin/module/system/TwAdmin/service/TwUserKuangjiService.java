@@ -10,4 +10,5 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserKuangji;
 */
 public interface TwUserKuangjiService extends IService<TwUserKuangji> {
 
+    boolean updatekj(TwUserKuangji twUserKuangji);
 }

@@ -5,8 +5,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserKuangji;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserKuangjiService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -31,6 +33,9 @@ public class TwUserController {
 
     @Autowired
     private TwHysettingService twHysettingService;
+
+    @Autowired
+    private TwUserKuangjiService twUserKuangjiService;
     /**
      * 获取所有用户  表User 全部查询 order by id desc
      * 所有表：User(用户) user_log（用户登陆日志） coin （用户财产）
@@ -265,6 +270,14 @@ public class TwUserController {
     @NoNeedLogin
     public ResponseDTO authProcess(@RequestParam int uid, @RequestParam int type, HttpServletRequest request) {
         return ResponseDTO.ok(twUserService.authProcess(uid,type,request));
+    }
+
+
+    @PostMapping("/updatekj")
+    @ApiOperation(value = "用户矿机单控")
+    @NoNeedLogin
+    public ResponseDTO updatekj(@Valid @RequestBody TwUserKuangji twUserKuangji) {
+        return ResponseDTO.ok(twUserKuangjiService.updatekj(twUserKuangji));
     }
 
 }
