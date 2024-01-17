@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -239,7 +240,7 @@ public class TwUser implements Serializable {
 
     @TableField(exist = false)
     @ApiModelProperty("用户矿机单控")
-    private TwUserKuangji twUserKuangji;
+    private List<TwUserKuangji> twUserKuangji;
 
 
 
