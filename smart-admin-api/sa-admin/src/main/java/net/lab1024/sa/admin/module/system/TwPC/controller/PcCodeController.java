@@ -31,8 +31,8 @@ public class PcCodeController {
     @GetMapping("/code")
     @ApiOperation(value = "手机/邮箱验证码")
     @NoNeedLogin
-    public ResponseDTO code(@RequestParam String phone,@RequestParam int type,@RequestParam String email,@RequestParam String language) throws IOException {
-        return twUserService.code(phone,type,email,language);
+    public ResponseDTO code(@RequestParam String username,@RequestParam int type,@RequestParam String language) throws IOException {
+        return twUserService.code(username,type,language);
     }
 
     @GetMapping("/codeResp")
