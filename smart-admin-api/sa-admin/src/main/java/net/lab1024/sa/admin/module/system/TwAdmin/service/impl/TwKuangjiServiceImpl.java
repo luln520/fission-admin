@@ -72,46 +72,59 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
         //需要做token校验, 消息头的token优先于请求query参数的token
         String token = pageParam.getToken();
-        Long uidToken = tokenService.getUIDToken(token);
-
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("id",uidToken);
-        TwUser user = twUserService.getOne(queryWrapper);
-
         List<TwKuangji> list = new ArrayList<>();
-        Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-        List<TwKuangji> twKuangjis = baseMapper.pcList(objectPage, pageParam);
-        for(TwKuangji twKuangji:twKuangjis){
-            Integer userid = user.getId();
-            Integer kjid = twKuangji.getId();
-            QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("kj_id", kjid);
-            queryWrapper1.eq("user_id", userid);
-            TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper1);
-            if(one == null){
-                TwUserKuangji twUserKuangji = new TwUserKuangji();
-                twUserKuangji.setMin(new BigDecimal(1000));
-                twUserKuangji.setMax(new BigDecimal(5000));
-                twUserKuangji.setNum(1);
-                twUserKuangji.setKjId(twKuangji.getId());
-                twUserKuangji.setKjName(twKuangji.getTitle());
-                twUserKuangji.setUserId(userid);
-                twUserKuangji.setCreateTime(new Date());
-                twUserKuangjiService.save(twUserKuangji);
+        if(token != null){
+            Long uidToken = tokenService.getUIDToken(token);
+            QueryWrapper queryWrapper = new QueryWrapper();
+            queryWrapper.eq("id",uidToken);
+            TwUser user = twUserService.getOne(queryWrapper);
 
+            Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+            List<TwKuangji> twKuangjis = baseMapper.pcList(objectPage, pageParam);
+            for(TwKuangji twKuangji:twKuangjis){
+                Integer userid = user.getId();
+                Integer kjid = twKuangji.getId();
+                QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper1.eq("kj_id", kjid);
+                queryWrapper1.eq("user_id", userid);
+                TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper1);
+                if(one == null){
+                    TwUserKuangji twUserKuangji = new TwUserKuangji();
+                    twUserKuangji.setMin(new BigDecimal(1000));
+                    twUserKuangji.setMax(new BigDecimal(5000));
+                    twUserKuangji.setNum(1);
+                    twUserKuangji.setKjId(twKuangji.getId());
+                    twUserKuangji.setKjName(twKuangji.getTitle());
+                    twUserKuangji.setUserId(userid);
+                    twUserKuangji.setCreateTime(new Date());
+                    twUserKuangjiService.save(twUserKuangji);
+
+                    twKuangji.setMin(new BigDecimal(1000));
+                    twKuangji.setMax(new BigDecimal(5000));
+                    twKuangji.setNum(1);
+                    list.add(twKuangji);
+                }else{
+                    twKuangji.setMin(one.getMin());
+                    twKuangji.setMax(one.getMax());
+                    twKuangji.setNum(one.getNum());
+                    list.add(twKuangji);
+                }
+            }
+            objectPage.setRecords(list);
+            return objectPage;
+        }else{
+            Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+            List<TwKuangji> twKuangjis = baseMapper.pcList(objectPage, pageParam);
+            for(TwKuangji twKuangji:twKuangjis){
                 twKuangji.setMin(new BigDecimal(1000));
                 twKuangji.setMax(new BigDecimal(5000));
                 twKuangji.setNum(1);
                 list.add(twKuangji);
-            }else{
-                twKuangji.setMin(one.getMin());
-                twKuangji.setMax(one.getMax());
-                twKuangji.setNum(one.getNum());
-                list.add(twKuangji);
             }
+            objectPage.setRecords(list);
+            return objectPage;
         }
-        objectPage.setRecords(list);
-        return objectPage;
+
     }
 
     @Override
@@ -173,6 +186,39 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
                  return ResponseDTO.userErrorParam("Mining machine sales suspended！");
              }
          }
+
+        QueryWrapper<TwUserKuangji> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("user_id", user.getId()); // 添加查询条件
+        queryWrapper3.eq("kj_id", kuangji.getId()); // 添加查询条件
+        TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper3);
+        if(buynum.compareTo(one.getMin()) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
+            }else{
+                return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
+            }
+        }
+
+        if(one.getMax().compareTo(buynum) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("投资金额不能高于最高投资额度！");
+            }else{
+                return ResponseDTO.userErrorParam("The investment amount cannot be higher than the maximum investment amount！");
+            }
+        }
+
+        QueryWrapper queryKjorder = new QueryWrapper();
+        queryKjorder.eq("uid",uid);
+        queryKjorder.eq("kid",kuangji.getId());
+        queryKjorder.eq("status",1);
+        int count = twKjorderDao.selectCount(queryKjorder).intValue();
+        if(one.getNum().compareTo(count) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("超出购买限制次数！");
+            }else{
+                return ResponseDTO.userErrorParam("Purchase limit exceeded！");
+            }
+        }
 
 
         QueryWrapper queryUserCoin = new QueryWrapper();

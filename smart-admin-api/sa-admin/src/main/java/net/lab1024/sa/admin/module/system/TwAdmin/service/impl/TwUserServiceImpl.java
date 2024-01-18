@@ -677,12 +677,21 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             //验证码
             String storedCaptcha = captchaMap.get(username);
 
-            if (storedCaptcha == null && !storedCaptcha.equals(regcode)) {
+            if (storedCaptcha == null) {
+                // 验证码正确，移除验证码以防止重复使用
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("验证码错误！");
+                }else{
+                    return ResponseDTO.userErrorParam("Verification code is wrong");
+                }
+            }
+
+            if (!storedCaptcha.equals(regcode)) {
                 // 验证码正确，移除验证码以防止重复使用
                 if(language.equals("zh")){
                     return ResponseDTO.userErrorParam("验证码错误或过期！");
                 }else{
-                    return ResponseDTO.userErrorParam("The username already exists");
+                    return ResponseDTO.userErrorParam("Verification code is wrong or expired");
                 }
             }
 
@@ -963,10 +972,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public ResponseDTO code(String username,int type,String language) throws IOException {
+    public ResponseDTO code(String username,String area,int type,String language) throws IOException {
         if(type == 1){   //手机
             String code = this.codeRandom();
-            SendSmsLib.phone(username,code);
+            String phone = area + username;
+            SendSmsLib.phone(phone,code);
             captchaMap.put(username, code);
             if(language.equals("zh")){
                 return ResponseDTO.ok("验证码已发送");

@@ -65,6 +65,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private TwUserKuangjiService twUserKuangjiService;
+
     @Override
     public int countUnClosedOrders() {
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();

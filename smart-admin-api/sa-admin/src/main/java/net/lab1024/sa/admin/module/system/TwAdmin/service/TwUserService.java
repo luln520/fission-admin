@@ -62,7 +62,7 @@ public interface TwUserService extends IService<TwUser> {
 
     boolean authProcess(int uid,int type, HttpServletRequest request);
 
-    ResponseDTO code(String username,int type,String language) throws IOException;
+    ResponseDTO code(String username,String area,int type,String language) throws IOException;
 
     ResponseDTO codeResp() throws IOException;
 }
