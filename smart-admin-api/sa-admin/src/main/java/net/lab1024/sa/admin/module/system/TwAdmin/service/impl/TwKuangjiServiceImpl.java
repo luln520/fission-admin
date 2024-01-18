@@ -72,14 +72,13 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
         //需要做token校验, 消息头的token优先于请求query参数的token
         String token = pageParam.getToken();
-        Long uidToken = tokenService.getUIDToken(token);
-
-        if(uidToken != null){
+        List<TwKuangji> list = new ArrayList<>();
+        if(token != null){
+            Long uidToken = tokenService.getUIDToken(token);
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.eq("id",uidToken);
             TwUser user = twUserService.getOne(queryWrapper);
 
-            List<TwKuangji> list = new ArrayList<>();
             Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
             List<TwKuangji> twKuangjis = baseMapper.pcList(objectPage, pageParam);
             for(TwKuangji twKuangji:twKuangjis){
@@ -115,7 +114,14 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
             return objectPage;
         }else{
             Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-            objectPage.setRecords(baseMapper.pcList(objectPage, pageParam));
+            List<TwKuangji> twKuangjis = baseMapper.pcList(objectPage, pageParam);
+            for(TwKuangji twKuangji:twKuangjis){
+                twKuangji.setMin(new BigDecimal(1000));
+                twKuangji.setMax(new BigDecimal(5000));
+                twKuangji.setNum(1);
+                list.add(twKuangji);
+            }
+            objectPage.setRecords(list);
             return objectPage;
         }
 
