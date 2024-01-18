@@ -74,44 +74,51 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         String token = pageParam.getToken();
         Long uidToken = tokenService.getUIDToken(token);
 
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("id",uidToken);
-        TwUser user = twUserService.getOne(queryWrapper);
+        if(uidToken != null){
+            QueryWrapper queryWrapper = new QueryWrapper();
+            queryWrapper.eq("id",uidToken);
+            TwUser user = twUserService.getOne(queryWrapper);
 
-        List<TwKuangji> list = new ArrayList<>();
-        Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-        List<TwKuangji> twKuangjis = baseMapper.pcList(objectPage, pageParam);
-        for(TwKuangji twKuangji:twKuangjis){
-            Integer userid = user.getId();
-            Integer kjid = twKuangji.getId();
-            QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("kj_id", kjid);
-            queryWrapper1.eq("user_id", userid);
-            TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper1);
-            if(one == null){
-                TwUserKuangji twUserKuangji = new TwUserKuangji();
-                twUserKuangji.setMin(new BigDecimal(1000));
-                twUserKuangji.setMax(new BigDecimal(5000));
-                twUserKuangji.setNum(1);
-                twUserKuangji.setKjId(twKuangji.getId());
-                twUserKuangji.setKjName(twKuangji.getTitle());
-                twUserKuangji.setUserId(userid);
-                twUserKuangji.setCreateTime(new Date());
-                twUserKuangjiService.save(twUserKuangji);
+            List<TwKuangji> list = new ArrayList<>();
+            Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+            List<TwKuangji> twKuangjis = baseMapper.pcList(objectPage, pageParam);
+            for(TwKuangji twKuangji:twKuangjis){
+                Integer userid = user.getId();
+                Integer kjid = twKuangji.getId();
+                QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper1.eq("kj_id", kjid);
+                queryWrapper1.eq("user_id", userid);
+                TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper1);
+                if(one == null){
+                    TwUserKuangji twUserKuangji = new TwUserKuangji();
+                    twUserKuangji.setMin(new BigDecimal(1000));
+                    twUserKuangji.setMax(new BigDecimal(5000));
+                    twUserKuangji.setNum(1);
+                    twUserKuangji.setKjId(twKuangji.getId());
+                    twUserKuangji.setKjName(twKuangji.getTitle());
+                    twUserKuangji.setUserId(userid);
+                    twUserKuangji.setCreateTime(new Date());
+                    twUserKuangjiService.save(twUserKuangji);
 
-                twKuangji.setMin(new BigDecimal(1000));
-                twKuangji.setMax(new BigDecimal(5000));
-                twKuangji.setNum(1);
-                list.add(twKuangji);
-            }else{
-                twKuangji.setMin(one.getMin());
-                twKuangji.setMax(one.getMax());
-                twKuangji.setNum(one.getNum());
-                list.add(twKuangji);
+                    twKuangji.setMin(new BigDecimal(1000));
+                    twKuangji.setMax(new BigDecimal(5000));
+                    twKuangji.setNum(1);
+                    list.add(twKuangji);
+                }else{
+                    twKuangji.setMin(one.getMin());
+                    twKuangji.setMax(one.getMax());
+                    twKuangji.setNum(one.getNum());
+                    list.add(twKuangji);
+                }
             }
+            objectPage.setRecords(list);
+            return objectPage;
+        }else{
+            Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+            objectPage.setRecords(baseMapper.pcList(objectPage, pageParam));
+            return objectPage;
         }
-        objectPage.setRecords(list);
-        return objectPage;
+
     }
 
     @Override
