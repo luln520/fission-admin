@@ -78,7 +78,7 @@
                         </div>
                         <!--editor  -->
                         <div v-if="formItem.type == 'editor'">
-                            <QuillEditor :options="editorOption" v-model:content="dataModel[formItem.name]" contentType="text" style="height: 200px;" />
+                            <QuillEditor :options="editorOption" v-model:content="dataModel[formItem.name]" contentType="html" style="height: 200px;" />
                         </div>
                     </a-form-item>
                 </a-col>
