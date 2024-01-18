@@ -12,6 +12,7 @@ import net.lab1024.sa.admin.module.system.TwPC.controller.Req.TwNewsVo;
 import net.lab1024.sa.common.common.domain.PageParam;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +33,7 @@ public class TwNewsServiceImpl extends ServiceImpl<TwNewsMapper, TwNews>
 
     @Override
     public boolean addOrUpdate(TwNews twNews) {
+        twNews.setCreateTime(new Date());
         return this.saveOrUpdate(twNews);
     }
 
