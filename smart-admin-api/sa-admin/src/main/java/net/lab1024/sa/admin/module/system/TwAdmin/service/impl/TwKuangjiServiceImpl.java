@@ -128,10 +128,19 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
     }
 
     @Override
-    public TwKuangji detail(int id) {
+    public TwKuangji detail(int id,int uid) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("id",id);
-        return this.getOne(queryWrapper);
+        TwKuangji kuangji = this.getOne(queryWrapper);
+
+        QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("kj_id", id);
+        queryWrapper1.eq("user_id", uid);
+        TwUserKuangji userKuangji = twUserKuangjiService.getOne(queryWrapper1);
+        kuangji.setNum(userKuangji.getNum());
+        kuangji.setMax(userKuangji.getMax());
+        kuangji.setMin(userKuangji.getMin());
+        return kuangji;
     }
 
     @Override
