@@ -246,7 +246,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorder.setStatus(1);
         twKjorder.setBuynum(buynum);
         twKjorder.setCycle(kuangji.getCycle());
-        twKjorder.setSynum(kuangji.getCycle());
+        twKjorder.setSynum(0);
 //        twKjorder.setOuttype(kuangji.getOuttype());
         twKjorder.setOutcoin(kuangji.getOutcoin());
         MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
