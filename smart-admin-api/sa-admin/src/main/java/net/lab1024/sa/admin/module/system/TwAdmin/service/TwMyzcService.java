@@ -36,5 +36,5 @@ public interface TwMyzcService extends IService<TwMyzc> {
 
     ResponseDTO confirmCoin(int id);
 
-    ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num);
+    ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num,String language);
 }

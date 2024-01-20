@@ -181,7 +181,9 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twNotice.setUid(one.getUid());
             twNotice.setAccount(one.getUsername());
             twNotice.setTitle("充币审核");
+            twNotice.setTitleEn("Deposit review");
             twNotice.setContent("您的充币记录被系统驳回，请联系客服");
+            twNotice.setContentEn("Your deposit record was rejected by the system, please contact customer service");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNotice.setDepartment(twUser.getDepatmentId());
@@ -235,7 +237,9 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 twNotice.setUid(one.getUid());
                 twNotice.setAccount(one.getUsername());
                 twNotice.setTitle("充币审核");
+                twNotice.setTitleEn("Deposit review");
                 twNotice.setContent("您的充值金额已到账，请注意查收");
+                twNotice.setContentEn("Your recharge amount has arrived, please check it carefully");
                 twNotice.setAddtime(new Date());
                 twNotice.setStatus(1);
                 twNotice.setDepartment(twUser.getDepatmentId());
