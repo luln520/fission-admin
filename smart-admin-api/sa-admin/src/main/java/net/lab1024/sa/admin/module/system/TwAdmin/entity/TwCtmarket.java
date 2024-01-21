@@ -77,7 +77,7 @@ public class TwCtmarket implements Serializable {
     private String infoZh;
 
     @ApiModelProperty("简介英文")
-    private String infoEh;
+    private String infoEn;
 
     @ApiModelProperty("简介西班牙语")
     private String infoEs;
