@@ -67,9 +67,13 @@ public class TwCtmarket implements Serializable {
     */
     @ApiModelProperty("添加时间")
     private Date addtime=new Date();
-    /**
-    * 
-    */
+
+    @ApiModelProperty("发行时间")
+    private Date publishTime;
+
+    @ApiModelProperty("发行数量")
+    private int publishNum;
+
     @ApiModelProperty("")
     private String logo;
 
