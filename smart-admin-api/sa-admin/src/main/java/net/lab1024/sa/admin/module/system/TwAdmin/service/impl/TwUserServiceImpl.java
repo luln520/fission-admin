@@ -247,8 +247,37 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUser.setMoney(one.getUsdt());
                     }
                     twUser.setPath(paths);
-                    list1.add(twUser);
 
+                    List<TwUserKuangji> kjList = new ArrayList<>();
+                    List<TwKuangji> list2 = twKuangjiService.list();
+                    for(TwKuangji twKuangji:list2){
+                        Integer userid = twUser.getId();
+                        Integer kjid = twKuangji.getId();
+                        QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
+                        queryWrapper.eq("kj_id", kjid);
+                        queryWrapper.eq("user_id", userid);
+                        TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
+                        if(one2 == null){
+                            TwUserKuangji twUserKuangji = new TwUserKuangji();
+                            twUserKuangji.setMin(new BigDecimal(1000));
+                            twUserKuangji.setMax(new BigDecimal(5000));
+                            twUserKuangji.setNum(1);
+                            twUserKuangji.setKjId(twKuangji.getId());
+                            twUserKuangji.setKjName(twKuangji.getTitle());
+                            twUserKuangji.setUserId(userid);
+                            twUserKuangji.setCreateTime(new Date());
+                            twUserKuangjiService.save(twUserKuangji);
+
+                            Integer id = twUserKuangji.getId();
+                            twUserKuangji.setId(id);
+                            kjList.add(twUserKuangji);
+                        }else{
+                            kjList.add(one2);
+                        }
+                    }
+                    twUser.setTwUserKuangji(kjList);
+
+                    list1.add(twUser);
                 }
                 objectPage.setRecords(list1);
                 return objectPage;
