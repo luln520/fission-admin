@@ -128,10 +128,19 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
     }
 
     @Override
-    public TwKuangji detail(int id) {
+    public TwKuangji detail(int id,int uid) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("id",id);
-        return this.getOne(queryWrapper);
+        TwKuangji kuangji = this.getOne(queryWrapper);
+
+        QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("kj_id", id);
+        queryWrapper1.eq("user_id", uid);
+        TwUserKuangji userKuangji = twUserKuangjiService.getOne(queryWrapper1);
+        kuangji.setNum(userKuangji.getNum());
+        kuangji.setMax(userKuangji.getMax());
+        kuangji.setMin(userKuangji.getMin());
+        return kuangji;
     }
 
     @Override
@@ -246,7 +255,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorder.setStatus(1);
         twKjorder.setBuynum(buynum);
         twKjorder.setCycle(kuangji.getCycle());
-        twKjorder.setSynum(kuangji.getCycle());
+        twKjorder.setSynum(0);
 //        twKjorder.setOuttype(kuangji.getOuttype());
         twKjorder.setOutcoin(kuangji.getOutcoin());
         MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);

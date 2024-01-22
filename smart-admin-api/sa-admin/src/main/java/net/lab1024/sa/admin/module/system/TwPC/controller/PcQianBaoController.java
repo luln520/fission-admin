@@ -91,5 +91,16 @@ public class PcQianBaoController {
         return ResponseDTO.ok(twUserQianbaoService.add(uid,oid,address,remark,czline));
     }
 
+    @GetMapping("/qbSum")
+    @ResponseBody
+    @NoNeedLogin
+    @ApiOperation(value = "钱包统计")
+    public ResponseDTO qbSum(@RequestParam int uid) {
+        return twUserQianbaoService.qbSum(uid);
+    }
+
+
+
+
 }
 

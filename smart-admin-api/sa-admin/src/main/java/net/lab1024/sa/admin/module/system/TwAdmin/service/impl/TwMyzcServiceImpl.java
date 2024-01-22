@@ -204,7 +204,9 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                     twNotice.setUid(uid);
                     twNotice.setAccount(one.getUsername());
                     twNotice.setTitle("提币审核");
+                    twNotice.setTitleEn("Coin Withdrawal Review");
                     twNotice.setContent("您的提币申请被驳回，请联系管理员");
+                    twNotice.setContentEn("Your coin withdrawal application has been rejected, please contact the administrator");
                     twNotice.setAddtime(new Date());
                     twNotice.setStatus(1);
                     twNotice.setPath(twUser.getPath());
@@ -249,7 +251,9 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             twNotice.setUid(one.getUserid());
             twNotice.setAccount(one.getUsername());
             twNotice.setTitle("提币审核");
+            twNotice.setTitleEn("Coin Withdrawal Review");
             twNotice.setContent("您的提币申请已通过，请及时查询");
+            twNotice.setContentEn("Your currency withdrawal application has been approved, please check in time");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNotice.setDepartment(twUser.getDepatmentId());
@@ -270,7 +274,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num) {
+    public ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num,String language) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", uid);
         TwUser twUser = twUserService.getOne(queryWrapper);
@@ -284,19 +288,35 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper2);
 
         if(twUser.getRzstatus() != 2){
-            return ResponseDTO.userErrorParam("请先完成实名认证");
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("请先完成实名认证!");
+            }else{
+                return ResponseDTO.userErrorParam("Please complete real-name authentication first！");
+            }
         }
 
         if(twUser.getTxstate() == 2){
-            return ResponseDTO.userErrorParam("已禁止提现");
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("已禁止提现!");
+            }else{
+                return ResponseDTO.userErrorParam("Withdrawal is prohibited！");
+            }
         }
 
         if(num.compareTo(twCoin.getTxminnum()) < 0){
-            return ResponseDTO.userErrorParam("不能低于最小提币值");
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("不能低于最小提币值!");
+            }else{
+                return ResponseDTO.userErrorParam("Cannot be lower than the minimum withdrawal value！");
+            }
         }
 
         if(num.compareTo(twCoin.getTxmaxnum())> 0){
-            return ResponseDTO.userErrorParam("不能高于最大提币值");
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("不能高于最大提币值!");
+            }else{
+                return ResponseDTO.userErrorParam("Cannot be higher than the maximum withdrawal value！");
+            }
         }
 
         BigDecimal sxf = new BigDecimal(0);
@@ -315,7 +335,11 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
 
         BigDecimal tnum = num.subtract(sxf).setScale(2,RoundingMode.HALF_UP);
         if(twUserCoin.getUsdt().compareTo(tnum) < 0){
-            return ResponseDTO.userErrorParam("账户余额不足");
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("账户余额不足!");
+            }else{
+                return ResponseDTO.userErrorParam("Insufficient account balance！");
+            }
         }
 
 //        twUserCoinService.decre(uid,num,twUserCoin.getUsdt());

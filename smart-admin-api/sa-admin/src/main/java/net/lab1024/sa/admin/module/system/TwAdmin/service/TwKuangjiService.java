@@ -28,7 +28,7 @@ public interface TwKuangjiService extends IService<TwKuangji> {
 
     IPage<TwKuangji> pcList(PageParam pageParam, HttpServletRequest request);
 
-    TwKuangji detail(int id);
+    TwKuangji detail(int id,int uid);
 
     boolean addkj(TwKuangji twKuangji);
 

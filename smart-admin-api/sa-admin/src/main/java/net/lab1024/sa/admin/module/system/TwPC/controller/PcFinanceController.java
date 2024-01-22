@@ -145,8 +145,9 @@ public class PcFinanceController {
     public ResponseDTO tbhandle(@RequestParam int uid,
                                 @RequestParam int cid,
                                 @RequestParam String address,
-                                @RequestParam BigDecimal num) {
-        return twMyzcService.tbhandle(uid,cid,address,num);
+                                @RequestParam BigDecimal num,
+                                @RequestParam String language) {
+        return twMyzcService.tbhandle(uid,cid,address,num,language);
     }
 
     /**

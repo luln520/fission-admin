@@ -757,7 +757,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             String invitCode = generateRandomString();  //生成验证码
 
 //            String address = CommonUtil.getAddress(ip);
-            String address = CommonUtil.getAddress("206.238.199.169");
+            String address = CommonUtil.getAddress(ip);
 
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
@@ -852,7 +852,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setPath(one.getPath());
             twNotice.setAccount(one.getUsername());
             twNotice.setTitle("重置密码");
+            twNotice.setTitleEn("reset Password");
             twNotice.setContent("登陆密码重置成功");
+            twNotice.setContentEn("Login password reset successfully");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNoticeService.save(twNotice);
@@ -899,7 +901,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setDepartment(twUser.getDepatmentId());
             twNotice.setPath(twUser.getPath());
             twNotice.setTitle("认证资料提交成功");
+            twNotice.setTitleEn("Certification information submitted successfully");
             twNotice.setContent("实名资料提成功，耐心等待管理员审核");
+            twNotice.setContentEn("The real-name information has been submitted successfully, please wait patiently for the administrator to review it.");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNoticeService.save(twNotice);
@@ -907,7 +911,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         }catch (Exception e){
              return ResponseDTO.userErrorParam("认证资料提交失败");
         }
-
     }
 
     @Override

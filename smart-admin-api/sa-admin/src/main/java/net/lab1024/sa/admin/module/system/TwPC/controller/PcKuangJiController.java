@@ -97,8 +97,8 @@ public class PcKuangJiController {
     @ResponseBody
     @ApiOperation(value = "获取矿机详情")
     @NoNeedLogin
-    public ResponseDTO<TwKuangji> detail(@RequestParam int id) {
-        return ResponseDTO.ok(twKuangjiService.detail(id));
+    public ResponseDTO<TwKuangji> detail(@RequestParam int id,@RequestParam int uid) {
+        return ResponseDTO.ok(twKuangjiService.detail(id,uid));
     }
 
 

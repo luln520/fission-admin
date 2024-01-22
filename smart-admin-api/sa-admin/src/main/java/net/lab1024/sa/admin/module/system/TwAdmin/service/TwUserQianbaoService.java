@@ -6,6 +6,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserQianbao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +28,8 @@ public interface TwUserQianbaoService extends IService<TwUserQianbao> {
     boolean del(int id);
 
     boolean add(int uid,int oid, String address,String remark, String czline);
+
+    ResponseDTO qbSum(int uid);
 
 
 

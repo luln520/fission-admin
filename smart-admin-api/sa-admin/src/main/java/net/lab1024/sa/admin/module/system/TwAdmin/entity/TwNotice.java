@@ -41,19 +41,19 @@ public class TwNotice implements Serializable {
     */
     @ApiModelProperty("会员账号")
     private String account;
-    /**
-    * 通知标题
-    */
+
     @ApiModelProperty("通知标题")
     private String title;
-    /**
-    * 通知内容
-    */
+
+    @ApiModelProperty("通知标题英文")
+    private String titleEn;
+
     @ApiModelProperty("通知内容")
     private String content;
-    /**
-    * 通知图片 
-    */
+
+    @ApiModelProperty("通知内容英文")
+    private String contentEn;
+
     @ApiModelProperty("通知图片 ")
     private String imgs;
     /**
