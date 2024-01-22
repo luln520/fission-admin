@@ -34,10 +34,10 @@
       <HeaderAvatar />
     </div>
     <!---帮助文档--->
-    <div class="user-space-item" @click="showHelpDoc">
+    <!-- <div class="user-space-item" @click="showHelpDoc">
       <question-circle-two-tone style="font-size: 18px; margin-right: 5px; margin-top: 5px" />
       <span>帮助文档</span>
-    </div>
+    </div> -->
 
     <HeaderSetting ref="headerSetting" />
   </a-space>
