@@ -5,7 +5,7 @@
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc">
         select * from tw_myzc where 1=1
         <if test="obj.username != null and obj.username !=''">
-            and username = #{obj.username}
+            and username like concat('%',#{obj.username},'%')
         </if>
         <if test="obj.startTime != null and obj.startTime !=''">
             and addtime >= #{obj.startTime}
