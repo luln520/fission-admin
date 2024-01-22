@@ -52,7 +52,7 @@ const formItems = [
     ]
   }, {
     name: "hyTzed",
-    label: "投资额度",
+    label: "投资最低额度",
     placeholder: '注意： 如额度为：10USDT、50USDT，100USDT、1000USDT，则请用字母逗号将比例分开，如输入：10,50,100,1000。',
     type: "input",
     defaultValue: '',
@@ -74,55 +74,56 @@ const formItems = [
         message: '必填选项',
       },
     ]
-  }, {
-    name: "hyKsid",
-    label: "指定亏损ID",
-    placeholder: '说明： 此处设置会员ID（如：8888），多个用户用|符号分开（如：8888|9999）设置之后该会员所有订单都会亏损，请谨慎操作。如停止该功能请在上面留空或者填0，并提交。',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "hyYlid",
-    label: "指定盈利ID",
-    placeholder: '说明： 此处设置会员ID（如：8888），多个用户用|符号分开（如：8888|9999）设置之后该会员所有订单都会亏损，请谨慎操作。如停止该功能请在上面留空或者填0，并提交。',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "hyFkgl",
-    label: "风控概率",
-    placeholder: '表示总盈利比例，填写20表示20%订单盈利，例 如同时结算10单，其中只有2单盈利',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "hyMin",
-    label: "投资最低额度",
-    placeholder: '每单最低投资额度',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
   }
+  // , {
+  //   name: "hyKsid",
+  //   label: "指定亏损ID",
+  //   placeholder: '说明： 此处设置会员ID（如：8888），多个用户用|符号分开（如：8888|9999）设置之后该会员所有订单都会亏损，请谨慎操作。如停止该功能请在上面留空或者填0，并提交。',
+  //   type: "input",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ]
+  // }, {
+  //   name: "hyYlid",
+  //   label: "指定盈利ID",
+  //   placeholder: '说明： 此处设置会员ID（如：8888），多个用户用|符号分开（如：8888|9999）设置之后该会员所有订单都会亏损，请谨慎操作。如停止该功能请在上面留空或者填0，并提交。',
+  //   type: "input",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ]
+  // }, {
+  //   name: "hyFkgl",
+  //   label: "风控概率",
+  //   placeholder: '表示总盈利比例，填写20表示20%订单盈利，例 如同时结算10单，其中只有2单盈利',
+  //   type: "input",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ]
+  // }, {
+  //   name: "hyMin",
+  //   label: "投资最低额度",
+  //   placeholder: '每单最低投资额度',
+  //   type: "input",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ]
+  // }
 ];
 
 //新增或者编辑

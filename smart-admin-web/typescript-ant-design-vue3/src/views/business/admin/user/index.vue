@@ -33,24 +33,22 @@
           {{ record.logins }}次
         </template>
 
-        <template v-if="column.key === 'addip'">
-          <div>最后登录ip：{{ record.addip }}</div>
-          <div>注册时间：{{ timestampToStr(record.addtime * 1000) }}</div>
-          <div>最后登陆：{{ record.logintime }}</div>
+        <template v-if="column.key === 'userType'">
+          <span v-if="record.userType == 1" style="color: green;">真实用户</span>
+          <span v-if="record.userType == 2" style="color: red;">测试用户</span>
         </template>
         <template v-if="column.key === 'status'">
-          <div>登录：
-            <span v-if="record.status == 1" style="color: green;">正常</span>
-            <span v-if="record.status != 1" style="color: red;">禁用</span>
-          </div>
-          <div>提币：
-            <span v-if="record.txstate == 1" style="color: green;">正常</span>
-            <span v-if="record.txstate != 1" style="color: red;">禁止</span>
-          </div>
-          <div>类型：
-            <span v-if="record.userType == 1" style="color: green;">正常用户</span>
-            <span v-if="record.userType == 2" style="color: red;">测试用户</span>
-          </div>
+          <span v-if="record.status == 1" style="color: green;">否</span>
+          <span v-if="record.status != 1" style="color: red;">是</span>
+        </template>
+        <template v-if="column.key === 'addtime'">
+          {{ timestampToStr(record.addtime * 1000) }}
+        </template>
+        <template v-if="column.key === 'rztype'">
+          {{ rztypeStrs[record.rztype - 1] }}
+        </template>
+        <template v-if="column.key === 'winOrLose'">
+          {{ winStrs[record.winOrLose - 1] }}
         </template>
         <template v-if="column.key === 'rzstatus'">
           <span v-if="record.rzstatus == 0" style=";">未申请</span>
@@ -60,43 +58,88 @@
         </template>
         <template v-if="column.key === 'action'">
           <div>
-            <!-- <a @click="openEdit(record)">编辑</a>
-            <a-divider type="vertical" /> -->
-            <a @click="() => {
+            <a-tooltip @click="openEdit(record)">
+              <template #title>编辑</template>
+              <FormOutlined />
+            </a-tooltip>
+            <a-divider type="vertical" />
+            <a-tooltip @click="() => {
               isOpenSendMsg = true;
               sendMsgData.type = 1;
               sendMsgData.id = record.id;
-            }">发通知</a>
+            }">
+              <template #title>发通知</template>
+              <MessageOutlined />
+            </a-tooltip>
+            <a-divider type="vertical" />
+            <a-tooltip @click="openEditKJ(record)">
+              <template #title>矿机单控</template>
+              <UngroupOutlined />
+            </a-tooltip>
+            <a-divider type="vertical" />
+            <a-tooltip @click="() => {
+              isOpenEditFK = true;
+              addOrEditDataFK = record;
+            }">
+              <template #title>用户风控</template>
+              <ThunderboltOutlined />
+            </a-tooltip>
             <!-- <a v-if="record.isAgent == 0" @click="setAgent(record.id)"><a-divider type="vertical" />设为代理</a> -->
-            <a @click="openEditKJ(record)"><a-divider type="vertical" />矿机单控</a>
-            <div style="height: 10px;"></div>
+            <!-- <div style="height: 10px;"></div>
             <a @click="setWin(record.id, 2)">指定必输</a>
             <a-divider type="vertical" />
             <a @click="setWin(record.id, 1)">指定必赢</a>
             <a-divider type="vertical" />
-            <a @click="setWin(record.id, 3)">正常交易</a>
+            <a @click="setWin(record.id, 3)">正常交易</a> -->
           </div>
         </template>
         <template v-if="column.key === 'action1'">
           <div>
-            <a @click="() => {
+            <a-tooltip @click="() => {
               isOpenUserMoney = true;
               userMoneyData.id = record.id;
-            }">操作余额</a>
+            }">
+              <template #title>资产</template>
+              <DollarCircleOutlined />
+            </a-tooltip>
             <a-divider type="vertical" />
-            <a v-if="record.buyOn == 1" @click="setBuy(record.id, 2)" style="color: red;">禁止交易</a>
+            <a-tooltip @click="() => {
+              isOpenEditJY = true;
+              addOrEditDataJY = record;
+            }">
+              <template #title>交易</template>
+              <SwapOutlined />
+            </a-tooltip>
+            <a-divider type="vertical" />
+            <!-- <a v-if="record.buyOn == 1" @click="setBuy(record.id, 2)" style="color: red;">禁止交易</a>
             <a v-if="record.buyOn == 2" @click="setBuy(record.id, 1)">允许交易</a>
+            <a-divider type="vertical" /> -->
+            <a-tooltip @click="() => {
+              isOpenEditTB = true;
+              addOrEditDataTB = record;
+            }">
+              <template #title>提币</template>
+              <CopyrightCircleOutlined />
+            </a-tooltip>
             <a-divider type="vertical" />
-            <a v-if="record.txstate == 1" @click="setUser(record.id, 4)" style="color: rgba(89, 0, 255, 0.623);">禁止提币</a>
+            <!-- <a v-if="record.txstate == 1" @click="setUser(record.id, 4)" style="color: rgba(89, 0, 255, 0.623);">禁止提币</a>
             <a v-if="record.txstate == 2" @click="setUser(record.id, 3)">允许提币</a>
-            <a-divider type="vertical" />
+            <a-divider type="vertical" /> -->
+            <a-tooltip @click="() => {
+              isOpenEditZH = true;
+              addOrEditDataZH = record;
+            }">
+              <template #title>账号</template>
+              <UserOutlined />
+            </a-tooltip>
+            <!-- <a-divider type="vertical" />
             <a v-if="record.status == 2" @click="() => {
               setUser(record.id, 2)
             }">解冻</a>
             <a v-if="record.status == 1" style="color: red;" @click="() => {
               setUser(record.id, 1)
             }
-              ">冻结</a>
+              ">冻结</a> -->
           </div>
         </template>
       </template>
@@ -126,17 +169,47 @@
       isOpenEditKJ = false;
     }
       " @submit="editKJSubmit" />
+  <!-- 交易控制 -->
+  <JYEdit v-if="isOpenEditJY" ref="addOrEditRefJY" :isOpen="isOpenEditJY" :formItems="[]" :data="addOrEditDataJY" @close="() => {
+    isOpenEditJY = false;
+  }
+    " @submit="editJYSubmit" />
+  <!-- 提币控制 -->
+  <TBEdit v-if="isOpenEditTB" ref="addOrEditRefTB" :isOpen="isOpenEditTB" :formItems="[]" :data="addOrEditDataTB" @close="() => {
+    isOpenEditTB = false;
+  }
+    " @submit="editTBSubmit" />
+  <!-- 账号控制 -->
+  <ZHEdit v-if="isOpenEditZH" ref="addOrEditRefZH" :isOpen="isOpenEditZH" :formItems="[]" :data="addOrEditDataZH" @close="() => {
+    isOpenEditZH = false;
+  }
+    " @submit="editZHSubmit" />
+  <!-- 用户风控 -->
+  <FKEdit v-if="isOpenEditFK" ref="addOrEditRefFK" :isOpen="isOpenEditFK" :formItems="[]" :data="addOrEditDataFK" @close="() => {
+    isOpenEditFK = false;
+  }
+    " @submit="editFKSubmit" />
 </template>
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
 import { h, ref, onMounted } from 'vue';
-import { PlusCircleOutlined, UndoOutlined, CommentOutlined } from '@ant-design/icons-vue';
+import { PlusCircleOutlined, UndoOutlined, CommentOutlined, DollarCircleOutlined, MessageOutlined, FormOutlined, SwapOutlined, CopyrightCircleOutlined, UngroupOutlined, UserOutlined, ThunderboltOutlined } from '@ant-design/icons-vue';
 import { userApi } from '/@/api/business/admin/user-api';
 import { agentApi } from '/@/api/business/admin/agent-api';
 import AddOrEdit from "/@/components/edit/edit.vue"
 import KJEdit from "./components/kj/kj.vue"
+import JYEdit from "./components/jy/jy.vue"
+import TBEdit from "./components/tb/tb.vue"
+import ZHEdit from "./components/zh/zh.vue"
+import FKEdit from "./components/fk/fk.vue"
 import { toLower, toUpper } from 'lodash';
 import { timestampToStr } from '/@/utils/util';
+const rztypeStrs = [
+  '护照', '驾驶证', 'SSN', '身份ID '
+];
+const winStrs = [
+  '亏损', '盈利', '正常'
+];
 const addOrEditRef = ref();
 const isOpenEdit = ref(false);
 const addOrEditType = ref(1);
@@ -149,6 +222,22 @@ const sendMsgData = ref({} as any);
 const isOpenEditKJ = ref(false);
 const addOrEditDataKJ = ref({});
 const addOrEditRefKJ = ref();
+//交易
+const isOpenEditJY = ref(false);
+const addOrEditDataJY = ref({});
+const addOrEditRefJY = ref();
+//提币
+const isOpenEditTB = ref(false);
+const addOrEditDataTB = ref({});
+const addOrEditRefTB = ref();
+//账号
+const isOpenEditZH = ref(false);
+const addOrEditDataZH = ref({});
+const addOrEditRefZH = ref();
+//风控
+const isOpenEditFK = ref(false);
+const addOrEditDataFK = ref({});
+const addOrEditRefFK = ref();
 
 const userMoneyRef = ref();
 const isOpenUserMoney = ref(false);
@@ -195,7 +284,7 @@ const userMoneyFormItems = [{
   ]
 }, {
   name: "bz",
-  label: "币种（ 存疑）",
+  label: "币种",
   placeholder: '',
   type: "select",
   defaultValue: 1,
@@ -258,7 +347,7 @@ const sendMsgFormItems = [{
   name: "title",
   label: "通知标题",
   placeholder: '请输入通知标题',
-  type: "input",
+  type: "textarea",
   defaultValue: '',
   rules: [
     {
@@ -342,20 +431,8 @@ const formItems = [{
     },
   ]
 }, {
-  name: "invit1",
-  label: "被邀请码",
-  placeholder: '请输入被邀请码',
-  type: "input",
-  defaultValue: '',
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ]
-}, {
   name: "status",
-  label: "登陆状态",
+  label: "封存账号",
   placeholder: '',
   type: "select",
   defaultValue: '',
@@ -387,7 +464,7 @@ const formItems = [{
   ]
 }, {
   name: "userType",
-  label: "用户类型",
+  label: "身份标识",
   placeholder: '',
   type: "select",
   defaultValue: 1,
@@ -410,76 +487,79 @@ const columns = [
     title: 'ID',
     dataIndex: 'id',
     key: 'id',
-    width: 100
+    width: 70
   },
   {
-    title: '会员号',
+    title: '手机号',
+    dataIndex: 'phone',
+    key: 'phone',
+    width: 120
+  },
+  {
+    title: '用户名',
     dataIndex: 'username',
     key: 'username',
-    width: 250
+    width: 150
   },
   {
-    title: 'USDT余额',
-    dataIndex: 'money',
-    key: 'money',
-    width: 150
-  }, {
-    title: '信用积分',
-    dataIndex: 'jifen',
-    key: 'jifen',
+    title: '真实姓名',
+    dataIndex: 'realName',
+    key: 'realName',
     width: 100
   }, {
-    title: '登录',
-    dataIndex: 'logins',
-    key: 'logins',
+    title: '身份标识',
+    dataIndex: 'userType',
+    key: 'userType',
     width: 100
-  },
-  {
-    title: '注册ip/时间',
-    dataIndex: 'addip',
-    key: 'addip',
-    width: 300
-  },
-  {
-    title: '地址',
-    dataIndex: 'addr',
-    key: 'addr',
-    width: 350
-  },
-  {
-    title: '推荐人',
-    dataIndex: 'invit1',
-    key: 'invit1',
-    width: 150
-  },
-  {
-    title: '认证',
-    dataIndex: 'rzstatus',
-    key: 'rzstatus',
-    width: 150
-  },
-  {
-    title: '状态/类型',
+  }, {
+    title: '封存账号',
     dataIndex: 'status',
     key: 'status',
-    width: 150
+    width: 100
+  }, {
+    title: '创建时间',
+    dataIndex: 'addtime',
+    key: 'addtime',
+    width: 120
+  }, {
+    title: '信息审核',
+    dataIndex: 'rztype',
+    key: 'rztype',
+    width: 100
+  }, {
+    title: '用户风控',
+    dataIndex: 'winOrLose',
+    key: 'winOrLose',
+    width: 100
+  },
+  {
+    title: '用户总余额',
+    dataIndex: 'money',
+    key: 'money',
+    width: 120
   },
   {
     title: '邀请码',
     dataIndex: 'invit',
     key: 'invit',
+    width: 100
+  },
+  {
+    title: '上级代理',
+    dataIndex: 'path',
+    key: 'path',
     width: 150
   },
   {
     title: '资产操作',
     key: 'action1',
-    width: 300,
+    width: 150,
     fixed: 'right',
   },
   {
     title: '操作',
     key: 'action',
-    width: 250,
+    width: 150,
     fixed: 'right',
   },
 ];
@@ -516,6 +596,36 @@ async function setWin(id, type) {
     message.error("操作失败！请重试~")
   }
   loadData();
+}
+//交易
+async function editJYSubmit(data) {
+  setBuy(data.id, data.buyOn);
+  isOpenEditJY.value = false;
+}
+//提币
+async function editTBSubmit(data) {
+  if (data.txstate == 1) {
+    setUser(data.id, 3);
+  }
+  if (data.txstate == 2) {
+    setUser(data.id, 4);
+  }
+  isOpenEditTB.value = false;
+}
+//账号
+async function editZHSubmit(data) {
+  if (data.txstate == 1) {
+    setUser(data.id, 1);
+  }
+  if (data.txstate == 2) {
+    setUser(data.id, 2);
+  }
+  isOpenEditZH.value = false;
+}
+//风控
+async function editFKSubmit(data) {
+  setWin(data.id, data.winOrLose);
+  isOpenEditFK.value = false;
 }
 //设置交易
 async function setBuy(id, buyOn) {
@@ -578,7 +688,7 @@ async function userMoneySubmit(submitData) {
 
 //kg单控
 async function editKJSubmit(submitData) {
-  const sendData={} as any;
+  const sendData = {} as any;
   sendData.kjNum = parseInt(submitData.kjNum);
   sendData.kjMinnum = parseFloat(submitData.kjMinnum);
   sendData.kjMaxnum = parseFloat(submitData.kjMaxnum);

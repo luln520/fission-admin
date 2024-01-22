@@ -112,8 +112,8 @@ const formItems = [{
   ]
 }, {
   name: "infoZh",
-  label: "中文简介",
-  placeholder: '请填写中文简介',
+  label: "简介（中文）",
+  placeholder: '请填写中文',
   type: "textarea",
   defaultValue: '',
   rules: [
@@ -124,8 +124,8 @@ const formItems = [{
   ]
 }, {
   name: "infoEn",
-  label: "英文简介",
-  placeholder: '请填写英文简介',
+  label: "简介（英文）",
+  placeholder: '请填写英文',
   type: "textarea",
   defaultValue: '',
   rules: [
@@ -136,8 +136,8 @@ const formItems = [{
   ]
 }, {
   name: "infoEs",
-  label: "西班牙简介",
-  placeholder: '请填写西班牙简介',
+  label: "简介（西班牙语）",
+  placeholder: '请填写西班牙语',
   type: "textarea",
   defaultValue: '',
   rules: [
@@ -148,8 +148,8 @@ const formItems = [{
   ]
 }, {
   name: "infoAr",
-  label: "阿拉伯简介",
-  placeholder: '请填写阿拉伯简介',
+  label: "简介（阿拉伯语）",
+  placeholder: '请填写阿拉伯语',
   type: "textarea",
   defaultValue: '',
   rules: [
@@ -160,8 +160,8 @@ const formItems = [{
   ]
 }, {
   name: "infoVi",
-  label: "越语简介",
-  placeholder: '请填写越语简介',
+  label: "简介（越语）",
+  placeholder: '请填写越语',
   type: "textarea",
   defaultValue: '',
   rules: [
@@ -172,8 +172,8 @@ const formItems = [{
   ]
 }, {
   name: "infoJa",
-  label: "日语简介",
-  placeholder: '请填写日语简介',
+  label: "简介（日语）",
+  placeholder: '请填写日语',
   type: "textarea",
   defaultValue: '',
   rules: [

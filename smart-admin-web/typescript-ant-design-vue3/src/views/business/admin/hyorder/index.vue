@@ -42,12 +42,12 @@
 
         <template v-if="column.key === 'action'">
           <span>
-            <a @click="() => {
+            <!-- <a @click="() => {
               isOpenEdit = true;
               addOrEditType = 2;
               addOrEditData = record;
             }">编辑</a>
-            <a-divider type="vertical" />
+            <a-divider type="vertical" /> -->
             <a @click="() => {
               updateStatus(record.id, 2);
             }">设置亏</a>
@@ -165,7 +165,7 @@ const columns = [
   {
     title: '操作',
     key: 'action',
-    width: 300,
+    width: 200,
     fixed: 'right',
   },
 ];
