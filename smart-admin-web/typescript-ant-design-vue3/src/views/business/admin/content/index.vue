@@ -100,11 +100,71 @@ const formItems = [{
   ]
 },{
   name: "content",
-  label: "公告内容",
-  placeholder: '请输入公告内容！',
+  label: "公告（中文）",
+  placeholder: '请输入中文！',
   type: "textarea",
   defaultValue: '',
   rows:6,
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "contentEn",
+  label: "公告（英文）",
+  placeholder: '请填写英文',
+  type: "textarea",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "contentEs",
+  label: "公告（西班牙语）",
+  placeholder: '请填写西班牙语',
+  type: "textarea",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "contentAr",
+  label: "公告（阿拉伯语）",
+  placeholder: '请填写阿拉伯语',
+  type: "textarea",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "contentVi",
+  label: "公告（越语）",
+  placeholder: '请填写越语语',
+  type: "textarea",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "contentJa",
+  label: "公告（日语）",
+  placeholder: '请填写日语',
+  type: "textarea",
+  defaultValue: '',
   rules: [
     {
       required: true,
