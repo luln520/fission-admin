@@ -38,8 +38,19 @@
                         </div>
                         <!--editor  -->
                         <div v-if="formItem.type == 'editor'">
-                            <QuillEditor :options="editorOption" v-model:content="content" contentType="text" readOnly />
+                            <QuillEditor :options="editorOption" v-model:content="dataModel[formItem.name]"
+                                contentType="text" readOnly />
                         </div>
+                        <!-- dateTime -->
+                        <div v-if="formItem.type == 'dateTime'">
+                            <a-date-picker show-time placeholder="请选择时间" v-model:value="dateTimes[formItemIndex]"
+                                style="width: 100%;" @change="(value, dateString)=>{
+                                    onDateTimeChange(value, dateString,formItemIndex);
+                                }" @ok="(value) => {
+                                    onDateTimeOk(value, formItemIndex, formItem.name)
+                                }" />
+                        </div>
+
                     </a-form-item>
                 </a-col>
             </a-row>
@@ -57,8 +68,7 @@
                         <!-- select -->
                         <a-select v-if="formItem.type == 'select'" v-model:value="dataModel[formItem.name]">
                             <a-select-option v-for="(selectItem, selectItemIndex) in formItem.selects"
-                                :key="'selectItem' + selectItemIndex +'' + index"
-                                :value="selectItem.value">
+                                :key="'selectItem' + selectItemIndex + '' + index" :value="selectItem.value">
                                 {{ selectItem.name }}
                             </a-select-option>
                         </a-select>
@@ -78,7 +88,17 @@
                         </div>
                         <!--editor  -->
                         <div v-if="formItem.type == 'editor'">
-                            <QuillEditor :options="editorOption" v-model:content="dataModel[formItem.name]" contentType="html" style="height: 200px;" />
+                            <QuillEditor :options="editorOption" v-model:content="dataModel[formItem.name]"
+                                contentType="html" style="height: 200px;" />
+                        </div>
+                         <!-- dateTime -->
+                         <div v-if="formItem.type == 'dateTime'">
+                            <a-date-picker show-time placeholder="请选择时间" v-model:value="dateTimes[index]"
+                                style="width: 100%;" @change="(value, dateString)=>{
+                                    onDateTimeChange(value, dateString,index);
+                                }" @ok="(value) => {
+                                    onDateTimeOk(value, index, formItem.name)
+                                }" />
                         </div>
                     </a-form-item>
                 </a-col>
@@ -89,10 +109,11 @@
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
 import { UploadChangeParam } from 'ant-design-vue/es/upload/interface';
-import { ref, shallowRef, computed, defineExpose } from 'vue';
+import { ref, shallowRef, computed, defineExpose, onMounted } from 'vue';
 import { imageConfig } from "/@/config/app-config";
 import { QuillEditor, Quill } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import dayjs, { Dayjs } from 'dayjs';
 const props = defineProps(["isOpen", "type", "data", "name", "formItems"]);
 const emit = defineEmits(["close", "submit"]);
 const dataFormRef = shallowRef();
@@ -101,6 +122,7 @@ const labelCol = { style: { width: '120px' } };
 const formItems = props.formItems;
 const fileList = ref([]);
 const fileNowName = ref("");
+const dateTimes = ref([] as any[]);
 const headers = {
     authorization: 'authorization-text',
 };
@@ -169,10 +191,29 @@ const formItemsNodes = computed(() => {
     }
     return [pairs, lens];
 });
-
+//日期时间选择
+const onDateTimeChange = (value, dateString,formItemIndex) => {
+    dateTimes.value[formItemIndex] = dayjs(dateString, 'YYYY-MM-DD HH:mm:ss');
+};
+//日期时间确认
+const onDateTimeOk = (date, formItemIndex, name) => { 
+    dataModel.value[name]=dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+};
+//初始化时间
+const initTimes = () => {
+    for (let index = 0; index < formItems.length; index++) {
+        const formItem = formItems[index];
+        if (formItem.type === "dateTime" && dataModel.value[formItem.name]) {
+            dateTimes.value[index] = dayjs(dataModel.value[formItem.name], 'YYYY-MM-DD HH:mm:ss')
+        }
+    }
+};
 //这里需要暴露出去不然父组件调用不到这个方法
 defineExpose({
     close
+});
+onMounted(() => {
+    initTimes()
 });
 </script>
 <style lang="less" scoped></style>

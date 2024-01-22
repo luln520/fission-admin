@@ -98,55 +98,57 @@ const formItems = [
         message: '必填选项',
       },
     ]
-  }, {
-    name: "startmoney",
-    label: "归集起始金额",
-    placeholder: 'USDT一键归集起始金额',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "shouxufeiid",
-    label: "TRX账户私钥",
-    placeholder: '用来给所有账户转TRX手续费',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "guijiid",
-    label: "USDT接收地址",
-    placeholder: '所有账户的USDT都将自动转账到该账户',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "tgtext",
-    label: "推荐页面推广语",
-    placeholder: '推荐页面的推广语，不要多于40个字',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
+  },
+  // , {
+  //   name: "startmoney",
+  //   label: "归集起始金额",
+  //   placeholder: 'USDT一键归集起始金额',
+  //   type: "input",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ]
+  // }, {
+  //   name: "shouxufeiid",
+  //   label: "TRX账户私钥",
+  //   placeholder: '用来给所有账户转TRX手续费',
+  //   type: "input",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ]
+  // }, {
+  //   name: "guijiid",
+  //   label: "USDT接收地址",
+  //   placeholder: '所有账户的USDT都将自动转账到该账户',
+  //   type: "input",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ]
+  // }, {
+  //   name: "tgtext",
+  //   label: "推荐页面推广语",
+  //   placeholder: '推荐页面的推广语，不要多于40个字',
+  //   type: "input",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ]
+  // },
+  {
     name: "gfemail",
     label: "官方客服邮箱",
     placeholder: '官方客服邮箱',
@@ -158,47 +160,49 @@ const formItems = [
         message: '必填选项',
       },
     ]
-  }, {
-    name: "footertext",
-    label: "PC端下方文字",
-    placeholder: '显示在PC端LOGO下的文字',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "tymoney",
-    label: "注册赠送体验金",
-    placeholder: '注册赠送体验金',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "webswitch",
-    label: "网站注册开关",
-    placeholder: '关闭时禁止注册',
-    type: "select",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ],
-    selects: [
-      { name: "开放", value: 1 },
-      { name: "关闭", value: 2 }
-    ]
-  }, {
+  },
+  //  {
+  //   name: "footertext",
+  //   label: "PC端下方文字",
+  //   placeholder: '显示在PC端LOGO下的文字',
+  //   type: "input",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ]
+  // }, {
+  //   name: "tymoney",
+  //   label: "注册赠送体验金",
+  //   placeholder: '注册赠送体验金',
+  //   type: "input",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ]
+  // }, {
+  //   name: "webswitch",
+  //   label: "网站注册开关",
+  //   placeholder: '关闭时禁止注册',
+  //   type: "select",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ],
+  //   selects: [
+  //     { name: "开放", value: 1 },
+  //     { name: "关闭", value: 2 }
+  //   ]
+  // }
+  {
     name: "tbswitch",
     label: "提币总开关",
     placeholder: '关闭时禁止所有币种提币',
@@ -227,8 +231,7 @@ const formItems = [
     ],
     selects: [
       { name: "赠送", value: 1 },
-      { name: "不送", value: 2 },
-      { name: "不送", value: 3 }
+      { name: "不送", value: 2 }
     ]
   }
 ];

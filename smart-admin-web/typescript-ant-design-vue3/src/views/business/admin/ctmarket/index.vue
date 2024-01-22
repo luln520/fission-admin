@@ -59,7 +59,7 @@ import { message } from 'ant-design-vue';
 import { h, ref, onMounted } from 'vue';
 import { PlusCircleOutlined, UndoOutlined } from '@ant-design/icons-vue';
 import { ctmarketConfigApi } from '/@/api/business/admin/ctmarketConfig-api';
-import AddOrEdit from  "/@/components/edit/edit.vue"
+import AddOrEdit from "/@/components/edit/edit.vue"
 import { toLower, toUpper } from 'lodash';
 const addOrEditRef = ref();
 const isOpenEdit = ref(false);
@@ -79,6 +79,102 @@ const formItems = [{
   label: "市场名称",
   placeholder: '如：BTC',
   type: "input",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "publishTime",
+  label: "发行时间",
+  placeholder: '时间',
+  type: "dateTime",
+  defaultValue: '',
+  rules: [
+    {
+      required: false,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "publishNum",
+  label: "发行数量",
+  placeholder: '填写数字',
+  type: "input",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "infoZh",
+  label: "中文简介",
+  placeholder: '请填写中文简介',
+  type: "textarea",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "infoEn",
+  label: "英文简介",
+  placeholder: '请填写英文简介',
+  type: "textarea",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "infoEs",
+  label: "西班牙简介",
+  placeholder: '请填写西班牙简介',
+  type: "textarea",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "infoAr",
+  label: "阿拉伯简介",
+  placeholder: '请填写阿拉伯简介',
+  type: "textarea",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "infoVi",
+  label: "越语简介",
+  placeholder: '请填写越语简介',
+  type: "textarea",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "infoJa",
+  label: "日语简介",
+  placeholder: '请填写日语简介',
+  type: "textarea",
   defaultValue: '',
   rules: [
     {
@@ -148,6 +244,24 @@ const columns = [
     width: 200
   },
   {
+    title: '发行时间',
+    dataIndex: 'publishTime',
+    key: 'publishTime',
+    width: 200
+  },
+  {
+    title: '发行数量',
+    dataIndex: 'publishNum',
+    key: 'publishNum',
+    width: 200
+  },
+  {
+    title: '简介',
+    dataIndex: 'infoZh',
+    key: 'infoZh',
+    width: 200
+  },
+  {
     title: '排序',
     dataIndex: 'sort',
     key: 'sort',
@@ -182,7 +296,7 @@ async function tableChange(pag: { pageSize: number; current: number }) {
 //打开编辑
 async function openEdit(record) {
   //处理数据
-  record.name=toUpper(record.coinname);
+  record.name = toUpper(record.coinname);
   isOpenEdit.value = true;
   addOrEditType.value = 2;
   addOrEditData.value = record;
