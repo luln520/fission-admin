@@ -109,6 +109,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Lazy
     private TwKuangjiService twKuangjiService;
 
+    @Autowired
+    @Lazy
+    private TwHysettingService twHysettingService;
+
     @Override
     public Integer countAllUsers() {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -174,6 +178,43 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUser.setMoney(one.getUsdt());
                 }
                 twUser.setPath(paths);
+
+
+                QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
+                queryWrapper4.eq("id",1);
+                TwHysetting twHysetting = twHysettingService.getOne(queryWrapper4);
+                String hyYlid = twHysetting.getHyYlid();
+                String hyKsid = twHysetting.getHyKsid();
+                String[] winarr = hyYlid.split("\\|");
+                String[] lossarr = hyKsid.split("\\|");
+
+                boolean isWinArray = false;
+                boolean isLoseArray = false;
+                for (String win : winarr) {
+                    if (win.equals(twUser.getId())) {
+                        isWinArray = true;
+                        break; // 如果找到匹配，可以提前退出循环
+                    }
+                }
+                for (String win : lossarr) {
+                    if (win.equals(twUser.getId())) {
+                        isLoseArray = true;
+                        break; // 如果找到匹配，可以提前退出循环
+                    }
+                }
+
+                if (isWinArray) {
+                    twUser.setWinOrLose(1);
+                }
+
+                if (isLoseArray) {
+                    twUser.setWinOrLose(2);
+                }
+
+                if(!isWinArray && !isLoseArray){
+                    twUser.setWinOrLose(3);
+                }
+
 
                 List<TwUserKuangji> kjList = new ArrayList<>();
                 List<TwKuangji> list2 = twKuangjiService.list();
@@ -247,6 +288,42 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUser.setMoney(one.getUsdt());
                     }
                     twUser.setPath(paths);
+
+                    QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
+                    queryWrapper4.eq("id",1);
+                    TwHysetting twHysetting = twHysettingService.getOne(queryWrapper4);
+                    String hyYlid = twHysetting.getHyYlid();
+                    String hyKsid = twHysetting.getHyKsid();
+                    String[] winarr = hyYlid.split("\\|");
+                    String[] lossarr = hyKsid.split("\\|");
+
+                    boolean isWinArray = false;
+                    boolean isLoseArray = false;
+                    for (String win : winarr) {
+                        if (win.equals(twUser.getId())) {
+                            isWinArray = true;
+                            break; // 如果找到匹配，可以提前退出循环
+                        }
+                    }
+                    for (String win : lossarr) {
+                        if (win.equals(twUser.getId())) {
+                            isLoseArray = true;
+                            break; // 如果找到匹配，可以提前退出循环
+                        }
+                    }
+
+                    if (isWinArray) {
+                        twUser.setWinOrLose(1);
+                    }
+
+                    if (isLoseArray) {
+                        twUser.setWinOrLose(2);
+                    }
+
+                    if(!isWinArray && !isLoseArray){
+                        twUser.setWinOrLose(3);
+                    }
+
 
                     List<TwUserKuangji> kjList = new ArrayList<>();
                     List<TwKuangji> list2 = twKuangjiService.list();

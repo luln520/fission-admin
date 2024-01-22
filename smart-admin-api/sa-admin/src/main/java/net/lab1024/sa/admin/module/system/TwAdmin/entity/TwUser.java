@@ -239,6 +239,10 @@ public class TwUser implements Serializable {
     private BigDecimal money;
 
     @TableField(exist = false)
+    @ApiModelProperty("1.指定必输，2.指定必赢 3.正常交易")
+    private int  winOrLose;
+
+    @TableField(exist = false)
     @ApiModelProperty("用户矿机单控")
     private List<TwUserKuangji> twUserKuangji;
 
