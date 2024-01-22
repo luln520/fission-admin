@@ -96,7 +96,7 @@ public class PcQianBaoController {
     @NoNeedLogin
     @ApiOperation(value = "钱包统计")
     public ResponseDTO qbSum(@RequestParam int uid) {
-        return ResponseDTO.ok(twUserQianbaoService.qbSum(uid));
+        return twUserQianbaoService.qbSum(uid);
     }
 
 
