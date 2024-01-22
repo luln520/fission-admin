@@ -42,9 +42,9 @@
       <a-form-item label="页脚">
         <a-switch @change="changeFooterFlag" v-model:checked="formState.footerFlag" checked-children="显示" un-checked-children="隐藏" />
       </a-form-item>
-      <a-form-item label="帮助文档">
+      <!-- <a-form-item label="帮助文档">
         <a-switch @change="changeHelpDocFlag" v-model:checked="formState.helpDocFlag" checked-children="显示" un-checked-children="隐藏" />
-      </a-form-item>
+      </a-form-item> -->
     </a-form>
     <div class="footer">
       <a-button style="margin-right: 8px" type="primary" @click="copy">复制配置信息</a-button>

@@ -9,5 +9,8 @@ export const adminlogApi = {
    */
   list: (param) => {
     return postRequest('/api/admin/adminlog/list', param);
+  },
+  message: (param) => {
+    return postRequest('/api/admin/adminlog/message', param);
   }
 };
