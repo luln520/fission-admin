@@ -59,11 +59,12 @@ public class TwKuangji implements Serializable {
     */
     @ApiModelProperty("日产出币种 ")
     private String outcoin;
-    /**
-    * 矿机单价额度
-    */
-    @ApiModelProperty("矿机单价额度")
-    private BigDecimal pricenum;
+
+    @ApiModelProperty("矿机单价最低额度")
+    private BigDecimal pricemin;
+
+    @ApiModelProperty("矿机单价最高额度")
+    private BigDecimal pricemax;
     /**
     * 矿机单价币种
     */
