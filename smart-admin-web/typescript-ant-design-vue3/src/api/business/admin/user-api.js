@@ -45,5 +45,11 @@ export const userApi = {
    */
   userNotice: (param) => {
     return getRequest('/api/admin/user/userNotice', param);
+  },
+  /**
+   *矿机控单
+   */
+   updatekj: (param) => {
+    return postRequest('/api/admin/user/updatekj', param);
   }
 };
