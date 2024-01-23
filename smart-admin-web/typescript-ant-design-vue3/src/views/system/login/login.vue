@@ -10,7 +10,7 @@
 -->
 <template>
   <div class="login-container">
-    <div class="box-item desc">
+    <!-- <div class="box-item desc">
       <div class="welcome">
         <p>欢迎登录 SmartAdmin V2</p>
         <p class="desc">
@@ -46,10 +46,11 @@
           <span class="qr-desc"> 关注：小镇程序员 </span>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="box-item login">
       <img class="login-qr" :src="loginQR" />
-      <div class="login-title">账号登录</div>
+      <div class="login-title">GQ全球量化平台</div>
+      <div class="login-title" style="font-size: 20px;">账号登录</div>
       <a-form ref="formRef" class="login-form" :model="loginForm" :rules="rules">
         <a-form-item name="loginName">
           <a-input v-model:value.trim="loginForm.loginName" placeholder="请输入用户名" />
@@ -73,7 +74,7 @@
           <div class="btn" @click="onLogin">登录</div>
         </a-form-item>
       </a-form>
-      <div class="more">
+      <!-- <div class="more">
         <div class="title-box">
           <p class="line"></p>
           <p class="title">其他方式登录</p>
@@ -85,7 +86,7 @@
           <img :src="googleLogin" />
           <img :src="weiboLogin" />
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

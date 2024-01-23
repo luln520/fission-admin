@@ -146,20 +146,20 @@
     </a-table>
   </a-card>
   <!-- 编辑弹框 -->
-  <AddOrEdit v-if="isOpenEdit" ref="addOrEditRef" :isOpen="isOpenEdit" :formItems="formItems" :type="addOrEditType"
+  <UserEdit v-if="isOpenEdit" ref="addOrEditRef" :isOpen="isOpenEdit" :formItems="formItems" :type="addOrEditType"
     :name="'会员'" :data="addOrEditData" @close="() => {
       isOpenEdit = false;
     }
       " @submit="addOrEditSubmit" />
   <!-- 群发 -->
   <AddOrEdit v-if="isOpenSendMsg" ref="sendMsgRef" :isOpen="isOpenSendMsg" :formItems="sendMsgFormItems"
-    :type="sendMsgType" :name="'通知'" :data="sendMsgData" @close="() => {
+    :type="sendMsgType" :name="'通知'" :isALlName="true" :data="sendMsgData" @close="() => {
       isOpenSendMsg = false;
     }
       " @submit="sendMsgSubmit" />
-  <!-- 操作用户余额 -->
+  <!-- 操作资产 -->
   <AddOrEdit v-if="isOpenUserMoney" ref="userMoneyRef" :isOpen="isOpenUserMoney" :formItems="userMoneyFormItems"
-    :type="userMoneyType" :name="'用户余额'" :data="userMoneyData" @close="() => {
+    :type="userMoneyType" :name="'资产'" :isALlName="true" :data="userMoneyData" @close="() => {
       isOpenUserMoney = false;
     }
       " @submit="userMoneySubmit" />
@@ -202,6 +202,7 @@ import JYEdit from "./components/jy/jy.vue"
 import TBEdit from "./components/tb/tb.vue"
 import ZHEdit from "./components/zh/zh.vue"
 import FKEdit from "./components/fk/fk.vue"
+import UserEdit from "./components/edit/edit.vue"
 import { toLower, toUpper } from 'lodash';
 import { timestampToStr } from '/@/utils/util';
 const rztypeStrs = [
@@ -282,23 +283,24 @@ const userMoneyFormItems = [{
     { name: "增加", value: 1 },
     { name: "减少", value: 2 }
   ]
-}, {
-  name: "bz",
-  label: "币种",
-  placeholder: '',
-  type: "select",
-  defaultValue: 1,
-  rules: [
-    {
-      required: true,
-      message: '必填选项',
-    },
-  ],
-  selects: [
-    { name: "USDT", value: 1 },
-    { name: "TRX", value: 2 }
-  ]
 }
+  // , {
+  //   name: "bz",
+  //   label: "币种",
+  //   placeholder: '',
+  //   type: "select",
+  //   defaultValue: 1,
+  //   rules: [
+  //     {
+  //       required: true,
+  //       message: '必填选项',
+  //     },
+  //   ],
+  //   selects: [
+  //     { name: "USDT", value: 1 },
+  //     { name: "TRX", value: 2 }
+  //   ]
+  // }
 ];
 
 //矿机单控
@@ -372,8 +374,8 @@ const sendMsgFormItems = [{
 //编辑配置
 const formItems = [{
   name: "username",
-  label: "用户名",
-  placeholder: '请输入用户名',
+  label: "账号",
+  placeholder: '请输入账号',
   type: "input",
   defaultValue: '',
   rules: [
@@ -430,7 +432,53 @@ const formItems = [{
       message: '必填选项',
     },
   ]
-}, {
+},
+{
+  name: "rztype",
+  label: "身份类型",
+  placeholder: '',
+  type: "select",
+  defaultValue: '',
+  rules: [
+    {
+      required: false,
+      message: '必填选项',
+    },
+  ],
+  selects: [
+    { name: "护照", value: 1 },
+    { name: "驾驶证", value: 2 },
+    { name: "SSN", value: 3 },
+    { name: "身份ID", value: 4 }
+  ]
+},
+{
+  name: "cardzm",
+  label: "证件正面",
+  placeholder: '',
+  type: "image",
+  defaultValue: '',
+  rules: [
+    {
+      required: false,
+      message: '必填选项',
+    },
+  ]
+},
+{
+  name: "cardfm",
+  label: "证件反面",
+  placeholder: '',
+  type: "image",
+  defaultValue: '',
+  rules: [
+    {
+      required: false,
+      message: '必填选项',
+    },
+  ]
+}
+  , {
   name: "status",
   label: "封存账号",
   placeholder: '',
@@ -461,6 +509,22 @@ const formItems = [{
   selects: [
     { name: "正常", value: 1 },
     { name: "禁止", value: 2 }
+  ]
+}, {
+  name: "buyOn",
+  label: "交易状态",
+  placeholder: '',
+  type: "select",
+  defaultValue: 1,
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ],
+  selects: [
+    { name: "允许交易", value: 1 },
+    { name: "正常交易", value: 2 }
   ]
 }, {
   name: "userType",

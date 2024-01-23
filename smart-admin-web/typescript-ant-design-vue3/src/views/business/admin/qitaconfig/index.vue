@@ -202,38 +202,38 @@ const formItems = [
   //     { name: "关闭", value: 2 }
   //   ]
   // }
-  {
-    name: "tbswitch",
-    label: "提币总开关",
-    placeholder: '关闭时禁止所有币种提币',
-    type: "select",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ],
-    selects: [
-      { name: "开放", value: 1 },
-      { name: "关闭", value: 2 }
-    ]
-  }, {
-    name: "regjl",
-    label: "注册是否赠送体验矿机",
-    placeholder: '请选择注册是否赠送体验矿机',
-    type: "select",
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ],
-    selects: [
-      { name: "赠送", value: 1 },
-      { name: "不送", value: 2 }
-    ]
-  }
+  // {
+  //   name: "tbswitch",
+  //   label: "提币总开关",
+  //   placeholder: '关闭时禁止所有币种提币',
+  //   type: "select",
+  //   defaultValue: '',
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ],
+  //   selects: [
+  //     { name: "开放", value: 1 },
+  //     { name: "关闭", value: 2 }
+  //   ]
+  // }, {
+  //   name: "regjl",
+  //   label: "注册是否赠送体验矿机",
+  //   placeholder: '请选择注册是否赠送体验矿机',
+  //   type: "select",
+  //   rules: [
+  //     {
+  //       required: false,
+  //       message: '必填选项',
+  //     },
+  //   ],
+  //   selects: [
+  //     { name: "赠送", value: 1 },
+  //     { name: "不送", value: 2 }
+  //   ]
+  // }
 ];
 
 //新增或者编辑
