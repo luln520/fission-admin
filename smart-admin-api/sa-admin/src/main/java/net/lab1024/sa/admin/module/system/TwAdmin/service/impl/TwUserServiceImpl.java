@@ -191,13 +191,13 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 boolean isWinArray = false;
                 boolean isLoseArray = false;
                 for (String win : winarr) {
-                    if (win.equals(twUser.getId())) {
+                    if (win.equals(twUser.getId().toString())) {
                         isWinArray = true;
                         break; // 如果找到匹配，可以提前退出循环
                     }
                 }
                 for (String win : lossarr) {
-                    if (win.equals(twUser.getId())) {
+                    if (win.equals(twUser.getId().toString())) {
                         isLoseArray = true;
                         break; // 如果找到匹配，可以提前退出循环
                     }
@@ -300,13 +300,13 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     boolean isWinArray = false;
                     boolean isLoseArray = false;
                     for (String win : winarr) {
-                        if (win.equals(twUser.getId())) {
+                        if (win.equals(twUser.getId().toString())) {
                             isWinArray = true;
                             break; // 如果找到匹配，可以提前退出循环
                         }
                     }
                     for (String win : lossarr) {
-                        if (win.equals(twUser.getId())) {
+                        if (win.equals(twUser.getId().toString())) {
                             isLoseArray = true;
                             break; // 如果找到匹配，可以提前退出循环
                         }
@@ -394,6 +394,70 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUser.setMoney(one.getUsdt());
                     }
                     twUser.setPath(paths);
+
+                    QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
+                    queryWrapper4.eq("id",1);
+                    TwHysetting twHysetting = twHysettingService.getOne(queryWrapper4);
+                    String hyYlid = twHysetting.getHyYlid();
+                    String hyKsid = twHysetting.getHyKsid();
+                    String[] winarr = hyYlid.split("\\|");
+                    String[] lossarr = hyKsid.split("\\|");
+
+                    boolean isWinArray = false;
+                    boolean isLoseArray = false;
+                    for (String win : winarr) {
+                        if (win.equals(twUser.getId().toString())) {
+                            isWinArray = true;
+                            break; // 如果找到匹配，可以提前退出循环
+                        }
+                    }
+                    for (String win : lossarr) {
+                        if (win.equals(twUser.getId().toString())) {
+                            isLoseArray = true;
+                            break; // 如果找到匹配，可以提前退出循环
+                        }
+                    }
+
+                    if (isWinArray) {
+                        twUser.setWinOrLose(1);
+                    }
+
+                    if (isLoseArray) {
+                        twUser.setWinOrLose(2);
+                    }
+
+                    if(!isWinArray && !isLoseArray){
+                        twUser.setWinOrLose(3);
+                    }
+
+                    List<TwUserKuangji> kjList = new ArrayList<>();
+                    List<TwKuangji> list2 = twKuangjiService.list();
+                    for(TwKuangji twKuangji:list2){
+                        Integer userid = twUser.getId();
+                        Integer kjid = twKuangji.getId();
+                        QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
+                        queryWrapper.eq("kj_id", kjid);
+                        queryWrapper.eq("user_id", userid);
+                        TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
+                        if(one2 == null){
+                            TwUserKuangji twUserKuangji = new TwUserKuangji();
+                            twUserKuangji.setMin(new BigDecimal(1000));
+                            twUserKuangji.setMax(new BigDecimal(5000));
+                            twUserKuangji.setNum(1);
+                            twUserKuangji.setKjId(twKuangji.getId());
+                            twUserKuangji.setKjName(twKuangji.getTitle());
+                            twUserKuangji.setUserId(userid);
+                            twUserKuangji.setCreateTime(new Date());
+                            twUserKuangjiService.save(twUserKuangji);
+
+                            Integer id = twUserKuangji.getId();
+                            twUserKuangji.setId(id);
+                            kjList.add(twUserKuangji);
+                        }else{
+                            kjList.add(one2);
+                        }
+                    }
+                    twUser.setTwUserKuangji(kjList);
                     list1.add(twUser);
 
                 }
