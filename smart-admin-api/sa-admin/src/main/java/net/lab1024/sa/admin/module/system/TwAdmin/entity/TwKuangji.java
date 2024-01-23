@@ -65,6 +65,7 @@ public class TwKuangji implements Serializable {
 
     @ApiModelProperty("矿机单价最高额度")
     private BigDecimal pricemax;
+
     /**
     * 矿机单价币种
     */
