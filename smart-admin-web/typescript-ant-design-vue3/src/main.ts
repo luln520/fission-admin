@@ -86,3 +86,5 @@ if (!token) {
 } else {
   getLoginInfo();
 }
+//刷新清空路由
+localStorage.setItem("smart_admin_user_tag_nav",[]);

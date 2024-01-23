@@ -31,7 +31,7 @@ export const appDefaultConfig: AppConfig = {
   // 帮助文档
   helpDocFlag: false,
   // 网站名称
-  websiteName: 'SmartAdmin 2.X',
+  websiteName: 'GQ全球量化平台',
 };
 
 

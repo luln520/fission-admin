@@ -147,12 +147,12 @@ const columns = [
     key: 'outcoin',
     width: 100
   },
-  {
-    title: '操作',
-    key: 'action',
-    width: 250,
-    fixed: 'right',
-  },
+  // {
+  //   title: '操作',
+  //   key: 'action',
+  //   width: 250,
+  //   fixed: 'right',
+  // },
 ];
 
 //分页方法

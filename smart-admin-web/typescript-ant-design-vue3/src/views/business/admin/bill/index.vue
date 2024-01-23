@@ -134,12 +134,12 @@ const columns = [
     key: 'addtime',
     width: 120
   },
-  {
-    title: '状态（存疑）',
-    key: 'st',
-    width: 200,
-    dataIndex: 'st',
-  },
+  // {
+  //   title: '状态（存疑）',
+  //   key: 'st',
+  //   width: 200,
+  //   dataIndex: 'st',
+  // },
 ];
 
 //分页方法
