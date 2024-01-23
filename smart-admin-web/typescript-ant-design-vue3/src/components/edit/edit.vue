@@ -1,7 +1,7 @@
 <template>
     <a-modal width="800px" :destroyOnClose="true" :visible="props.isOpen" :open="props.isOpen"
-        :title="props.type == 1 ? `新增（${props.name}）` : `编辑（${props.name}-${props.data?.id}）`" @ok="addHandleOk"
-        @cancel="close">
+        :title="props.isALlName ? props.name : (props.type == 1 ? `新增（${props.name}）` : `编辑（${props.name}-${props.data?.id}）`)"
+        @ok="addHandleOk" @cancel="close">
         <a-form ref="dataFormRef" :label-col="labelCol" :model="dataModel">
             <!-- 一行两个 -->
             <a-row v-for="(item, index) in formItemsNodes[0]" :key="index">
@@ -44,11 +44,11 @@
                         <!-- dateTime -->
                         <div v-if="formItem.type == 'dateTime'">
                             <a-date-picker show-time placeholder="请选择时间" v-model:value="dateTimes[formItemIndex]"
-                                style="width: 100%;" @change="(value, dateString)=>{
-                                    onDateTimeChange(value, dateString,formItemIndex);
+                                style="width: 100%;" @change="(value, dateString) => {
+                                    onDateTimeChange(value, dateString, formItemIndex);
                                 }" @ok="(value) => {
-                                    onDateTimeOk(value, formItemIndex, formItem.name)
-                                }" />
+    onDateTimeOk(value, formItemIndex, formItem.name)
+}" />
                         </div>
 
                     </a-form-item>
@@ -91,14 +91,14 @@
                             <QuillEditor :options="editorOption" v-model:content="dataModel[formItem.name]"
                                 contentType="html" style="height: 200px;" />
                         </div>
-                         <!-- dateTime -->
-                         <div v-if="formItem.type == 'dateTime'">
+                        <!-- dateTime -->
+                        <div v-if="formItem.type == 'dateTime'">
                             <a-date-picker show-time placeholder="请选择时间" v-model:value="dateTimes[index]"
-                                style="width: 100%;" @change="(value, dateString)=>{
-                                    onDateTimeChange(value, dateString,index);
+                                style="width: 100%;" @change="(value, dateString) => {
+                                    onDateTimeChange(value, dateString, index);
                                 }" @ok="(value) => {
-                                    onDateTimeOk(value, index, formItem.name)
-                                }" />
+    onDateTimeOk(value, index, formItem.name)
+}" />
                         </div>
                     </a-form-item>
                 </a-col>
@@ -114,7 +114,7 @@ import { imageConfig } from "/@/config/app-config";
 import { QuillEditor, Quill } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import dayjs, { Dayjs } from 'dayjs';
-const props = defineProps(["isOpen", "type", "data", "name", "formItems"]);
+const props = defineProps(["isOpen", "type", "data", "name", "formItems", "isALlName"]);
 const emit = defineEmits(["close", "submit"]);
 const dataFormRef = shallowRef();
 const dataModel = ref(props.data);
@@ -192,12 +192,12 @@ const formItemsNodes = computed(() => {
     return [pairs, lens];
 });
 //日期时间选择
-const onDateTimeChange = (value, dateString,formItemIndex) => {
+const onDateTimeChange = (value, dateString, formItemIndex) => {
     dateTimes.value[formItemIndex] = dayjs(dateString, 'YYYY-MM-DD HH:mm:ss');
 };
 //日期时间确认
-const onDateTimeOk = (date, formItemIndex, name) => { 
-    dataModel.value[name]=dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+const onDateTimeOk = (date, formItemIndex, name) => {
+    dataModel.value[name] = dayjs(date).format('YYYY-MM-DD HH:mm:ss');
 };
 //初始化时间
 const initTimes = () => {
