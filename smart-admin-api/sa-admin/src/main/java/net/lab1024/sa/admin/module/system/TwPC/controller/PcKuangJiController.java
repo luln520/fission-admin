@@ -420,6 +420,7 @@ public class PcKuangJiController {
     @GetMapping("/buyKuangji")
     @ResponseBody
     @ApiOperation(value = "购买独资矿机")
+    @NoNeedLogin
     public ResponseDTO buyKuangji(@RequestParam int uid, @RequestParam int kid, @RequestParam BigDecimal buynum,@RequestParam String language) {
         return twKuangjiService.buyKuangji(uid,kid,buynum,language);
     }
