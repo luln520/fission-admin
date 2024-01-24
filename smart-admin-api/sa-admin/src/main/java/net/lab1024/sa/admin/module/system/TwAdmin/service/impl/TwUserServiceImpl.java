@@ -967,8 +967,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 List<TwKuangji> list = twKuangjiService.list();
                 for(TwKuangji twKuangji:list){
                     TwUserKuangji twUserKuangji = new TwUserKuangji();
-                    twUserKuangji.setMin(twKuangji.getMin());
-                    twUserKuangji.setMax(twKuangji.getMax());
+                    twUserKuangji.setMin(twKuangji.getPricemin());
+                    twUserKuangji.setMax(twKuangji.getPricemax());
                     twUserKuangji.setNum(1);
                     twUserKuangji.setKjId(twKuangji.getId());
                     twUserKuangji.setKjName(twKuangji.getTitle());
