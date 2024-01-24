@@ -95,6 +95,7 @@ public class PcContractController {
     @GetMapping("/getHyorderOne")
     @ResponseBody
     @ApiOperation(value = "合约倒计时")
+    @NoNeedLogin
     public ResponseDTO<HyorderOneRes> getHyorderOne(@RequestParam int id) {
         return twHyorderService.getHyorderOne(id);
     }
@@ -175,6 +176,7 @@ public class PcContractController {
     @GetMapping("/gethyorder")
     @ResponseBody
     @ApiOperation(value = "获取合约记录")
+    @NoNeedLogin
     public ResponseDTO<List<TwHyorder>> gethyorder(@RequestParam int uid) {
         return twHyorderService.gethyorder(uid);
     }
@@ -215,6 +217,7 @@ public class PcContractController {
     @GetMapping("/contractTy")
     @ResponseBody
     @ApiOperation(value = "合约未平仓、已平仓订单")
+    @NoNeedLogin
     public ResponseDTO<List<TwHyorder>> contractTy(@RequestParam int uid ,@RequestParam int type) {
         return twHyorderService.contractTy(uid,type);
     }
@@ -237,6 +240,7 @@ public class PcContractController {
     @GetMapping("/cbillinfo")
     @ResponseBody
     @ApiOperation(value = "购买合约详情")
+    @NoNeedLogin
     public ResponseDTO<TwHyorder> cbillinfo(@RequestParam int uid ,@RequestParam int id) {
         return twHyorderService.cbillinfo(uid,id);
     }
@@ -249,6 +253,7 @@ public class PcContractController {
     @GetMapping("/hysetInfo")
     @ResponseBody
     @ApiOperation(value = "获取合约设置")
+    @NoNeedLogin
     public ResponseDTO<TwHysetting> hysetInfo() {
         return ResponseDTO.ok(twHysettingService.hysettingId());
     }
@@ -271,6 +276,7 @@ public class PcContractController {
     @GetMapping("/cbillList")
     @ResponseBody
     @ApiOperation(value = "合约购买记录")
+    @NoNeedLogin
     public ResponseDTO<List<TwHyorder>> cbillList(@RequestParam int uid) {
         return twHyorderService.cbillList(uid);
     }
@@ -457,6 +463,7 @@ public class PcContractController {
     @GetMapping("/creatorder")
     @ResponseBody
     @ApiOperation(value = "秒合约建仓")
+    @NoNeedLogin
     public ResponseDTO creatorder(@RequestParam int uid,
                                   @RequestParam int ctime,
                                   @RequestParam BigDecimal ctzed,

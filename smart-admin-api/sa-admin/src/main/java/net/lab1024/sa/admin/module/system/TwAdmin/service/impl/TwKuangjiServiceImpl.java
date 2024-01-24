@@ -151,8 +151,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         queryWrapper.eq("kj_id", twKuangji.getId());
         List<TwUserKuangji> list = twUserKuangjiService.list(queryWrapper);
         for(TwUserKuangji twUserKuang:list){
-            twUserKuang.setMin(twKuangji.getMin());
-            twUserKuang.setMax(twKuangji.getMax());
+            twUserKuang.setMin(twKuangji.getPricemin());
+            twUserKuang.setMax(twKuangji.getPricemax());
             twUserKuang.setUpdateTime(new Date());
             twUserKuangjiService.updateById(twUserKuang);
         }

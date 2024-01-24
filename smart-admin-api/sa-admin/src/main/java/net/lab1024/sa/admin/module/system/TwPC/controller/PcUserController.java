@@ -32,6 +32,7 @@ public class PcUserController {
      * */
     @GetMapping("/userInfo")
     @ApiOperation("获取用户信息")
+    @NoNeedLogin
     public ResponseDTO userInfo(@RequestParam String token) {
         return twUserService.userInfo(token);
     }
@@ -58,6 +59,7 @@ public class PcUserController {
      * */
     @PostMapping("/editpassword")
     @ApiOperation("用户重置密码")
+    @NoNeedLogin
     public ResponseDTO editpassword(@Valid @RequestBody UserReq userReq) {
         return twUserService.editpassword(userReq);
     }
@@ -102,6 +104,7 @@ public class PcUserController {
     @PostMapping("/auth")
     @ResponseBody
     @ApiOperation(value = "用户提交实名认证")
+    @NoNeedLogin
     public ResponseDTO auth(@RequestBody TwUser twUser) {
         return twUserService.auth(twUser);
     }

@@ -32,6 +32,7 @@ public class PcOnlineController {
     @GetMapping("/list")
     @ResponseBody
     @ApiOperation(value = "获取聊天列表")
+    @NoNeedLogin
     public ResponseDTO<List<TwOnline>> lists(@RequestParam int uid) {
         return ResponseDTO.ok(twOnlineService.lists(uid));
     }
@@ -54,6 +55,7 @@ public class PcOnlineController {
     @GetMapping("/sendMsg")
     @ResponseBody
     @ApiOperation(value = "发送聊天")
+    @NoNeedLogin
     public ResponseDTO sendMsg(@RequestParam int uid,@RequestParam String content) {
         return ResponseDTO.ok(twOnlineService.sendMsg(uid,content));
     }

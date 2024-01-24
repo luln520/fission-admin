@@ -67,6 +67,7 @@ public class PcTradeController {
     @GetMapping("/getcoinprice")
     @ResponseBody
     @ApiOperation(value = "获取当前最新价格")
+    @NoNeedLogin
     public ResponseDTO<CoinpriceRes> getcoinprice(@RequestParam String symbol) {
         return ResponseDTO.ok(twCtmarketService.getcoinprice(symbol));
     }
@@ -337,6 +338,7 @@ public class PcTradeController {
     @GetMapping("/getallsymbol")
     @ResponseBody
     @ApiOperation(value = "获取所有获取市场行情")
+    @NoNeedLogin
     public ResponseDTO<List<AllsymbolRes>> getallsymbol() {
         return ResponseDTO.ok(twCtmarketService.getallsymbol());
     }

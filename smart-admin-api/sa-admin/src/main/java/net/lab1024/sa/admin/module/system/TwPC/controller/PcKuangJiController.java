@@ -51,6 +51,7 @@ public class PcKuangJiController {
     @PostMapping("/pcList")
     @ResponseBody
     @ApiOperation(value = "获取矿机列表")
+    @NoNeedLogin
     public ResponseDTO<IPage<TwKuangji>> pcList(@Valid @RequestBody PageParam pageParam, HttpServletRequest request) {
         return ResponseDTO.ok(twKuangjiService.pcList(pageParam,request));
     }
@@ -73,6 +74,7 @@ public class PcKuangJiController {
     @GetMapping("/uidList")
     @ResponseBody
     @ApiOperation(value = "获取用户矿机列表/获取用户 运行/过期 的矿机")
+    @NoNeedLogin
     public ResponseDTO<List<TwKjorder>> uidList(@RequestParam int uid) {
         return ResponseDTO.ok(twKjorderService.uidList(uid));
     }
@@ -94,6 +96,7 @@ public class PcKuangJiController {
     @GetMapping("/detail")
     @ResponseBody
     @ApiOperation(value = "获取矿机详情")
+    @NoNeedLogin
     public ResponseDTO<TwKuangji> detail(@RequestParam int id,@RequestParam int uid) {
         return ResponseDTO.ok(twKuangjiService.detail(id,uid));
     }
@@ -121,6 +124,7 @@ public class PcKuangJiController {
     @GetMapping("/kjprofit")
     @ResponseBody
     @ApiOperation(value = "矿机收益列表")
+    @NoNeedLogin
     public ResponseDTO<List<TwKjprofit>> kjprofit(@RequestParam int uid) {
         return ResponseDTO.ok(twKjprofitService.kjprofit(uid));
     }
@@ -129,6 +133,7 @@ public class PcKuangJiController {
     @GetMapping("/kjprofitSum")
     @ResponseBody
     @ApiOperation(value = "统计矿机收益列表")
+    @NoNeedLogin
     public ResponseDTO<TwPCKjprofitVo> kjprofitSum(@RequestParam int uid) {
         return ResponseDTO.ok(twKuangjiService.kjprofitSum(uid));
     }
@@ -136,6 +141,7 @@ public class PcKuangJiController {
     @GetMapping("/kjprofitOneSum")
     @ResponseBody
     @ApiOperation(value = "统计单个矿机托管资金")
+    @NoNeedLogin
     public ResponseDTO<TwPCKjprofitVo> kjprofitOneSum(@RequestParam int uid,@RequestParam int kid) {
         return ResponseDTO.ok(twKuangjiService.kjprofitOneSum(uid,kid));
     }
@@ -414,6 +420,7 @@ public class PcKuangJiController {
     @GetMapping("/buyKuangji")
     @ResponseBody
     @ApiOperation(value = "购买独资矿机")
+    @NoNeedLogin
     public ResponseDTO buyKuangji(@RequestParam int uid, @RequestParam int kid, @RequestParam BigDecimal buynum,@RequestParam String language) {
         return twKuangjiService.buyKuangji(uid,kid,buynum,language);
     }
