@@ -31,14 +31,12 @@ public class TwNewsController {
 
     @PostMapping("/list")
     @ApiOperation(value = "新闻列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwNews>> listpage(@Valid @RequestBody TwNewsVo twNewsVo) {
         return ResponseDTO.ok(twNewsService.listpage(twNewsVo));
     }
 
     @PostMapping("/addOrUpdate")
     @ApiOperation(value = "新闻新增或编辑")
-    @NoNeedLogin
     public ResponseDTO addOrUpdate(@RequestBody TwNews twNews) {
         return ResponseDTO.ok(twNewsService.addOrUpdate(twNews));
     }
@@ -48,14 +46,12 @@ public class TwNewsController {
      */
     @GetMapping("/delete")
     @ApiOperation(value = "删除新闻")
-    @NoNeedLogin
     public ResponseDTO delete(@RequestParam int id) {
         return ResponseDTO.ok(twNewsService.delete(id));
     }
 
     @GetMapping("/find")
     @ApiOperation(value = "查询新闻")
-    @NoNeedLogin
     public ResponseDTO find(@RequestParam int id) {
         return ResponseDTO.ok(twNewsService.find(id));
     }

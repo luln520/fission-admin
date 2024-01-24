@@ -30,7 +30,6 @@ public class PcUserController {
      * 参数： token
      * select user  where  uid=？
      * */
-    @NoNeedLogin
     @GetMapping("/userInfo")
     @ApiOperation("获取用户信息")
     public ResponseDTO userInfo(@RequestParam String token) {
@@ -57,7 +56,6 @@ public class PcUserController {
      *       $data['status'] = 1;
      *       M("notice")->add($data); （写入通知表）
      * */
-    @NoNeedLogin
     @PostMapping("/editpassword")
     @ApiOperation("用户重置密码")
     public ResponseDTO editpassword(@Valid @RequestBody UserReq userReq) {
@@ -103,7 +101,6 @@ public class PcUserController {
      * */
     @PostMapping("/auth")
     @ResponseBody
-    @NoNeedLogin
     @ApiOperation(value = "用户提交实名认证")
     public ResponseDTO auth(@RequestBody TwUser twUser) {
         return twUserService.auth(twUser);

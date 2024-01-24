@@ -120,7 +120,6 @@ public class TwKuangmController {
     @PostMapping("/getkuangjiList")
     @ResponseBody
     @ApiOperation(value = "矿机列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwKuangji>> getkuangjiList(@Valid @RequestBody PageParam pageParam) {
         //查询列表 并返回  M('kuangji')->order('id desc')->select();
         return ResponseDTO.ok(twKuangjiService.listpage(pageParam));
@@ -132,7 +131,6 @@ public class TwKuangmController {
     @PostMapping("/addkj")
     @ResponseBody
     @ApiOperation(value = "新增/编辑矿机")
-    @NoNeedLogin
     public ResponseDTO addkj(@RequestBody TwKuangji twKuangji) {
         return ResponseDTO.ok(twKuangjiService.addkj(twKuangji));
     }

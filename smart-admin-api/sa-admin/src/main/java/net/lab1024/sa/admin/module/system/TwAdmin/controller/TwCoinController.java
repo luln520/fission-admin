@@ -40,7 +40,6 @@ public class TwCoinController {
      */
     @PostMapping("/list")
     @ApiOperation(value = "币种配置列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwCoin>> listpage(@Valid @RequestBody PageParam pageParam) {
         return ResponseDTO.ok(twCoinService.listpage(pageParam));
     }
@@ -50,7 +49,6 @@ public class TwCoinController {
      */
     @PostMapping("/addOrUpdate")
     @ApiOperation(value = "公告新增或编辑")
-    @NoNeedLogin
     public ResponseDTO addOrUpdate(@RequestBody TwCoin twCoin) {
         return ResponseDTO.ok(twCoinService.addOrUpdate(twCoin));
     }
@@ -60,7 +58,6 @@ public class TwCoinController {
      */
     @GetMapping("/updateStatus")
     @ApiOperation(value = "币种禁用启用")
-    @NoNeedLogin
     public ResponseDTO updateStatus(@RequestParam int id,@RequestParam Integer status) {
         return ResponseDTO.ok(twCoinService.updateStatus(id,status));
     }
@@ -70,14 +67,12 @@ public class TwCoinController {
      */
     @GetMapping("/delete")
     @ApiOperation(value = "删除币")
-    @NoNeedLogin
     public ResponseDTO delete(@RequestParam int id) {
         return ResponseDTO.ok(twCoinService.delete(id));
     }
 
     @GetMapping("/find")
     @ApiOperation(value = "删除币")
-    @NoNeedLogin
     public ResponseDTO find(@RequestParam int id) {
         return ResponseDTO.ok(twCoinService.find(id));
     }

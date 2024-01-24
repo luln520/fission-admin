@@ -31,14 +31,12 @@ public class TwNewsTypeController {
 
     @PostMapping("/list")
     @ApiOperation(value = "新闻列表")
-    @NoNeedLogin
     public ResponseDTO<List<TwNewsType>> listpage() {
         return ResponseDTO.ok(twNewsTypeService.listpage());
     }
 
     @PostMapping("/addOrUpdate")
     @ApiOperation(value = "新闻新增或编辑")
-    @NoNeedLogin
     public ResponseDTO addOrUpdate(@RequestBody TwNewsType twNewsType) {
         return ResponseDTO.ok(twNewsTypeService.addOrUpdate(twNewsType));
     }
@@ -48,14 +46,12 @@ public class TwNewsTypeController {
      */
     @GetMapping("/delete")
     @ApiOperation(value = "删除新闻")
-    @NoNeedLogin
     public ResponseDTO delete(@RequestParam int id) {
         return ResponseDTO.ok(twNewsTypeService.delete(id));
     }
 
     @GetMapping("/find")
     @ApiOperation(value = "查询新闻")
-    @NoNeedLogin
     public ResponseDTO find(@RequestParam int id) {
         return ResponseDTO.ok(twNewsTypeService.find(id));
     }

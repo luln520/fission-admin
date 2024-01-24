@@ -31,7 +31,6 @@ public class PcBillController {
      * */
     @GetMapping("/list")
     @ApiOperation(value = "账单列表")
-    @NoNeedLogin
     public ResponseDTO<List<TwBill>> list(@RequestParam int uid) {
         return ResponseDTO.ok(twBillService.lists(uid));
     }

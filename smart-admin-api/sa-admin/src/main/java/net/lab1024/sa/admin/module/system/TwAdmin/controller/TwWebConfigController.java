@@ -26,14 +26,12 @@ public class TwWebConfigController {
 
     @GetMapping("/find")
     @ApiOperation(value = "查询网站信息，系统配置")
-    @NoNeedLogin
     public ResponseDTO<TwConfig> find() {
         return ResponseDTO.ok(twConfigService.find());
     }
 
     @PostMapping("/addOrUpdate")
     @ApiOperation(value = "修改网站信息，系统配置")
-    @NoNeedLogin
     @PreAuthorize("@saAuth.checkPermission('system:webConfig:add')")
     public ResponseDTO addOrUpdate(@RequestBody TwConfig twConfig) {
         return ResponseDTO.ok(twConfigService.addOrUpdate(twConfig));
