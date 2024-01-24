@@ -512,9 +512,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUser.setPassword(encryptPwd);
            twUser.setAreaCode("");
            twUser.setAddip(ip);
-           twUser.setKjMinnum(new BigDecimal(1000));
-           twUser.setKjMaxnum(new BigDecimal(5000));
-           twUser.setKjNum(1);
+//           twUser.setKjMinnum(new BigDecimal(1000));
+//           twUser.setKjMaxnum(new BigDecimal(5000));
+//           twUser.setKjNum(1);
            twUser.setAddr(locationByIP);
            twUser.setRealName(locationByIP);
            long timestampInSeconds = Instant.now().getEpochSecond();
@@ -946,9 +946,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setType(type);
                 twUser.setAreaCode("");
                 twUser.setPath(path);
-                twUser.setKjMinnum(new BigDecimal(1000));
-                twUser.setKjMaxnum(new BigDecimal(5000));
-                twUser.setKjNum(1);
                 twUser.setAddip(ip);
                 twUser.setDepatmentId(departmentId.intValue());
                 twUser.setAddr(address);
@@ -970,8 +967,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 List<TwKuangji> list = twKuangjiService.list();
                 for(TwKuangji twKuangji:list){
                     TwUserKuangji twUserKuangji = new TwUserKuangji();
-                    twUserKuangji.setMin(new BigDecimal(1000));
-                    twUserKuangji.setMax(new BigDecimal(5000));
+                    twUserKuangji.setMin(twKuangji.getMin());
+                    twUserKuangji.setMax(twKuangji.getMax());
                     twUserKuangji.setNum(1);
                     twUserKuangji.setKjId(twKuangji.getId());
                     twUserKuangji.setKjName(twKuangji.getTitle());
