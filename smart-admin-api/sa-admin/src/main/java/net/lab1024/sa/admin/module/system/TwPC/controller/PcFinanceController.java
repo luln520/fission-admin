@@ -40,7 +40,6 @@ public class PcFinanceController {
      */
     @GetMapping("/listPcpage")
     @ApiOperation(value = "提币列表")
-    @NoNeedLogin
     public ResponseDTO<List<TwMyzc>> listPcpage(@RequestParam int uid) {
         return ResponseDTO.ok(twMyzcService.listPcpage(uid));
     }
@@ -54,7 +53,6 @@ public class PcFinanceController {
      */
     @GetMapping("/listRecharge")
     @ApiOperation(value = "充币列表")
-    @NoNeedLogin
     public ResponseDTO<List<TwRecharge>> listRecharge(@RequestParam int uid) {
         return ResponseDTO.ok(twRechargeService.listRecharge(uid));
     }
@@ -141,7 +139,6 @@ public class PcFinanceController {
      */
     @GetMapping("/tbhandle")
     @ApiOperation(value = "申请提币")
-    @NoNeedLogin
     public ResponseDTO tbhandle(@RequestParam int uid,
                                 @RequestParam int cid,
                                 @RequestParam String address,
@@ -191,7 +188,6 @@ public class PcFinanceController {
      */
     @GetMapping("/paycoin")
     @ApiOperation(value = "上传转账号凭证")
-    @NoNeedLogin
     public ResponseDTO paycoin(@RequestParam int uid,
                                @RequestParam String coinname,
                                @RequestParam String czaddress,
@@ -218,7 +214,6 @@ public class PcFinanceController {
      */
     @GetMapping("/userCoin")
     @ApiOperation(value = "获取折合资产")
-    @NoNeedLogin
     public ResponseDTO<TwUserCoin> userCoin(@RequestParam int uid) {
         return ResponseDTO.ok(twUserCoinService.userCoin(uid));
     }

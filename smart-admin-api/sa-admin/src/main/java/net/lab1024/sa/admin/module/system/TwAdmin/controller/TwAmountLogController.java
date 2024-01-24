@@ -35,7 +35,6 @@ public class TwAmountLogController {
      */
     @PostMapping("/list")
     @ApiOperation(value = "资金流水列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwBill>> listpage(@Valid @RequestBody TwBillVo twBillVo, HttpServletRequest request) {
         return ResponseDTO.ok(twBillService.listpage(twBillVo,request));
     }

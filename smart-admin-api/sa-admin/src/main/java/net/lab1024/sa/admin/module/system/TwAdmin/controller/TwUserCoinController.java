@@ -44,7 +44,6 @@ public class TwUserCoinController {
      */
     @PostMapping("/list")
     @ApiOperation(value = "用户财产列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwUserCoin>> listpage(@RequestBody TwUserVo twUserVo) {
         return ResponseDTO.ok(twUserCoinService.listpage(twUserVo));
     }

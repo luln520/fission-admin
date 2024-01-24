@@ -43,7 +43,6 @@ public class TwFinanceController {
      */
     @PostMapping("/billList")
     @ApiOperation(value = "账务明细列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwBill>> listpage(@Valid @RequestBody TwBillVo twBillVo, HttpServletRequest request) {
         return ResponseDTO.ok(twBillService.listpage(twBillVo,request));
     }
@@ -54,7 +53,6 @@ public class TwFinanceController {
      */
     @PostMapping("/rechargeList")
     @ApiOperation(value = "充币列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwRecharge>> listpage(@Valid @RequestBody TwRechargeVo twRechargeVo, HttpServletRequest request) {
         return ResponseDTO.ok(twRechargeService.listpage(twRechargeVo,request));
     }
@@ -64,7 +62,6 @@ public class TwFinanceController {
      */
     @PostMapping("/list")
     @ApiOperation(value = "提币列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwMyzc>> listpage(@Valid @RequestBody TwMyzcVo twMyzcVo, HttpServletRequest request) {
         return ResponseDTO.ok(twMyzcService.listpage(twMyzcVo,request));
     }
@@ -75,7 +72,6 @@ public class TwFinanceController {
      */
     @GetMapping("/reject")
     @ApiOperation(value = "驳回充值")
-    @NoNeedLogin
     public ResponseDTO reject(@RequestParam int  id) {
         return twRechargeService.reject(id);
     }
@@ -116,7 +112,6 @@ public class TwFinanceController {
 
     @GetMapping("/confirm")
     @ApiOperation(value = "确认充币")
-    @NoNeedLogin
     public ResponseDTO confirm(@RequestParam int  id) {
         return twRechargeService.confirm(id);
     }
@@ -168,7 +163,6 @@ public class TwFinanceController {
 
     @GetMapping("/rejectCoin")
     @ApiOperation(value = "驳回提币")
-    @NoNeedLogin
     public ResponseDTO rejectCoin(@RequestParam int  id) {
         return twMyzcService.rejectCoin(id);
     }
@@ -231,7 +225,6 @@ public class TwFinanceController {
 
     @GetMapping("/confirmCoin")
     @ApiOperation(value = "通过提币")
-    @NoNeedLogin
     public ResponseDTO confirmCoin(@RequestParam int  id) {
         return twMyzcService.confirmCoin(id);
     }

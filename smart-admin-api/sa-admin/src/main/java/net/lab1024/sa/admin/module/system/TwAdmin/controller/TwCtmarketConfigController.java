@@ -30,7 +30,6 @@ public class TwCtmarketConfigController {
      */
     @PostMapping("/list")
     @ApiOperation(value = "市场配置列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwCtmarket>> listpage(@Valid @RequestBody PageParam pageParam) {
         return ResponseDTO.ok(twCtmarketService.listpage(pageParam));
     }
@@ -40,14 +39,12 @@ public class TwCtmarketConfigController {
      */
     @GetMapping("/updateStatus")
     @ApiOperation(value = "市场配置禁用启用")
-    @NoNeedLogin
     public ResponseDTO updateStatus(@RequestParam int id, @RequestParam int status) {
         return ResponseDTO.ok(twCtmarketService.updateStatus(id,status));
     }
 
     @PostMapping("/addOrUpdate")
     @ApiOperation(value = "市场配置新增或编辑")
-    @NoNeedLogin
     public ResponseDTO addOrUpdate(@RequestBody TwCtmarket twCtmarket) {
         return ResponseDTO.ok(twCtmarketService.addOrUpdate(twCtmarket));
     }
@@ -55,14 +52,12 @@ public class TwCtmarketConfigController {
 
     @GetMapping("/find")
     @ApiOperation(value = "查询市场配置")
-    @NoNeedLogin
     public ResponseDTO find(@RequestParam int id) {
         return ResponseDTO.ok(twCtmarketService.find(id));
     }
 
     @GetMapping("/delete")
     @ApiOperation(value = "删除市场配置")
-    @NoNeedLogin
     public ResponseDTO delete(@RequestParam int id) {
         return ResponseDTO.ok(twCtmarketService.delete(id));
     }

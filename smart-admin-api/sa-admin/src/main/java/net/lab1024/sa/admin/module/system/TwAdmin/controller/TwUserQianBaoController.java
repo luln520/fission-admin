@@ -37,7 +37,6 @@ public class TwUserQianBaoController {
      * */
     @PostMapping("/list")
     @ApiOperation(value = "获取用户钱包列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwUserQianbao>> listpage(@Valid @RequestBody TwUserVo twUserVo) {
         return ResponseDTO.ok(twUserQianbaoService.listpage(twUserVo));
     }
@@ -47,7 +46,6 @@ public class TwUserQianBaoController {
      */
     @PostMapping("/addUpdate")
     @ApiOperation(value = "新增或者编辑用户钱包")
-    @NoNeedLogin
     public ResponseDTO addUpdate(@Valid @RequestBody TwUserQianbao userQianBao) {
         return ResponseDTO.ok(twUserQianbaoService.addUpdate(userQianBao));
     }
@@ -57,7 +55,6 @@ public class TwUserQianBaoController {
      */
     @GetMapping("/del")
     @ApiOperation(value = "删除用户钱包")
-    @NoNeedLogin
     public ResponseDTO delete(@RequestParam int id) {
         return ResponseDTO.ok(twUserQianbaoService.del(id));
     }

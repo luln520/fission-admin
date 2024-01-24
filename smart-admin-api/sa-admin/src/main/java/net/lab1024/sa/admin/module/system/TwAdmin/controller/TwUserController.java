@@ -13,6 +13,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +56,6 @@ public class TwUserController {
      */
     @PostMapping("/list")
     @ApiOperation(value = "获取所有用户")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwUser>> listUserpage(@Valid @RequestBody TwUserVo twUserVo, HttpServletRequest request) {
         return ResponseDTO.ok(twUserService.listUserpage(twUserVo,request));
     }
@@ -68,7 +68,6 @@ public class TwUserController {
      */
     @GetMapping("/setBuy")
     @ApiOperation(value = "禁止/允许交易")
-    @NoNeedLogin
     public ResponseDTO setBuy(@RequestParam int id,@RequestParam int buyOn) {
         return ResponseDTO.ok(twUserService.setBUy(id,buyOn));
     }
@@ -89,7 +88,7 @@ public class TwUserController {
      */
     @GetMapping("/setWin")
     @ApiOperation(value = "指定必赢/指定必输/正常输赢")
-    @NoNeedLogin
+    @PreAuthorize("@saAuth.checkPermission('system:user:win')")
     public ResponseDTO setWin(@RequestParam int id,@RequestParam int type,@RequestParam int uid, HttpServletRequest request) {
         return ResponseDTO.ok(twHysettingService.setWin(id,type,uid,request));
     }
@@ -123,7 +122,6 @@ public class TwUserController {
     //不要删除会员
     @GetMapping("/setUser")
     @ApiOperation(value = "修改会员状态（冻结，解冻，启动提币禁止提币 ，删除会员）")
-    @NoNeedLogin
     public ResponseDTO setUser(@RequestParam int id,@RequestParam int type,@RequestParam int uid) {
         return ResponseDTO.ok(twUserService.setUser(id,type,uid));
     }
@@ -161,7 +159,6 @@ public class TwUserController {
      */
     @GetMapping("/userNotice")
     @ApiOperation(value = "给会员发送通知或者群发")
-    @NoNeedLogin
     public ResponseDTO userNotice(@RequestParam int id,
                                   @RequestParam int type,
                                   @RequestParam String title,
@@ -229,7 +226,7 @@ public class TwUserController {
 
     @GetMapping("/setMoney")
     @ApiOperation(value = "修改用户余额")
-    @NoNeedLogin
+    @PreAuthorize("@saAuth.checkPermission('system:user:money')")
     public ResponseDTO setMoney(@RequestParam int uid, @RequestParam int type, @RequestParam BigDecimal money,HttpServletRequest request) {
         return ResponseDTO.ok(twUserService.setMoney(uid,type,money,request));
     }
@@ -252,7 +249,6 @@ public class TwUserController {
      */
     @PostMapping("/addOrUpdate")
     @ApiOperation(value = "编辑或新增会员")
-    @NoNeedLogin
     public ResponseDTO addOrUpdate(@RequestBody TwUser twUser, HttpServletRequest request) throws IOException {
         return twUserService.addOrUpdate(twUser,request);
     }
@@ -260,14 +256,12 @@ public class TwUserController {
 
     @PostMapping("/authList")
     @ApiOperation(value = "获取认证用户")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwUser>> authList(@Valid @RequestBody TwUserVo twUserVo) {
         return ResponseDTO.ok(twUserService.authList(twUserVo));
     }
 
     @GetMapping("/authProcess")
     @ApiOperation(value = "认证用户审核")
-    @NoNeedLogin
     public ResponseDTO authProcess(@RequestParam int uid, @RequestParam int type, HttpServletRequest request) {
         return ResponseDTO.ok(twUserService.authProcess(uid,type,request));
     }
@@ -275,7 +269,7 @@ public class TwUserController {
 
     @PostMapping("/updatekj")
     @ApiOperation(value = "用户矿机单控")
-    @NoNeedLogin
+    @PreAuthorize("@saAuth.checkPermission('system:user:updatekj')")
     public ResponseDTO updatekj(@Valid @RequestBody TwUserKuangji twUserKuangji) {
         return ResponseDTO.ok(twUserKuangjiService.updatekj(twUserKuangji));
     }
