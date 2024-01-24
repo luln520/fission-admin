@@ -38,7 +38,8 @@
         </div>
     </a-form>
     <div style="padding-left: 200px;">
-        <a-button type="primary" @click="submit">提交</a-button>
+        <a-button v-if="props.privilege" v-privilege="props.privilege" type="primary" @click="submit">提交</a-button>
+        <a-button v-else type="primary" @click="submit">提交</a-button>
     </div>
 </template>
 <script setup lang="ts">
@@ -46,7 +47,7 @@ import { ref, shallowRef } from 'vue'
 import { message } from 'ant-design-vue';
 import { UploadChangeParam } from 'ant-design-vue/es/upload/interface';
 import {imageConfig } from "/@/config/app-config"
-const props = defineProps(["data", "formItems"]);
+const props = defineProps(["data", "formItems","privilege"]);
 const emit = defineEmits(["submit"]);
 const dataFormRef = shallowRef();
 const dataModel = ref(props.data);

@@ -72,18 +72,22 @@
               <MessageOutlined />
             </a-tooltip>
             <a-divider type="vertical" />
-            <a-tooltip @click="openEditKJ(record)">
-              <template #title>矿机单控</template>
-              <UngroupOutlined />
-            </a-tooltip>
-            <a-divider type="vertical" />
-            <a-tooltip @click="() => {
-              isOpenEditFK = true;
-              addOrEditDataFK = record;
-            }">
-              <template #title>用户风控</template>
-              <ThunderboltOutlined />
-            </a-tooltip>
+            <span v-privilege="'system:user:updatekj'">
+              <a-tooltip @click="openEditKJ(record)">
+                <template #title>矿机单控</template>
+                <UngroupOutlined />
+              </a-tooltip>
+              <a-divider type="vertical" />
+            </span>
+            <span v-privilege="'system:user:win'">
+              <a-tooltip @click="() => {
+                isOpenEditFK = true;
+                addOrEditDataFK = record;
+              }">
+                <template #title>用户风控</template>
+                <ThunderboltOutlined />
+              </a-tooltip>
+            </span>
             <!-- <a v-if="record.isAgent == 0" @click="setAgent(record.id)"><a-divider type="vertical" />设为代理</a> -->
             <!-- <div style="height: 10px;"></div>
             <a @click="setWin(record.id, 2)">指定必输</a>
@@ -95,14 +99,16 @@
         </template>
         <template v-if="column.key === 'action1'">
           <div>
-            <a-tooltip @click="() => {
-              isOpenUserMoney = true;
-              userMoneyData.id = record.id;
-            }">
-              <template #title>资产</template>
-              <DollarCircleOutlined />
-            </a-tooltip>
-            <a-divider type="vertical" />
+            <span v-privilege="'system:user:money'">
+              <a-tooltip @click="() => {
+                isOpenUserMoney = true;
+                userMoneyData.id = record.id;
+              }">
+                <template #title>资产</template>
+                <DollarCircleOutlined />
+              </a-tooltip>
+              <a-divider type="vertical" />
+            </span>
             <a-tooltip @click="() => {
               isOpenEditJY = true;
               addOrEditDataJY = record;
@@ -797,13 +803,13 @@ async function loadData() {
     tableData.value = data.records;
     pagination.value.total = data.total;
     //更新二级列表
-    if(addOrEditDataKJ.value?.id){
+    if (addOrEditDataKJ.value?.id) {
       for (let index = 0; index < tableData.value.length; index++) {
         const d = tableData.value[index];
-        if(d.id==addOrEditDataKJ.value?.id){
-          addOrEditDataKJ.value=d;
+        if (d.id == addOrEditDataKJ.value?.id) {
+          addOrEditDataKJ.value = d;
         }
-        
+
       }
     }
   }
