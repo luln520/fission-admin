@@ -2,7 +2,7 @@
   <!-- 表格 -->
   <a-card style="min-height:100%;margin-top: 10px;">
     <!-- 编辑弹框 -->
-    <AddOrEdit v-if="isShow" @submit="addOrEditSubmit" :formItems="formItems" :data="baseData" />
+    <AddOrEdit v-if="isShow" @submit="addOrEditSubmit" :formItems="formItems" :data="baseData" privilege="system:webConfig:add" />
   </a-card>
 </template>
 <script setup lang="ts">

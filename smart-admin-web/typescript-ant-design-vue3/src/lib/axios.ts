@@ -57,10 +57,13 @@ smartAxios.interceptors.response.use(
         setTimeout(() => {
           location.href = '/';
         }, 300);
-        return Promise.resolve(response);
+        return Promise.resolve(res);
+      }
+      if (res.code === 30005) {
+        message.error(res.msg);
       }
       // message.error(res.msg);
-      return Promise.resolve(response);
+      return Promise.resolve(res);
     } else {
       return Promise.resolve(res);
     }
@@ -71,7 +74,7 @@ smartAxios.interceptors.response.use(
       message.error('网络超时');
     } else if (error.message == 'Network Error') {
       message.error('网络连接错误');
-    }else if (error.message.indexOf('Request') != -1) {
+    } else if (error.message.indexOf('Request') != -1) {
       message.error('网络发生错误');
     }
     return Promise.reject(error);
