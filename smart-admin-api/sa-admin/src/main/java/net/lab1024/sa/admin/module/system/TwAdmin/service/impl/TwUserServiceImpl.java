@@ -556,7 +556,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            one.setCardzm(twUser.getCardzm());
            one.setUsername(twUser.getUsername());
            if(StringUtils.isNotEmpty(twUser.getPassword())){
-               one.setPassword(twUser.getPassword());
+               String encryptPwd = getEncryptPwd(twUser.getPassword());
+               one.setPassword(encryptPwd);
            }
            one.setTxstate(twUser.getTxstate());
            one.setBuyOn(twUser.getBuyOn());
