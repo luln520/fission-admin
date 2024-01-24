@@ -148,14 +148,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
             for(TwUser twUser:list){
                 String paths = "";
-                String path = twUser.getPath();
-                String[] numberStrings = path.replace("#", "").split(",");
-                int[] numbers = new int[numberStrings.length];
-                for (int i = 0; i < numberStrings.length; i++) {
-                    numbers[i] = Integer.parseInt(numberStrings[i]);
-                }
-                for (int num : numbers) {
-                    EmployeeEntity byId = employeeService.getById(Long.valueOf(num));
+//                String path = twUser.getPath();
+//                String[] numberStrings = path.replace("#", "").split(",");
+//                int[] numbers = new int[numberStrings.length];
+//                for (int i = 0; i < numberStrings.length; i++) {
+//                    numbers[i] = Integer.parseInt(numberStrings[i]);
+//                }
+//                for (int num : numbers) {
+                    EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
                     if(byId == null){
                         QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
                         queryWrapper1.eq("id", twUser.getId());
@@ -168,7 +168,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         String actualName = byId.getActualName();
                         paths += actualName +",";
                     }
-                }
+//                }
                 QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper1.eq("userid", twUser.getId());
                 TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
@@ -258,14 +258,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
                 for(TwUser twUser:list){
                     String paths = "";
-                    String path = twUser.getPath();
-                    String[] numberStrings = path.replace("#", "").split(",");
-                    int[] numbers = new int[numberStrings.length];
-                    for (int i = 0; i < numberStrings.length; i++) {
-                        numbers[i] = Integer.parseInt(numberStrings[i]);
-                    }
-                    for (int num : numbers) {
-                        EmployeeEntity byId = employeeService.getById(Long.valueOf(num));
+//                    String path = twUser.getPath();
+//                    String[] numberStrings = path.replace("#", "").split(",");
+//                    int[] numbers = new int[numberStrings.length];
+//                    for (int i = 0; i < numberStrings.length; i++) {
+//                        numbers[i] = Integer.parseInt(numberStrings[i]);
+//                    }
+//                    for (int num : numbers) {
+                        EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
                         if(byId == null){
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
                             queryWrapper1.eq("id", twUser.getId());
@@ -278,7 +278,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             String actualName = byId.getActualName();
                             paths += actualName +",";
                         }
-                    }
+//                    }
                     QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
                     queryWrapper1.eq("userid", twUser.getId());
                     TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
@@ -364,14 +364,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
                 for(TwUser twUser:list){
                     String paths = "";
-                    String path = twUser.getPath();
-                    String[] numberStrings = path.replace("#", "").split(",");
-                    int[] numbers = new int[numberStrings.length];
-                    for (int i = 0; i < numberStrings.length; i++) {
-                        numbers[i] = Integer.parseInt(numberStrings[i]);
-                    }
-                    for (int num : numbers) {
-                        EmployeeEntity byId = employeeService.getById(Long.valueOf(num));
+//                    String path = twUser.getPath();
+//                    String[] numberStrings = path.replace("#", "").split(",");
+//                    int[] numbers = new int[numberStrings.length];
+//                    for (int i = 0; i < numberStrings.length; i++) {
+//                        numbers[i] = Integer.parseInt(numberStrings[i]);
+//                    }
+//                    for (int num : numbers) {
+                        EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
                         if(byId == null){
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
                             queryWrapper1.eq("id", twUser.getId());
@@ -384,7 +384,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             String actualName = byId.getActualName();
                             paths += actualName +",";
                         }
-                    }
+//                    }
                     QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
                     queryWrapper1.eq("userid", twUser.getId());
                     TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
@@ -544,7 +544,23 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
        }
 
        if(twUser.getId() != null){
-           this.updateById(twUser);
+           QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+           queryWrapper.eq("id", twUser.getId());
+           TwUser one = this.getOne(queryWrapper);
+
+           one.setJifen(twUser.getJifen());
+           one.setStatus(twUser.getStatus());
+           one.setUserType(twUser.getUserType());
+           one.setRztype(twUser.getRztype());
+           one.setCardfm(twUser.getCardfm());
+           one.setCardzm(twUser.getCardzm());
+           one.setUsername(twUser.getUsername());
+           if(StringUtils.isNotEmpty(twUser.getPassword())){
+               one.setPassword(twUser.getPassword());
+           }
+           one.setTxstate(twUser.getTxstate());
+           one.setBuyOn(twUser.getBuyOn());
+           this.updateById(one);
            return ResponseDTO.ok();
        }
            return ResponseDTO.ok();
