@@ -17,8 +17,8 @@ const dataModel = ref(props.data);
 const formItems = props.formItems;
 const labelCol = { style: { width: '120px' } };
 const optionsWithDisabled = [
-    { label: '亏损', value: 1 },
-    { label: '盈利', value: 2 },
+    { label: '盈利', value: 1 },
+    { label: '亏损', value: 2 },
     { label: '正常', value: 3 },
 ];
 //点击确认

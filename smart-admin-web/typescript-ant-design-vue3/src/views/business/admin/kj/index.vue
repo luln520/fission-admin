@@ -40,9 +40,9 @@
           <div>产出类型：{{ record.outtype == 1 ? "按产值" : "按币量" }}</div>
           <div>日产量：{{ record.dayoutnum }}</div>
         </template>
-        <template v-if="column.key === 'pricenum'">
-          {{ record.pricenum }}usdt
-        </template>
+        <!-- <template v-if="column.key === 'pricenum'">
+          {{ record.pricemin }}~{{record.pricemax}}
+        </template> -->
         <template v-if="column.key === 'buymax'">
           {{ record.buymax }}台
         </template>
@@ -173,9 +173,21 @@ const formItems = [{
     { name: "btcBTC", value: 'btc' }
   ]
 }, {
-  name: "pricenum",
-  label: "矿机单价",
-  placeholder: '请输入矿机单价',
+  name: "pricemin",
+  label: "最低价",
+  placeholder: '请输入矿机最低价',
+  type: "input",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
+}, {
+  name: "pricemax",
+  label: "最高价",
+  placeholder: '请输入矿机最高价',
   type: "input",
   defaultValue: '',
   rules: [
@@ -244,10 +256,15 @@ const columns = [
     key: 'imgs',
     width: 100
   }, {
-    title: '购买单价',
-    dataIndex: 'pricenum',
-    key: 'pricenum',
-    width: 150
+    title: '最低价',
+    dataIndex: 'pricemin',
+    key: 'pricemin',
+    width: 70
+  },{
+    title: '最高价',
+    dataIndex: 'pricemax',
+    key: 'pricemax',
+    width: 70
   },
   {
     title: '周期',

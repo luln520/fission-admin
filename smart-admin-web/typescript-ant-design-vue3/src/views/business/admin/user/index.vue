@@ -164,11 +164,16 @@
     }
       " @submit="userMoneySubmit" />
   <!-- kj单控 -->
-  <KJEdit v-if="isOpenEditKJ" ref="addOrEditRefKJ" :isOpen="isOpenEditKJ" :formItems="userKJFormItems"
-    :data="addOrEditDataKJ" @close="() => {
+  <KJTableEdit v-if="isOpenEditKJ" ref="addOrEditRefKJ" :isOpen="isOpenEditKJ" :data="addOrEditDataKJ.twUserKuangji"
+    @close="() => {
       isOpenEditKJ = false;
     }
       " @submit="editKJSubmit" />
+  <!-- <KJEdit v-if="isOpenEditKJ" ref="addOrEditRefKJ" :isOpen="isOpenEditKJ" :formItems="userKJFormItems"
+    :data="addOrEditDataKJ" @close="() => {
+      isOpenEditKJ = false;
+    }
+      " @submit="editKJSubmit" /> -->
   <!-- 交易控制 -->
   <JYEdit v-if="isOpenEditJY" ref="addOrEditRefJY" :isOpen="isOpenEditJY" :formItems="[]" :data="addOrEditDataJY" @close="() => {
     isOpenEditJY = false;
@@ -198,6 +203,7 @@ import { userApi } from '/@/api/business/admin/user-api';
 import { agentApi } from '/@/api/business/admin/agent-api';
 import AddOrEdit from "/@/components/edit/edit.vue"
 import KJEdit from "./components/kj/kj.vue"
+import KJTableEdit from "./components/kjtable/kjtable.vue"
 import JYEdit from "./components/jy/jy.vue"
 import TBEdit from "./components/tb/tb.vue"
 import ZHEdit from "./components/zh/zh.vue"
@@ -209,7 +215,7 @@ const rztypeStrs = [
   '护照', '驾驶证', 'SSN', '身份ID '
 ];
 const winStrs = [
-  '亏损', '盈利', '正常'
+  '盈利', '亏损', '正常'
 ];
 const addOrEditRef = ref();
 const isOpenEdit = ref(false);
@@ -221,7 +227,7 @@ const sendMsgType = ref(1);
 const sendMsgData = ref({} as any);
 //kj
 const isOpenEditKJ = ref(false);
-const addOrEditDataKJ = ref({});
+const addOrEditDataKJ = ref({} as any);
 const addOrEditRefKJ = ref();
 //交易
 const isOpenEditJY = ref(false);
@@ -752,15 +758,12 @@ async function userMoneySubmit(submitData) {
 
 //kg单控
 async function editKJSubmit(submitData) {
-  const sendData = {} as any;
-  sendData.kjNum = parseInt(submitData.kjNum);
-  sendData.kjMinnum = parseFloat(submitData.kjMinnum);
-  sendData.kjMaxnum = parseFloat(submitData.kjMaxnum);
-  sendData.id = submitData.id;
-  let data = await userApi.addOrUpdate(sendData);
+  let data = await userApi.updatekj(submitData);
   if (data.ok) {
     message.success("操作成功！");
-    addOrEditRefKJ.value.close();
+    if (!submitData.noClose) {
+      addOrEditRefKJ.value.close();
+    }
   } else {
     message.error("操作失败！请重试~");
   }
@@ -793,7 +796,16 @@ async function loadData() {
     data = data.data;
     tableData.value = data.records;
     pagination.value.total = data.total;
-    console.info(tableData.value)
+    //更新二级列表
+    if(addOrEditDataKJ.value?.id){
+      for (let index = 0; index < tableData.value.length; index++) {
+        const d = tableData.value[index];
+        if(d.id==addOrEditDataKJ.value?.id){
+          addOrEditDataKJ.value=d;
+        }
+        
+      }
+    }
   }
 }
 onMounted(() => {
