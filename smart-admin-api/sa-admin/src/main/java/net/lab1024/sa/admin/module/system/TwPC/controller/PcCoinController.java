@@ -33,7 +33,6 @@ public class PcCoinController {
      * */
     @GetMapping("/list")
     @ApiOperation(value = "账单列表")
-    @NoNeedLogin
     public ResponseDTO<List<TwCoin>> lists() {
         return ResponseDTO.ok(twCoinService.lists());
     }
@@ -46,7 +45,6 @@ public class PcCoinController {
      * */
     @GetMapping("/find")
     @ApiOperation(value = "获取单个币种信息")
-    @NoNeedLogin
     public ResponseDTO<TwCoin> find(@RequestParam int id) {
         return ResponseDTO.ok(twCoinService.find(id));
     }

@@ -31,7 +31,6 @@ public class PcQianBaoController {
      * */
     @GetMapping("/list")
     @ResponseBody
-    @NoNeedLogin
     @ApiOperation(value = "提币地址管理")
     public ResponseDTO<List<TwUserQianbao>> lists(@RequestParam int uid) {
         return ResponseDTO.ok(twUserQianbaoService.lists(uid));
@@ -45,7 +44,6 @@ public class PcQianBaoController {
      * */
     @GetMapping("/del")
     @ResponseBody
-    @NoNeedLogin
     @ApiOperation(value = "删除提币地址")
     public ResponseDTO del(@RequestParam int id) {
         return ResponseDTO.ok(twUserQianbaoService.del(id));
@@ -81,7 +79,6 @@ public class PcQianBaoController {
      * */
     @GetMapping("/add")
     @ResponseBody
-    @NoNeedLogin
     @ApiOperation(value = "添加提币地址")
     public ResponseDTO add(@RequestParam int uid,
                            @RequestParam int oid,
@@ -93,7 +90,6 @@ public class PcQianBaoController {
 
     @GetMapping("/qbSum")
     @ResponseBody
-    @NoNeedLogin
     @ApiOperation(value = "钱包统计")
     public ResponseDTO qbSum(@RequestParam int uid) {
         return twUserQianbaoService.qbSum(uid);

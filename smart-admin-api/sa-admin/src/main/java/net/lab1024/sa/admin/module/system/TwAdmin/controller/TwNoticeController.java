@@ -34,7 +34,6 @@ public class TwNoticeController {
      */
     @PostMapping("/list")
     @ApiOperation(value = "通知管理列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwNotice>> listpage(@Valid @RequestBody PageParam pageParam, HttpServletRequest request) {
         return ResponseDTO.ok(twNoticeService.listpage(pageParam,request));
     }

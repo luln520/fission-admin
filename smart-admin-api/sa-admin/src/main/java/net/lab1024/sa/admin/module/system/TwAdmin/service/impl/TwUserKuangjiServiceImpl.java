@@ -9,6 +9,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserKuangjiService;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
 * @author 1
@@ -21,15 +22,28 @@ public class TwUserKuangjiServiceImpl extends ServiceImpl<TwUserKuangjiMapper, T
 
     @Override
     public boolean updatekj(TwUserKuangji twUserKuangji) {
+//        QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("kj_id", twUserKuangji.getKjId());
+//        queryWrapper.eq("user_id", twUserKuangji.getUserId());
+//        TwUserKuangji one = this.getOne(queryWrapper);
+//        one.setMin(twUserKuangji.getMin());
+//        one.setMax(twUserKuangji.getMax());
+//        one.setNum(twUserKuangji.getNum());
+//        one.setUpdateTime(new Date());
+//        return this.updateById(one);
+
         QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("kj_id", twUserKuangji.getKjId());
         queryWrapper.eq("user_id", twUserKuangji.getUserId());
-        TwUserKuangji one = this.getOne(queryWrapper);
-        one.setMin(twUserKuangji.getMin());
-        one.setMax(twUserKuangji.getMax());
-        one.setNum(twUserKuangji.getNum());
-        one.setUpdateTime(new Date());
-        return this.updateById(one);
+        List<TwUserKuangji> list = this.list(queryWrapper);
+        for(TwUserKuangji twUserKuang:list){
+            twUserKuang.setMin(twUserKuangji.getMin());
+            twUserKuang.setMax(twUserKuangji.getMax());
+            twUserKuang.setNum(twUserKuangji.getNum());
+            twUserKuang.setUpdateTime(new Date());
+            this.updateById(twUserKuang);
+        }
+
+        return true;
     }
 }
 

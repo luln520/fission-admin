@@ -35,7 +35,6 @@ public class TwOnlineController {
     @PostMapping("/list")
     @ApiOperation(value = "获取所有用户的聊天列表")
     @ResponseBody
-    @NoNeedLogin
     public ResponseDTO<IPage<TwOnline>> list(@Valid @RequestBody PageParam pageParam, HttpServletRequest request) {
         return ResponseDTO.ok(twOnlineService.listpage(pageParam,request));
     }
@@ -49,7 +48,6 @@ public class TwOnlineController {
     @GetMapping("/getId")
     @ResponseBody
     @ApiOperation(value = "获取单个用户的对话信息")
-    @NoNeedLogin
     public ResponseDTO<List<TwOnline>> getId(@RequestParam int uid) {
         return ResponseDTO.ok(twOnlineService.getId(uid));
     }
@@ -78,7 +76,6 @@ public class TwOnlineController {
     @GetMapping("/backOnline")
     @ResponseBody
     @ApiOperation(value = "客服回复")
-    @NoNeedLogin
     public ResponseDTO backOnline(@RequestParam int uid, @RequestParam String content) {
         return twOnlineService.backOnline(uid,content);
     }

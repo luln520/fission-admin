@@ -145,8 +145,18 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
     @Override
     public boolean addkj(TwKuangji twKuangji) {
+        this.saveOrUpdate(twKuangji);
 
-       return this.saveOrUpdate(twKuangji);
+        QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("kj_id", twKuangji.getId());
+        List<TwUserKuangji> list = twUserKuangjiService.list(queryWrapper);
+        for(TwUserKuangji twUserKuang:list){
+            twUserKuang.setMin(twKuangji.getMin());
+            twUserKuang.setMax(twKuangji.getMax());
+            twUserKuang.setUpdateTime(new Date());
+            twUserKuangjiService.updateById(twUserKuang);
+        }
+        return true;
     }
 
     @Override

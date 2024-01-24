@@ -43,7 +43,6 @@ public class TwIndexController {
      */
     @GetMapping("/getIndexData")
     @ResponseBody
-    @NoNeedLogin
     public ResponseDTO getIndexData() {
         Map<String, Object> result = new HashMap<>();
         // 获取当前时间

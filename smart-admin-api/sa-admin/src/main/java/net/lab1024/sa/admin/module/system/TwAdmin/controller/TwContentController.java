@@ -41,7 +41,6 @@ public class TwContentController {
      */
     @PostMapping("/list")
     @ApiOperation(value = "公告新增列表")
-    @NoNeedLogin
     public ResponseDTO<IPage<TwContent>> listpage(@Valid @RequestBody PageParam pageParam) {
         return ResponseDTO.ok(twContentService.listpage(pageParam));
     }
@@ -51,7 +50,6 @@ public class TwContentController {
      */
     @PostMapping("/addOrUpdate")
     @ApiOperation(value = "公告新增或编辑")
-    @NoNeedLogin
     public ResponseDTO addOrUpdate(@RequestBody TwContent twContent) {
         return ResponseDTO.ok(twContentService.addOrUpdate(twContent));
     }
@@ -61,14 +59,12 @@ public class TwContentController {
      */
     @GetMapping("/delete")
     @ApiOperation(value = "删除公告")
-    @NoNeedLogin
     public ResponseDTO delete(@RequestParam int id) {
         return ResponseDTO.ok(twContentService.delete(id));
     }
 
     @GetMapping("/find")
     @ApiOperation(value = "查询公告")
-    @NoNeedLogin
     public ResponseDTO find(@RequestParam int id) {
         return ResponseDTO.ok(twContentService.find(id));
     }
