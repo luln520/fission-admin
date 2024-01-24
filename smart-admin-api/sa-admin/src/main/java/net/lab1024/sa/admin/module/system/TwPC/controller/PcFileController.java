@@ -29,7 +29,7 @@ import javax.validation.Valid;
  */
 @RestController
 @Api(tags = {AdminSwaggerTagConst.PC.PC_FILE})
-@RequestMapping("/api/pc")
+@RequestMapping("/api/pc/file")
 public class PcFileController extends SupportBaseController {
 
     @Autowired
@@ -66,5 +66,17 @@ public class PcFileController extends SupportBaseController {
     public ResponseEntity<Object> downLoad(@RequestParam String fileKey, HttpServletRequest request) {
         String userAgent = ServletUtil.getHeaderIgnoreCase(request, RequestHeaderConst.USER_AGENT);
         return fileService.downloadByFileKey(fileKey, userAgent);
+    }
+
+    /**
+     * 有file文件时
+     * @param file 图片file
+     */
+    @PostMapping("/upload")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO editMovieInfo(@RequestParam("file")MultipartFile file) {
+        return  fileService.editMovieInfo(file);
+
     }
 }
