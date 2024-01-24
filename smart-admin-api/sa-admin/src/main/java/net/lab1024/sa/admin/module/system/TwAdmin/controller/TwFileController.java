@@ -42,6 +42,7 @@ public class TwFileController extends SupportBaseController {
 
     @ApiOperation(value = "文件上传", notes = FileFolderTypeEnum.INFO)
     @PostMapping("/file/upload")
+    @NoNeedLogin
     public ResponseDTO<FileUploadVO> upload(@RequestParam MultipartFile file,
                                             @RequestParam Integer folder) {
         RequestUser requestUser = SmartRequestUtil.getRequestUser();
@@ -50,6 +51,7 @@ public class TwFileController extends SupportBaseController {
 
     @ApiOperation(value = "文件上传，通过url上传", notes = FileFolderTypeEnum.INFO)
     @PostMapping("/file/upload/url")
+    @NoNeedLogin
     public ResponseDTO<FileUploadVO> uploadByUrl(@RequestBody @Valid FileUrlUploadForm uploadForm) {
         RequestUser requestUser = SmartRequestUtil.getRequestUser();
         return fileService.fileUpload(uploadForm,requestUser);
@@ -57,12 +59,14 @@ public class TwFileController extends SupportBaseController {
 
     @ApiOperation("获取文件URL：根据fileKey ")
     @GetMapping("/file/getFileUrl")
+    @NoNeedLogin
     public ResponseDTO<String> getUrl(@RequestParam String fileKey) {
         return fileService.getFileUrl(fileKey);
     }
 
     @ApiOperation(value = "下载文件流（根据fileKey）")
     @GetMapping("/file/downLoad")
+    @NoNeedLogin
     public ResponseEntity<Object> downLoad(@RequestParam String fileKey, HttpServletRequest request) {
         String userAgent = ServletUtil.getHeaderIgnoreCase(request, RequestHeaderConst.USER_AGENT);
         return fileService.downloadByFileKey(fileKey, userAgent);
@@ -74,6 +78,7 @@ public class TwFileController extends SupportBaseController {
      */
     @PostMapping("/upload")
     @ResponseBody
+    @NoNeedLogin
     public ResponseDTO editMovieInfo(@RequestParam("file")MultipartFile file) {
           return  fileService.editMovieInfo(file);
 
