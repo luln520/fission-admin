@@ -29,7 +29,7 @@ import javax.validation.Valid;
  */
 @RestController
 @Api(tags = {AdminSwaggerTagConst.PC.PC_FILE})
-@RequestMapping("/api/pc/file")
+@RequestMapping("/api/pc/")
 public class PcFileController extends SupportBaseController {
 
     @Autowired
