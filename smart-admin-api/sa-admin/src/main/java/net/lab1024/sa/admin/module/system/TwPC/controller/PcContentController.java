@@ -32,6 +32,7 @@ public class PcContentController {
 
     @PostMapping("/list")
     @ApiOperation(value = "获取所有公告")
+    @NoNeedLogin
     public ResponseDTO<IPage<TwContent>> listContentPage(@Valid @RequestBody PageParam pageParam) {
         return ResponseDTO.ok(twContentService.listPCpage(pageParam));
     }
@@ -43,6 +44,7 @@ public class PcContentController {
      * */
     @GetMapping("/detail")
     @ApiOperation(value = "获取所有公告")
+    @NoNeedLogin
     public ResponseDTO<TwContent> detail(@RequestParam int id) {
         return ResponseDTO.ok(twContentService.find(id));
     }

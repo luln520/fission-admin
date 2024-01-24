@@ -47,6 +47,7 @@ public class PcIndexController {
      */
     @PostMapping("/ctmarketlist")
     @ApiOperation(value = "获取所有市场信息")
+    @NoNeedLogin
     public ResponseDTO<IPage<TwCtmarket>> listpage(@Valid @RequestBody PageParam pageParam) {
         return ResponseDTO.ok(twCtmarketService.listPCpage(pageParam));
     }
@@ -57,6 +58,7 @@ public class PcIndexController {
      */
     @PostMapping("/contentlist")
     @ApiOperation(value = "获取所有公告")
+    @NoNeedLogin
     public ResponseDTO<IPage<TwContent>> listContentPage(@Valid @RequestBody PageParam pageParam) {
         return ResponseDTO.ok(twContentService.listPCpage(pageParam));
     }

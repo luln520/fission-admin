@@ -31,6 +31,7 @@ public class PcNoticeController {
      * */
     @GetMapping("/list")
     @ApiOperation("通知列表")
+    @NoNeedLogin
     public ResponseDTO<List<TwNotice>> list(@RequestParam int uid) {
         return twNoticeService.notice(uid);
     }
@@ -44,6 +45,7 @@ public class PcNoticeController {
 
     @GetMapping("/noticeDetail")
     @ApiOperation("通知详情")
+    @NoNeedLogin
     public ResponseDTO<TwNotice> noticeDetail(@RequestParam int id) {
         return twNoticeService.noticeDetail(id);
     }
@@ -56,6 +58,7 @@ public class PcNoticeController {
      * */
     @GetMapping("/read")
     @ApiOperation("标记全部已经读取")
+    @NoNeedLogin
     public ResponseDTO read(@RequestParam String token) {
         return twNoticeService.read(token);
     }
@@ -68,6 +71,7 @@ public class PcNoticeController {
      * */
     @GetMapping("/readone")
     @ApiOperation("标记单个已经读取")
+    @NoNeedLogin
     public ResponseDTO readone(@RequestParam int id) {
         return twNoticeService.readone(id);
     }
@@ -79,6 +83,7 @@ public class PcNoticeController {
      * */
     @GetMapping("/delete")
     @ApiOperation("删除我的全部通知")
+    @NoNeedLogin
     public ResponseDTO delete(@RequestParam String token) {
         return twNoticeService.delete(token);
     }
@@ -92,6 +97,7 @@ public class PcNoticeController {
      * */
     @GetMapping("/deleteOne")
     @ApiOperation("删除我单个通知")
+    @NoNeedLogin
     public ResponseDTO deleteOne(@RequestParam int id) {
         return twNoticeService.deleteOne(id);
     }
