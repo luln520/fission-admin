@@ -8,7 +8,7 @@
  * @Copyright  1024创新实验室 （ https://1024lab.net ），Since 2012
  */
 import { AppConfig } from '/@/types/config';
-
+import { BASE_API_URL } from '/@/lib/axios';
 /**
  * 应用默认配置
  */
@@ -34,9 +34,7 @@ export const appDefaultConfig: AppConfig = {
   websiteName: 'GQ全球量化平台',
 };
 
-
-
 export const imageConfig = {
-  uploadUrl: 'http://206.238.199.169:1024/api/admin/file/upload',
-  baseImageUrl:"http://206.238.199.169/imgs/"
+  uploadUrl: `${BASE_API_URL}/api/admin/file/upload`,
+  baseImageUrl:`${BASE_API_URL}/imgs/`
 };

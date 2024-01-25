@@ -690,11 +690,11 @@ async function editTBSubmit(data) {
 }
 //账号
 async function editZHSubmit(data) {
-  if (data.txstate == 1) {
-    setUser(data.id, 1);
-  }
-  if (data.txstate == 2) {
+  if (data.status == 1) {
     setUser(data.id, 2);
+  }
+  if (data.status == 2) {
+    setUser(data.id, 1);
   }
   isOpenEditZH.value = false;
 }
