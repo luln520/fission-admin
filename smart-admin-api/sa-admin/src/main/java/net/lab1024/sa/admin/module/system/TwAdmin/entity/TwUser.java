@@ -199,7 +199,7 @@ public class TwUser implements Serializable {
     *  1 护照 2驾驶证 3SSN 4身份ID
     */
     @ApiModelProperty(" 1 护照 2驾驶证 3SSN 4身份ID")
-    private int rztype;
+    private Object rztype;
     /**
     * 1允许交易2禁止交易
     */
