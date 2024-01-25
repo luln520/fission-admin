@@ -231,7 +231,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         queryKjorder.eq("kid",kuangji.getId());
         queryKjorder.eq("status",1);
         int count = twKjorderDao.selectCount(queryKjorder).intValue();
-        if(count <= one.getNum()  ){
+        if(count >= one.getNum()  ){
             if(language.equals("zh")){
                 return ResponseDTO.userErrorParam("超出购买限制次数！");
             }else{

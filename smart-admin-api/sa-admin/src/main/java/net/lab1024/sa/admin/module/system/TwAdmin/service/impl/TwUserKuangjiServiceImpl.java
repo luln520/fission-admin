@@ -33,12 +33,18 @@ public class TwUserKuangjiServiceImpl extends ServiceImpl<TwUserKuangjiMapper, T
 //        return this.updateById(one);
 
         QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("kj_id", twUserKuangji.getKjId());
         queryWrapper.eq("user_id", twUserKuangji.getUserId());
-        List<TwUserKuangji> list = this.list(queryWrapper);
-        for(TwUserKuangji twUserKuang:list){
+        TwUserKuangji one = this.getOne(queryWrapper);
+        one.setNum(twUserKuangji.getNum());
+        this.updateById(one);
+
+        QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("user_id", twUserKuangji.getUserId());
+        List<TwUserKuangji> list1 = this.list(queryWrapper1);
+        for(TwUserKuangji twUserKuang:list1){
             twUserKuang.setMin(twUserKuangji.getMin());
             twUserKuang.setMax(twUserKuangji.getMax());
-            twUserKuang.setNum(twUserKuangji.getNum());
             twUserKuang.setUpdateTime(new Date());
             this.updateById(twUserKuang);
         }
