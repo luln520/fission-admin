@@ -943,7 +943,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             String invitCode = generateRandomString();  //生成验证码
 
 //            String address = CommonUtil.getAddress(ip);
-            String address = CommonUtil.getAddress(ip);
+//            String address = CommonUtil.getAddress(ip);
 
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
@@ -964,7 +964,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setPath(path);
                 twUser.setAddip(ip);
                 twUser.setDepatmentId(departmentId.intValue());
-                twUser.setAddr(address);
+//                twUser.setAddr(address);
                 long timestampInSeconds = Instant.now().getEpochSecond();
                 twUser.setAddtime((int) (timestampInSeconds));
                 twUser.setStatus(1);
