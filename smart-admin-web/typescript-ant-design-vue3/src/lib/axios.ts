@@ -16,9 +16,12 @@ import { smartSentry } from '/@/lib/smart-sentry';
 import { localClear } from '/@/utils/local-util';
 
 const TOKEN_HEADER: string = 'x-access-token';
-
+//基础请求地址
+//export const BASE_API_URL = "http://127.0.0.1:1084"
+// export const BASE_API_URL = "http://206.238.199.169:1024"
+export const BASE_API_URL = "https://2024api.pz167.com"
 const smartAxios = axios.create({
-  baseURL: import.meta.env.VITE_APP_API_URL,
+  baseURL: BASE_API_URL,
 });
 
 // ================================= 请求拦截器 =================================
