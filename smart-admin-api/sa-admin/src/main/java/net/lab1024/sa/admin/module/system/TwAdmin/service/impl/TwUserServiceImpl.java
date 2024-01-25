@@ -943,7 +943,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             String invitCode = generateRandomString();  //生成验证码
 
 //            String address = CommonUtil.getAddress(ip);
-//            String address = CommonUtil.getAddress(ip);
+            String address = CommonUtil.getAddress(ip);
 
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
