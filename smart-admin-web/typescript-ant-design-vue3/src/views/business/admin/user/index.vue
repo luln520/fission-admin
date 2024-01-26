@@ -548,7 +548,7 @@ const formItems = [{
   ],
   selects: [
     { name: "允许交易", value: 1 },
-    { name: "正常交易", value: 2 }
+    { name: "禁止交易", value: 2 }
   ]
 }, {
   name: "userType",
@@ -757,7 +757,7 @@ async function addOrEditSubmit(submitData) {
     message.success("操作成功！");
     addOrEditRef.value.close();
   } else {
-    message.error("操作失败！请重试~");
+    message.error(data.msg);
   }
   loadData();
 }
