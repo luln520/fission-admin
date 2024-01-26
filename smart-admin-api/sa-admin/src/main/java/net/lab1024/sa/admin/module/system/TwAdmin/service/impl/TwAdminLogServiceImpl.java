@@ -91,21 +91,52 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
     }
 
     @Override
-    public TwMessageRep message() {
-        TwMessageRep messageRep = new TwMessageRep();
-        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("rzstatus", 1);
-        messageRep.setAuthCount(twUserDao.selectCount(queryWrapper).intValue());
+    public TwMessageRep message(HttpServletRequest request) {
 
-        QueryWrapper<TwMyzc> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("status", 1);
-        messageRep.setMyzcCount(twMyzcDao.selectCount(queryWrapper1).intValue());
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+        RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        QueryWrapper<TwRecharge> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.eq("status", 1);
-        messageRep.setRechargeCount(twRechargeDao.selectCount(queryWrapper2).intValue());
+        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+            TwMessageRep messageRep = new TwMessageRep();
+            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("rzstatus", 1);
+            messageRep.setAuthCount(twUserDao.selectCount(queryWrapper).intValue());
 
-        return messageRep;
+            QueryWrapper<TwMyzc> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("status", 1);
+            messageRep.setMyzcCount(twMyzcDao.selectCount(queryWrapper1).intValue());
 
+            QueryWrapper<TwRecharge> queryWrapper2 = new QueryWrapper<>();
+            queryWrapper2.eq("status", 1);
+            messageRep.setRechargeCount(twRechargeDao.selectCount(queryWrapper2).intValue());
+
+            return messageRep;
+        }
+
+
+        if(roleEmployeeVO.getKey().equals("agent")){
+            int supervisorFlag = byId.getSupervisorFlag();
+            if(supervisorFlag == 1){
+                TwMessageRep messageRep = new TwMessageRep();
+                QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("rzstatus", 1);
+                messageRep.setAuthCount(twUserDao.selectCount(queryWrapper).intValue());
+
+                QueryWrapper<TwMyzc> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper1.eq("status", 1);
+                messageRep.setMyzcCount(twMyzcDao.selectCount(queryWrapper1).intValue());
+
+                QueryWrapper<TwRecharge> queryWrapper2 = new QueryWrapper<>();
+                queryWrapper2.eq("status", 1);
+                messageRep.setRechargeCount(twRechargeDao.selectCount(queryWrapper2).intValue());
+
+                return messageRep;
+            }
+        }
+
+        return null;
     }
 }
