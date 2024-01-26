@@ -26,6 +26,10 @@
         <template v-if="column.key === 'status'">
           {{ record.status == 1 ? "可用" : "不可用" }}
         </template>
+        <template v-if="column.key === 'addtime'">
+          {{ timestampToStr(record.addtime*1000) }}
+        </template>
+        
       </template>
     </a-table>
   </a-card>
@@ -41,6 +45,7 @@ import { h, ref, onMounted } from 'vue';
 import { PlusCircleOutlined, UndoOutlined } from '@ant-design/icons-vue';
 import { userlogApi } from '/@/api/business/admin/userLog-api';
 import AddOrEdit from "/@/components/edit/edit.vue"
+import { timestampToStr } from '/@/utils/util';
 const addOrEditRef = ref();
 const isOpenEdit = ref(false);
 const addOrEditType = ref(1);

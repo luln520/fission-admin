@@ -444,6 +444,18 @@ const formItems = [{
       message: '必填选项',
     },
   ]
+}, {
+  name: "invit",
+  label: "邀请码",
+  placeholder: '请输入邀请码',
+  type: "input",
+  defaultValue: '',
+  rules: [
+    {
+      required: false,
+      message: '必填选项',
+    },
+  ]
 },
 {
   name: "rztype",
@@ -593,7 +605,7 @@ const columns = [
     key: 'status',
     width: 100
   }, {
-    title: '创建时间',
+    title: '注册时间',
     dataIndex: 'addtime',
     key: 'addtime',
     width: 120

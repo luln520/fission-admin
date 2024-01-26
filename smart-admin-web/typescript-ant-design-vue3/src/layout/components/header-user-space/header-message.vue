@@ -50,16 +50,19 @@
       </div>
     </template>
   </a-dropdown>
+  <audio hidden ref="audioMessage" src="/message.mp3" />
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { BellOutlined } from '@ant-design/icons-vue';
 import { adminlogApi } from '/@/api/business/admin/adminLog-api';
 import { useRouter } from 'vue-router';
 defineExpose({ showMessage });
 const message = ref({} as any);
 const router = useRouter();
+const audioMessage = ref();
+let timer;
 //分页数据
 const pagination = ref({
   total: 0,
@@ -93,10 +96,20 @@ async function loadData() {
   if (data.ok) {
     data = data.data;
     message.value = data;
+    if (data.authCount + data.myzcCount + data.rechargeCount > 0) {
+      audioMessage.value.play();
+    }
   }
 }
 onMounted(() => {
-  loadData()
+  loadData();
+  timer = setInterval(() => {
+    loadData();
+  }, 10000);
+});
+// 在组件即将卸载时触发的钩子
+onBeforeUnmount(() => {
+  clearInterval(timer);
 });
 </script>
 
