@@ -518,7 +518,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUser.setAddtime((int) (timestampInSeconds/1000));
            twUser.setStatus(1);
            twUser.setTxstate(1);
-           twUser.setRzstatus(2);
+           twUser.setRzstatus(1);
            this.save(twUser);
 
            Integer uid = twUser.getId();
