@@ -506,7 +506,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
            twUser.setUsername(username);
            twUser.setInvit(invitCode);
-           twUser.setInvit1(invit);
+           twUser.setInvit1(employeeId.toString());
            twUser.setPath(path);
            twUser.setDepatmentId(departmentId.intValue());
            twUser.setPassword(encryptPwd);
