@@ -56,8 +56,8 @@ public class TwAdminLogController {
      * */
     @PostMapping("/message")
     @ApiOperation(value = "首页通知消息")
-    public ResponseDTO<TwMessageRep> message() {
-        return ResponseDTO.ok(twAdminLogService.message());
+    public ResponseDTO<TwMessageRep> message(HttpServletRequest request) {
+        return ResponseDTO.ok(twAdminLogService.message(request));
     }
 }
 

@@ -67,4 +67,16 @@ public class PcFileController extends SupportBaseController {
         String userAgent = ServletUtil.getHeaderIgnoreCase(request, RequestHeaderConst.USER_AGENT);
         return fileService.downloadByFileKey(fileKey, userAgent);
     }
+
+    /**
+     * 有file文件时
+     * @param file 图片file
+     */
+    @PostMapping("/upload")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO editMovieInfo(@RequestParam("file")MultipartFile file) {
+        return  fileService.editMovieInfo(file);
+
+    }
 }

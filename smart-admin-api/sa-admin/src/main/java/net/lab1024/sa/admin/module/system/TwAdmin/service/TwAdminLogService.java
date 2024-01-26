@@ -30,6 +30,6 @@ public interface TwAdminLogService extends IService<TwAdminLog> {
     boolean add(TwAdminLog twAdminLog);
 
 
-    TwMessageRep message();
+    TwMessageRep message(HttpServletRequest request);
 
 }
