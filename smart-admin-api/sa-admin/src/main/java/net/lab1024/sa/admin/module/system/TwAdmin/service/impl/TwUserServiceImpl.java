@@ -513,7 +513,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUser.setAreaCode("");
            twUser.setAddip(ip);
            twUser.setAddr(locationByIP);
-           twUser.setRealName(locationByIP);
+           twUser.setRealName(username);
            long timestampInSeconds = Instant.now().getEpochSecond();
            twUser.setAddtime((int) (timestampInSeconds/1000));
            twUser.setStatus(1);
