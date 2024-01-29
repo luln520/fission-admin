@@ -444,6 +444,18 @@ const formItems = [{
       message: '必填选项',
     },
   ]
+}, {
+  name: "invit",
+  label: "邀请码",
+  placeholder: '请输入邀请码',
+  type: "input",
+  defaultValue: '',
+  rules: [
+    {
+      required: false,
+      message: '必填选项',
+    },
+  ]
 },
 {
   name: "rztype",
@@ -536,7 +548,7 @@ const formItems = [{
   ],
   selects: [
     { name: "允许交易", value: 1 },
-    { name: "正常交易", value: 2 }
+    { name: "禁止交易", value: 2 }
   ]
 }, {
   name: "userType",
@@ -593,7 +605,7 @@ const columns = [
     key: 'status',
     width: 100
   }, {
-    title: '创建时间',
+    title: '注册时间',
     dataIndex: 'addtime',
     key: 'addtime',
     width: 120
@@ -745,7 +757,7 @@ async function addOrEditSubmit(submitData) {
     message.success("操作成功！");
     addOrEditRef.value.close();
   } else {
-    message.error("操作失败！请重试~");
+    message.error(data.msg);
   }
   loadData();
 }

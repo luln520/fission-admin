@@ -6,13 +6,13 @@
                 <a-form>
                     <a-row>
                         <a-col :span="12">
-                            <a-form-item label="最高投资额度" name="max" :rules="[{ required: false, message: '请输入最高投资额度' }]">
-                                <a-input v-model:value="max" />
+                            <a-form-item label="最低投资额度" name="min" :rules="[{ required: false, message: '请输入最低投资额度' }]">
+                                <a-input v-model:value="min" />
                             </a-form-item>
                         </a-col>
                         <a-col :span="12">
-                            <a-form-item label="最低投资额度" name="min" :rules="[{ required: false, message: '请输入最低投资额度' }]">
-                                <a-input v-model:value="min" />
+                            <a-form-item label="最高投资额度" name="max" :rules="[{ required: false, message: '请输入最高投资额度' }]">
+                                <a-input v-model:value="max" />
                             </a-form-item>
                         </a-col>
                     </a-row>
@@ -132,7 +132,7 @@ async function addHandleOk() {
 //点击确认
 async function addHandleOk2() {
     emit("submit", { ...tempData.value, min: min.value, max: max.value, noClose: true });
-    open.value=false;
+    open.value = false;
     // tableData.value = props.data;
 }
 //窗口关闭
