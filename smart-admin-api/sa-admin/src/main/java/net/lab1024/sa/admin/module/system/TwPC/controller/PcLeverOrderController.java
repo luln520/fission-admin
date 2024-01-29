@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/leverorder")
+@RequestMapping("/api/pc/leverorder")
 @Api(tags = {AdminSwaggerTagConst.PC.PC_LEVERORDER})
 public class PcLeverOrderController {
 
