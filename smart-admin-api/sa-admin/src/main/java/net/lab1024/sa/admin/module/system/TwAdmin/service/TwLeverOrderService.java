@@ -20,6 +20,8 @@ public interface TwLeverOrderService extends IService<TwLeverOrder> {
 
     IPage<TwLeverOrder> listpage(LeverVo leverVo, HttpServletRequest request);
 
+    IPage<TwLeverOrder> listPcPage(LeverVo leverVo);
+
     ResponseDTO creatorder(int uid, String ccoinname, int win, int loss, int fold, int hyzd, BigDecimal num, BigDecimal ploss,BigDecimal premium,String language);
 
     ResponseDTO closeorder(int uid, int lid,String language);

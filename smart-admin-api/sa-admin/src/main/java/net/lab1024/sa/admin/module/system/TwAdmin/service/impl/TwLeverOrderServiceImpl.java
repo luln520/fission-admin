@@ -92,6 +92,13 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
     }
 
     @Override
+    public IPage<TwLeverOrder> listPcPage(LeverVo leverVo) {
+        Page<TwLeverOrder> objectPage = new Page<>(leverVo.getPageNum(), leverVo.getPageSize());
+        objectPage.setRecords(this.baseMapper.listpage(objectPage, leverVo));
+        return objectPage;
+    }
+
+    @Override
     public ResponseDTO creatorder(int uid, String ccoinname, int win, int loss, int fold, int hyzd,BigDecimal num, BigDecimal ploss, BigDecimal premium, String language) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", uid); // 添加查询条件

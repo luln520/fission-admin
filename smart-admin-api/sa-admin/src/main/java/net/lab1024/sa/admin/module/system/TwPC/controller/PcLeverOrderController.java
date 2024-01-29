@@ -1,10 +1,13 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwLeverOrder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwLeverSet;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwLeverage;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.LeverVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwLeverOrderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwLeverSetService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwLeverageService;
@@ -13,6 +16,8 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -28,6 +33,13 @@ public class PcLeverOrderController {
     private TwLeverageService twLeverageService;
     @Autowired
     private TwLeverSetService twLeverSetService;
+
+    @PostMapping("/list")
+    @ApiOperation(value = "杠杆订单列表")
+    public ResponseDTO<IPage<TwLeverOrder>> listpage(@Valid @RequestBody LeverVo leverVo) {
+        return ResponseDTO.ok(twLeverOrderService.listPcPage(leverVo));
+    }
+
     @GetMapping("/getTwLeverSet")
     @ResponseBody
     @ApiOperation(value = "获取杠杆止盈止损设置")
@@ -69,4 +81,6 @@ public class PcLeverOrderController {
     public ResponseDTO closeorder(@RequestParam int uid,@RequestParam int lid,@RequestParam String language){
         return twLeverOrderService.closeorder(uid,lid,language);
     }
+
+
 }
