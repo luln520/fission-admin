@@ -144,8 +144,8 @@ public class TimerServiceImpl {
         twNotice.setAccount(username);
         twNotice.setTitle("秒合约交易");
         twNotice.setTitleEn("second contract trading");
-        twNotice.setContent("秒合约已平仓，请及时加仓");
-        twNotice.setContentEn("The second contract has been closed, please add your position in time");
+        twNotice.setContent("秒合约已平仓，请注意查收");
+        twNotice.setContentEn("The second contract has been closed, please check it carefully");
         twNotice.setAddtime(new Date());
         twNotice.setStatus(1);
         twNoticeService.save(twNotice);

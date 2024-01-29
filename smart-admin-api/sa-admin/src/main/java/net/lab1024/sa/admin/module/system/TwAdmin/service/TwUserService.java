@@ -30,6 +30,8 @@ public interface TwUserService extends IService<TwUser> {
 
     Integer countAllUsers();
 
+    Integer countTodayUsers(long startTime, long endTime);
+
     Integer countLineUsers(String startTime , String endTime);
 
 

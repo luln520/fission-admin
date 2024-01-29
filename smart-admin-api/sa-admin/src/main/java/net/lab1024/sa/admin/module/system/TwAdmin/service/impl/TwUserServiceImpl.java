@@ -116,14 +116,25 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Override
     public Integer countAllUsers() {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_type",1);
+        return this.baseMapper.selectCount(queryWrapper).intValue();
+    }
+
+    @Override
+    public Integer countTodayUsers(long startTime, long endTime) {
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_type",1);
+        queryWrapper.ge("addtime", startTime);
+        queryWrapper.le("addtime", endTime);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
     @Override
     public Integer countLineUsers(String startTime, String endTime) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.ge("addtime", startTime);
-        queryWrapper.le("addtime", endTime);
+        queryWrapper.eq("user_type",1);
+        queryWrapper.ge("lgtime", startTime);
+        queryWrapper.le("lgtime", endTime);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
@@ -515,7 +526,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUser.setAddr(locationByIP);
            twUser.setRealName(username);
            long timestampInSeconds = Instant.now().getEpochSecond();
-           twUser.setAddtime((int) (timestampInSeconds/1000));
+           twUser.setAddtime((int) (timestampInSeconds));
            twUser.setStatus(1);
            twUser.setTxstate(1);
            twUser.setRzstatus(1);

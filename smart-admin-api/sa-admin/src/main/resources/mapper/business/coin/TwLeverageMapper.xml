@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwLeverageMapper">
+
+    <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwLeverage">
+        select * from tw_leverage where 1=1
+        <if test="obj.symbol != null and obj.symbol !=''">
+            and symbol = #{obj.symbol}
+        </if>
+        order by create_time desc
+    </select>
+
+</mapper>

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserCoinDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用户币种表(TwUserCoin)表服务实现类
@@ -41,6 +43,11 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
     @Override
     public BigDecimal afternum(Integer uid) {
         return this.baseMapper.afternum(uid);
+    }
+
+    @Override
+    public BigDecimal sumUserCoin() {
+        return this.baseMapper.sumUserCoin();
     }
 
     @Override

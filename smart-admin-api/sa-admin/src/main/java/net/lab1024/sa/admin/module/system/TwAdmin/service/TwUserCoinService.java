@@ -37,6 +37,8 @@ public interface TwUserCoinService extends IService<TwUserCoin> {
 
      BigDecimal afternum(Integer uid);
 
+     BigDecimal sumUserCoin();
+
 
     IPage<TwUserCoin> listpage(TwUserVo twUserVo);
 

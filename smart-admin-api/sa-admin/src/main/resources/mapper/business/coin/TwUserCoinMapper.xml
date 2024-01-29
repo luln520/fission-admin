@@ -14,6 +14,10 @@
         SELECT usdt FROM tw_user_coin WHERE userid = #{uid}
     </select>
 
+    <select id="sumUserCoin" resultType="java.math.BigDecimal">
+        select ifnull(SUM(h.usdt),0) usdt from tw_user u  join tw_user_coin h on u.id=h.userid where user_type = 1;
+    </select>
+
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin">
         select * from tw_user_coin where 1=1 order by id desc

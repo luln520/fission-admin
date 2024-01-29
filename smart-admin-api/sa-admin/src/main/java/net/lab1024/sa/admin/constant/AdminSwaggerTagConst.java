@@ -70,6 +70,12 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String TW_KUANGM = "后台-矿机";
 
+        public static final String TW_LEVERAGE = "后台-杠杆倍数";
+
+        public static final String TW_LEVERSET = "后台-杠杆止盈止损设置";
+
+        public static final String TW_LEVERORDER = "后台-杠杆订单表";
+
         public static final String TW_NEWS = "后台-新闻管理";
 
         public static final String TW_NEWSTYPE = "后台-新闻类型";
@@ -130,9 +136,9 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String PC_USER = "PC-用户";
 
-        public static final String TW_NEWS = "PC-新闻";
+        public static final String PC_NEWS = "PC-新闻";
 
-
+        public static final String PC_LEVERORDER = "PC-杠杆订单表";
     }
 
 

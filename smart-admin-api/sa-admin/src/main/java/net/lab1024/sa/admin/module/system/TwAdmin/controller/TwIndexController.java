@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +42,28 @@ public class TwIndexController {
 
     @Autowired
     private  TwMyzcService twMyzcService;
+
+    @Autowired
+    private TwUserCoinService twUserCoinService;
+
+    public static void main(String[] args) {
+        // 获取今天的日期
+        LocalDate today = LocalDate.now();
+
+        // 获取今天的开始时间和结束时间
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        // 将时间转换为时间戳（秒级别）
+        long startTimestamp = startOfDay.toEpochSecond(ZoneOffset.UTC);
+        long endTimestamp = endOfDay.toEpochSecond(ZoneOffset.UTC);
+
+        System.out.println("今天的开始时间戳：" + startTimestamp);
+        System.out.println("今天的结束时间戳：" + endTimestamp);
+    }
+
+
+
     /**
      * 系统首页数据
      */
@@ -52,9 +78,29 @@ public class TwIndexController {
         String startTime = nowDate + " 00:00:00";
         String endTime = nowDate + " 23:59:59";
 
+
+        // 获取今天的日期
+        LocalDate today = LocalDate.now();
+
+        // 获取今天的开始时间和结束时间
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        // 将时间转换为时间戳（秒级别）
+        long startTimestamp = startOfDay.toEpochSecond(ZoneOffset.UTC);
+        long endTimestamp = endOfDay.toEpochSecond(ZoneOffset.UTC);
+
+        //今日注册人数
+        int todayUser = 0;
+        todayUser = twUserService.countTodayUsers(startTimestamp,endTimestamp);
         // 查询全网总人数 M("user")->count()
         int allUser = 0;//userDao.countAllUsers();
         allUser = twUserService.countAllUsers();
+
+        //用户总余额
+        BigDecimal userCoinSum = new BigDecimal(100);
+        userCoinSum = twUserCoinService.sumUserCoin();
+
         // 查询秒合约未平仓记录数 M("hyorder")->where 'status' => 1 ->count();
         int allHyOrders = 0;//hyOrderDao.countUnClosedOrders();
         allHyOrders = twHyorderService.countUnClosedOrders();
@@ -78,7 +124,10 @@ public class TwIndexController {
         int allLineUsers = 0;//userDao.countLineUsers(nowDate);
         allLineUsers = twUserService.countLineUsers(startTime, endTime);
         // 将结果放入Map返回
+        result.put("todayUser",todayUser);
         result.put("allUser", allUser);
+        result.put("userCoinSum",userCoinSum);
+
         result.put("allHyOrders", allHyOrders);
         result.put("allKjOrders", allKjOrders);
         result.put("dayRecharge", dayRecharge);

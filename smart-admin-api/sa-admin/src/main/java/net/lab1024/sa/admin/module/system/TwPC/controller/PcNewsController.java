@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/pc/news")
-@Api(tags = {AdminSwaggerTagConst.PC.TW_NEWS})
+@Api(tags = {AdminSwaggerTagConst.PC.PC_NEWS})
 public class PcNewsController {
 
     @Autowired

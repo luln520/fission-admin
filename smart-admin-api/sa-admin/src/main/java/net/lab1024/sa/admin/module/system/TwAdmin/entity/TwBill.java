@@ -44,7 +44,7 @@ public class TwBill implements Serializable {
     @ApiModelProperty(value = "操作后余额")
     private BigDecimal afternum;
 
-    @ApiModelProperty(value = "1充币2提币3购买合约4出售合约5购买矿机6购机奖励7矿机收益冻结8释放冻结收益9币币交易USDT10币币交易币种11认购扣除12认购增加13一代认购奖励14二代认购奖励15三代认购奖励16提币退回17充币成功")
+    @ApiModelProperty(value = "1充币2提币3购买合约4出售合约5购买矿机6购机奖励7矿机收益冻结8释放冻结收益9杠杆交易USDT10币币交易币种11认购扣除12认购增加13一代认购奖励14二代认购奖励15三代认购奖励16提币退回17充币成功")
     private Integer type;
 
     @ApiModelProperty(value = "操作时间")
