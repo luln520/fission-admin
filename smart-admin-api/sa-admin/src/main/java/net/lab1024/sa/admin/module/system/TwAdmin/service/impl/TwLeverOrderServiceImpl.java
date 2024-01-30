@@ -211,7 +211,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
     public ResponseDTO closeorder(int uid, int lid,String language) {
         QueryWrapper<TwLeverOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
-        queryWrapper.eq("lid", lid);
+        queryWrapper.eq("id", lid);
         TwLeverOrder twLeverOrder = this.getOne(queryWrapper);
         if(twLeverOrder == null){
             if(language.equals("zh")){
