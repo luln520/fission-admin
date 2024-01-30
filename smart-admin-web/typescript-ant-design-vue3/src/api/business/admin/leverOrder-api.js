@@ -13,7 +13,7 @@ export const leverOrderApi = {
   /**
   * 盈亏 设 置
   */
-  editKongylo: (param) => {
-    return getRequest('/api/admin/leverorder/editKongylo', param);
+  editKonglo: (param) => {
+    return getRequest('/api/admin/leverorder/editKonglo', param);
   },
 };

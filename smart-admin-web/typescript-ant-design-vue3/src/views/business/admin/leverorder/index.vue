@@ -42,25 +42,25 @@
         </template>
 
         <template v-if="column.key === 'ploss'">
-          <div v-if="record.isWin == 1" style="color: green;">+{{ record.ploss }}</div>
-          <div v-if="record.isWin == 2" style="color: red;">-{{ record.ploss }}</div>
+          <div v-if="record.isWin == 1" style="color: green;">{{ record.ploss }}</div>
+          <div v-if="record.isWin == 2" style="color: red;">{{ record.ploss }}</div>
         </template>
 
         <template v-if="column.key === 'action'">
-          <span>
+          <span v-if="record.status==1">
             <!-- <a @click="() => {
               isOpenEdit = true;
               addOrEditType = 2;
               addOrEditData = record;
             }">编辑</a>
             <a-divider type="vertical" /> -->
-            <a @click="() => {
-              updateStatus(record.id, 2);
-            }">输</a>
-            <a-divider type="vertical" />
-            <a @click="() => {
+            <a-button type="primary" @click="() => {
               updateStatus(record.id, 1);
-            }">赢</a>
+            }">赢</a-button>
+            <a-divider type="vertical" />
+            <a-button type="primary" danger @click="() => {
+              updateStatus(record.id, 2);
+            }">输</a-button>
           </span>
         </template>
       </template>
@@ -95,27 +95,33 @@ const searchUserName = ref("");
 const tableData = ref([] as any[]);
 //行配置
 const columns = [
-  {
-    name: 'id',
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    width: 100
-  },
+  // {
+  //   name: 'id',
+  //   title: 'ID',
+  //   dataIndex: 'id',
+  //   key: 'id',
+  //   width: 100
+  // },
+  // {
+  //   title: '订单号',
+  //   dataIndex: 'ordernum',
+  //   key: 'ordernum',
+  //   width: 250
+  // },
   {
     title: '用户ID',
     dataIndex: 'uid',
     key: 'uid',
-    width: 250
+    width: 100
   },
   {
-    title: '会员账号',
+    title: '用户名',
     dataIndex: 'username',
     key: 'username',
-    width: 250
+    width: 100
   },
   {
-    title: '投资金额',
+    title: '购买金额',
     dataIndex: 'num',
     key: 'num',
     width: 100
@@ -124,55 +130,55 @@ const columns = [
     title: '倍数',
     dataIndex: 'fold',
     key: 'fold',
-    width: 200
+    width: 100
   },
   {
     title: '止盈/止损 ',
     dataIndex: 'win',
     key: 'win',
-    width: 200
+    width: 100
   },
   {
     title: '买后余额',
     dataIndex: 'buyOrblance',
     key: 'buyOrblance',
-    width: 200
+    width: 100
   },
   {
     title: '盈亏金额',
     dataIndex: 'ploss',
     key: 'ploss',
-    width: 200
+    width: 80
   },
   {
     title: '手续费',
     dataIndex: 'premium',
     key: 'premium',
-    width: 200
+    width: 70
   },
   {
     title: '类型',
     dataIndex: 'hyzd',
     key: 'hyzd',
-    width: 200
+    width: 50
   },
   {
     title: '状态',
     dataIndex: 'status',
     key: 'status',
-    width: 200
+    width: 100
   },
   {
     title: '币种',
     dataIndex: 'coinname',
     key: 'coinname',
-    width: 200
+    width: 100
   },
   {
     title: '建仓时间',
     dataIndex: 'buytime',
     key: 'buytime',
-    width: 200
+    width: 150
   },
   {
     title: '操作',
