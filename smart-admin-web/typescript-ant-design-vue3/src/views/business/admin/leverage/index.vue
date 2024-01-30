@@ -100,13 +100,13 @@ const formItems = [{
 }];
 //行配置
 const columns = [
-  {
-    name: 'id',
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    width: 150
-  },
+  // {
+  //   name: 'id',
+  //   title: 'ID',
+  //   dataIndex: 'id',
+  //   key: 'id',
+  //   width: 150
+  // },
   {
     title: '币种',
     dataIndex: 'symbol',
@@ -125,12 +125,12 @@ const columns = [
     key: 'createTime',
     width: 150
   },
-  {
-    title: '编辑时间',
-    dataIndex: 'updateTime',
-    key: 'updateTime',
-    width: 150
-  },
+  // {
+  //   title: '编辑时间',
+  //   dataIndex: 'updateTime',
+  //   key: 'updateTime',
+  //   width: 150
+  // },
   {
     title: '操作',
     key: 'action',
