@@ -350,7 +350,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 //            BigDecimal hybl = twLeverOrder.getHybl();
 //            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
 //            BigDecimal ylnum = num.multiply(hybl.divide(new BigDecimal(100), mathContext));
-        BigDecimal money = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());  //盈利金额
+        BigDecimal money =  twLeverOrder.getNum().add(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //盈利金额
         BigDecimal ploss = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());
         BigDecimal sellprice = twLeverOrder.getSellprice();
 
