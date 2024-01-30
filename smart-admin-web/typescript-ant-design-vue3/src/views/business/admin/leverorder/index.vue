@@ -34,7 +34,7 @@
         <template v-if="column.key === 'kongyk'">
           <div v-if="record.kongyk == 1" style="color: green;">盈利</div>
           <div v-if="record.kongyk == 2" style="color: red;">亏损</div>
-          <div v-if="record.kongyk == 0" style=";">未指定</div>
+          <div v-if="record.kongyk == 0" style=";">正常</div>
         </template>
         <template v-if="column.key === 'win'">
           {{ record?.win }}/{{ record?.loss }}
@@ -57,13 +57,20 @@
               addOrEditData = record;
             }">编辑</a>
             <a-divider type="vertical" /> -->
-            <a-button type="primary" @click="() => {
+            <a-tooltip @click="() => {
+                isOpenEditFK = true;
+                addOrEditDataFK = record;
+              }">
+                <template #title>输赢控制</template>
+                <ThunderboltOutlined />
+              </a-tooltip>
+            <!-- <a-button type="primary" @click="() => {
               updateStatus(record.id, 1);
             }">赢</a-button>
             <a-divider type="vertical" />
             <a-button type="primary" danger @click="() => {
               updateStatus(record.id, 2);
-            }">输</a-button>
+            }">输</a-button> -->
           </span>
         </template>
       </template>
@@ -74,6 +81,11 @@
     :name="'合约订单'" :data="addOrEditData" @close="() => {
       isOpenEdit = false;
     }" @submit="addOrEditSubmit" />
+  <!-- 用户风控 -->
+  <FKEdit v-if="isOpenEditFK" ref="addOrEditRefFK" :isOpen="isOpenEditFK" :formItems="[]" :data="addOrEditDataFK" @close="() => {
+    isOpenEditFK = false;
+  }
+    " @submit="editFKSubmit" />
 </template>
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
@@ -81,12 +93,19 @@ import { h, ref, onMounted } from 'vue';
 import { PlusCircleOutlined, UndoOutlined } from '@ant-design/icons-vue';
 import { leverOrderApi } from '/@/api/business/admin/leverOrder-api';
 import AddOrEdit from "/@/components/edit/edit.vue"
+import FKEdit from "./components/fk/fk.vue"
 const addOrEditRef = ref();
 const isOpenEdit = ref(false);
 const addOrEditType = ref(1);
 const addOrEditData = ref({});
 const formItems = [];
-
+const winStrs = [
+'正常','盈利', '亏损'
+];
+//风控
+const isOpenEditFK = ref(false);
+const addOrEditDataFK = ref({});
+const addOrEditRefFK = ref();
 //分页数据
 const pagination = ref({
   total: 0,
@@ -166,6 +185,12 @@ const columns = [
     width: 100
   },
   {
+    title: '输赢控制',
+    dataIndex: 'kongyk',
+    key: 'kongyk',
+    width: 100
+  },
+  {
     title: '状态',
     dataIndex: 'status',
     key: 'status',
@@ -186,11 +211,16 @@ const columns = [
   {
     title: '操作',
     key: 'action',
-    width: 200,
+    width: 100,
     fixed: 'right',
   },
 ];
 
+//风控
+async function editFKSubmit(data) {
+  updateStatus(data.id, data.kongyk);
+  isOpenEditFK.value = false;
+}
 //分页方法
 async function tableChange(pag: { pageSize: number; current: number }) {
   pagination.value.pageSize = pag.pageSize;
