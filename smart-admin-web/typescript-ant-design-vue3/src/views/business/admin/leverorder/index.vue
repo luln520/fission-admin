@@ -25,7 +25,10 @@
 
         <template v-if="column.key === 'status'">
           <div v-if="record.status == 1" style="color: red;">待结算</div>
-          <div v-if="record.status == 2" style="color: green;">已结算</div>
+          <div v-if="record.status == 2" style="color: green;">
+            <div v-if="record.isWin == 1" style="color: green;">赢</div>
+            <div v-if="record.isWin == 2" style="color: red;">输</div>
+          </div>
           <div v-if="record.status == 3" style="">无效结算</div>
         </template>
         <template v-if="column.key === 'kongyk'">
@@ -42,12 +45,12 @@
         </template>
 
         <template v-if="column.key === 'ploss'">
-          <div v-if="record.isWin == 1" style="color: green;">{{ record.ploss }}</div>
-          <div v-if="record.isWin == 2" style="color: red;">{{ record.ploss }}</div>
+          <div v-if="record.isWin == 1" style="color: green;">+{{ record.ploss }}</div>
+          <div v-if="record.isWin == 2" style="color: red;">-{{ record.ploss }}</div>
         </template>
 
         <template v-if="column.key === 'action'">
-          <span v-if="record.status==1">
+          <span v-if="record.status == 1">
             <!-- <a @click="() => {
               isOpenEdit = true;
               addOrEditType = 2;
