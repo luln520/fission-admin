@@ -72,7 +72,7 @@ public class PcLeverOrderController {
                                   @RequestParam BigDecimal ploss,   //利润
                                   @RequestParam BigDecimal premium, //手续费
                                   @RequestParam String language){
-        return twLeverOrderService.creatorder(uid,ccoinname,win,loss,fold,hyzd,num,premium,ploss,language);
+        return twLeverOrderService.creatorder(uid,ccoinname,win,loss,fold,hyzd,num,ploss,premium,language);
     }
 
 
