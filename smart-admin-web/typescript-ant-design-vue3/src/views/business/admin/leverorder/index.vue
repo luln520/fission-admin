@@ -163,7 +163,7 @@ const columns = [
     title: '类型',
     dataIndex: 'hyzd',
     key: 'hyzd',
-    width: 50
+    width: 100
   },
   {
     title: '状态',
