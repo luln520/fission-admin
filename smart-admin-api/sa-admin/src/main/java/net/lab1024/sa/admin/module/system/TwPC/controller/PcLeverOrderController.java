@@ -35,7 +35,9 @@ public class PcLeverOrderController {
     private TwLeverSetService twLeverSetService;
 
     @PostMapping("/list")
+    @ResponseBody
     @ApiOperation(value = "杠杆订单列表")
+    @NoNeedLogin
     public ResponseDTO<IPage<TwLeverOrder>> listpage(@Valid @RequestBody LeverVo leverVo) {
         return ResponseDTO.ok(twLeverOrderService.listPcPage(leverVo));
     }
@@ -58,7 +60,7 @@ public class PcLeverOrderController {
 
     @GetMapping("/creatorder")
     @ResponseBody
-    @ApiOperation(value = "秒合约建仓")
+    @ApiOperation(value = "杠杆建仓")
     @NoNeedLogin
     public ResponseDTO creatorder(@RequestParam int uid,            //用户id
                                   @RequestParam String ccoinname,   //币种
