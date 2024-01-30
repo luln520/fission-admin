@@ -35,7 +35,9 @@ public class PcLeverOrderController {
     private TwLeverSetService twLeverSetService;
 
     @PostMapping("/list")
+    @ResponseBody
     @ApiOperation(value = "杠杆订单列表")
+    @NoNeedLogin
     public ResponseDTO<IPage<TwLeverOrder>> listpage(@Valid @RequestBody LeverVo leverVo) {
         return ResponseDTO.ok(twLeverOrderService.listPcPage(leverVo));
     }
