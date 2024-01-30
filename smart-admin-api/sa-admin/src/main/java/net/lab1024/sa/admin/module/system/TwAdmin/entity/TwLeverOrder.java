@@ -54,7 +54,7 @@ public class TwLeverOrder implements Serializable {
     * 盈亏比例
     */
     @ApiModelProperty("盈亏比例")
-    private Double hybl;
+    private BigDecimal hybl;
     /**
     * 合约涨跌1买涨2买跌
     */
@@ -95,16 +95,7 @@ public class TwLeverOrder implements Serializable {
     */
     @ApiModelProperty("购买时间")
     private Date buytime;
-    /**
-    * 结算时间
-    */
-    @ApiModelProperty("结算时间")
-    private Date selltime;
-    /**
-    * 结算时间戳
-    */
-    @ApiModelProperty("结算时间戳")
-    private Integer intselltime;
+
     /**
     * 建仓单价
     */

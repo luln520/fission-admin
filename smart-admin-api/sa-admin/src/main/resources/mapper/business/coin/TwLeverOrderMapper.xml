@@ -9,6 +9,6 @@
         <if test="obj.uid != null and obj.uid !=''">
             and uid = #{obj.uid}
         </if>
-        order by create_time desc
+        order by buytime desc
     </select>
 </mapper>
