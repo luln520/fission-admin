@@ -245,8 +245,8 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 //            BigDecimal hybl = twLeverOrder.getHybl();
 //            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
 //            BigDecimal ylnum = num.multiply(hybl.divide(new BigDecimal(100), mathContext));
-            BigDecimal money = twLeverOrder.getNum().add(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //盈利金额
-            BigDecimal ploss = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());
+//            BigDecimal money = twLeverOrder.getNum().add(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //盈利金额
+//            BigDecimal ploss = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());
             BigDecimal sellprice = twLeverOrder.getSellprice();
 
             QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
@@ -257,6 +257,8 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
             if(hyzd == 1){
                 if(kongyk == 0){
                     if (buyprice.compareTo(newprice) < 0) {   //盈利
+                        BigDecimal money =  twLeverOrder.getNum().add(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //盈利金额
+                        BigDecimal ploss = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());
                         twUserCoinService.incre(uid,money,twUserCoin.getUsdt());
                         twLeverOrder.setStatus(2);
                         twLeverOrder.setIsWin(1);
@@ -269,8 +271,11 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
 
                     } else if (newprice.compareTo(buyprice) == 0) {
+                        BigDecimal ploss =  new BigDecimal(twLeverOrder.getLoss()/100).multiply(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //亏损金额
                         twLeverOrder.setStatus(2);
                         twLeverOrder.setIsWin(2);
+
+                        twUserCoinService.decre(uid, ploss,twUserCoin.getUsdt());
                         //写财务日志
                         addlog(uid,username,ploss);
 
@@ -279,8 +284,11 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                         this.updateById(twLeverOrder);
 
                     } else if (newprice.compareTo(buyprice) < 0) {   //亏损
+                        BigDecimal ploss =  new BigDecimal(twLeverOrder.getLoss()/100).multiply(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //亏损金额
                         twLeverOrder.setStatus(2);
                         twLeverOrder.setIsWin(2);
+
+                        twUserCoinService.decre(uid, ploss,twUserCoin.getUsdt());
                         //写财务日志
                         addlog(uid,username,ploss);
 
@@ -294,8 +302,11 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
             if(hyzd == 2){
                 if(kongyk == 0 ){
                         if (buyprice.compareTo(newprice) < 0) {   //亏损
+                            BigDecimal ploss =  new BigDecimal(twLeverOrder.getLoss()/100).multiply(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //亏损金额
                             twLeverOrder.setStatus(2);
                             twLeverOrder.setIsWin(2);
+
+                            twUserCoinService.decre(uid, ploss,twUserCoin.getUsdt());
                             //写财务日志
                             addlog(uid,username,ploss);
 
@@ -304,8 +315,11 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                             this.updateById(twLeverOrder);
 
                         } else if (newprice.compareTo(buyprice) == 0) {
+                            BigDecimal ploss =  new BigDecimal(twLeverOrder.getLoss()/100).multiply(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //亏损金额
                             twLeverOrder.setStatus(2);
                             twLeverOrder.setIsWin(2);
+
+                            twUserCoinService.decre(uid, ploss,twUserCoin.getUsdt());
                             //写财务日志
                             addlog(uid,username,ploss);
 
@@ -314,6 +328,8 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                             this.updateById(twLeverOrder);
 
                         } else if (newprice.compareTo(buyprice) < 0) {   //盈利
+                            BigDecimal money =  twLeverOrder.getNum().add(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //盈利金额
+                            BigDecimal ploss = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());
                             twUserCoinService.incre(uid,money,twUserCoin.getUsdt());
                             twLeverOrder.setStatus(2);
                             twLeverOrder.setIsWin(1);
@@ -351,8 +367,6 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 //            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
 //            BigDecimal ylnum = num.multiply(hybl.divide(new BigDecimal(100), mathContext));
 
-        BigDecimal money =  twLeverOrder.getNum().add(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //盈利金额
-        BigDecimal ploss = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());
         BigDecimal sellprice = twLeverOrder.getSellprice();
 
         QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
@@ -362,6 +376,8 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         //买涨
         if(hyzd == 1){
                 if(kongyk == 1){  //盈利
+                    BigDecimal money =  twLeverOrder.getNum().add(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //盈利金额
+                    BigDecimal ploss = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());
                     if (buyprice.compareTo(newprice) < 0) {
                         sellprice = newprice;
                     } else if (newprice.compareTo(buyprice) == 0) {
@@ -385,6 +401,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                 }
 
                 if(kongyk == 2){ //亏损
+                    BigDecimal ploss =  new BigDecimal(twLeverOrder.getLoss()/100).multiply(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //亏损金额
                     if (buyprice.compareTo(newprice) < 0) {
                         sellprice = buyprice.subtract(randnum);
                     } else if (newprice.compareTo(buyprice) == 0) {
@@ -399,6 +416,8 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                     twLeverOrder.setPloss(ploss);
                     this.updateById(twLeverOrder);
 
+
+                    twUserCoinService.decre(uid, ploss,twUserCoin.getUsdt());
                     //写财务日志
                     addlog(uid,username,ploss);
                 }
@@ -407,6 +426,8 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         //买跌
         if(hyzd == 2){
                 if(kongyk == 1){ //盈利
+                    BigDecimal money =  twLeverOrder.getNum().add(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //盈利金额
+                    BigDecimal ploss = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());
                     if (buyprice.compareTo(newprice) < 0) {
                         sellprice = buyprice.subtract(randnum);
                     } else if (newprice.compareTo(buyprice) == 0) {
@@ -430,6 +451,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                 }
 
                 if(kongyk == 2){ //亏损
+                    BigDecimal ploss =  new BigDecimal(twLeverOrder.getLoss()/100).multiply(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //亏损金额
                     if (buyprice.compareTo(newprice) < 0) {
                         sellprice = newprice;
                     } else if (newprice.compareTo(buyprice) == 0) {
@@ -444,6 +466,8 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                     twLeverOrder.setSellprice(sellprice);
                     twLeverOrder.setPloss(ploss);
                     this.updateById(twLeverOrder);
+
+                    twUserCoinService.decre(uid, ploss,twUserCoin.getUsdt());
 
                     //写财务日志
                     addlog(uid,username,ploss);
