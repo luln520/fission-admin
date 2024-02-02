@@ -124,12 +124,12 @@ const columns = [
   //   key: 'id',
   //   width: 100
   // },
-  // {
-  //   title: '订单号',
-  //   dataIndex: 'ordernum',
-  //   key: 'ordernum',
-  //   width: 250
-  // },
+  {
+    title: '订单号',
+    dataIndex: 'orderNo',
+    key: 'orderNo',
+    width: 120
+  },
   {
     title: '用户ID',
     dataIndex: 'uid',
