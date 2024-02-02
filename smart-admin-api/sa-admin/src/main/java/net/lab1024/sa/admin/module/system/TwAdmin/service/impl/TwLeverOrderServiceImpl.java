@@ -18,6 +18,8 @@ import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.CommonUtil;
 import net.lab1024.sa.common.common.util.DateUtil;
+import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
+import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,6 +62,9 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
     @Autowired
     private TwNoticeService twNoticeService;
+
+    @Autowired
+    private SerialNumberService serialNumberService;
     @Override
     public IPage<TwLeverOrder> listpage(LeverVo leverVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -158,8 +163,11 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
         BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
 
+        String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+
         TwLeverOrder twLeverOrder = new TwLeverOrder();
         twLeverOrder.setUid(uid);
+        twLeverOrder.setOrderNo(orderNo);
         twLeverOrder.setUsername(twUser.getUsername());
         twLeverOrder.setNum(num);
         twLeverOrder.setHyzd(hyzd);

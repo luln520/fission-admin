@@ -8,6 +8,9 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAppc;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwArea;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAppcService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAreaService;
+import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
+import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,6 +27,7 @@ import java.util.List;
  */
 @Service("twAreaService")
 public class TwAreaServiceImpl extends ServiceImpl<TwAreaDao, TwArea> implements TwAreaService {
+
 
     @Override
     public List<TwArea> lists() {

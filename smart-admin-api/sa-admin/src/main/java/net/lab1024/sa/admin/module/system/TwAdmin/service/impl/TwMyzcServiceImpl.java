@@ -13,6 +13,8 @@ import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
+import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,9 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private SerialNumberService serialNumberService;
 
     @Override
     public BigDecimal sumDayWithdraw(String startTime, String endTime) {
@@ -344,8 +349,11 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
 
 //        twUserCoinService.decre(uid,num,twUserCoin.getUsdt());
 
+        String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+
         TwMyzc twMyzc = new TwMyzc();
         twMyzc.setUserid(uid);
+        twMyzc.setOrderNo(orderNo);
         twMyzc.setUsername(twUser.getUsername());
         twMyzc.setCoinname(twCoin.getName());
         twMyzc.setNum(num);
