@@ -130,12 +130,12 @@ const columns = [
     key: 'orderNo',
     width: 120
   },
-  {
-    title: '用户ID',
-    dataIndex: 'uid',
-    key: 'uid',
-    width: 100
-  },
+  // {
+  //   title: '用户ID',
+  //   dataIndex: 'uid',
+  //   key: 'uid',
+  //   width: 100
+  // },
   {
     title: '用户名',
     dataIndex: 'username',
