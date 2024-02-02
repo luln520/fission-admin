@@ -20,6 +20,8 @@ import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.CommonUtil;
 import net.lab1024.sa.common.common.util.DateUtil;
+import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
+import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +68,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     private TokenService tokenService;
 
     @Autowired
-    private TwUserKuangjiService twUserKuangjiService;
+    private SerialNumberService serialNumberService;
 
     @Override
     public int countUnClosedOrders() {
@@ -306,8 +308,11 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
             BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
 
+            String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+
             TwHyorder twHyorder = new TwHyorder();
             twHyorder.setUid(uid);
+            twHyorder.setOrderNo(orderNo);
             twHyorder.setUsername(twUser.getUsername());
             twHyorder.setNum(ctzed);
             twHyorder.setHybl(cykbl);

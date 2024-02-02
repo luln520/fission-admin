@@ -110,4 +110,7 @@ public class TwKjorder implements Serializable {
     @ApiModelProperty("部门id")
     private Integer department;
 
+    @ApiModelProperty("订单编号")
+    private String orderNo;
+
 }

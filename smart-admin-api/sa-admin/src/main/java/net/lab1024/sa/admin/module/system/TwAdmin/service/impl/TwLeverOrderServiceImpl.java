@@ -18,6 +18,8 @@ import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.CommonUtil;
 import net.lab1024.sa.common.common.util.DateUtil;
+import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
+import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,6 +62,9 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
     @Autowired
     private TwNoticeService twNoticeService;
+
+    @Autowired
+    private SerialNumberService serialNumberService;
     @Override
     public IPage<TwLeverOrder> listpage(LeverVo leverVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -158,8 +163,11 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
         BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
 
+        String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+
         TwLeverOrder twLeverOrder = new TwLeverOrder();
         twLeverOrder.setUid(uid);
+        twLeverOrder.setOrderNo(orderNo);
         twLeverOrder.setUsername(twUser.getUsername());
         twLeverOrder.setNum(num);
         twLeverOrder.setHyzd(hyzd);
@@ -184,7 +192,8 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twLeverOrder.setInvit(invite);
         this.save(twLeverOrder);
         //扣除USDT额度
-        twUserCoinService.decre(uid,num,twUserCoin.getUsdt());
+        BigDecimal money = num.subtract(premium);
+        twUserCoinService.decre(uid,money,twUserCoin.getUsdt());
 
         //创建财务日志
         TwBill twBill = new TwBill();
@@ -211,7 +220,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
     public ResponseDTO closeorder(int uid, int lid,String language) {
         QueryWrapper<TwLeverOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
-        queryWrapper.eq("lid", lid);
+        queryWrapper.eq("id", lid);
         TwLeverOrder twLeverOrder = this.getOne(queryWrapper);
         if(twLeverOrder == null){
             if(language.equals("zh")){
@@ -251,11 +260,11 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
             queryWrapper3.eq("userid",uid);
             TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
             BigDecimal sellprice = new BigDecimal(0);
+            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
             //买涨
               if(hyzd == 1){
                     if(kongyk == 1){  //盈利
-
-                        BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getFold())).multiply(new BigDecimal(twLeverOrder.getWin()/100)).subtract(twLeverOrder.getPremium());  //盈利金额
+                        BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
                         BigDecimal money = ploss.add(twLeverOrder.getNum());
 
                         if (buyprice.compareTo(newprice) < 0) {
@@ -281,7 +290,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                     }
 
                     if(kongyk == 2){ //亏损
-                        BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getFold())).multiply(new BigDecimal(twLeverOrder.getLoss()/100)).subtract(twLeverOrder.getPremium());  //亏损金额
+                        BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
                         if (buyprice.compareTo(newprice) < 0) {
                             sellprice = buyprice.subtract(randnum);
                         } else if (newprice.compareTo(buyprice) == 0) {
@@ -305,7 +314,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
                   if(kongyk == 0){   //未控
                         if (buyprice.compareTo(newprice) < 0) {   //盈利
-                            BigDecimal ploss = twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getFold())).multiply(new BigDecimal(twLeverOrder.getWin() / 100)).subtract(twLeverOrder.getPremium());  //盈利金额
+                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
                             BigDecimal money = ploss.add(twLeverOrder.getNum());
                             //增加资产
                             twUserCoinService.incre(uid, money, twUserCoin.getUsdt());
@@ -322,7 +331,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
 
                         } else if (newprice.compareTo(buyprice) == 0) {
-                            BigDecimal ploss = twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getFold())).multiply(new BigDecimal(twLeverOrder.getLoss() / 100)).subtract(twLeverOrder.getPremium());  //亏损金额
+                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
                             //修改订单状态
                             twLeverOrder.setStatus(2);
                             twLeverOrder.setIsWin(2);
@@ -336,7 +345,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                             //写财务日志
                             addlog(uid, username, ploss);
                         } else if (newprice.compareTo(buyprice) < 0) {   //亏损
-                            BigDecimal ploss = twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getFold())).multiply(new BigDecimal(twLeverOrder.getLoss() / 100)).subtract(twLeverOrder.getPremium());  //亏损金额
+                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
                             //修改订单状态
                             twLeverOrder.setStatus(2);
                             twLeverOrder.setIsWin(2);
@@ -357,7 +366,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                 if(hyzd == 2){
                         if(kongyk == 1){ //盈利
 
-                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getFold())).multiply(new BigDecimal(twLeverOrder.getWin()/100)).subtract(twLeverOrder.getPremium());  //盈利金额
+                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
                             BigDecimal money = ploss.add(twLeverOrder.getNum());
 
                             if (buyprice.compareTo(newprice) < 0) {
@@ -383,7 +392,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                         }
 
                         if(kongyk == 2){ //亏损
-                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getFold())).multiply(new BigDecimal(twLeverOrder.getLoss()/100)).subtract(twLeverOrder.getPremium());  //亏损金额
+                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
                             if (buyprice.compareTo(newprice) < 0) {
                                 sellprice = newprice;
                             } else if (newprice.compareTo(buyprice) == 0) {
@@ -409,7 +418,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
                     if(kongyk == 0) {                              //未控
                         if (buyprice.compareTo(newprice) < 0) {   //亏损
-                            BigDecimal ploss = twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getFold())).multiply(new BigDecimal(twLeverOrder.getLoss() / 100)).subtract(twLeverOrder.getPremium());  //亏损金额
+                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
                             //修改订单状态
                             twLeverOrder.setStatus(2);
                             twLeverOrder.setIsWin(2);
@@ -424,7 +433,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                             addlog(uid, username, ploss);
 
                         } else if (newprice.compareTo(buyprice) == 0) {
-                            BigDecimal ploss = twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getFold())).multiply(new BigDecimal(twLeverOrder.getLoss() / 100)).subtract(twLeverOrder.getPremium());  //亏损金额
+                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
                             //修改订单状态
                             twLeverOrder.setStatus(2);
                             twLeverOrder.setIsWin(2);
@@ -439,7 +448,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                             addlog(uid, username, ploss);
 
                         } else if (newprice.compareTo(buyprice) < 0) {   //盈利
-                            BigDecimal ploss = twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getFold())).multiply(new BigDecimal(twLeverOrder.getWin() / 100)).subtract(twLeverOrder.getPremium());  //盈利金额
+                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
                             BigDecimal money = ploss.add(twLeverOrder.getNum());
                             //增加资产
                             twUserCoinService.incre(uid, money, twUserCoin.getUsdt());
