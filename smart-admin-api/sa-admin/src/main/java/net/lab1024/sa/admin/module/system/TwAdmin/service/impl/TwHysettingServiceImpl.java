@@ -86,7 +86,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 twAdminLog.setAction("指定必赢");
                 long timestampInSeconds = Instant.now().getEpochSecond();
                 twAdminLog.setCreateTime((int) timestampInSeconds);
-                twAdminLog.setRemark("指定用户 "+uid+" 必赢");
+                twAdminLog.setRemark("指定用户 "+twUser.getUsername()+" 必赢");
                 twAdminLogService.save(twAdminLog);
             }
 
@@ -107,7 +107,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 twAdminLog.setAction("指定必输");
                 long timestampInSeconds = Instant.now().getEpochSecond();
                 twAdminLog.setCreateTime((int) timestampInSeconds);
-                twAdminLog.setRemark("指定用户 "+uid+" 必输");
+                twAdminLog.setRemark("指定用户 "+twUser.getUsername()+" 必输");
                 twAdminLogService.save(twAdminLog);
             }
 
@@ -128,7 +128,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 twAdminLog.setAction("正常输赢");
                 long timestampInSeconds = Instant.now().getEpochSecond();
                 twAdminLog.setCreateTime((int) timestampInSeconds);
-                twAdminLog.setRemark("指定用户 "+uid+" 正常输赢");
+                twAdminLog.setRemark("指定用户 "+twUser.getUsername()+" 正常输赢");
                 twAdminLogService.save(twAdminLog);
             }
         }

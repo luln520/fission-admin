@@ -108,7 +108,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
 
             this.baseMapper.updateState(uid);
 
-            return ResponseDTO.userErrorParam("回复成功");
+            return ResponseDTO.ok("回复成功");
 
         }catch (Exception e){
             return ResponseDTO.userErrorParam("回复失败");
