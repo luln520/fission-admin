@@ -82,12 +82,11 @@ const statusStrs = [
 const formItems = [];
 //行配置
 const columns = [
-  {
-    name: 'id',
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    width: 50
+{
+    title: '订单号',
+    dataIndex: 'orderNo',
+    key: 'orderNo',
+    width: 150
   },
   {
     title: '用户名',

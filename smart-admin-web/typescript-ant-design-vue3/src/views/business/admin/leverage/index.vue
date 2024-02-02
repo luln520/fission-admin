@@ -97,6 +97,18 @@ const formItems = [{
       message: '必填选项',
     },
   ]
+}, {
+  name: "min",
+  label: "最低金额",
+  placeholder: '请输入最低金额！',
+  type: "input",
+  defaultValue: '',
+  rules: [
+    {
+      required: true,
+      message: '必填选项',
+    },
+  ]
 }];
 //行配置
 const columns = [
@@ -117,6 +129,12 @@ const columns = [
     title: '数值',
     dataIndex: 'num',
     key: 'num',
+    width: 150
+  },
+  {
+    title: '最低金额',
+    dataIndex: 'min',
+    key: 'min',
     width: 150
   },
   {
