@@ -661,7 +661,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
             twAdminLog.setPath(one.getPath());
-            twAdminLog.setRemark("指定用户 "+uid+" 手动减少");
+            twAdminLog.setRemark("指定用户 "+one.getUsername()+" 手动减少");
             twAdminLogService.save(twAdminLog);
 
         }
@@ -693,7 +693,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
             twAdminLog.setPath(one.getPath());
-            twAdminLog.setRemark("指定用户 "+uid+" 手动增加");
+            twAdminLog.setRemark("指定用户 "+one.getUsername()+" 手动增加");
             twAdminLogService.save(twAdminLog);
 
         }
