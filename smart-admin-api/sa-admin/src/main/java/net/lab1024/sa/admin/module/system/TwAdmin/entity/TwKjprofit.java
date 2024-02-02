@@ -83,4 +83,7 @@ public class TwKjprofit implements Serializable {
     @TableField(exist = false)
     private int status;
 
+    @ApiModelProperty("订单编号")
+    private String orderNo;
+
 }

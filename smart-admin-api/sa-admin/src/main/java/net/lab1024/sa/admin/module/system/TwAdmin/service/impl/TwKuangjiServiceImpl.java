@@ -14,6 +14,8 @@ import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.DateUtil;
+import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
+import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,6 +62,9 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
     @Autowired
     private TwUserKuangjiService twUserKuangjiService;
+
+    @Autowired
+    private SerialNumberService serialNumberService;
     @Override
     public IPage<TwKuangji> listpage(PageParam pageParam) {
         Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
@@ -253,10 +258,12 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
             }
         }
 
+        String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
         //建仓矿机订单数据
         TwKjorder twKjorder = new TwKjorder();
         twKjorder.setKid(kuangji.getId());
         twKjorder.setUid(uid);
+        twKjorder.setOrderNo(orderNo);
         twKjorder.setUsername(user.getUsername());
         twKjorder.setKjtitle(kuangji.getTitle());
         twKjorder.setImgs(kuangji.getImgs());

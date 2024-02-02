@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -36,6 +37,11 @@ public class TwLeverage implements Serializable {
     */
     @ApiModelProperty("数值")
     private Integer num;
+    /**
+    * 数值
+    */
+    @ApiModelProperty("最低投注金额")
+    private BigDecimal min;
     /**
     * 创建时间
     */
