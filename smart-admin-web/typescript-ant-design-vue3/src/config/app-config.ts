@@ -8,7 +8,7 @@
  * @Copyright  1024创新实验室 （ https://1024lab.net ），Since 2012
  */
 import { AppConfig } from '/@/types/config';
-import { BASE_API_URL } from '/@/lib/axios';
+import { BASE_API_URL,BASE_IMG_URL } from '/@/lib/axios';
 /**
  * 应用默认配置
  */
@@ -36,5 +36,5 @@ export const appDefaultConfig: AppConfig = {
 
 export const imageConfig = {
   uploadUrl: `${BASE_API_URL}/api/admin/file/upload`,
-  baseImageUrl:`${BASE_API_URL}/imgs/`
+  baseImageUrl:`${BASE_IMG_URL}/imgs/`
 };
