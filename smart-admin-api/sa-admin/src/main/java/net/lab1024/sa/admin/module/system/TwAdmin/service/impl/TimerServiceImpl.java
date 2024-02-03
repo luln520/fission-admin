@@ -179,6 +179,7 @@ public class TimerServiceImpl {
             if(twKjprofit == null){
                 TwKjprofit twKjprofit1 = new TwKjprofit();
                 twKjprofit1.setUid(uid);
+                twKjprofit1.setOrderNo(twKjorder.getOrderNo());
                 twKjprofit1.setUsername(username);
                 twKjprofit1.setPath(twUser.getPath());
                 twKjprofit1.setDepartment(twUser.getDepatmentId());
