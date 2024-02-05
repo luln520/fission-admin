@@ -47,10 +47,8 @@ public class TwRecharge implements Serializable {
     */
     @ApiModelProperty("币名称")
     private String coin;
-    /**
-    * 名称
-    */
-    @ApiModelProperty("名称")
+
+    @ApiModelProperty("数量")
     private BigDecimal num;
     /**
     * 添加时间
@@ -106,5 +104,8 @@ public class TwRecharge implements Serializable {
 
     @ApiModelProperty("订单编号")
     private String orderNo;
+
+    @ApiModelProperty(value = "用户code")
+    private String userCode;
 
 }

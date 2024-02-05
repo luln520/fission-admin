@@ -193,6 +193,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
 
                     TwBill twBill = new TwBill();
                     twBill.setUid(uid);
+                    twBill.setUserCode(twUser.getUserCode());
                     twBill.setUsername(one.getUsername());
                     twBill.setNum(num);
                     twBill.setPath(twUser.getPath());
@@ -355,6 +356,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         twMyzc.setUserid(uid);
         twMyzc.setOrderNo(orderNo);
         twMyzc.setUsername(twUser.getUsername());
+        twMyzc.setUserCode(twUser.getUserCode());
         twMyzc.setCoinname(twCoin.getName());
         twMyzc.setNum(num);
         twMyzc.setAddress(address);
@@ -368,6 +370,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
         twBill.setUsername(twUser.getUsername());
+        twBill.setUserCode(twUser.getUserCode());
         twBill.setNum(num);
         twBill.setDepartment(twUser.getDepatmentId());
         twBill.setPath(twUser.getPath());

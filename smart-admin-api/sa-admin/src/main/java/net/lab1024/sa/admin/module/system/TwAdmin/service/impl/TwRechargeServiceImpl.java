@@ -253,6 +253,15 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
+    public boolean rechargeNum(Integer id, BigDecimal num) {
+        QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        TwRecharge one = this.getOne(queryWrapper);
+        one.setNum(num);
+        return this.updateById(one);
+    }
+
+    @Override
     public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline) {
         try {
             QueryWrapper<TwUser> query = new QueryWrapper<>();

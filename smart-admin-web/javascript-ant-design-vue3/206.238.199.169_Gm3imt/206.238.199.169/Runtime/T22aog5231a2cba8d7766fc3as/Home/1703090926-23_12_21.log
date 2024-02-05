@@ -1,0 +1,17 @@
+[ 2023-12-21T00:48:46+08:00 ] 206.238.199.169 /home/autoexe/setwl
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000006s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001920s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000236s ]
+INFO: Run Behavior\CheckLangBehavior [ RunTime:0.000974s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001329s ]
+SQL: SHOW COLUMNS FROM `tw_hyorder` [ RunTime:0.0005s ]
+NOTIC: [2] shuffle() expects parameter 1 to be array, object given /www/wwwroot/206.238.199.169/Application/Home/Controller/AutoexeController.class.php 第 542 行.
+SQL: SELECT COUNT(*) AS tp_count FROM `tw_hyorder` WHERE `status` = 1 AND `kongyk` = 0 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `tw_hysetting` [ RunTime:0.0005s ]
+SQL: SELECT `hy_fkgl` FROM `tw_hysetting` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0001s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000287s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000337s ]
+
