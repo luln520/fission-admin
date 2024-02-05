@@ -238,9 +238,9 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         int count = twKjorderDao.selectCount(queryKjorder).intValue();
         if(count >= one.getNum()  ){
             if(language.equals("zh")){
-                return ResponseDTO.userErrorParam("超出购买限制次数！");
+                return ResponseDTO.userErrorParam("该矿机无参与名额,请稍后再试！");
             }else{
-                return ResponseDTO.userErrorParam("Purchase limit exceeded！");
+                return ResponseDTO.userErrorParam("There is no quota for this mining machine, please try again later！");
             }
         }
 
