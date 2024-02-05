@@ -11,4 +11,6 @@ public class TwMyzcVo extends PageParam {
 
         private String endTime;
 
+        private String userCode;
+
 }

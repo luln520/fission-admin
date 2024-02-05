@@ -12,4 +12,6 @@ public class TwRechargeVo extends PageParam {
 
         private String endTime;
 
+        private String userCode;
+
 }

@@ -4,9 +4,10 @@
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill">
         select * from tw_bill where 1=1
-        <if test="obj.username != null and obj.username !=''">
-            and username like concat('%',#{obj.username},'%')
+        <if test="obj.userCode != null and obj.userCode !=''">
+            and user_code like concat('%',#{obj.userCode},'%')
         </if>
+
         <if test="obj.coinname != null and obj.coinname !=''">
             and coinname = #{obj.coinname}
         </if>

@@ -8,5 +8,7 @@ public class TwKjorderVo extends PageParam {
     private String username;
     private Integer status;
 
+    private String userCode;
+
 
 }

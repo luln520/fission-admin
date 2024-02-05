@@ -8,5 +8,7 @@ public class TwUserVo extends PageParam {
 
      private String username;
 
+     private String userCode;
+
 
 }
