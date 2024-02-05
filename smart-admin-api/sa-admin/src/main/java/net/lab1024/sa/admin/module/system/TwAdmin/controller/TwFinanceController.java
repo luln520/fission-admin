@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 
 /**
  * 财务记录
@@ -266,6 +268,11 @@ public class TwFinanceController {
      */
 
 
+    @GetMapping("/rechargeNum")
+    @ApiOperation(value = "修改充值金额")
+    public ResponseDTO rechargeNum(@RequestParam Integer id , @RequestParam BigDecimal num) {
+        return ResponseDTO.ok(twRechargeService.rechargeNum(id,num));
+    }
 
 }
 

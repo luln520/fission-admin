@@ -7,6 +7,9 @@
         <if test="obj.username != null and obj.username !=''">
             and username like concat('%',#{obj.username},'%')
         </if>
+        <if test="obj.userCode != null and obj.userCode !=''">
+            and user_code like concat('%',#{obj.userCode},'%')
+        </if>
         <if test="obj.hyzd != null">
             and hyzd = #{obj.hyzd}
         </if>

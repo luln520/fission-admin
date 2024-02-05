@@ -511,6 +511,16 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
            String invitCode = generateRandomString();  //生成验证码
 
+
+           String usercode = "";
+           usercode = userRandomString();   //生成用户code
+           QueryWrapper<TwUser> queryWrapperUserCode = new QueryWrapper<>();
+           queryWrapperUserCode.eq("user_code", usercode);
+           TwUser userCode = this.getOne(queryWrapperUserCode);
+           if(userCode != null){
+               usercode = userRandomString();
+           }
+
            String encryptPwd = getEncryptPwd(password);
            String ip = CommonUtil.getClientIP(request);
            String locationByIP = CommonUtil.getAddress(ip);
@@ -522,6 +532,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUser.setDepatmentId(departmentId.intValue());
            twUser.setPassword(encryptPwd);
            twUser.setAreaCode("");
+           twUser.setUserCode(usercode);
            twUser.setAddip(ip);
            twUser.setAddr(locationByIP);
            twUser.setRealName(username);
@@ -701,6 +712,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
         twBill.setUsername(one.getUsername());
+        twBill.setUserCode(one.getUserCode());
         twBill.setCoinname("usdt");
         twBill.setNum(money);
         twBill.setPath(one.getPath());
@@ -953,6 +965,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
             String invitCode = generateRandomString();  //生成验证码
 
+            String usercode = "";
+            usercode = userRandomString();   //生成用户code
+            QueryWrapper<TwUser> queryWrapperUserCode = new QueryWrapper<>();
+            queryWrapperUserCode.eq("user_code", usercode);
+            TwUser userCode = this.getOne(queryWrapperUserCode);
+            if(userCode != null){
+                usercode = userRandomString();
+            }
+
 //            String address = CommonUtil.getAddress(ip);
             String address = CommonUtil.getAddress(ip);
 
@@ -971,6 +992,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setInvit2(invit2);
                 twUser.setInvit3(invit3);
                 twUser.setType(type);
+                twUser.setUserCode(usercode);
                 twUser.setAreaCode("");
                 twUser.setPath(path);
                 twUser.setAddip(ip);
@@ -1229,6 +1251,20 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         StringBuilder stringBuilder = new StringBuilder();
 
         for (int i = 0; i < 5; i++) {
+            int randomIndex = random.nextInt(characterSet.length());
+            char randomChar = characterSet.charAt(randomIndex);
+            stringBuilder.append(randomChar);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    private  String userRandomString() {
+        String characterSet = "0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < 7; i++) {
             int randomIndex = random.nextInt(characterSet.length());
             char randomChar = characterSet.charAt(randomIndex);
             stringBuilder.append(randomChar);

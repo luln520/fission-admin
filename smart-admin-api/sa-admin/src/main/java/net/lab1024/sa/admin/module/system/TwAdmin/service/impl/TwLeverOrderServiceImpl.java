@@ -65,6 +65,9 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
     @Autowired
     private SerialNumberService serialNumberService;
+
+    @Autowired
+    private TwLeverageService twLeverageService;
     @Override
     public IPage<TwLeverOrder> listpage(LeverVo leverVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -144,7 +147,20 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 //                ResponseDTO.userErrorParam("不能小于最低投资额度");
 //            }
 
-        if(twUserCoin.getUsdt().compareTo(num) < 0){
+        QueryWrapper<TwLeverage> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("symbol", ccoinname); // 添加查询条件
+        queryWrapper3.eq("num", fold); // 添加查询条件
+        TwLeverage one = twLeverageService.getOne(queryWrapper3);
+        if(num.compareTo(one.getMin()) < 0) {
+            if (language.equals("zh")) {
+                return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
+            } else {
+                return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
+            }
+        }
+
+
+            if(twUserCoin.getUsdt().compareTo(num) < 0){
             if(language.equals("zh")){
                 return ResponseDTO.userErrorParam("余额不足！");
             }else{
@@ -170,6 +186,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twLeverOrder.setOrderNo(orderNo);
         twLeverOrder.setUsername(twUser.getUsername());
         twLeverOrder.setNum(num);
+        twLeverOrder.setUserCode(twUser.getUserCode());
         twLeverOrder.setHyzd(hyzd);
         twLeverOrder.setBuyOrblance(twUserCoin.getUsdt().subtract(num));
         twLeverOrder.setCoinname(ccoinname);
@@ -199,6 +216,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
         twBill.setUsername(twUser.getUsername());
+        twBill.setUserCode(twUser.getUserCode());
         twBill.setNum(num);
         twBill.setCoinname("usdt");
         twBill.setAfternum(twUserCoinService.afternum(uid));

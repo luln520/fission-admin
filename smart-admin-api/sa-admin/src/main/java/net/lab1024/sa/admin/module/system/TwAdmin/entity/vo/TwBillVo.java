@@ -13,6 +13,8 @@ public class TwBillVo extends PageParam {
 
     private Integer st;
 
+    private String userCode;
+
     @ApiModelProperty(value = "代理id")
     private Long employeeId;
 

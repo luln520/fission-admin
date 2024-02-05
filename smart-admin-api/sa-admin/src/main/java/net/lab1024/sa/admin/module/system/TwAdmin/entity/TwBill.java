@@ -56,6 +56,9 @@ public class TwBill implements Serializable {
     @ApiModelProperty(value = "操作说明")
     private String remark;
 
+    @ApiModelProperty(value = "用户code")
+    private String userCode;
+
     @ApiModelProperty(value = "trc交易id")
     private String trc20id;
 

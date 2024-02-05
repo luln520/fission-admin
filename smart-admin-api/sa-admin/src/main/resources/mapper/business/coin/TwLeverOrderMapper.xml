@@ -9,6 +9,9 @@
         <if test="obj.uid != null and obj.uid !=''">
             and uid = #{obj.uid}
         </if>
+        <if test="obj.userCode != null and obj.userCode !=''">
+            and user_code like concat('%',#{obj.userCode},'%')
+        </if>
         order by buytime desc
     </select>
 </mapper>

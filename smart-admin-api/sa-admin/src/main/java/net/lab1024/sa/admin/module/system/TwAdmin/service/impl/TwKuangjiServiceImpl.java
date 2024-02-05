@@ -238,9 +238,9 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         int count = twKjorderDao.selectCount(queryKjorder).intValue();
         if(count >= one.getNum()  ){
             if(language.equals("zh")){
-                return ResponseDTO.userErrorParam("超出购买限制次数！");
+                return ResponseDTO.userErrorParam("该矿机无参与名额,请稍后再试！");
             }else{
-                return ResponseDTO.userErrorParam("Purchase limit exceeded！");
+                return ResponseDTO.userErrorParam("There is no quota for this mining machine, please try again later！");
             }
         }
 
@@ -268,6 +268,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorder.setKjtitle(kuangji.getTitle());
         twKjorder.setImgs(kuangji.getImgs());
         twKjorder.setPath(user.getPath());
+        twKjorder.setUserCode(user.getUserCode());
         twKjorder.setDepartment(user.getDepatmentId());
         twKjorder.setStatus(1);
         twKjorder.setBuynum(buynum);
@@ -293,6 +294,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
         twBill.setUsername(user.getUsername());
+        twBill.setUserCode(user.getUserCode());
         twBill.setNum(buynum);
         twBill.setDepartment(user.getDepatmentId());
         twBill.setPath(user.getPath());

@@ -15,6 +15,8 @@ public class LeverVo extends PageParam {
 
      @ApiModelProperty("用户id")
      private int uid;
+
+     private String userCode;
 }
 
 
