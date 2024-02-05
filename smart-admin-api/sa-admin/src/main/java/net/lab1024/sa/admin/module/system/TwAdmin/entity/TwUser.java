@@ -231,6 +231,9 @@ public class TwUser implements Serializable {
     @ApiModelProperty("部门id")
     private Integer depatmentId;
 
+    @ApiModelProperty("用户code")
+    private String userCode;
+
     @TableField(exist = false)
     private  String token;
 

@@ -107,4 +107,7 @@ public class TwRecharge implements Serializable {
     @ApiModelProperty("订单编号")
     private String orderNo;
 
+    @ApiModelProperty(value = "用户code")
+    private String userCode;
+
 }

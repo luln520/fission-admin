@@ -316,6 +316,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twHyorder.setUsername(twUser.getUsername());
             twHyorder.setNum(ctzed);
             twHyorder.setHybl(cykbl);
+            twHyorder.setUserCode(twUser.getUserCode());
             twHyorder.setHyzd(ctzfx);
             twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoney));
             twHyorder.setCoinname(ccoinname);
@@ -339,6 +340,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
             //创建财务日志
             TwBill twBill = new TwBill();
+            twBill.setUserCode(twUser.getUserCode());
             twBill.setUid(uid);
             twBill.setUsername(twUser.getUsername());
             twBill.setNum(ctzed);
