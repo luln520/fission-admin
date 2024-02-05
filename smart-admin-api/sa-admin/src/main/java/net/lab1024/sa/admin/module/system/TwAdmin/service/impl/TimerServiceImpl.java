@@ -179,6 +179,7 @@ public class TimerServiceImpl {
             if(twKjprofit == null){
                 TwKjprofit twKjprofit1 = new TwKjprofit();
                 twKjprofit1.setUid(uid);
+                twKjprofit1.setOrderNo(twKjorder.getOrderNo());
                 twKjprofit1.setUsername(username);
                 twKjprofit1.setPath(twUser.getPath());
                 twKjprofit1.setDepartment(twUser.getDepatmentId());
@@ -349,6 +350,7 @@ public class TimerServiceImpl {
                         //写财务日志
                         addlog(uuid,username,money);
 
+                        log.info("买涨已控盈利1=================================");
                     }
 
                     if(kongyk == 2){ //亏损
@@ -369,6 +371,8 @@ public class TimerServiceImpl {
 
                         //写财务日志
                         addlog(uuid,username,num);
+
+                        log.info("买涨已控亏损2=================================");
                     }
                 }
 
@@ -409,6 +413,8 @@ public class TimerServiceImpl {
 
                         //写财务日志
                         addlog(uuid,username,money);
+
+                        log.info("买涨指定盈利3=================================");
                     }
 
                     if (isLoseArray) {
@@ -431,6 +437,8 @@ public class TimerServiceImpl {
 
                         //写财务日志
                         addlog(uuid,username,num);
+
+                        log.info("买涨指定亏损4=================================");
                     }
 
                     if(!isWinArray && !isLoseArray){
@@ -457,6 +465,8 @@ public class TimerServiceImpl {
                             //写财务日志
                             addlog(uuid,username,money);
 
+                            log.info("买涨指定盈利5=================================");
+
                         }
 
                         if(kongyk == 2){ //亏损
@@ -477,6 +487,8 @@ public class TimerServiceImpl {
 
                             //写财务日志
                             addlog(uuid,username,num);
+
+                            log.info("买涨指定亏损6=================================");
                         }
 
                         if(kongyk == 0){
@@ -490,7 +502,7 @@ public class TimerServiceImpl {
                                 twHyorder.setSellprice(newprice);
                                 twHyorder.setPloss(ylnum);
                                 twHyorderService.updateById(twHyorder);
-
+                                log.info("买涨指定盈利7=================================");
 
                             } else if (newprice.compareTo(buyprice) == 0) {
                                 twHyorder.setStatus(2);
@@ -501,7 +513,7 @@ public class TimerServiceImpl {
                                 twHyorder.setSellprice(newprice);
                                 twHyorder.setPloss(num);
                                 twHyorderService.updateById(twHyorder);
-
+                                log.info("买涨指定亏损8=================================");
                             } else if (newprice.compareTo(buyprice) < 0) {   //亏损
                                 twHyorder.setStatus(2);
                                 twHyorder.setIsWin(2);
@@ -511,6 +523,7 @@ public class TimerServiceImpl {
                                 twHyorder.setSellprice(newprice);
                                 twHyorder.setPloss(num);
                                 twHyorderService.updateById(twHyorder);
+                                log.info("买涨指定亏损9=================================");
                             }
 
                         }
