@@ -16,7 +16,7 @@
         await loadData();
         message.success('刷新成功');
       }">刷新</a-button>
-      <a-input-search v-model:value="searchUserName" placeholder="请输入用户名" enter-button @search="async () => {
+      <a-input-search v-model:value="searchUserName" placeholder="请输入用户ID" enter-button @search="async () => {
         pagination.current = 1;
         await loadData();
         message.success('查询成功');
@@ -396,7 +396,21 @@ const formItems = [{
       message: '必填选项',
     },
   ]
-}, {
+}
+// , {
+//   name: "userCode",
+//   label: "用户ID",
+//   placeholder: '请输入用户ID',
+//   type: "input",
+//   defaultValue: '',
+//   rules: [
+//     {
+//       required: true,
+//       message: '必填选项',
+//     },
+//   ]
+// }
+, {
   name: "phone",
   label: "手机号",
   placeholder: '请输入手机号',
@@ -570,12 +584,18 @@ const formItems = [{
 ];
 //行配置
 const columns = [
+  // {
+  //   name: 'id',
+  //   title: 'ID',
+  //   dataIndex: 'id',
+  //   key: 'id',
+  //   width: 70
+  // },
   {
-    name: 'id',
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    width: 70
+    title: '用户ID',
+    dataIndex: 'userCode',
+    key: 'userCode',
+    width: 150
   },
   {
     title: '手机号',
@@ -809,7 +829,7 @@ async function sendMsgSubmit(submitData) {
 }
 //获取表格数据
 async function loadData() {
-  let data = await userApi.list({ pageNum: pagination.value.current, pageSize: pagination.value.pageSize, username: searchUserName.value });
+  let data = await userApi.list({ pageNum: pagination.value.current, pageSize: pagination.value.pageSize, userCode: searchUserName.value });
   if (data.ok) {
     data = data.data;
     tableData.value = data.records;

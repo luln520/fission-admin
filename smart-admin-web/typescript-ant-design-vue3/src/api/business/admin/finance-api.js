@@ -45,5 +45,11 @@ export const financeApi = {
     */
   rejectCoin: (param) => {
     return getRequest('/api/admin/financeConfig/rejectCoin', param);
+  },
+  /**
+    * 修改金额
+    */
+   rechargeNum: (param) => {
+    return getRequest('/api/admin/financeConfig/rechargeNum', param);
   }
 };

@@ -6,7 +6,7 @@
         await loadData();
         message.success('刷新成功');
       }">刷新</a-button>
-      <a-input-search v-model:value="searchUserName" placeholder="请输入用户名" enter-button @search="async () => {
+      <a-input-search v-model:value="searchUserName" placeholder="请输入用户ID"  enter-button @search="async () => {
         pagination.current = 1;
         await loadData();
         message.success('查询成功');
@@ -143,6 +143,12 @@ const columns = [
     width: 100
   },
   {
+    title: '用户ID',
+    dataIndex: 'userCode',
+    key: 'userCode',
+    width: 100
+  },
+  {
     title: '购买金额',
     dataIndex: 'num',
     key: 'num',
@@ -252,7 +258,7 @@ async function addOrEditSubmit(submitData) {
 //获取表格数据
 async function loadData() {
   let data = await leverOrderApi.list({
-    pageNum: pagination.value.current, pageSize: pagination.value.pageSize, username: searchUserName.value
+    pageNum: pagination.value.current, pageSize: pagination.value.pageSize, userCode: searchUserName.value
   });
   if (data.ok) {
     data = data.data;
