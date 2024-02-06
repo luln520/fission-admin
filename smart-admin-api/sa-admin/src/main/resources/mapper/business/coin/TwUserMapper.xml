@@ -10,6 +10,9 @@
         <if test="obj.departmentId != null">
             and depatment_id = #{obj.departmentId}
         </if>
+        <if test="obj.userCode != null and obj.userCode !=''">
+            and user_code like concat('%',#{obj.userCode},'%')
+        </if>
         <if test="obj.employeeId != null and obj.employeeId !=''">
             and path like concat('%',#{obj.employeeId},'%')
         </if>
@@ -20,6 +23,9 @@
         select * from tw_user where 1=1 and rzstatus IN (1, 2, 3)
         <if test="obj.username != null and obj.username !=''">
             and username = #{obj.username}
+        </if>
+        <if test="obj.userCode != null and obj.userCode !=''">
+            and user_code like concat('%',#{obj.userCode},'%')
         </if>
          order by id desc
     </select>

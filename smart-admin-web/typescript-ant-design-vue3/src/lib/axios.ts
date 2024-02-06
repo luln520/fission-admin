@@ -16,10 +16,23 @@ import { smartSentry } from '/@/lib/smart-sentry';
 import { localClear } from '/@/utils/local-util';
 
 const TOKEN_HEADER: string = 'x-access-token';
+const hostname = window.location.hostname;
+const apiUrlMap = {
+  "localhost": "http://206.238.199.169:1024",//"http://127.0.0.1:1084",
+  '206.238.199.169': "http://206.238.199.169:1024",
+  "2024.pz167.com":'https://2024api.pz167.com',
+  "2024.bic6699.com":'https://api.bic6699.com',
+}
+export const BASE_API_URL = apiUrlMap[hostname] ? apiUrlMap[hostname] : `https://${hostname}`.replace("2024.","api.");
+export const BASE_IMG_URL = BASE_API_URL.replace(":1024", '');
 //基础请求地址
 //export const BASE_API_URL = "http://127.0.0.1:1084"
 // export const BASE_API_URL = "http://206.238.199.169:1024"
-export const BASE_API_URL = "https://2024api.pz167.com"
+// export const BASE_IMG_URL = "http://206.238.199.169"
+// export const BASE_API_URL = "https://2024api.pz167.com"
+// export const BASE_API_URL = "https://api.bic6699.com"
+// export const BASE_IMG_URL = BASE_API_URL
+
 const smartAxios = axios.create({
   baseURL: BASE_API_URL,
 });
