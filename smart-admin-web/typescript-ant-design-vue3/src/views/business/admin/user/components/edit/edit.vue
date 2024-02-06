@@ -207,7 +207,7 @@
                     <a-row v-for="(formItem, index) in formItemsNodes[1]" :key="index">
                         <a-col :span="22">
                             <a-form-item
-                                v-if="formItem && (formItem.name === 'username' || formItem.name === 'phone' || formItem.name === 'password' || formItem.name === 'txstate' || formItem.name === 'buyOn'|| formItem.name === 'invit')"
+                                v-if="formItem && (formItem.name === 'username' || formItem.name === 'userCode' || formItem.name === 'phone' || formItem.name === 'password' || formItem.name === 'txstate' || formItem.name === 'buyOn' || formItem.name === 'invit')"
                                 :name="formItem.name" :label="formItem.label" :rules="formItem.rules">
                                 <!-- 判断控件类型 -->
                                 <!-- input -->

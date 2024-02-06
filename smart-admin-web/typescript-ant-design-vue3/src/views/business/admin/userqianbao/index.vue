@@ -11,7 +11,7 @@
         await loadData();
         message.success('刷新成功');
       }">刷新</a-button>
-       <a-input-search v-model:value="searchUserName" placeholder="请输入用户名" enter-button @search="async () => {
+       <a-input-search v-model:value="searchUserName" placeholder="请输入用户ID"  enter-button @search="async () => {
         pagination.current = 1;
         await loadData();
         message.success('查询成功');

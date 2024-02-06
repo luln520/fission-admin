@@ -1,5 +1,5 @@
 <template>
-    <a-modal width="800px" :destroyOnClose="true" :visible="props.isOpen" :open="props.isOpen"
+    <a-modal :width="props.width?props.width:'800px'" :destroyOnClose="true" :visible="props.isOpen" :open="props.isOpen"
         :title="props.isALlName ? props.name : (props.type == 1 ? `新增（${props.name}）` : `编辑（${props.name}-${props.data?.id}）`)"
         @ok="addHandleOk" @cancel="close">
         <a-form ref="dataFormRef" :label-col="labelCol" :model="dataModel">
@@ -114,7 +114,7 @@ import { imageConfig } from "/@/config/app-config";
 import { QuillEditor, Quill } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import dayjs, { Dayjs } from 'dayjs';
-const props = defineProps(["isOpen", "type", "data", "name", "formItems", "isALlName"]);
+const props = defineProps(["isOpen", "type", "data", "name", "formItems", "isALlName","width"]);
 const emit = defineEmits(["close", "submit"]);
 const dataFormRef = shallowRef();
 const dataModel = ref(props.data);
@@ -178,7 +178,7 @@ const formItemsNodes = computed(() => {
     const len2 = [];
     for (let i = 0; i < formItems.length; i++) {
         const item = formItems[i];
-        if (item.type == "editor") {
+        if (item.type == "editor"||item.row===1) {
             lens.push(item);
         } else {
             len2.push(item);
