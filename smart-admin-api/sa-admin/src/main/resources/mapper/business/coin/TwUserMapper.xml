@@ -24,6 +24,9 @@
         <if test="obj.username != null and obj.username !=''">
             and username = #{obj.username}
         </if>
+        <if test="obj.userCode != null and obj.userCode !=''">
+            and user_code like concat('%',#{obj.userCode},'%')
+        </if>
          order by id desc
     </select>
 
