@@ -11,7 +11,7 @@
             and depatment_id = #{obj.departmentId}
         </if>
         <if test="obj.userCode != null and obj.userCode !=''">
-            and user_code like concat('%',#{obj.userCode},'%')
+            and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>
         <if test="obj.employeeId != null and obj.employeeId !=''">
             and path like concat('%',#{obj.employeeId},'%')
@@ -25,7 +25,7 @@
             and username = #{obj.username}
         </if>
         <if test="obj.userCode != null and obj.userCode !=''">
-            and user_code like concat('%',#{obj.userCode},'%')
+            and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>
          order by id desc
     </select>

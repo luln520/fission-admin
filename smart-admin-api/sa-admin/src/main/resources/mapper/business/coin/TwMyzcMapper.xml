@@ -8,7 +8,7 @@
             and username like concat('%',#{obj.username},'%')
         </if>
         <if test="obj.userCode != null and obj.userCode !=''">
-            and user_code like concat('%',#{obj.userCode},'%')
+            and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>
         <if test="obj.startTime != null and obj.startTime !=''">
             and addtime >= #{obj.startTime}
