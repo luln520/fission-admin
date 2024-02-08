@@ -56,8 +56,8 @@ public class SendEmailLib {
             //选择ssl方式
             gmailtls(props);
 
-            final String username = "1119076443luln@gmail.com";// gmail 邮箱
-            final String password = "phfe xdpx iinq nvyr";// Google应用专用密码
+            final String username = "coinex.ams@gmail.com";// gmail 邮箱
+            final String password = "xcwq gbch jsnd jvhq";// Google应用专用密码
             // 当做多商户的时候需要使用getInstance, 如果只是一个邮箱发送的话就用getDefaultInstance
             // Session.getDefaultInstance 会将username,password保存在session会话中
             // Session.getInstance 不进行保存
