@@ -16,7 +16,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SystemErrorCode implements ErrorCode {
 
-    SYSTEM_ERROR(10001, "系统似乎出现了点小问题"),
+    SYSTEM_ERROR(10001, "There seems to be a small problem with the system"),
 
     ;
 
