@@ -185,7 +185,6 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                 queryCoin.eq("userid", uid);
                 TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
                 if(twUserCoin != null){
-//                    twUserCoinService.incre(uid,num,twUserCoin.getUsdt());//增加用户资产
 
                     QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
                     queryWrapper2.eq("id", uid);
@@ -218,6 +217,8 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                     twNotice.setPath(twUser.getPath());
                     twNotice.setDepartment(twUser.getDepatmentId());
                     twNoticeService.save(twNotice);
+
+                    twUserCoinService.incre(uid,num,twUserCoin.getUsdt());//增加用户资产
                     return ResponseDTO.okMsg("操作成功");
                 }else {
                     return ResponseDTO.userErrorParam("操作失败");
@@ -270,11 +271,11 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             queryWrapper3.eq("userid", twUser.getId());
             TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
 
-            twUserCoinService.decre(twUser.getId(),one.getNum(),twUserCoin.getUsdt());
+//            twUserCoinService.decre(twUser.getId(),one.getNum(),twUserCoin.getUsdt());
 
-            return ResponseDTO.okMsg("充值驳回成功");
+            return ResponseDTO.okMsg("提币通过成功");
         }catch (Exception e){
-            return ResponseDTO.userErrorParam("充值驳回失败");
+            return ResponseDTO.userErrorParam("提币通过失败");
         }
     }
 
@@ -348,18 +349,18 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             }
         }
 
-        QueryWrapper<TwMyzc> queryWrapper3 = new QueryWrapper<>();
-        queryWrapper3.eq("userid", uid);
-        queryWrapper3.eq("status", 1);
-        TwMyzc one = this.getOne(queryWrapper3);
-        if(one != null){
-            if(language.equals("zh")){
-                return ResponseDTO.userErrorParam("有一笔订单未审核，请勿重复提交!");
-            }else{
-                return ResponseDTO.userErrorParam("There is an order that has not been reviewed. Please do not submit it again.！");
-            }
-        }
-//        twUserCoinService.decre(uid,num,twUserCoin.getUsdt());
+//        QueryWrapper<TwMyzc> queryWrapper3 = new QueryWrapper<>();
+//        queryWrapper3.eq("userid", uid);
+//        queryWrapper3.eq("status", 1);
+//        TwMyzc one = this.getOne(queryWrapper3);
+//        if(one != null){
+//            if(language.equals("zh")){
+//                return ResponseDTO.userErrorParam("有一笔订单未审核，请勿重复提交!");
+//            }else{
+//                return ResponseDTO.userErrorParam("There is an order that has not been reviewed. Please do not submit it again.！");
+//            }
+//        }
+        twUserCoinService.decre(uid,num,twUserCoin.getUsdt());
 
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
 
