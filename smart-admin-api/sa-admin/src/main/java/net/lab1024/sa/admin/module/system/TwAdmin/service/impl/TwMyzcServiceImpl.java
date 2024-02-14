@@ -348,6 +348,17 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             }
         }
 
+        QueryWrapper<TwMyzc> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("userid", uid);
+        queryWrapper3.eq("status", 1);
+        TwMyzc one = this.getOne(queryWrapper3);
+        if(one != null){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("有一笔订单未审核，请勿重复提交!");
+            }else{
+                return ResponseDTO.userErrorParam("There is an order that has not been reviewed. Please do not submit it again.！");
+            }
+        }
 //        twUserCoinService.decre(uid,num,twUserCoin.getUsdt());
 
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
