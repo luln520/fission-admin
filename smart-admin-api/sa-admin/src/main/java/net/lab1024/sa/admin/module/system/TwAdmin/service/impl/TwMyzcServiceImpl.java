@@ -372,6 +372,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         twMyzc.setNum(num);
         twMyzc.setAddress(address);
         twMyzc.setSort(1);
+        twMyzc.setMum(tnum);
         twMyzc.setPath(twUser.getPath());
         twMyzc.setDepartment(twUser.getDepatmentId());
         twMyzc.setAddtime(new Date());
