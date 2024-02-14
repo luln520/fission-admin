@@ -354,9 +354,9 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         TwMyzc one = this.getOne(queryWrapper3);
         if(one != null){
             if(language.equals("zh")){
-                return ResponseDTO.userErrorParam("你有一笔审核订单!");
+                return ResponseDTO.userErrorParam("有一笔订单未审核，请勿重复提交!");
             }else{
-                return ResponseDTO.userErrorParam("You have a review order！");
+                return ResponseDTO.userErrorParam("There is an order that has not been reviewed. Please do not submit it again.！");
             }
         }
 
