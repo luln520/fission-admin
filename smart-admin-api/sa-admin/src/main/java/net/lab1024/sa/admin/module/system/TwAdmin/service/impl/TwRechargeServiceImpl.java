@@ -15,6 +15,8 @@ import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.code.ErrorCode;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
+import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -61,6 +63,9 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     @Autowired
     private TokenService tokenService;
 
+
+    @Autowired
+    private SerialNumberService serialNumberService;
     @Override
     public BigDecimal sumDayRecharge(String startTime, String endTime) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
@@ -268,13 +273,16 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             query.eq("id", uid);
             TwUser one = twUserService.getOne(query);
 
+            String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
             TwRecharge twRecharge = new TwRecharge();
             twRecharge.setUid(uid);
             twRecharge.setUsername(one.getUsername());
             twRecharge.setCoin(coinname);
+            twRecharge.setOrderNo(orderNo);
             twRecharge.setNum(zznum);
             twRecharge.setAddtime(new Date());
             twRecharge.setStatus(1);
+            twRecharge.setUserCode(one.getUserCode());
             twRecharge.setPath(one.getPath());
             twRecharge.setDepartment(one.getDepatmentId());
             twRecharge.setPayimg(payimg);

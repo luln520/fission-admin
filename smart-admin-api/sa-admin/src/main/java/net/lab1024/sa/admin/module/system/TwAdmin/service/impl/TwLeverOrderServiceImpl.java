@@ -527,7 +527,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twBill.setPath(twUser.getPath());
         twBill.setCoinname("usdt");
         twBill.setAfternum(twUserCoinService.afternum(uid));
-        twBill.setType(4);
+        twBill.setType(9);
         twBill.setAddtime(new Date());
         twBill.setSt(1);
         twBill.setRemark("杠杆平仓");
