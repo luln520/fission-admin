@@ -125,37 +125,37 @@ const columns = [
     title: '用户ID',
     dataIndex: 'userCode',
     key: 'userCode',
-    width: 150
+    width: 100
   },
   {
     title: '充值网络',
     dataIndex: 'czline',
     key: 'czline',
-    width: 300
+    width: 200
   },
   {
     title: '充值时间',
     dataIndex: 'addtime',
     key: 'addtime',
-    width: 200
+    width: 120
   },
   {
     title: '处理时间',
     dataIndex: 'updatetime',
     key: 'updatetime',
-    width: 200
+    width: 120
   },
   {
     title: '充值数量',
     dataIndex: 'num',
     key: 'num',
-    width: 120
+    width: 80
   },
   {
-    title: '实际到账(存疑)',
+    title: '实际到账',
     dataIndex: 'num',
     key: 'num',
-    width: 120
+    width: 80
   },
   {
     title: '转账凭证',
@@ -167,12 +167,12 @@ const columns = [
     title: '状态',
     key: 'status',
     dataIndex: 'status',
-    width: 200,
+    width: 100,
   },
   {
     title: '操作',
     key: 'action',
-    width: 300,
+    width: 200,
     fixed: 'right',
   },
 ];

@@ -595,7 +595,7 @@ const columns = [
     title: '用户ID',
     dataIndex: 'userCode',
     key: 'userCode',
-    width: 150
+    width: 100
   },
   {
     title: '手机号',
@@ -656,7 +656,7 @@ const columns = [
     title: '上级代理',
     dataIndex: 'path',
     key: 'path',
-    width: 150
+    width: 100
   },
   {
     title: '资产操作',
