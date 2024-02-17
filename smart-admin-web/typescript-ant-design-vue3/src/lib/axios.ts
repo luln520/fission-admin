@@ -43,10 +43,29 @@ smartAxios.interceptors.request.use(
   (config) => {
     // 在发送请求之前消息头加入token token
     const token = getTokenFromCookie();
+    let companyId=localStorage.getItem("companyId");
     if (token) {
       config.headers[TOKEN_HEADER] = token;
     } else {
       delete config.headers[TOKEN_HEADER];
+    }
+    //公司id添加
+    if (companyId) {
+      companyId=parseInt(companyId);
+      //get添加companyId
+      if (config.method === "get" || config.method === "GET") {
+        if (!config.params) {
+          config.params = {}
+        }
+        config.params["companyId"] = companyId;
+      }
+      //post添加companyId
+      if (config.method === "post" || config.method === "POST") {
+        if (!config.data) {
+          config.data = {};
+        }
+        config.data.companyId = companyId;
+      }
     }
     return config;
   },
