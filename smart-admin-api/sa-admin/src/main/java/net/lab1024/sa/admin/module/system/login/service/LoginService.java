@@ -132,7 +132,7 @@ public class LoginService {
         //获取员工登录信息
         LoginEmployeeDetail loginEmployeeDetail = loadLoginInfo(employeeEntity);
         loginEmployeeDetail.setToken(token);
-
+        loginEmployeeDetail.setCompanyId(employeeEntity.getCompanyId());
         // 放入缓存
         loginUserDetailCache.put(employeeEntity.getEmployeeId(), loginEmployeeDetail);
 
