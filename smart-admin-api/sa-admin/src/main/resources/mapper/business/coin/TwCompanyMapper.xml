@@ -4,6 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwCompanyMapper">
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCompany">
-        select * from tw_company where is_del = 1 order by create_time desc
+        select * from tw_company where is_del = 1
+        <if test="obj.companyName != null and obj.companyName !=''">
+            and company_name like concat('%',#{obj.companyName},'%')
+        </if>
+        order by create_time desc
     </select>
 </mapper>
