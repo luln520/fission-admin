@@ -73,6 +73,7 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
         entity.setLoginName(twCompany.getCompanyAccount());
         entity.setCompanyId(twCompany.getId());
         entity.setDeletedFlag(Boolean.FALSE);
+        entity.setActualName("管理员");
         entity.setAdministratorFlag(Boolean.TRUE);
         entity.setDisabledFlag(Boolean.FALSE);
         entity.setCreateTime(LocalDateTime.now());
