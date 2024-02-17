@@ -127,12 +127,12 @@ public class LoginService {
 
         // 生成 登录token，保存token
         Boolean superPasswordFlag = superPassword.equals(requestPassword);
-        String token = tokenService.generateToken(employeeEntity.getEmployeeId(), employeeEntity.getActualName(), UserTypeEnum.ADMIN_EMPLOYEE, loginDeviceEnum, superPasswordFlag);
+        String token = tokenService.generateToken(employeeEntity.getEmployeeId(), employeeEntity.getActualName(),employeeEntity.getCompanyId(), UserTypeEnum.ADMIN_EMPLOYEE, loginDeviceEnum, superPasswordFlag);
 
         //获取员工登录信息
         LoginEmployeeDetail loginEmployeeDetail = loadLoginInfo(employeeEntity);
         loginEmployeeDetail.setToken(token);
-
+        loginEmployeeDetail.setCompanyId(employeeEntity.getCompanyId());
         // 放入缓存
         loginUserDetailCache.put(employeeEntity.getEmployeeId(), loginEmployeeDetail);
 

@@ -35,7 +35,7 @@ public class TwCompanyController {
     @PostMapping("/addOrUpdate")
     @ApiOperation(value = "公司新增或编辑")
     public ResponseDTO addOrUpdate(@RequestBody TwCompany twCompany) {
-        return ResponseDTO.ok(twCompanyService.addOrUpdate(twCompany));
+        return twCompanyService.addOrUpdate(twCompany);
     }
 
     @GetMapping("/detail")

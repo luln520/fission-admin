@@ -9,8 +9,18 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCompany;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.CompanyVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
+import net.lab1024.sa.admin.module.system.department.domain.entity.DepartmentEntity;
+import net.lab1024.sa.admin.module.system.employee.dao.EmployeeDao;
+import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.manager.EmployeeManager;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.common.util.SmartBeanUtil;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,6 +31,13 @@ import java.util.List;
 @Service
 public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany> implements TwCompanyService {
 
+    private static final String PASSWORD_SALT_FORMAT = "smart_%s_admin_$^&*";
+
+    @Autowired
+    private EmployeeDao employeeDao;
+
+    @Autowired
+    private EmployeeManager employeeManager;
     @Override
     public IPage<TwCompany> listpage(CompanyVo companyVo) {
         Page<TwCompany> objectPage = new Page<>(companyVo.getPageNum(), companyVo.getPageSize());
@@ -36,8 +53,32 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
     }
 
     @Override
-    public boolean addOrUpdate(TwCompany twCompany) {
-            return this.saveOrUpdate(twCompany);
+    public ResponseDTO addOrUpdate(TwCompany twCompany) {
+
+        // 校验名称是否重复
+        if(twCompany.getId() == null){
+            EmployeeEntity employeeEntity = employeeDao.getByLoginName(twCompany.getCompanyAccount(), null);
+            if (null != employeeEntity) {
+                return ResponseDTO.userErrorParam("账号重复");
+            }
+        }
+
+
+        this.saveOrUpdate(twCompany);
+
+        EmployeeEntity entity  = new EmployeeEntity();
+        // 设置密码 默认密码
+        String password = twCompany.getCompanyPwd();
+        entity.setLoginPwd(getEncryptPwd(password));
+        entity.setLoginName(twCompany.getCompanyAccount());
+        entity.setCompanyId(twCompany.getId());
+        entity.setDeletedFlag(Boolean.FALSE);
+        entity.setAdministratorFlag(Boolean.TRUE);
+        entity.setDisabledFlag(Boolean.FALSE);
+        entity.setCreateTime(LocalDateTime.now());
+        employeeManager.saveEmployee(entity, null);
+
+        return ResponseDTO.ok(password);
     }
 
     @Override
@@ -56,6 +97,16 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
         TwCompany one = this.getOne(queryWrapper);
         one.setIsDel(2);
         return this.updateById(one);
+    }
+
+    /**
+     * 获取 加密后 的密码
+     *
+     * @param password
+     * @return
+     */
+    public static String getEncryptPwd(String password) {
+        return DigestUtils.md5Hex(String.format(PASSWORD_SALT_FORMAT, password));
     }
 }
 

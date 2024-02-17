@@ -20,6 +20,8 @@ class JwtConst {
      */
     static final String CLAIM_NAME_KEY = "name";
 
+    static final String CLAIM_COMPANY_ID = "companyId";
+
     /**
      * user type
      */

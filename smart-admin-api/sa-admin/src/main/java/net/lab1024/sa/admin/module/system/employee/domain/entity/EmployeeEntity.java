@@ -87,5 +87,7 @@ public class EmployeeEntity {
 
     private LocalDateTime createTime;
 
+    private int companyId;
+
 
 }
