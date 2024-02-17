@@ -819,7 +819,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         // 生成 登录token，保存token
         Boolean superPasswordFlag = superPassword.equals(requestPassword);
-        String token = tokenService.useToken(uid, username, superPasswordFlag);
+        String token = tokenService.useToken(uid, username,one.getCompanyId(), superPasswordFlag);
 
         //获取员工登录信息
         one.setToken(token);
