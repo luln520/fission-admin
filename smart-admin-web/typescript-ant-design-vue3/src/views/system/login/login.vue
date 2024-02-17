@@ -154,6 +154,8 @@ async function onLogin() {
       }
       stopRefrestCaptchaInterval();
       saveTokenToCookie(res.data.token ? res.data.token : '');
+      //公司id
+      localStorage.setItem("companyId",res.data.companyId);
       //更新用户信息到pinia
       useUserStore().setUserLoginInfo(res.data);
       //构建系统的路由
