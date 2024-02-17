@@ -19,6 +19,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +75,7 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
         entity.setDeletedFlag(Boolean.FALSE);
         entity.setAdministratorFlag(Boolean.TRUE);
         entity.setDisabledFlag(Boolean.FALSE);
+        entity.setCreateTime(LocalDateTime.now());
         employeeManager.saveEmployee(entity, null);
 
         return ResponseDTO.ok(password);
