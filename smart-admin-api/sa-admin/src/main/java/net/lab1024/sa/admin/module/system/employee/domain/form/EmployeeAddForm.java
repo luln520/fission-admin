@@ -42,6 +42,10 @@ public class EmployeeAddForm {
     @NotNull(message = "部门id不能为空")
     private Long departmentId;
 
+    @ApiModelProperty("部门id")
+    @NotNull(message = "部门id不能为空")
+    private int companyId;
+
     @ApiModelProperty("是否启用")
     @NotNull(message = "是否被禁用不能为空")
     private Boolean disabledFlag;
