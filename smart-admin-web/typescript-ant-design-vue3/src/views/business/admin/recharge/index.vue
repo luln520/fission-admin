@@ -151,12 +151,12 @@ const columns = [
     key: 'num',
     width: 80
   },
-  {
-    title: '实际到账',
-    dataIndex: 'num',
-    key: 'num',
-    width: 80
-  },
+  // {
+  //   title: '实际到账',
+  //   dataIndex: 'num',
+  //   key: 'num',
+  //   width: 80
+  // },
   {
     title: '转账凭证',
     dataIndex: 'payimg',

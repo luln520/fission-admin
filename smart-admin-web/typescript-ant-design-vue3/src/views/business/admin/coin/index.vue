@@ -417,7 +417,7 @@ const columns = [
     width: 100
   },
   {
-    title: '代理信息(有疑问)',
+    title: '代理信息',
     dataIndex: 'agentId',
     key: 'agentId',
     width: 150
@@ -465,7 +465,7 @@ const columns = [
     width: 120
   },
   {
-    title: '默认通道(有疑问)',
+    title: '默认通道',
     dataIndex: 'defaultOn',
     key: 'defaultOn',
     width: 100

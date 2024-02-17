@@ -136,7 +136,8 @@ const columns = [
     dataIndex: 'fee',
     key: 'fee',
     width: 120
-  }, {
+  },
+   {
     title: '实际到账',
     dataIndex: 'mum',
     key: 'mum',
