@@ -49,7 +49,7 @@
     </div> -->
     <div class="box-item login">
       <img class="login-qr" :src="loginQR" />
-      <div class="login-title">GQ全球量化平台</div>
+      <div class="login-title">CoinEx全球量化平台</div>
       <div class="login-title" style="font-size: 20px;">账号登录</div>
       <a-form ref="formRef" class="login-form" :model="loginForm" :rules="rules">
         <a-form-item name="loginName">
