@@ -54,13 +54,14 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
     @Override
     public ResponseDTO addOrUpdate(TwCompany twCompany) {
 
-        this.saveOrUpdate(twCompany);
-
         // 校验名称是否重复
         EmployeeEntity employeeEntity = employeeDao.getByLoginName(twCompany.getCompanyAccount(), null);
         if (null != employeeEntity) {
             return ResponseDTO.userErrorParam("账号重复");
         }
+
+
+        this.saveOrUpdate(twCompany);
 
         EmployeeEntity entity  = new EmployeeEntity();
         // 设置密码 默认密码
