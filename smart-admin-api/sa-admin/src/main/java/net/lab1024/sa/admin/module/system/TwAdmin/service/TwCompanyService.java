@@ -6,6 +6,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCompany;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.CompanyVo;
 import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface TwCompanyService extends IService<TwCompany> {
 
     TwCompany detail(int id);
 
-    boolean addOrUpdate(TwCompany twCompany);
+    ResponseDTO addOrUpdate(TwCompany twCompany);
 
     boolean updateStatus(int id, Integer status);
 
