@@ -55,9 +55,11 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
     public ResponseDTO addOrUpdate(TwCompany twCompany) {
 
         // 校验名称是否重复
-        EmployeeEntity employeeEntity = employeeDao.getByLoginName(twCompany.getCompanyAccount(), null);
-        if (null != employeeEntity) {
-            return ResponseDTO.userErrorParam("账号重复");
+        if(twCompany.getId() == null){
+            EmployeeEntity employeeEntity = employeeDao.getByLoginName(twCompany.getCompanyAccount(), null);
+            if (null != employeeEntity) {
+                return ResponseDTO.userErrorParam("账号重复");
+            }
         }
 
 
