@@ -19,6 +19,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -84,6 +85,14 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
         employeeManager.saveEmployee(entity, roleIdList);
 
         return ResponseDTO.ok(password);
+    }
+
+    @Override
+    public TwCompany companyDomain(HttpServletRequest request) {
+        String serverName = request.getServerName();
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.like("company_domain",serverName);
+        return this.getOne(queryWrapper);
     }
 
     @Override

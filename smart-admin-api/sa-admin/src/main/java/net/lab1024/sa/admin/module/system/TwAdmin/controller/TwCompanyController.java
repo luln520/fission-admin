@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -58,4 +59,9 @@ public class TwCompanyController {
     }
 
 
+    @GetMapping("/domain")
+    @ApiOperation(value = "根据域名获取公司信息")
+    public ResponseDTO<TwCompany> companyDomain(HttpServletRequest request) {
+        return ResponseDTO.ok(twCompanyService.companyDomain(request));
+    }
 }

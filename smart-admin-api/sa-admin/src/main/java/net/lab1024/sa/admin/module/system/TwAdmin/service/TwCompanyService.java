@@ -8,6 +8,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.CompanyVo;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -21,6 +22,8 @@ public interface TwCompanyService extends IService<TwCompany> {
     TwCompany detail(int id);
 
     ResponseDTO addOrUpdate(TwCompany twCompany);
+
+    TwCompany companyDomain(HttpServletRequest request);
 
     boolean updateStatus(int id, Integer status);
 
