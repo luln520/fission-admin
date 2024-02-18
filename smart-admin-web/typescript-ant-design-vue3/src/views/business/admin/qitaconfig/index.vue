@@ -2,243 +2,344 @@
   <!-- 表格 -->
   <a-card style="min-height:100%;margin-top: 10px;">
     <!-- 编辑弹框 -->
-    <AddOrEdit v-if="isShow" @submit="addOrEditSubmit" :formItems="formItems" :data="baseData" privilege="system:webConfig:add" />
+    <AddOrEdit v-if="isShow" @submit="addOrEditSubmit" :formItems="formItems" :data="baseData"
+      privilege="system:webConfig:add" />
   </a-card>
 </template>
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
 import { h, ref, onMounted } from 'vue';
 import { PlusCircleOutlined, UndoOutlined } from '@ant-design/icons-vue';
-import { webConfigApi } from '/@/api/business/admin/webConfig-api';
+import { companyApi } from '/@/api/business/admin/company-api';
 import AddOrEdit from "/@/components/edit/editIn.vue"
 const isShow = ref(false)
 const baseData = ref({});
 const formItems = [
   {
-    name: "smsemail",
-    label: "验证码发送邮箱",
-    placeholder: '发送邮箱验证码的邮箱账号',
+    name: "name",
+    label: "公司名称",
+    placeholder: "请输入公司名称！",
     type: "input",
-    defaultValue: '',
+    defaultValue: "",
     rules: [
       {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "emailcode",
-    label: "邮箱授权码",
-    placeholder: '发送邮箱验证码的邮箱授权码',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "smstemple",
-    label: "验证码模板",
-    placeholder: '短信验证码模板',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "smtpdz",
-    label: "邮箱服务器",
-    placeholder: '163邮箱是：smtp.163.com QQ邮箱是smtp.qq.com 谷歌邮箱是：smtp.gmail.com(谷歌邮箱授权码填密码)',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "smsUrl",
-    label: "短信服务器",
-    placeholder: '提交发送的网关地址',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "smsId",
-    label: "短信商户ID",
-    placeholder: '商户ID',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
-    ]
-  }, {
-    name: "smsKey",
-    label: "短信商户key",
-    placeholder: '商户密钥',
-    type: "input",
-    defaultValue: '',
-    rules: [
-      {
-        required: false,
-        message: '必填选项',
-      },
+        required: true,
+        message: "必填选项"
+      }
     ]
   },
-  // , {
-  //   name: "startmoney",
-  //   label: "归集起始金额",
-  //   placeholder: 'USDT一键归集起始金额',
-  //   type: "input",
-  //   defaultValue: '',
-  //   rules: [
-  //     {
-  //       required: false,
-  //       message: '必填选项',
-  //     },
-  //   ]
-  // }, {
-  //   name: "shouxufeiid",
-  //   label: "TRX账户私钥",
-  //   placeholder: '用来给所有账户转TRX手续费',
-  //   type: "input",
-  //   defaultValue: '',
-  //   rules: [
-  //     {
-  //       required: false,
-  //       message: '必填选项',
-  //     },
-  //   ]
-  // }, {
-  //   name: "guijiid",
-  //   label: "USDT接收地址",
-  //   placeholder: '所有账户的USDT都将自动转账到该账户',
-  //   type: "input",
-  //   defaultValue: '',
-  //   rules: [
-  //     {
-  //       required: false,
-  //       message: '必填选项',
-  //     },
-  //   ]
-  // }, {
-  //   name: "tgtext",
-  //   label: "推荐页面推广语",
-  //   placeholder: '推荐页面的推广语，不要多于40个字',
-  //   type: "input",
-  //   defaultValue: '',
-  //   rules: [
-  //     {
-  //       required: false,
-  //       message: '必填选项',
-  //     },
-  //   ]
-  // },
   {
-    name: "gfemail",
-    label: "官方客服邮箱",
-    placeholder: '官方客服邮箱',
+    name: "companyName",
+    label: "平台名称",
+    placeholder: "请输入平台名称！",
     type: "input",
-    defaultValue: '',
+    defaultValue: "",
     rules: [
       {
-        required: false,
-        message: '必填选项',
-      },
+        required: true,
+        message: "必填选项"
+      }
     ]
   },
-  //  {
-  //   name: "footertext",
-  //   label: "PC端下方文字",
-  //   placeholder: '显示在PC端LOGO下的文字',
-  //   type: "input",
-  //   defaultValue: '',
-  //   rules: [
-  //     {
-  //       required: false,
-  //       message: '必填选项',
-  //     },
-  //   ]
-  // }, {
-  //   name: "tymoney",
-  //   label: "注册赠送体验金",
-  //   placeholder: '注册赠送体验金',
-  //   type: "input",
-  //   defaultValue: '',
-  //   rules: [
-  //     {
-  //       required: false,
-  //       message: '必填选项',
-  //     },
-  //   ]
-  // }, {
-  //   name: "webswitch",
-  //   label: "网站注册开关",
-  //   placeholder: '关闭时禁止注册',
-  //   type: "select",
-  //   defaultValue: '',
-  //   rules: [
-  //     {
-  //       required: false,
-  //       message: '必填选项',
-  //     },
-  //   ],
-  //   selects: [
-  //     { name: "开放", value: 1 },
-  //     { name: "关闭", value: 2 }
-  //   ]
-  // }
-  // {
-  //   name: "tbswitch",
-  //   label: "提币总开关",
-  //   placeholder: '关闭时禁止所有币种提币',
-  //   type: "select",
-  //   defaultValue: '',
-  //   rules: [
-  //     {
-  //       required: false,
-  //       message: '必填选项',
-  //     },
-  //   ],
-  //   selects: [
-  //     { name: "开放", value: 1 },
-  //     { name: "关闭", value: 2 }
-  //   ]
-  // }, {
-  //   name: "regjl",
-  //   label: "注册是否赠送体验矿机",
-  //   placeholder: '请选择注册是否赠送体验矿机',
-  //   type: "select",
-  //   rules: [
-  //     {
-  //       required: false,
-  //       message: '必填选项',
-  //     },
-  //   ],
-  //   selects: [
-  //     { name: "赠送", value: 1 },
-  //     { name: "不送", value: 2 }
-  //   ]
-  // }
-];
+  {
+    name: "companyAccount",
+    label: "平台账号",
+    placeholder: "请输入平台账号！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "companyPwd",
+    label: "平台密码",
+    placeholder: "请输入平台密码！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "companyDomain",
+    label: "平台域名",
+    placeholder: "请输入平台域名！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  }, {
+    name: "companySkin",
+    label: "平台皮肤",
+    placeholder: "请输入平台皮肤！",
+    type: "select",
+    defaultValue: 1,
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ],
+    selects: [
+      { name: "碧蓝色", value: 1 },
+      { name: "翠绿色", value: 2 },
+      { name: "柠檬黄", value: 3 }
+    ]
+  }, {
+    name: "companyLogoName",
+    label: "平台logo名称",
+    placeholder: "请输入平台logo名称！",
+    type: "image",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "companyLogo",
+    label: "平台logo",
+    placeholder: "请输入平台logo！",
+    type: "image",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "companyMail",
+    label: "平台邮箱",
+    placeholder: "请输入平台邮箱！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "companyMailPwd",
+    label: "平台邮箱密码",
+    placeholder: "请输入平台邮箱密码！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "hyFee",
+    label: "合约交易手续费",
+    placeholder: "请输入合约交易手续费！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "kjFee",
+    label: "矿机交易手续费",
+    placeholder: "请输入矿机交易手续费！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "leverFee",
+    label: "杠杆交易手续费",
+    placeholder: "请输入杠杆交易手续费！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  }, {
+    name: "logo1",
+    label: "H5轮播图1",
+    placeholder: "请输入H5轮播图1！",
+    type: "image",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  }, {
+    name: "logo2",
+    label: "H5轮播图2",
+    placeholder: "请输入H5轮播图2！",
+    type: "image",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  }, {
+    name: "logo3",
+    label: "H5轮播图3",
+    placeholder: "请输入H5轮播图3！",
+    type: "image",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "pcLogo1",
+    label: "PC轮播图1",
+    placeholder: "请输入PC轮播图1！",
+    type: "image",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+
+  {
+    name: "pcLogo2",
+    label: "PC轮播图2",
+    placeholder: "请输入PC轮播图2！",
+    type: "image",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+
+  {
+    name: "pcLogo3",
+    label: "PC轮播图3",
+    placeholder: "请输入PC轮播图3！",
+    type: "image",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+
+  {
+    name: "pcLogo4",
+    label: "PC轮播图4",
+    placeholder: "请输入PC轮播图4！",
+    type: "image",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  }, {
+    name: "iosDomain",
+    label: "苹果下载页域名",
+    placeholder: "请输入苹果下载页域名！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "androidDomain",
+    label: "安卓下载页域名",
+    placeholder: "请输入安卓下载页域名！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "phoneDomian",
+    label: "手机下载页域名",
+    placeholder: "请输入手机下载页域名！",
+    type: "input",
+    defaultValue: "",
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+  },
+  {
+    name: "status",
+    label: "状态",
+    placeholder: "请输入状态！",
+    type: "select",
+    defaultValue: 1,
+    rules: [
+      {
+        required: true,
+        message: "必填选项"
+      }
+    ]
+    ,
+    selects: [
+      { name: "开启", value: 1 },
+      { name: "关闭", value: 2 }
+    ]
+  }
+]
+
 
 //新增或者编辑
 async function addOrEditSubmit(submitData) {
-  let data = await webConfigApi.addOrUpdate(submitData);
+  let data = await companyApi.addOrUpdate(submitData);
   if (data.ok) {
     message.success("操作成功！");
   } else {
@@ -248,7 +349,8 @@ async function addOrEditSubmit(submitData) {
 }
 //获取表格数据
 async function loadData() {
-  let data = await webConfigApi.find();
+  const id = localStorage.getItem("companyId");
+  let data = await companyApi.detail({ id });
   if (data.ok) {
     data = data.data;
     baseData.value = data;
