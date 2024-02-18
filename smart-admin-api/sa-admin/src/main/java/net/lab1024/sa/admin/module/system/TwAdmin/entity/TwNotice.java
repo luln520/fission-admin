@@ -73,4 +73,6 @@ public class TwNotice implements Serializable {
     @ApiModelProperty("部门id")
     private Integer department;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 }

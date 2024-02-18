@@ -47,9 +47,9 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
     private TwUserService twUserService;
 
     @Override
-    public TwHysetting hysettingId() {
+    public TwHysetting hysettingId(int companyId) {
         QueryWrapper<TwHysetting> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", 1); // 添加查询条件
+        queryWrapper.eq("company_id", companyId); // 添加查询条件
         return this.getOne(queryWrapper);
     }
 

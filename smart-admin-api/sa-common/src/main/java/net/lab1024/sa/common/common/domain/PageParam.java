@@ -62,5 +62,5 @@ public class PageParam {
 
     private String token;
 
-    private int companyId;
+    private Integer companyId;
 }

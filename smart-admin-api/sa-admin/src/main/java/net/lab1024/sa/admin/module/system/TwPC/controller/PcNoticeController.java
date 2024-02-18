@@ -32,8 +32,8 @@ public class PcNoticeController {
     @GetMapping("/list")
     @ApiOperation("通知列表")
     @NoNeedLogin
-    public ResponseDTO<List<TwNotice>> list(@RequestParam int uid) {
-        return twNoticeService.notice(uid);
+    public ResponseDTO<List<TwNotice>> list(@RequestParam int uid,@RequestParam int companyId) {
+        return twNoticeService.notice(uid,companyId);
     }
 
     /**

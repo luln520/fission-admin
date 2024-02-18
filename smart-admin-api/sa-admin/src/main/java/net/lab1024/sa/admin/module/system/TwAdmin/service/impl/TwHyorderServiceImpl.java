@@ -316,6 +316,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twHyorder.setUsername(twUser.getUsername());
             twHyorder.setNum(ctzed);
             twHyorder.setHybl(cykbl);
+            twHyorder.setCompanyId(twUser.getCompanyId());
             twHyorder.setUserCode(twUser.getUserCode());
             twHyorder.setHyzd(ctzfx);
             twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoney));
@@ -344,6 +345,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twBill.setUid(uid);
             twBill.setUsername(twUser.getUsername());
             twBill.setNum(ctzed);
+            twBill.setCompanyId(twUser.getCompanyId());
             twBill.setCoinname("usdt");
             twBill.setAfternum(twUserCoinService.afternum(uid));
             twBill.setType(3);

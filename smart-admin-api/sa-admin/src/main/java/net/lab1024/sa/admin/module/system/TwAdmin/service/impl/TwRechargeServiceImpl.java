@@ -191,6 +191,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twNotice.setContentEn("Your deposit record was rejected by the system, please contact customer service");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
+            twNotice.setCompanyId(twUser.getCompanyId());
             twNotice.setDepartment(twUser.getDepatmentId());
             twNotice.setPath(twUser.getPath());
             twNoticeService.save(twNotice);
@@ -247,6 +248,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 twNotice.setContentEn("Your recharge amount has arrived, please check it carefully");
                 twNotice.setAddtime(new Date());
                 twNotice.setStatus(1);
+                twNotice.setCompanyId(one.getCompanyId());
                 twNotice.setDepartment(twUser.getDepatmentId());
                 twNotice.setPath(twUser.getPath());
                 twNoticeService.save(twNotice);

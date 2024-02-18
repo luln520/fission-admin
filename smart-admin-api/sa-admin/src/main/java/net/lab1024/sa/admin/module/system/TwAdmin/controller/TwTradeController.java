@@ -57,8 +57,8 @@ public class TwTradeController {
     @GetMapping("/hysettingId")
     @ResponseBody
     @ApiOperation(value = "合约设置")
-    public ResponseDTO hysettingId() {
-        return ResponseDTO.ok(twHysettingService.hysettingId());
+    public ResponseDTO hysettingId(@RequestParam int companyId) {
+        return ResponseDTO.ok(twHysettingService.hysettingId(companyId));
     }
 
     /**

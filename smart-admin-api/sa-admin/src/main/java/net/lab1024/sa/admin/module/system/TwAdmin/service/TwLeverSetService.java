@@ -24,5 +24,5 @@ public interface TwLeverSetService extends IService<TwLeverSet> {
 
     TwLeverSet find(int id);
 
-    ResponseDTO<List<TwLeverSet>> getTwLeverSet(String symbol,int type);
+    ResponseDTO<List<TwLeverSet>> getTwLeverSet(String symbol,int type,int companyId);
 }

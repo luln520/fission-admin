@@ -76,9 +76,10 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     }
 
     @Override
-    public List<TwOnline> lists(int uid) {
+    public List<TwOnline> lists(int uid,int companyId) {
         QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
+        queryWrapper.eq("company_id",companyId);
         queryWrapper.orderByDesc("addtime");
         return this.list(queryWrapper);
     }
@@ -127,6 +128,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             one1.setUid(one.getId());
             one1.setUsername(one.getUsername());
             one1.setContent(content);
+            one1.setCompanyId(one.getCompanyId());
             one1.setType(2);
             one1.setAddtime(new Date());
             this.save(one1);

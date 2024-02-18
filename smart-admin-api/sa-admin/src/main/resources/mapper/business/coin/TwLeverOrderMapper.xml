@@ -12,6 +12,9 @@
         <if test="obj.userCode != null and obj.userCode !=''">
             and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>
+        <if test="obj.companyId != null and obj.companyId !=''">
+            and company_id = #{obj.companyId}
+        </if>
         order by buytime desc
     </select>
 </mapper>

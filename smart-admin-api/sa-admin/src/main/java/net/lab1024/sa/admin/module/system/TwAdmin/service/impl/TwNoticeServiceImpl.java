@@ -71,9 +71,10 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
     }
 
     @Override
-    public ResponseDTO<List<TwNotice>>  notice(int uid) {
+    public ResponseDTO<List<TwNotice>>  notice(int uid,int companyId) {
         QueryWrapper<TwNotice> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
+        queryWrapper.eq("company_id",companyId);
         return ResponseDTO.ok(this.list(queryWrapper));
     }
 

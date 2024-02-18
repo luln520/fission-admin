@@ -339,8 +339,8 @@ public class PcTradeController {
     @ResponseBody
     @ApiOperation(value = "获取所有获取市场行情")
     @NoNeedLogin
-    public ResponseDTO<List<AllsymbolRes>> getallsymbol() {
-        return ResponseDTO.ok(twCtmarketService.getallsymbol());
+    public ResponseDTO<List<AllsymbolRes>> getallsymbol(@RequestParam int companyId) {
+        return ResponseDTO.ok(twCtmarketService.getallsymbol(companyId));
     }
 
 

@@ -188,6 +188,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twLeverOrder.setNum(num);
         twLeverOrder.setUserCode(twUser.getUserCode());
         twLeverOrder.setHyzd(hyzd);
+        twLeverOrder.setCompanyId(twUser.getCompanyId());
         twLeverOrder.setBuyOrblance(twUserCoin.getUsdt().subtract(num));
         twLeverOrder.setCoinname(ccoinname);
         twLeverOrder.setStatus(1);
@@ -218,6 +219,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twBill.setUsername(twUser.getUsername());
         twBill.setUserCode(twUser.getUserCode());
         twBill.setNum(num);
+        twBill.setCompanyId(twUser.getCompanyId());
         twBill.setCoinname("usdt");
         twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(9);
@@ -539,6 +541,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twNotice.setDepartment(twUser.getDepatmentId());
         twNotice.setAccount(username);
         twNotice.setTitle("杠杆交易");
+        twNotice.setCompanyId(twUser.getCompanyId());
         twNotice.setTitleEn("Leverage trading");
         twNotice.setContent("杠杆已平仓，请注意查收");
         twNotice.setContentEn("The leverage position has been closed, please check it carefully");

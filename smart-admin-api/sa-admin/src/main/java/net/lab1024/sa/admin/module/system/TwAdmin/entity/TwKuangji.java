@@ -104,4 +104,6 @@ public class TwKuangji implements Serializable {
     @ApiModelProperty("购买次数")
     private int num;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 }

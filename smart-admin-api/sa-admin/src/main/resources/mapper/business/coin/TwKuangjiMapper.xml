@@ -3,10 +3,18 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKuangjiDao">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji">
-        select * from tw_kuangji order by id desc
+        select * from tw_kuangji where 1=1
+        <if test="obj.companyId != null and obj.companyId !=''">
+            and company_id = #{obj.companyId}
+        </if>
+        order by id desc
     </select>
 
     <select id="pcList" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji">
-        select * from tw_kuangji where  status=1  order by id asc
+        select * from tw_kuangji where 1=1 and  status=1
+        <if test="obj.companyId != null and obj.companyId !=''">
+            and company_id = #{obj.companyId}
+        </if>
+         order by id asc
     </select>
 </mapper>

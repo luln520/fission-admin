@@ -254,8 +254,8 @@ public class PcContractController {
     @ResponseBody
     @ApiOperation(value = "获取合约设置")
     @NoNeedLogin
-    public ResponseDTO<TwHysetting> hysetInfo() {
-        return ResponseDTO.ok(twHysettingService.hysettingId());
+    public ResponseDTO<TwHysetting> hysetInfo(@RequestParam int companyId) {
+        return ResponseDTO.ok(twHysettingService.hysettingId(companyId));
     }
 
     /**

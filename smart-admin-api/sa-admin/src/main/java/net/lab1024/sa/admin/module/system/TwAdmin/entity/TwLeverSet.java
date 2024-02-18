@@ -55,4 +55,6 @@ public class TwLeverSet implements Serializable {
     @ApiModelProperty("编辑时间")
     private Date updateTime;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 }

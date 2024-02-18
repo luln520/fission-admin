@@ -267,6 +267,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorder.setUsername(user.getUsername());
         twKjorder.setKjtitle(kuangji.getTitle());
         twKjorder.setImgs(kuangji.getImgs());
+        twKjorder.setCompanyId(user.getCompanyId());
         twKjorder.setPath(user.getPath());
         twKjorder.setUserCode(user.getUserCode());
         twKjorder.setDepartment(user.getDepatmentId());
@@ -295,6 +296,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twBill.setUid(uid);
         twBill.setUsername(user.getUsername());
         twBill.setUserCode(user.getUserCode());
+        twBill.setCompanyId(user.getCompanyId());
         twBill.setNum(buynum);
         twBill.setDepartment(user.getDepatmentId());
         twBill.setPath(user.getPath());

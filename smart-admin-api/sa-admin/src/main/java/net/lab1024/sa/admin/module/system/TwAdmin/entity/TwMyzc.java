@@ -114,4 +114,8 @@ public class TwMyzc implements Serializable {
     @ApiModelProperty(value = "用户code")
     private String userCode;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
+
+
 }

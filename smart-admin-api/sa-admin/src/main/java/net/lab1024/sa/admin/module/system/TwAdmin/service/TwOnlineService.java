@@ -23,7 +23,7 @@ import java.util.List;
 public interface TwOnlineService extends IService<TwOnline> {
     IPage<TwOnline> listpage(PageParam pageParam, HttpServletRequest request);
 
-    List<TwOnline> lists(int uid);
+    List<TwOnline> lists(int uid,int companyId);
 
     List<TwOnline> getId(int id);
 

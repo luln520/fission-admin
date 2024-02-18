@@ -75,4 +75,7 @@ public class TwHysetting implements Serializable {
     */
     @ApiModelProperty("合约最低投资额")
     private BigDecimal hyMin;
+
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 }

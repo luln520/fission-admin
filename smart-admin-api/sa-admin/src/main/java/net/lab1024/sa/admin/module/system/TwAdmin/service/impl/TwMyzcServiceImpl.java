@@ -208,6 +208,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                     TwNotice twNotice = new TwNotice();
                     twNotice.setUid(uid);
                     twNotice.setAccount(one.getUsername());
+                    twNotice.setCompanyId(one.getCompanyId());
                     twNotice.setTitle("提币审核");
                     twNotice.setTitleEn("Coin Withdrawal Review");
                     twNotice.setContent("您的提币申请被驳回，请联系管理员");
@@ -257,6 +258,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             TwNotice twNotice = new TwNotice();
             twNotice.setUid(one.getUserid());
             twNotice.setAccount(one.getUsername());
+            twNotice.setCompanyId(one.getCompanyId());
             twNotice.setTitle("提币审核");
             twNotice.setTitleEn("Coin Withdrawal Review");
             twNotice.setContent("您的提币申请已通过，请及时查询");

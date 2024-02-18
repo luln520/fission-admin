@@ -49,5 +49,8 @@ public class TwAdminLog implements Serializable {
 
     @ApiModelProperty("团队路径")
     private String path;
+
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 }
 

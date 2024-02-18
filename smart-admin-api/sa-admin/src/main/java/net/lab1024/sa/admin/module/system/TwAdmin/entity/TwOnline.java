@@ -63,6 +63,9 @@ public class TwOnline implements Serializable {
     @ApiModelProperty("后台查看状态0未查看2已查看")
     private Integer state;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
+
     @ApiModelProperty("未回复条数")
     @TableField(exist = false)
     private Integer noCount;

@@ -51,10 +51,11 @@ public class TwLeverSetServiceImpl extends ServiceImpl<TwLeverSetMapper, TwLever
     }
 
     @Override
-    public ResponseDTO<List<TwLeverSet>> getTwLeverSet(String symbol, int type) {
+    public ResponseDTO<List<TwLeverSet>> getTwLeverSet(String symbol, int type,int companyId) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("symbol",symbol);
         queryWrapper.eq("type",type);
+        queryWrapper.eq("company_id",companyId);
         return ResponseDTO.ok(this.list(queryWrapper));
     }
 }

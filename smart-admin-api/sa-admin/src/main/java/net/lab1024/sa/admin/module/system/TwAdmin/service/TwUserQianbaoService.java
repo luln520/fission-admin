@@ -22,7 +22,7 @@ import java.util.List;
 public interface TwUserQianbaoService extends IService<TwUserQianbao> {
     IPage<TwUserQianbao> listpage(TwUserVo twUserVo);
 
-    List<TwUserQianbao> lists(int uid);
+    List<TwUserQianbao> lists(int uid,int companyId);
     boolean addUpdate(TwUserQianbao userQianBao);
 
     boolean del(int id);

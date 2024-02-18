@@ -10,6 +10,9 @@
         <if test="obj.employeeId != null">
             and path like concat('%',#{obj.employeeId},'%')
         </if>
+        <if test="obj.companyId != null and obj.companyId !=''">
+            and company_id = #{obj.companyId}
+        </if>
         order by id desc
 
     </select>

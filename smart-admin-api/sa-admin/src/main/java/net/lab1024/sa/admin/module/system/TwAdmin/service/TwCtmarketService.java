@@ -31,6 +31,6 @@ public interface TwCtmarketService extends IService<TwCtmarket> {
 
     CoinpriceRes getcoinprice(String symbol);
 
-    List<AllsymbolRes> getallsymbol();
+    List<AllsymbolRes> getallsymbol(int companyId);
 
 }
