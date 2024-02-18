@@ -13,8 +13,8 @@ export const companyApi = {
   /**
   * 得到单个详情
   */
-  find: (param) => {
-    return getRequest('/api/admin/company/find', param);
+   detail: (param) => {
+    return getRequest('/api/admin/company/detail', param);
   },
 
   /**
