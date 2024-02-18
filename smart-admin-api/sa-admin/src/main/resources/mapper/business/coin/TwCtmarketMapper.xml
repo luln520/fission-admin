@@ -3,7 +3,7 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwCtmarketDao">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket">
-        select * from tw_ctmarket order by sort desc
+        select * from tw_ctmarket where company_id = #{obj.companyId} order by sort desc
     </select>
 
     <select id="listPCpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCtmarket">

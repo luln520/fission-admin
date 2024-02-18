@@ -61,4 +61,6 @@ public class PageParam {
     private Long departmentId;
 
     private String token;
+
+    private int companyId;
 }

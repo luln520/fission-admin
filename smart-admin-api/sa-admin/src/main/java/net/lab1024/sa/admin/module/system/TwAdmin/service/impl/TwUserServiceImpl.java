@@ -555,6 +555,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                twUserKuangji.setMin(twKuangji.getPricemin());
                twUserKuangji.setMax(twKuangji.getPricemax());
                twUserKuangji.setNum(1);
+               twUserKuangji.setCompanyId(twUser.getCompanyId());
                twUserKuangji.setKjId(twKuangji.getId());
                twUserKuangji.setKjName(twKuangji.getTitle());
                twUserKuangji.setUserId(uid);
@@ -976,7 +977,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
 //            String address = CommonUtil.getAddress(ip);
             String address = CommonUtil.getAddress(ip);
-
+            Integer companyId = invitUser.getCompanyId();
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
             TwUser invituserCode = this.getOne(queryWrapperInvite);
@@ -996,6 +997,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setAreaCode("");
                 twUser.setPath(path);
                 twUser.setAddip(ip);
+                twUser.setCompanyId(companyId);
                 twUser.setDepatmentId(departmentId.intValue());
 //                twUser.setAddr(address);
                 long timestampInSeconds = Instant.now().getEpochSecond();
