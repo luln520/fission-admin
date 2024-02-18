@@ -11,7 +11,7 @@
 <template>
   <a-dropdown trigger="click" v-model:visible="show">
     <div @click="fetchMessage">
-      <a-badge :count="(message&&message!={}) ? (`${message?.authCount + message?.myzcCount + message?.rechargeCount}`=='NaN'&&0) : 0">
+      <a-badge :count="(message&&message!={}) ? message?.authCount + message?.myzcCount + message?.rechargeCount : 0">
         <div style="width: 26px; height: 26px">
           <BellOutlined :style="{ fontSize: '18px' }" />
         </div>
@@ -19,7 +19,7 @@
     </div>
 
     <template #overlay>
-      <div>
+      <div>d
         <a-spin :spinning="loading">
           <a-tabs class="dropdown-tabs" centered :tabBarStyle="{ textAlign: 'center' }" style="width: 200px">
             <a-tab-pane tab="通知" key="1">
