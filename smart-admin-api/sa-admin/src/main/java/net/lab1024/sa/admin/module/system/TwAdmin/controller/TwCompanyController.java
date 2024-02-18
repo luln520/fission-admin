@@ -59,9 +59,4 @@ public class TwCompanyController {
     }
 
 
-    @GetMapping("/domain")
-    @ApiOperation(value = "根据域名获取公司信息")
-    public ResponseDTO<TwCompany> companyDomain(HttpServletRequest request) {
-        return ResponseDTO.ok(twCompanyService.companyDomain(request));
-    }
 }
