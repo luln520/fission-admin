@@ -98,19 +98,22 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
-
+        int companyId = byId.getCompanyId();
         if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
             TwMessageRep messageRep = new TwMessageRep();
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("rzstatus", 1);
+            queryWrapper.eq("company_id", companyId);
             messageRep.setAuthCount(twUserDao.selectCount(queryWrapper).intValue());
 
             QueryWrapper<TwMyzc> queryWrapper1 = new QueryWrapper<>();
             queryWrapper1.eq("status", 1);
+            queryWrapper1.eq("company_id", companyId);
             messageRep.setMyzcCount(twMyzcDao.selectCount(queryWrapper1).intValue());
 
             QueryWrapper<TwRecharge> queryWrapper2 = new QueryWrapper<>();
             queryWrapper2.eq("status", 1);
+            queryWrapper2.eq("company_id", companyId);
             messageRep.setRechargeCount(twRechargeDao.selectCount(queryWrapper2).intValue());
 
             return messageRep;
@@ -123,14 +126,17 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
                 TwMessageRep messageRep = new TwMessageRep();
                 QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("rzstatus", 1);
+                queryWrapper.eq("company_id", companyId);
                 messageRep.setAuthCount(twUserDao.selectCount(queryWrapper).intValue());
 
                 QueryWrapper<TwMyzc> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper1.eq("status", 1);
+                queryWrapper1.eq("company_id", companyId);
                 messageRep.setMyzcCount(twMyzcDao.selectCount(queryWrapper1).intValue());
 
                 QueryWrapper<TwRecharge> queryWrapper2 = new QueryWrapper<>();
                 queryWrapper2.eq("status", 1);
+                queryWrapper2.eq("company_id", companyId);
                 messageRep.setRechargeCount(twRechargeDao.selectCount(queryWrapper2).intValue());
 
                 return messageRep;
