@@ -31,7 +31,7 @@ public class EmployeeQueryForm extends PageParam {
     private Boolean disabledFlag;
 
     @ApiModelProperty("公司Id")
-    private int companyId;
+    private Integer companyId;
 
     @ApiModelProperty("员工id集合")
     @Size(max = 99, message = "最多查询99个员工")
