@@ -282,6 +282,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twRecharge.setCoin(coinname);
             twRecharge.setOrderNo(orderNo);
             twRecharge.setNum(zznum);
+            twRecharge.setCompanyId(one.getCompanyId());
             twRecharge.setAddtime(new Date());
             twRecharge.setStatus(1);
             twRecharge.setUserCode(one.getUserCode());
