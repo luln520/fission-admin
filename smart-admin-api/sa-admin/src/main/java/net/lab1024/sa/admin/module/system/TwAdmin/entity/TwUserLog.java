@@ -82,7 +82,9 @@ public class TwUserLog implements Serializable {
     @ApiModelProperty("部门id")
     private Integer department;
 
-    @TableField(exist = false)
     private  String username;
+
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 
 }

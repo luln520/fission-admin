@@ -828,7 +828,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         TwUserLog twUserLog = new TwUserLog();
         twUserLog.setUserid(uid);
         twUserLog.setType("登录");
+        twUserLog.setUsername(one.getUsername());
         twUserLog.setRemark("邮箱登录");
+        twUserLog.setCompanyId(one.getCompanyId());
         twUserLog.setDepartment(one.getDepatmentId());
         twUserLog.setPath(one.getPath());
         long timestampInSeconds = Instant.now().getEpochSecond();
