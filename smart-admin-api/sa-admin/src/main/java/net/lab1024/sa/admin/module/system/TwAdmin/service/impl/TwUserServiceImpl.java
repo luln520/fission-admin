@@ -1002,6 +1002,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 Integer uid = twUser.getId();
                 TwUserCoin twUserCoin = new TwUserCoin();
                 twUserCoin.setUserid(uid);
+                twUserCoin.setCompanyId(companyId);
                 twUserCoin.setUsdt(tyonfig.getTymoney());
                 twUserCoinService.save(twUserCoin);
 
@@ -1013,6 +1014,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUserKuangji.setMin(twKuangji.getPricemin());
                     twUserKuangji.setMax(twKuangji.getPricemax());
                     twUserKuangji.setNum(1);
+                    twUserKuangji.setCompanyId(companyId);
                     twUserKuangji.setKjId(twKuangji.getId());
                     twUserKuangji.setKjName(twKuangji.getTitle());
                     twUserKuangji.setUserId(uid);
