@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwCompanyMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCompany;
@@ -31,6 +33,7 @@ import java.util.List;
 * @createDate 2024-02-15 17:42:54
 */
 @Service
+@Slf4j
 public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany> implements TwCompanyService {
 
     private static final String PASSWORD_SALT_FORMAT = "smart_%s_admin_$^&*";
@@ -89,9 +92,12 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
 
     @Override
     public TwCompany companyDomain(HttpServletRequest request) {
+        String host = request.getHeader("Host");
         String serverName = request.getServerName();
+        log.info("获取域名================{}",host);
+        log.info("获取域名================{}",serverName);
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.like("company_domain",serverName);
+        queryWrapper.like("company_domain",host);
         return this.getOne(queryWrapper);
     }
 
