@@ -229,6 +229,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 twBill.setUid(uid);
                 twBill.setUsername(one.getUsername());
                 twBill.setNum(one.getNum());
+                twBill.setCompanyId(one.getCompanyId());
                 twBill.setCoinname(one.getCoin());
                 twBill.setAfternum(twUserCoinService.afternum(uid));
                 twBill.setType(17);
@@ -282,6 +283,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twRecharge.setCoin(coinname);
             twRecharge.setOrderNo(orderNo);
             twRecharge.setNum(zznum);
+            twRecharge.setCompanyId(one.getCompanyId());
             twRecharge.setAddtime(new Date());
             twRecharge.setStatus(1);
             twRecharge.setUserCode(one.getUserCode());

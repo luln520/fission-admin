@@ -626,7 +626,6 @@ public class TimerServiceImpl {
 
                             //写财务日志
                             addlog(uuid, username, money,companyId);
-                            System.out.println("指定盈利ID======================================");
                         }
 
                         if (isLoseArray) { //如果有指定亏损ID，则按亏损结算
@@ -648,11 +647,9 @@ public class TimerServiceImpl {
 
                             //写财务日志
                             addlog(uuid, username, num,companyId);
-                            System.out.println("合约指定亏损成功======================================");
                         }
 
                         if (!isWinArray && !isLoseArray) { //如果未指定盈利和亏损，则按单控的计算
-                            System.out.println("未指定盈利和亏损，则按单控的计算======================================");
                             if (kongyk == 1) { //盈利
                                 if (buyprice.compareTo(newprice) < 0) {
                                     sellprice = buyprice.subtract(randnum);

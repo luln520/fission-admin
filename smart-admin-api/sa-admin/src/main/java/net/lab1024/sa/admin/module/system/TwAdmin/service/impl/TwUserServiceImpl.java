@@ -828,7 +828,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         TwUserLog twUserLog = new TwUserLog();
         twUserLog.setUserid(uid);
         twUserLog.setType("登录");
+        twUserLog.setUsername(one.getUsername());
         twUserLog.setRemark("邮箱登录");
+        twUserLog.setCompanyId(one.getCompanyId());
         twUserLog.setDepartment(one.getDepatmentId());
         twUserLog.setPath(one.getPath());
         long timestampInSeconds = Instant.now().getEpochSecond();
@@ -968,8 +970,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             }
 
 //            String address = CommonUtil.getAddress(ip);
-            String address = CommonUtil.getAddress(ip);
-            Integer companyId = invitUser.getCompanyId();
+//            String address = CommonUtil.getAddress(ip);
+            Integer companyId = byInvite.getCompanyId();
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
             TwUser invituserCode = this.getOne(queryWrapperInvite);
@@ -1002,6 +1004,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 Integer uid = twUser.getId();
                 TwUserCoin twUserCoin = new TwUserCoin();
                 twUserCoin.setUserid(uid);
+                twUserCoin.setCompanyId(companyId);
                 twUserCoin.setUsdt(tyonfig.getTymoney());
                 twUserCoinService.save(twUserCoin);
 
@@ -1013,6 +1016,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUserKuangji.setMin(twKuangji.getPricemin());
                     twUserKuangji.setMax(twKuangji.getPricemax());
                     twUserKuangji.setNum(1);
+                    twUserKuangji.setCompanyId(companyId);
                     twUserKuangji.setKjId(twKuangji.getId());
                     twUserKuangji.setKjName(twKuangji.getTitle());
                     twUserKuangji.setUserId(uid);
