@@ -969,7 +969,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
 //            String address = CommonUtil.getAddress(ip);
             String address = CommonUtil.getAddress(ip);
-            Integer companyId = invitUser.getCompanyId();
+            Integer companyId = byInvite.getCompanyId();
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
             TwUser invituserCode = this.getOne(queryWrapperInvite);
