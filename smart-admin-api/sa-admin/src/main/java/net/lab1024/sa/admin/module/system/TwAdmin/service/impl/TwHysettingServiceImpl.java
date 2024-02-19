@@ -65,7 +65,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
         TwUser twUser = twUserService.getOne(queryWrapper1);
 
         QueryWrapper<TwHysetting> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", 1); // 添加查询条件
+        queryWrapper.eq("company_id", twUser.getCompanyId()); // 添加查询条件
         TwHysetting one = this.getOne(queryWrapper);
         if(one != null){
 
@@ -81,6 +81,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 TwAdminLog twAdminLog = new TwAdminLog();
                 twAdminLog.setDepartment(twUser.getDepatmentId());
                 twAdminLog.setPath(twUser.getPath());
+                twAdminLog.setCompanyId(twUser.getCompanyId());
                 twAdminLog.setAdminId((int) byId.getEmployeeId());
                 twAdminLog.setAdminUsername(byId.getActualName());
                 twAdminLog.setAction("指定必赢");
@@ -102,6 +103,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 TwAdminLog twAdminLog = new TwAdminLog();
                 twAdminLog.setDepartment(twUser.getDepatmentId());
                 twAdminLog.setPath(twUser.getPath());
+                twAdminLog.setCompanyId(twUser.getCompanyId());
                 twAdminLog.setAdminId((int) byId.getEmployeeId());
                 twAdminLog.setAdminUsername(byId.getActualName());
                 twAdminLog.setAction("指定必输");
@@ -123,6 +125,7 @@ public class TwHysettingServiceImpl extends ServiceImpl<TwHysettingDao, TwHysett
                 TwAdminLog twAdminLog = new TwAdminLog();
                 twAdminLog.setDepartment(twUser.getDepatmentId());
                 twAdminLog.setPath(twUser.getPath());
+                twAdminLog.setCompanyId(twUser.getCompanyId());
                 twAdminLog.setAdminId((int) byId.getEmployeeId());
                 twAdminLog.setAdminUsername(byId.getActualName());
                 twAdminLog.setAction("正常输赢");
