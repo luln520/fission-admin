@@ -150,6 +150,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         QueryWrapper<TwLeverage> queryWrapper3 = new QueryWrapper<>();
         queryWrapper3.eq("symbol", ccoinname); // 添加查询条件
         queryWrapper3.eq("num", fold); // 添加查询条件
+        queryWrapper3.eq("company_id",twUser.getCompanyId());
         TwLeverage one = twLeverageService.getOne(queryWrapper3);
         if(num.compareTo(one.getMin()) < 0) {
             if (language.equals("zh")) {
