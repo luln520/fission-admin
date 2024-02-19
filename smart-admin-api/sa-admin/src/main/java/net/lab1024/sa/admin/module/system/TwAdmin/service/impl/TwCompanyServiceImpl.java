@@ -91,13 +91,9 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
     }
 
     @Override
-    public TwCompany companyDomain(HttpServletRequest request) {
-        String host = request.getHeader("Host");
-        String serverName = request.getServerName();
-        log.info("获取域名================{}",host);
-        log.info("获取域名================{}",serverName);
+    public TwCompany companyDomain(String  domain) {
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.like("company_domain",host);
+        queryWrapper.like("company_domain",domain);
         return this.getOne(queryWrapper);
     }
 

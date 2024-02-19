@@ -27,7 +27,7 @@ public class PcCompanyController {
     @GetMapping("/domain")
     @NoNeedLogin
     @ApiOperation(value = "根据域名获取公司信息")
-    public ResponseDTO<TwCompany> companyDomain(HttpServletRequest request) {
-        return ResponseDTO.ok(twCompanyService.companyDomain(request));
+    public ResponseDTO<TwCompany> companyDomain(@RequestParam String domain) {
+        return ResponseDTO.ok(twCompanyService.companyDomain(domain));
     }
 }

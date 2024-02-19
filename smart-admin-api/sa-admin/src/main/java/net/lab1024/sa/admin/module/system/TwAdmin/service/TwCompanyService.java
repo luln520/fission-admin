@@ -23,7 +23,7 @@ public interface TwCompanyService extends IService<TwCompany> {
 
     ResponseDTO addOrUpdate(TwCompany twCompany);
 
-    TwCompany companyDomain(HttpServletRequest request);
+    TwCompany companyDomain(String  domain);
 
     boolean updateStatus(int id, Integer status);
 
