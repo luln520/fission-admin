@@ -65,6 +65,9 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
     @Autowired
     private SerialNumberService serialNumberService;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
     @Override
     public IPage<TwKuangji> listpage(PageParam pageParam) {
         Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
@@ -258,6 +261,11 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
             }
         }
 
+        Integer companyId = user.getCompanyId();
+        QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("id", companyId); // 添加查询条件
+        TwCompany company = twCompanyService.getOne(queryWrapper2);
+        BigDecimal kjFee = company.getKjFee();
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
         //建仓矿机订单数据
         TwKjorder twKjorder = new TwKjorder();
@@ -278,7 +286,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 //        twKjorder.setOuttype(kuangji.getOuttype());
         twKjorder.setOutcoin(kuangji.getOutcoin());
         MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
-        BigDecimal outnum = buynum.multiply(kuangji.getDayoutnum().divide(new BigDecimal(100),mathContext)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal outnu = buynum.multiply(kuangji.getDayoutnum().divide(new BigDecimal(100),mathContext)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal outnum = outnu.subtract(kjFee);
         twKjorder.setOutnum(outnum);
 //        twKjorder.setOutusdt(kuangji.getDayoutnum());
         twKjorder.setAddtime(new Date());
