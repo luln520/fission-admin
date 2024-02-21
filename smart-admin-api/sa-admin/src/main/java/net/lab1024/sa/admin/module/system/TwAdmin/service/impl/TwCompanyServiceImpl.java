@@ -67,7 +67,7 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
                 return ResponseDTO.userErrorParam("账号重复");
             }
         }
-
+        twCompany.setCompanyPwd(getEncryptPwd(twCompany.getCompanyPwd()));
         this.saveOrUpdate(twCompany);
 
         if(twCompany.getId() == null){
