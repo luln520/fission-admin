@@ -70,7 +70,7 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
 
         this.saveOrUpdate(twCompany);
 
-        if(twCompany.getId() != null){
+        if(twCompany.getId() == null){
             EmployeeEntity entity  = new EmployeeEntity();
             // 设置密码 默认密码
             String password = twCompany.getCompanyPwd();
