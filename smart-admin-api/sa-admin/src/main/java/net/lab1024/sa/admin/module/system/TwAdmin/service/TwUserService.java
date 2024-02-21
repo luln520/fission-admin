@@ -67,4 +67,6 @@ public interface TwUserService extends IService<TwUser> {
     ResponseDTO code(String username,String area,int type,String language) throws IOException;
 
     ResponseDTO codeResp() throws IOException;
+
+    ResponseDTO usertj(int uid) ;
 }

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
-import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
@@ -102,6 +102,21 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Autowired
     @Lazy
     private TwHysettingService twHysettingService;
+
+    @Autowired
+    private TwHyorderDao twHyorderDao;
+
+    @Autowired
+    private TwLeverOrderMapper twLeverOrderMapper;
+
+    @Autowired
+    private TwKjprofitDao twKjprofitDao;
+
+    @Autowired
+    private TwRechargeDao twRechargeDao;
+
+    @Autowired
+    private TwMyzcDao twMyzcDao;
 
     @Override
     public Integer countAllUsers() {
@@ -1231,6 +1246,197 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 .build();
         Response response = client.newCall(request).execute();
         return ResponseDTO.ok(response);
+    }
+
+    @Override
+    public ResponseDTO usertj(int uid) {
+
+        BigDecimal winHyorder = new BigDecimal(0);
+        BigDecimal lossHyorder = new BigDecimal(0);
+        BigDecimal winLeverOrder = new BigDecimal(0);
+        BigDecimal lossLeverOrder = new BigDecimal(0);
+        BigDecimal kjOrder = new BigDecimal(0);
+        BigDecimal recharge = new BigDecimal(0);
+        BigDecimal myzc = new BigDecimal(0);
+
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(num), 0) as winHyorder")
+                .eq("is_win", 1)
+                .eq("uid", uid)
+                .eq("status", 2);
+
+        List<Map<String, Object>> winHyorderResult = this.twHyorderDao.selectMaps(queryWrapper);
+        if (winHyorderResult.isEmpty()) {
+            winHyorder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object winHyorderObject = winHyorderResult.get(0).get("winHyorder");
+        if (winHyorderObject instanceof BigDecimal) {
+            winHyorder =  ((BigDecimal) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Long) {
+            winHyorder =  BigDecimal.valueOf((Long) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Integer) {
+            winHyorder =  BigDecimal.valueOf((Integer) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            winHyorder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwHyorder> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.select("IFNULL(SUM(num), 0) as lossHyorder")
+                .eq("is_win", 2)
+                .eq("uid", uid)
+                .eq("status", 2);
+
+        List<Map<String, Object>> lossHyorderResult = this.twHyorderDao.selectMaps(queryWrapper1);
+        if (lossHyorderResult.isEmpty()) {
+            lossHyorder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object lossHyorderObject = lossHyorderResult.get(0).get("lossHyorder");
+        if (lossHyorderObject instanceof BigDecimal) {
+            lossHyorder =  ((BigDecimal) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossHyorderObject instanceof Long) {
+            lossHyorder =  BigDecimal.valueOf((Long) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossHyorderObject instanceof Integer) {
+            lossHyorder =  BigDecimal.valueOf((Integer) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            lossHyorder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwLeverOrder> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.select("IFNULL(SUM(num), 0) as winLeverOrder")
+                .eq("is_win", 1)
+                .eq("uid", uid)
+                .eq("status", 2);
+
+        List<Map<String, Object>> winLeverOrderResult = this.twLeverOrderMapper.selectMaps(queryWrapper2);
+        if (winLeverOrderResult.isEmpty()) {
+            winLeverOrder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object winLeverOrderResultObject = winLeverOrderResult.get(0).get("winLeverOrder");
+        if (winLeverOrderResultObject instanceof BigDecimal) {
+            winLeverOrder =  ((BigDecimal) winLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winLeverOrderResultObject instanceof Long) {
+            winLeverOrder =  BigDecimal.valueOf((Long) winLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winLeverOrderResultObject instanceof Integer) {
+            winLeverOrder =  BigDecimal.valueOf((Integer) winLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            winLeverOrder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwLeverOrder> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.select("IFNULL(SUM(num), 0) as lossLeverOrder")
+                .eq("is_win", 2)
+                .eq("uid", uid)
+                .eq("status", 2);
+
+
+        List<Map<String, Object>> lossLeverOrderResult = this.twLeverOrderMapper.selectMaps(queryWrapper3);
+        if (lossLeverOrderResult.isEmpty()) {
+            lossLeverOrder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object lossLeverOrderResultObject = lossLeverOrderResult.get(0).get("lossLeverOrder");
+        if (lossLeverOrderResultObject instanceof BigDecimal) {
+            lossLeverOrder =  ((BigDecimal) lossLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossLeverOrderResultObject instanceof Long) {
+            lossLeverOrder =  BigDecimal.valueOf((Long) lossLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossLeverOrderResultObject instanceof Integer) {
+            lossLeverOrder =  BigDecimal.valueOf((Integer) lossLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            lossLeverOrder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwKjprofit> queryWrapper4 = new QueryWrapper<>();
+        queryWrapper4.select("IFNULL(SUM(num), 0) as kjOrder")
+                .eq("uid", uid);
+
+        List<Map<String, Object>> kjOrderResult = this.twKjprofitDao.selectMaps(queryWrapper4);
+        if (kjOrderResult.isEmpty()) {
+            kjOrder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object kjOrderResultObject = kjOrderResult.get(0).get("kjOrder");
+        if (kjOrderResultObject instanceof BigDecimal) {
+            kjOrder =  ((BigDecimal) kjOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (kjOrderResultObject instanceof Long) {
+            kjOrder =  BigDecimal.valueOf((Long) kjOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (kjOrderResultObject instanceof Integer) {
+            kjOrder =  BigDecimal.valueOf((Integer) kjOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            kjOrder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwRecharge> queryWrapper5 = new QueryWrapper<>();
+        queryWrapper5.select("IFNULL(SUM(num), 0) as recharge")
+                .eq("uid", uid)
+                .eq("status", 2);
+
+        List<Map<String, Object>> rechargeResult = this.twRechargeDao.selectMaps(queryWrapper5);
+        if (rechargeResult.isEmpty()) {
+            recharge = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object rechargeResultObject = rechargeResult.get(0).get("recharge");
+        if (rechargeResultObject instanceof BigDecimal) {
+            recharge =  ((BigDecimal) rechargeResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (rechargeResultObject instanceof Long) {
+            recharge =  BigDecimal.valueOf((Long) rechargeResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (rechargeResultObject instanceof Integer) {
+            recharge =  BigDecimal.valueOf((Integer) rechargeResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            recharge =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        QueryWrapper<TwMyzc> queryWrapper6 = new QueryWrapper<>();
+        queryWrapper6.select("IFNULL(SUM(num), 0) as myzc")
+                .eq("uid", uid)
+                .eq("status", 2);
+
+        List<Map<String, Object>> myzcResult = this.twMyzcDao.selectMaps(queryWrapper6);
+        if (myzcResult.isEmpty()) {
+            myzc = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object myzcResultObject = myzcResult.get(0).get("myzc");
+        if (myzcResultObject instanceof BigDecimal) {
+            myzc =  ((BigDecimal) myzcResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (myzcResultObject instanceof Long) {
+            myzc =  BigDecimal.valueOf((Long) myzcResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (myzcResultObject instanceof Integer) {
+            myzc =  BigDecimal.valueOf((Integer) myzcResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            myzc =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        BigDecimal hyorder = winHyorder.subtract(lossHyorder);
+
+        BigDecimal totalWinOrder = winHyorder.add(winLeverOrder).add(kjOrder);
+        BigDecimal totalLossOrder = lossHyorder.add(lossLeverOrder);
+
+
+        Map<String, Object> results = new HashMap<>();
+        results.put("hyorderWinOrder",hyorder);        //用户合约盈利
+
+        results.put("totalWinOrder",totalWinOrder);   //用户总盈利
+        results.put("totalLossOrder",totalLossOrder); //用户总亏损
+        results.put("recharge",recharge);             //用户总充值
+        results.put("myzc",myzc);                     //用户总提现
+
+        return ResponseDTO.ok(results);
     }
 
     /**
