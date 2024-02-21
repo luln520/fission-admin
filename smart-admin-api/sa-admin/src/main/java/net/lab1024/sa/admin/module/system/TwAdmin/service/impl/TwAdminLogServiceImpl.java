@@ -53,6 +53,8 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
     private TokenService tokenService;
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private TwOnlineDao twOnlineDao;
     @Override
     public IPage<TwAdminLog> listpage(TwBillVo twBillVo,HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -115,6 +117,11 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
             queryWrapper2.eq("status", 1);
             queryWrapper2.eq("company_id", companyId);
             messageRep.setRechargeCount(twRechargeDao.selectCount(queryWrapper2).intValue());
+
+            QueryWrapper<TwOnline> queryWrapper3= new QueryWrapper<>();
+            queryWrapper3.eq("state", 0);
+            queryWrapper3.eq("company_id", companyId);
+            messageRep.setOnlineCount(twOnlineDao.selectCount(queryWrapper3).intValue());
 
             return messageRep;
         }
