@@ -70,6 +70,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     @Autowired
     private SerialNumberService serialNumberService;
 
+    @Autowired
+    private TwCompanyService twCompanyService;
+
     @Override
     public int countUnClosedOrders() {
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
@@ -260,11 +263,6 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             queryWrapper1.eq("userid", uid); // 添加查询条件
             TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
 
-            //获取合约手续费比例
-            QueryWrapper<TwHysetting> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("id", 1); // 添加查询条件
-            TwHysetting twHysetting = twHysettingService.getOne(queryWrapper2);
-
             if(twUser.getRzstatus() != 2){
                 if(language.equals("zh")){
                     return ResponseDTO.userErrorParam("请先完成实名认证！");
@@ -285,9 +283,16 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 //                ResponseDTO.userErrorParam("不能小于最低投资额度");
 //            }
 
-            BigDecimal hySxf = twHysetting.getHySxf();
+//            BigDecimal hySxf = twHysetting.getHySxf();
+
+            Integer companyId = twUser.getCompanyId();
+            QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
+            queryWrapper2.eq("id", companyId); // 添加查询条件
+            TwCompany company = twCompanyService.getOne(queryWrapper2);
+            BigDecimal hyFee = company.getHyFee();
+            BigDecimal hyfee = ctzed.subtract(hyFee);
             MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
-            BigDecimal divide = ctzed.multiply(hySxf).divide(new BigDecimal(100), mathContext);
+            BigDecimal divide = hyfee.divide(new BigDecimal(100), mathContext);
             BigDecimal tmoney = ctzed.add(divide);
             if(twUserCoin.getUsdt().compareTo(tmoney) < 0){
                 if(language.equals("zh")){
