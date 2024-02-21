@@ -274,5 +274,17 @@ public class TwUserController {
         return ResponseDTO.ok(twUserKuangjiService.updatekj(twUserKuangji));
     }
 
+    /**
+     * 账户总览 USDT余额查询  表 user_coin
+     * 参数：id(用户id)
+     * select user_coin where  userid =?
+     * */
+    @GetMapping("/usertj")
+    @ResponseBody
+    @ApiOperation(value = "用户流水统计")
+    public ResponseDTO usertj(@RequestParam int uid) {
+        return twUserService.usertj(uid);
+    }
+
 }
 

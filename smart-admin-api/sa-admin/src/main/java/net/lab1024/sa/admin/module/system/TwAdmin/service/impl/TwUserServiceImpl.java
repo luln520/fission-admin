@@ -1423,13 +1423,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         }
 
         BigDecimal hyorder = winHyorder.subtract(lossHyorder);
-
+        BigDecimal leverOrder = winLeverOrder.subtract(lossLeverOrder);
         BigDecimal totalWinOrder = winHyorder.add(winLeverOrder).add(kjOrder);
         BigDecimal totalLossOrder = lossHyorder.add(lossLeverOrder);
 
 
         Map<String, Object> results = new HashMap<>();
         results.put("hyorderWinOrder",hyorder);        //用户合约盈利
+        results.put("leverWinOrder",leverOrder);       //用户杠杆盈利
 
         results.put("totalWinOrder",totalWinOrder);   //用户总盈利
         results.put("totalLossOrder",totalLossOrder); //用户总亏损
