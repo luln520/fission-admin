@@ -1106,18 +1106,34 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Override
     public ResponseDTO auth(TwUser twUser) {
         try{
-            if(StringUtils.isEmpty(twUser.getPhone())){
-                return ResponseDTO.userErrorParam("手机号不能为空");
+            if(twUser.getLanguage().equals("zh")){
+                if(StringUtils.isEmpty(twUser.getPhone())){
+                    return ResponseDTO.userErrorParam("手机号不能为空");
+                }
+                if(StringUtils.isEmpty(twUser.getRealName())){
+                    return ResponseDTO.userErrorParam("真实姓名不能为空");
+                }
+                if(StringUtils.isEmpty(twUser.getCardzm())){
+                    return ResponseDTO.userErrorParam("证件正面不能为空");
+                }
+                if(StringUtils.isEmpty(twUser.getCardfm())){
+                    return ResponseDTO.userErrorParam("证件背面不能为空");
+                }
+            }else{
+                if(StringUtils.isEmpty(twUser.getPhone())){
+                    return ResponseDTO.userErrorParam("The mobile phone number cannot be empty");
+                }
+                if(StringUtils.isEmpty(twUser.getRealName())){
+                    return ResponseDTO.userErrorParam("The real name cannot be empty");
+                }
+                if(StringUtils.isEmpty(twUser.getCardzm())){
+                    return ResponseDTO.userErrorParam("The front of the document cannot be empty");
+                }
+                if(StringUtils.isEmpty(twUser.getCardfm())){
+                    return ResponseDTO.userErrorParam("The back of the document cannot be empty");
+                }
             }
-            if(StringUtils.isEmpty(twUser.getRealName())){
-                return ResponseDTO.userErrorParam("真实姓名不能为空");
-            }
-            if(StringUtils.isEmpty(twUser.getCardzm())){
-                return ResponseDTO.userErrorParam("证件正面不能为空");
-            }
-            if(StringUtils.isEmpty(twUser.getCardfm())){
-                return ResponseDTO.userErrorParam("证件背面不能为空");
-            }
+
 
 
             twUser.setRzstatus(1);

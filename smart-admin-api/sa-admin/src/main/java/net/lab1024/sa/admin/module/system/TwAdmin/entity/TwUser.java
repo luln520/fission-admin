@@ -249,6 +249,10 @@ public class TwUser implements Serializable {
     private int  winOrLose;
 
     @TableField(exist = false)
+    @ApiModelProperty("语言")
+    private String language;
+
+    @TableField(exist = false)
     @ApiModelProperty("用户矿机单控")
     private List<TwUserKuangji> twUserKuangji;
 
