@@ -270,7 +270,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
-    public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline) {
+    public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline,String  language) {
         try {
             QueryWrapper<TwUser> query = new QueryWrapper<>();
             query.eq("id", uid);
@@ -295,9 +295,17 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twRecharge.setMsg("");
             this.save(twRecharge);
 
-            return ResponseDTO.ok("凭证提交成功");
+            if(language.equals("zh")){
+                return ResponseDTO.ok("凭证提交成功");
+            }else{
+                return ResponseDTO.ok("The voucher is successfully submitted");
+            }
         } catch (Exception e) {
-            return ResponseDTO.userErrorParam("凭证提交失败");
+            if(language.equals("zh")){
+                return ResponseDTO.ok("凭证提交失败");
+            }else{
+                return ResponseDTO.ok("Credential submission failed");
+            }
         }
     }
 

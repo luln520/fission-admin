@@ -37,6 +37,6 @@ public interface TwRechargeService extends IService<TwRecharge> {
 
     boolean rechargeNum(Integer id , @RequestParam BigDecimal num);
 
-    ResponseDTO paycoin(int uid, String coinname,String czaddress,String  payimg, BigDecimal zznum,String czline);
+    ResponseDTO paycoin(int uid, String coinname,String czaddress,String  payimg, BigDecimal zznum,String czline,String  language);
 
 }
