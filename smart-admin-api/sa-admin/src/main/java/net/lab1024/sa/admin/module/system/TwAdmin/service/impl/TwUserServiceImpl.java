@@ -1154,9 +1154,17 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNoticeService.save(twNotice);
-            return ResponseDTO.okMsg("认证资料提交成功");
+            if(twUser.getLanguage().equals("zh")){
+                return ResponseDTO.okMsg("认证资料提交成功");
+            }else{
+                return ResponseDTO.okMsg("The certification materials were submitted successfully");
+            }
         }catch (Exception e){
-             return ResponseDTO.userErrorParam("认证资料提交失败");
+            if(twUser.getLanguage().equals("zh")){
+                return ResponseDTO.okMsg("认证资料提交失败");
+            }else{
+                return ResponseDTO.okMsg("Failed to submit the authentication materials");
+            }
         }
     }
 
