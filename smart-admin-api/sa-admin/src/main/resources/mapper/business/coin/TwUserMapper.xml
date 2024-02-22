@@ -19,7 +19,7 @@
         <if test="obj.companyId != null and obj.companyId !=''">
             and company_id  = #{obj.companyId}
         </if>
-        select * from tw_user where 1=1 and rzstatus IN (1, 2, 3)  order by rzstatus,id desc
+         order by addtime desc
     </select>
 
     <select id="authList" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser">
@@ -33,7 +33,7 @@
         <if test="obj.companyId != null and obj.companyId !=''">
             and company_id  = #{obj.companyId}
         </if>
-         order by id desc
+        order by rzstatus,id desc
     </select>
 
 </mapper>
