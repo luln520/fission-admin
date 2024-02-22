@@ -16,7 +16,7 @@
         <if test="obj.employeeId != null and obj.employeeId !=''">
             and path like concat('%',#{obj.employeeId},'%')
         </if>
-         order by id desc
+         order by addtime desc
     </select>
 
     <select id="authList" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser">
