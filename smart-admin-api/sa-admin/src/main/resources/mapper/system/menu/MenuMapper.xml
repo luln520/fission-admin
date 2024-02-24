@@ -23,7 +23,7 @@
     </select>
     <select id="queryMenuList" resultType="net.lab1024.sa.admin.module.system.menu.domain.vo.MenuVO">
         select * from t_menu
-        where deleted_flag = #{deletedFlag} and menu_id not in(270)
+        where deleted_flag = #{deletedFlag}
         <if test="disabledFlag != null">
             and disabled_flag = #{disabledFlag}
         </if>
