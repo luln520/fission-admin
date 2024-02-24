@@ -23,4 +23,7 @@ public class RoleVO {
 
     @ApiModelProperty("角色备注")
     private String remark;
+
+    @ApiModelProperty("角色key")
+    private String wordKey;
 }

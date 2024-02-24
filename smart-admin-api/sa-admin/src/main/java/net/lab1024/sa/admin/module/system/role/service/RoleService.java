@@ -1,5 +1,6 @@
 package net.lab1024.sa.admin.module.system.role.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import net.lab1024.sa.admin.module.system.role.dao.RoleDao;
 import net.lab1024.sa.admin.module.system.role.dao.RoleEmployeeDao;
 import net.lab1024.sa.admin.module.system.role.dao.RoleMenuDao;
@@ -112,7 +113,9 @@ public class RoleService {
      * @return ResponseDTO
      */
     public ResponseDTO<List<RoleVO>> getAllRole() {
-        List<RoleEntity> roleEntityList = roleDao.selectList(null);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.notIn("word_key","company");
+        List<RoleEntity> roleEntityList = roleDao.selectList(queryWrapper);
         List<RoleVO> roleList = SmartBeanUtil.copyList(roleEntityList, RoleVO.class);
         return ResponseDTO.ok(roleList);
     }
