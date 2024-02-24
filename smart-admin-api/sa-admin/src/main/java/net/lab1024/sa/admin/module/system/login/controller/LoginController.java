@@ -80,8 +80,8 @@ public class LoginController {
             List<MenuVO> menuList = loginEmployeeDetail.getMenuList();
             result = menuList.stream()
                     .filter((MenuVO m) -> m.getMenuId()!=270).collect(Collectors.toList());
+            loginEmployeeDetail.setMenuList(result);
         }
-        loginEmployeeDetail.setMenuList(result);
         return ResponseDTO.ok(loginEmployeeDetail);
     }
 
