@@ -113,7 +113,9 @@ public class RoleService {
      * @return ResponseDTO
      */
     public ResponseDTO<List<RoleVO>> getAllRole() {
-        List<RoleEntity> roleEntityList = roleDao.selectList(null);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.notIn("word_key","company");
+        List<RoleEntity> roleEntityList = roleDao.selectList(queryWrapper);
         List<RoleVO> roleList = SmartBeanUtil.copyList(roleEntityList, RoleVO.class);
         return ResponseDTO.ok(roleList);
     }
