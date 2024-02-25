@@ -14,7 +14,7 @@
     </select>
 
     <select id="getId" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline">
-        select * from tw_online  where uid= #{id}  order by id desc
+        select * from tw_online  where uid= #{id}  order by id asc
     </select>
 
     <update id="updateState">
