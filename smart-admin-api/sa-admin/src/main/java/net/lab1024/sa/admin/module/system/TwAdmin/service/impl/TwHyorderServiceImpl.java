@@ -74,9 +74,10 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     private TwCompanyService twCompanyService;
 
     @Override
-    public int countUnClosedOrders() {
+    public int countUnClosedOrders(int companyId) {
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status", "1"); // 添加查询条件
+        queryWrapper.eq("company_id", companyId); // 添加查询条件
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 

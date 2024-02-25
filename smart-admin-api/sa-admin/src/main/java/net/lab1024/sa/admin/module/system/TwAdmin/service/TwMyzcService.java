@@ -24,9 +24,9 @@ import java.util.List;
  */
 public interface TwMyzcService extends IService<TwMyzc> {
 
-    BigDecimal sumDayWithdraw(String startTime, String endTime);
+    BigDecimal sumDayWithdraw(String startTime, String endTime,int companyId);
 
-    BigDecimal sumAllWithdraw();
+    BigDecimal sumAllWithdraw(int companyId);
 
     IPage<TwMyzc> listpage(TwMyzcVo twMyzcVo, HttpServletRequest request);
 

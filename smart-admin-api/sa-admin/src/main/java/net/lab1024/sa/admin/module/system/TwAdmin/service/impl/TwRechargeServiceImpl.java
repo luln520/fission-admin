@@ -67,12 +67,13 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     @Autowired
     private SerialNumberService serialNumberService;
     @Override
-    public BigDecimal sumDayRecharge(String startTime, String endTime) {
+    public BigDecimal sumDayRecharge(String startTime, String endTime,int companyId) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as dayRecharge")
                 .ge("addtime", startTime)
                 .le("addtime", endTime)
-                .eq("status", 2);
+                .eq("status", 2)
+                .eq("company_id", companyId);
 
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
@@ -93,10 +94,11 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
-    public BigDecimal sumAllRecharge() {
+    public BigDecimal sumAllRecharge(int companyId) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as allRecharge")
-                .eq("status", 2);
+                .eq("status", 2)
+                .eq("company_id", companyId);
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
             return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);

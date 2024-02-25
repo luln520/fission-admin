@@ -119,27 +119,30 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     private TwMyzcDao twMyzcDao;
 
     @Override
-    public Integer countAllUsers() {
+    public Integer countAllUsers(int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_type",1);
+        queryWrapper.eq("company_id", companyId);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
     @Override
-    public Integer countTodayUsers(long startTime, long endTime) {
+    public Integer countTodayUsers(long startTime, long endTime,int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_type",1);
         queryWrapper.ge("addtime", startTime);
         queryWrapper.le("addtime", endTime);
+        queryWrapper.eq("company_id", companyId);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
     @Override
-    public Integer countLineUsers(String startTime, String endTime) {
+    public Integer countLineUsers(String startTime, String endTime,int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_type",1);
         queryWrapper.ge("lgtime", startTime);
         queryWrapper.le("lgtime", endTime);
+        queryWrapper.eq("company_id", companyId);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 

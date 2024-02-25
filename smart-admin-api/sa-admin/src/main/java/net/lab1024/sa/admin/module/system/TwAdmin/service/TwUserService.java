@@ -28,11 +28,11 @@ import java.math.BigDecimal;
  */
 public interface TwUserService extends IService<TwUser> {
 
-    Integer countAllUsers();
+    Integer countAllUsers(int companyId);
 
-    Integer countTodayUsers(long startTime, long endTime);
+    Integer countTodayUsers(long startTime, long endTime,int companyId);
 
-    Integer countLineUsers(String startTime , String endTime);
+    Integer countLineUsers(String startTime , String endTime,int companyId);
 
 
     IPage<TwUser> listpage(TwUserVo twUserVo);

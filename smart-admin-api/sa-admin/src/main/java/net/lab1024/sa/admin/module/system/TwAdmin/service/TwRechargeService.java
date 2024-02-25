@@ -23,9 +23,9 @@ import java.util.List;
  */
 public interface TwRechargeService extends IService<TwRecharge> {
 
-    BigDecimal sumDayRecharge(String startTime, String endTime);
+    BigDecimal sumDayRecharge(String startTime, String endTime,int companyId);
 
-    BigDecimal sumAllRecharge();
+    BigDecimal sumAllRecharge(int companyId);
 
     IPage<TwRecharge> listpage(TwRechargeVo twRechargeVo, HttpServletRequest request);
 

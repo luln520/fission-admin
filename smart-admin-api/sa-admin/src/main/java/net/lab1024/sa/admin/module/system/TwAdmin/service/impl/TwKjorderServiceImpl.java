@@ -71,9 +71,10 @@ public class TwKjorderServiceImpl extends ServiceImpl<TwKjorderDao, TwKjorder> i
     }
 
     @Override
-    public int countAllOrders() {
+    public int countAllOrders(int companyId) {
         QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status", "1"); // 添加查询条件
+        queryWrapper.eq("company_id", companyId); // 添加查询条件
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 

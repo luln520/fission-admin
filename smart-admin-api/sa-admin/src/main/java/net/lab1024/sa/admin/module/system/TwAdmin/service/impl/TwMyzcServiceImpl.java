@@ -64,12 +64,13 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     private SerialNumberService serialNumberService;
 
     @Override
-    public BigDecimal sumDayWithdraw(String startTime, String endTime) {
+    public BigDecimal sumDayWithdraw(String startTime, String endTime,int companyId) {
         QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as dayWithdraw")
                 .ge("addtime", startTime)
                 .le("addtime", endTime)
-                .eq("status", 2);
+                .eq("status", 2)
+                .eq("company_id", companyId);
 
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
@@ -90,10 +91,11 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     }
 
     @Override
-    public BigDecimal sumAllWithdraw() {
+    public BigDecimal sumAllWithdraw(int companyId) {
         QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as allWithdraw")
-                .eq("status", 2);
+                .eq("status", 2)
+                .eq("company_id", companyId);
 
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
