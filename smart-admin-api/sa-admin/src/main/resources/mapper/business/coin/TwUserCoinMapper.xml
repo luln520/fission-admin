@@ -15,7 +15,7 @@
     </select>
 
     <select id="sumUserCoin" resultType="java.math.BigDecimal">
-        select ifnull(SUM(h.usdt),0) usdt from tw_user u  join tw_user_coin h on u.id=h.userid where user_type = 1;
+        select ifnull(SUM(h.usdt),0) usdt from tw_user u  join tw_user_coin h on u.id=h.userid where user_type = 1 and u.company_id = #{companyId};
     </select>
 
 

@@ -54,21 +54,66 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-            objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+            List<TwOnline> listpage = baseMapper.listpage(objectPage, pageParam);
+            for (TwOnline twOnline:listpage){
+                Integer uid = twOnline.getUid();
+                QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("uid",uid);
+                List<TwOnline> list = this.list(queryWrapper);
+                for(TwOnline online:list){
+                    Integer state = online.getState();
+                    if(state == 0){
+                        twOnline.setState(0);
+                    }else{
+                        twOnline.setState(1);
+                    }
+                }
+            }
+            objectPage.setRecords(listpage);
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-                objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+                List<TwOnline> listpage = baseMapper.listpage(objectPage, pageParam);
+                for (TwOnline twOnline:listpage){
+                    Integer uid = twOnline.getUid();
+                    QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("uid",uid);
+                    List<TwOnline> list = this.list(queryWrapper);
+                    for(TwOnline online:list){
+                        Integer state = online.getState();
+                        if(state == 0){
+                            twOnline.setState(0);
+                        }else{
+                            twOnline.setState(1);
+                        }
+                    }
+                }
+                objectPage.setRecords(listpage);
                 return objectPage;
             }else{
                 Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-                objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+                List<TwOnline> listpage = baseMapper.listpage(objectPage, pageParam);
+                for (TwOnline twOnline:listpage){
+                    Integer uid = twOnline.getUid();
+                    QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("uid",uid);
+                    List<TwOnline> list = this.list(queryWrapper);
+                    for(TwOnline online:list){
+                        Integer state = online.getState();
+                        if(state == 0){
+                            twOnline.setState(0);
+                        }else{
+                            twOnline.setState(1);
+                        }
+                    }
+                }
+                objectPage.setRecords(listpage);
                 return objectPage;
             }
         }
@@ -98,10 +143,15 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             TwOnline one = getOne(queryWrapper);
             Integer uid = one.getUid();
 
+            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("id",uid);
+            TwUser user = twUserService.getOne(queryWrapper1);
+
             TwOnline one1 =new TwOnline();
             one1.setUid(one.getUid());
             one1.setUsername(one.getUsername());
             one1.setContent(content);
+            one1.setCompanyId(user.getCompanyId());
             one1.setType(1);
             one1.setAddtime(new Date());
             one1.setState(2);

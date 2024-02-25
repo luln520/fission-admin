@@ -23,9 +23,9 @@ import java.util.List;
  */
 public interface TwRechargeService extends IService<TwRecharge> {
 
-    BigDecimal sumDayRecharge(String startTime, String endTime);
+    BigDecimal sumDayRecharge(String startTime, String endTime,int companyId);
 
-    BigDecimal sumAllRecharge();
+    BigDecimal sumAllRecharge(int companyId);
 
     IPage<TwRecharge> listpage(TwRechargeVo twRechargeVo, HttpServletRequest request);
 
@@ -37,6 +37,6 @@ public interface TwRechargeService extends IService<TwRecharge> {
 
     boolean rechargeNum(Integer id , @RequestParam BigDecimal num);
 
-    ResponseDTO paycoin(int uid, String coinname,String czaddress,String  payimg, BigDecimal zznum,String czline);
+    ResponseDTO paycoin(int uid, String coinname,String czaddress,String  payimg, BigDecimal zznum,String czline,String  language);
 
 }

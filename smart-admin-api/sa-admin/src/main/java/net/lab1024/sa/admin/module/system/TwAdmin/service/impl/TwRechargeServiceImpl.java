@@ -67,12 +67,13 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     @Autowired
     private SerialNumberService serialNumberService;
     @Override
-    public BigDecimal sumDayRecharge(String startTime, String endTime) {
+    public BigDecimal sumDayRecharge(String startTime, String endTime,int companyId) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as dayRecharge")
                 .ge("addtime", startTime)
                 .le("addtime", endTime)
-                .eq("status", 2);
+                .eq("status", 2)
+                .eq("company_id", companyId);
 
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
@@ -93,10 +94,11 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
-    public BigDecimal sumAllRecharge() {
+    public BigDecimal sumAllRecharge(int companyId) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as allRecharge")
-                .eq("status", 2);
+                .eq("status", 2)
+                .eq("company_id", companyId);
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
             return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -123,13 +125,13 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twRechargeVo));
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
@@ -270,7 +272,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
-    public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline) {
+    public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline,String  language) {
         try {
             QueryWrapper<TwUser> query = new QueryWrapper<>();
             query.eq("id", uid);
@@ -295,9 +297,17 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twRecharge.setMsg("");
             this.save(twRecharge);
 
-            return ResponseDTO.ok("凭证提交成功");
+            if(language.equals("zh")){
+                return ResponseDTO.ok("凭证提交成功");
+            }else{
+                return ResponseDTO.ok("The voucher is successfully submitted");
+            }
         } catch (Exception e) {
-            return ResponseDTO.userErrorParam("凭证提交失败");
+            if(language.equals("zh")){
+                return ResponseDTO.ok("凭证提交失败");
+            }else{
+                return ResponseDTO.ok("Credential submission failed");
+            }
         }
     }
 

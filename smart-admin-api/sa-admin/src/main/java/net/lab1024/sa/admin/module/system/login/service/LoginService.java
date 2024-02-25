@@ -110,7 +110,7 @@ public class LoginService {
         }
 
         if (employeeEntity.getDisabledFlag()) {
-            saveLoginLog(employeeEntity, ip, userAgent, "账号已禁用", LoginLogResultEnum.LOGIN_FAIL);
+            saveLoginLog(employeeEntity, ip, userAgent, "账号已禁用", LoginLogResultEnum.LOGIN_FAIL,employeeEntity.getCompanyId());
             return ResponseDTO.userErrorParam("您的账号已被禁用,请联系工作人员！");
         }
         /**
@@ -121,7 +121,7 @@ public class LoginService {
         String superPassword = EmployeeService.getEncryptPwd(configService.getConfigValue(ConfigKeyEnum.SUPER_PASSWORD));
         String requestPassword = EmployeeService.getEncryptPwd(loginForm.getPassword());
         if (!(superPassword.equals(requestPassword) || employeeEntity.getLoginPwd().equals(requestPassword))) {
-            saveLoginLog(employeeEntity, ip, userAgent, "密码错误", LoginLogResultEnum.LOGIN_FAIL);
+            saveLoginLog(employeeEntity, ip, userAgent, "密码错误", LoginLogResultEnum.LOGIN_FAIL,employeeEntity.getCompanyId());
             return ResponseDTO.userErrorParam("登录名或密码错误！");
         }
 
@@ -137,7 +137,7 @@ public class LoginService {
         loginUserDetailCache.put(employeeEntity.getEmployeeId(), loginEmployeeDetail);
 
         //保存登录记录
-        saveLoginLog(employeeEntity, ip, userAgent, superPasswordFlag ? "万能密码登录" : loginDeviceEnum.getDesc(), LoginLogResultEnum.LOGIN_SUCCESS);
+        saveLoginLog(employeeEntity, ip, userAgent, superPasswordFlag ? "万能密码登录" : loginDeviceEnum.getDesc(), LoginLogResultEnum.LOGIN_SUCCESS,employeeEntity.getCompanyId());
 
         return ResponseDTO.ok(loginEmployeeDetail);
     }
@@ -185,12 +185,13 @@ public class LoginService {
      * @param ip
      * @param userAgent
      */
-    private void saveLoginLog(EmployeeEntity employeeEntity, String ip, String userAgent, String remark, LoginLogResultEnum result) {
+    private void saveLoginLog(EmployeeEntity employeeEntity, String ip, String userAgent, String remark, LoginLogResultEnum result,Integer companyId) {
         LoginLogEntity loginEntity = LoginLogEntity.builder()
                 .userId(employeeEntity.getEmployeeId())
                 .userType(UserTypeEnum.ADMIN_EMPLOYEE.getValue())
                 .userName(employeeEntity.getActualName())
                 .userAgent(userAgent)
+                .companyId(companyId)
                 .loginIp(ip)
                 .remark(remark)
                 .loginResult(result.getValue())

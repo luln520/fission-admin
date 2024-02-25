@@ -108,5 +108,19 @@ public class PcUserController {
     public ResponseDTO auth(@RequestBody TwUser twUser) {
         return twUserService.auth(twUser);
     }
+
+    /**
+     * 账户总览 USDT余额查询  表 user_coin
+     * 参数：id(用户id)
+     * select user_coin where  userid =?
+     * */
+    @GetMapping("/usertj")
+    @ResponseBody
+    @ApiOperation(value = "用户流水统计")
+    @NoNeedLogin
+    public ResponseDTO usertj(@RequestParam int uid) {
+        return twUserService.usertj(uid);
+    }
+
 }
 

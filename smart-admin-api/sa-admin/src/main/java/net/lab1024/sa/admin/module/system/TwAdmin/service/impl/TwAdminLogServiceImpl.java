@@ -53,6 +53,8 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
     private TokenService tokenService;
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private TwOnlineDao twOnlineDao;
     @Override
     public IPage<TwAdminLog> listpage(TwBillVo twBillVo,HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -61,13 +63,13 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwAdminLog> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twBillVo));
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwAdminLog> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
@@ -99,7 +101,7 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
         int companyId = byId.getCompanyId();
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             TwMessageRep messageRep = new TwMessageRep();
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("rzstatus", 1);
@@ -116,11 +118,16 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
             queryWrapper2.eq("company_id", companyId);
             messageRep.setRechargeCount(twRechargeDao.selectCount(queryWrapper2).intValue());
 
+            QueryWrapper<TwOnline> queryWrapper3= new QueryWrapper<>();
+            queryWrapper3.eq("state", 0);
+            queryWrapper3.eq("company_id", companyId);
+            messageRep.setOnlineCount(twOnlineDao.selectCount(queryWrapper3).intValue());
+
             return messageRep;
         }
 
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 TwMessageRep messageRep = new TwMessageRep();

@@ -29,43 +29,49 @@ public class TwNews implements Serializable {
     @NotNull(message="[id]不能为空")
     @ApiModelProperty("id")
     private Integer id;
-    /**
-    * 标题
-    */
-    @ApiModelProperty("标题")
-    private String title;
-    /**
-    * 简介
-    */
-    @ApiModelProperty("简介")
-    private String info;
-    /**
-    * 图片
-    */
-    @ApiModelProperty("图片")
+
+    @ApiModelProperty("图标")
     private String img;
-    /**
-    * 内容
-    */
-    @ApiModelProperty("内容")
+
+    @ApiModelProperty("中文内容")
     private String content;
-    /**
-    * 类型
-    */
-    @ApiModelProperty("类型")
+
+    @ApiModelProperty("西班牙语内容")
+    private String contentEs;
+
+    @ApiModelProperty("越语内容")
+    private String contentVi;
+
+    @ApiModelProperty("日语内容")
+    private String contentJa;
+
+    @ApiModelProperty("英语内容")
+    private String contentEn;
+
+    @ApiModelProperty("阿拉伯内容")
+    private String contentAr;
+
+    @ApiModelProperty("类型-中文")
     private String type;
 
-    @ApiModelProperty("语言")
-    private String language;
+    @ApiModelProperty("类型-西班牙")
+    private String typeEs;
 
-    /**
-    * 创建时间
-    */
+    @ApiModelProperty("类型-越语")
+    private String typeVi;
+
+    @ApiModelProperty("类型-日语")
+    private String typeJa;
+
+    @ApiModelProperty("类型-英语")
+    private String typeEn;
+
+    @ApiModelProperty("类型-阿拉伯语")
+    private String typeAr;
+
     @ApiModelProperty("创建时间")
     private Date createTime;
-    /**
-    * 是否显示 0.不显示，1.显示
-    */
+
     @ApiModelProperty("是否显示 0.不显示，1.显示")
     private Integer isShow;
 

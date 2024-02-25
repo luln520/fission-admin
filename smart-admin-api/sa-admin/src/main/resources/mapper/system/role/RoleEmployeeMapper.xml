@@ -106,7 +106,7 @@
         t_role_employee.role_id,
         t_role_employee.employee_id,
         t_role.role_name,
-        t_role.key
+        t_role.word_key
         FROM
         t_role_employee
         LEFT JOIN t_role  ON t_role.role_id = t_role_employee.role_id

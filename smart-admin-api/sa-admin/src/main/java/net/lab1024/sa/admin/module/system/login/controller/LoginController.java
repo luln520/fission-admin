@@ -7,6 +7,7 @@ import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.login.domain.LoginEmployeeDetail;
 import net.lab1024.sa.admin.module.system.login.domain.LoginForm;
 import net.lab1024.sa.admin.module.system.login.service.LoginService;
+import net.lab1024.sa.admin.module.system.menu.domain.vo.MenuVO;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.code.UserErrorCode;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
@@ -22,6 +23,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 员工登录
@@ -71,6 +75,13 @@ public class LoginController {
 
         LoginEmployeeDetail loginEmployeeDetail = (LoginEmployeeDetail) authentication.getPrincipal();
         loginEmployeeDetail.setLoginPassword(null);
+        List<MenuVO> result = new ArrayList<MenuVO>();
+        if(loginEmployeeDetail.getAdministratorFlag()){
+            List<MenuVO> menuList = loginEmployeeDetail.getMenuList();
+            result = menuList.stream()
+                    .filter((MenuVO m) -> m.getMenuId()!=270).collect(Collectors.toList());
+            loginEmployeeDetail.setMenuList(result);
+        }
         return ResponseDTO.ok(loginEmployeeDetail);
     }
 

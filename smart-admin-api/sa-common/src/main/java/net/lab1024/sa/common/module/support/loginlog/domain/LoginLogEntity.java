@@ -3,6 +3,7 @@ package net.lab1024.sa.common.module.support.loginlog.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -54,6 +55,8 @@ public class LoginLogEntity {
      * 备注
      */
     private String remark;
+
+    private Integer companyId;
 
     /**
      * 登录类型

@@ -67,27 +67,28 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
                 return ResponseDTO.userErrorParam("账号重复");
             }
         }
-
-
+        twCompany.setCompanyPwd(getEncryptPwd(twCompany.getCompanyPwd()));
         this.saveOrUpdate(twCompany);
 
-        EmployeeEntity entity  = new EmployeeEntity();
-        // 设置密码 默认密码
-        String password = twCompany.getCompanyPwd();
-        entity.setLoginPwd(getEncryptPwd(password));
-        entity.setLoginName(twCompany.getCompanyAccount());
-        entity.setCompanyId(twCompany.getId());
-        entity.setDeletedFlag(Boolean.FALSE);
-        entity.setActualName("管理员");
-        entity.setAdministratorFlag(Boolean.TRUE);
-        entity.setDisabledFlag(Boolean.FALSE);
-        entity.setCreateTime(LocalDateTime.now());
+        if(twCompany.getId() == null){
+            EmployeeEntity entity  = new EmployeeEntity();
+            // 设置密码 默认密码
+            String password = twCompany.getCompanyPwd();
+            entity.setLoginPwd(getEncryptPwd(password));
+            entity.setLoginName(twCompany.getCompanyAccount());
+            entity.setCompanyId(twCompany.getId());
+            entity.setDeletedFlag(Boolean.FALSE);
+            entity.setActualName(twCompany.getCompanyAccount());
+            entity.setAdministratorFlag(Boolean.TRUE);
+            entity.setDisabledFlag(Boolean.FALSE);
+            entity.setCreateTime(LocalDateTime.now());
 
-        List<Long> roleIdList = new ArrayList<>();
-        roleIdList.add(1L);
-        employeeManager.saveEmployee(entity, roleIdList);
+            List<Long> roleIdList = new ArrayList<>();
+            roleIdList.add(1L);
+            employeeManager.saveEmployee(entity, roleIdList);
+        }
 
-        return ResponseDTO.ok(password);
+        return ResponseDTO.ok();
     }
 
     @Override

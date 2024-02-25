@@ -41,13 +41,13 @@ public class TwBillServiceImpl extends ServiceImpl<TwBillDao, TwBill> implements
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwBill> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twBillVo));
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwBill> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());

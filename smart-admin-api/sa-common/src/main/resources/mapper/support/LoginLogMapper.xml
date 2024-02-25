@@ -19,6 +19,9 @@
             <if test="query.ip != null">
                 AND INSTR(login_ip,#{query.ip})
             </if>
+            <if test="query.companyId != null and query.companyId !=''">
+                and company_id  = #{query.companyId}
+            </if>
         </where>
         order by create_time desc
     </select>

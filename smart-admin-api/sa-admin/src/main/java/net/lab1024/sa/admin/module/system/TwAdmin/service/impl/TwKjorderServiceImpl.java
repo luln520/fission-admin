@@ -40,12 +40,12 @@ public class TwKjorderServiceImpl extends ServiceImpl<TwKjorderDao, TwKjorder> i
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwKjorder> objectPage = new Page<>(twKjorderVo.getPageNum(), twKjorderVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twKjorderVo));
             return objectPage;
         }
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwKjorder> objectPage = new Page<>(twKjorderVo.getPageNum(), twKjorderVo.getPageSize());
@@ -71,9 +71,10 @@ public class TwKjorderServiceImpl extends ServiceImpl<TwKjorderDao, TwKjorder> i
     }
 
     @Override
-    public int countAllOrders() {
+    public int countAllOrders(int companyId) {
         QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status", "1"); // 添加查询条件
+        queryWrapper.eq("company_id", companyId); // 添加查询条件
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 

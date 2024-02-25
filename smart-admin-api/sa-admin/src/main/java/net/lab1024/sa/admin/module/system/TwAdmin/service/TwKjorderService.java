@@ -23,7 +23,7 @@ public interface TwKjorderService extends IService<TwKjorder> {
     IPage<TwKjorder> listpage(TwKjorderVo twKjorderVo, HttpServletRequest request);
 
     List<TwKjorder> uidList(int uid);
-    int countAllOrders();
+    int countAllOrders(int companyId);
 
     boolean open(int  id);
     boolean close(int  id);
