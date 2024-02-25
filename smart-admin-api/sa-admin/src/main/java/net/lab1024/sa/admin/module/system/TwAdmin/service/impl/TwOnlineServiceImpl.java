@@ -98,10 +98,15 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             TwOnline one = getOne(queryWrapper);
             Integer uid = one.getUid();
 
+            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("id",uid);
+            TwUser user = twUserService.getOne(queryWrapper1);
+
             TwOnline one1 =new TwOnline();
             one1.setUid(one.getUid());
             one1.setUsername(one.getUsername());
             one1.setContent(content);
+            one1.setCompanyId(user.getCompanyId());
             one1.setType(1);
             one1.setAddtime(new Date());
             one1.setState(2);
