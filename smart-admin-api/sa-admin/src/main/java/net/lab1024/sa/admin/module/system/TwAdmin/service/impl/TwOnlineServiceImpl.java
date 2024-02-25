@@ -56,7 +56,22 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
 
         if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
             Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-            objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+            List<TwOnline> listpage = baseMapper.listpage(objectPage, pageParam);
+            for (TwOnline twOnline:listpage){
+                Integer uid = twOnline.getUid();
+                QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("uid",uid);
+                List<TwOnline> list = this.list(queryWrapper);
+                for(TwOnline online:list){
+                    Integer state = online.getState();
+                    if(state == 0){
+                        twOnline.setState(0);
+                    }else{
+                        twOnline.setState(1);
+                    }
+                }
+            }
+            objectPage.setRecords(listpage);
             return objectPage;
         }
 
@@ -64,11 +79,41 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-                objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+                List<TwOnline> listpage = baseMapper.listpage(objectPage, pageParam);
+                for (TwOnline twOnline:listpage){
+                    Integer uid = twOnline.getUid();
+                    QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("uid",uid);
+                    List<TwOnline> list = this.list(queryWrapper);
+                    for(TwOnline online:list){
+                        Integer state = online.getState();
+                        if(state == 0){
+                            twOnline.setState(0);
+                        }else{
+                            twOnline.setState(1);
+                        }
+                    }
+                }
+                objectPage.setRecords(listpage);
                 return objectPage;
             }else{
                 Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-                objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
+                List<TwOnline> listpage = baseMapper.listpage(objectPage, pageParam);
+                for (TwOnline twOnline:listpage){
+                    Integer uid = twOnline.getUid();
+                    QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+                    queryWrapper.eq("uid",uid);
+                    List<TwOnline> list = this.list(queryWrapper);
+                    for(TwOnline online:list){
+                        Integer state = online.getState();
+                        if(state == 0){
+                            twOnline.setState(0);
+                        }else{
+                            twOnline.setState(1);
+                        }
+                    }
+                }
+                objectPage.setRecords(listpage);
                 return objectPage;
             }
         }
