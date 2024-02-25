@@ -125,7 +125,7 @@
   const total = ref(0);
 
   onMounted(() => {
-    queryList();
+    //queryList();
   });
 
   async function queryList() {

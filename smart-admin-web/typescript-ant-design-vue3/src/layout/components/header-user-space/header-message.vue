@@ -19,7 +19,7 @@
     </div>
 
     <template #overlay>
-      <div>d
+      <div>
         <a-spin :spinning="loading">
           <a-tabs class="dropdown-tabs" centered :tabBarStyle="{ textAlign: 'center' }" style="width: 200px">
             <a-tab-pane tab="通知" key="1">
