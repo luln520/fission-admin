@@ -147,7 +147,7 @@ import { smartSentry } from '/@/lib/smart-sentry';
         smartSentry.captureError(e);
       }
       if (menuId > 0) {
-        queryHelpDocList(menuId);
+        //queryHelpDocList(menuId);
       }
     },
     {
