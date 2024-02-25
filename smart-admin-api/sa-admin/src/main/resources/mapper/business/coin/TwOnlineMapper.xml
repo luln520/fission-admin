@@ -13,7 +13,7 @@
         <if test="obj.companyId != null and obj.companyId !=''">
             and company_id  = #{obj.companyId}
         </if>
-        group by username order by id desc
+        group by username order by addtime desc
     </select>
 
     <select id="getId" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline">
