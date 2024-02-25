@@ -118,6 +118,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Autowired
     private TwMyzcDao twMyzcDao;
 
+    @Autowired
+    private TwCompanyService twCompanyService;
+
     @Override
     public Integer countAllUsers(int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -1233,7 +1236,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public ResponseDTO code(String username,String area,int type,String language) throws IOException {
+    public ResponseDTO code(String username,String area,int type,String language,int companyId) throws IOException {
         if(type == 1){   //手机
             String code = this.codeRandom();
             String phone = area + username;
@@ -1248,7 +1251,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         if(type == 2){    //邮箱
             String code = this.codeRandom();
-            this.email(username,code);
+            QueryWrapper<TwCompany> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", companyId);
+            TwCompany one = twCompanyService.getOne(queryWrapper);
+            String companyMail = one.getCompanyMail();
+            String companyMailPwd = one.getCompanyMailPwd();
+            this.email(username,code,companyMail,companyMailPwd);
             captchaMap.put(username, code);
             if(language.equals("zh")){
                 return ResponseDTO.ok("验证码已发送");
@@ -1531,15 +1539,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
     }
-    public  void email(String email,String code){
+    public  void email(String email,String code,String companyMail,String companyMailPwd){
         try{
             //1.创建一封邮件的实例对象
             Properties props = new Properties();
             //选择ssl方式
             gmailtls(props);
 
-            final String username = "coinex.ams@gmail.com";// gmail 邮箱
-            final String password = "xcwq gbch jsnd jvhq";// Google应用专用密码
+            final String username = companyMail;// gmail 邮箱
+            final String password = companyMailPwd;// Google应用专用密码
             // 当做多商户的时候需要使用getInstance, 如果只是一个邮箱发送的话就用getDefaultInstance
             // Session.getDefaultInstance 会将username,password保存在session会话中
             // Session.getInstance 不进行保存
