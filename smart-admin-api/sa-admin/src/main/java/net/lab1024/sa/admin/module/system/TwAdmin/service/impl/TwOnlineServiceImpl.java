@@ -125,7 +125,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
         QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
         queryWrapper.eq("company_id",companyId);
-        queryWrapper.orderByDesc("addtime");
+        queryWrapper.orderByDesc("id");
         return this.list(queryWrapper);
     }
 
