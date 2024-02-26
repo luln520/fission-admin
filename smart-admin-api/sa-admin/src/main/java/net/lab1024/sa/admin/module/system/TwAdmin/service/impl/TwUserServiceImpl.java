@@ -1580,7 +1580,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             // 7. （文本+图片）设置 文本 和 图片"节点"的关系（将 文本 和 图片"节点"合成一个混合"节点"）
             MimeMultipart mm_text_image = new MimeMultipart();
             mm_text_image.addBodyPart(text);
-            mm_text_image.setSubType("Verification Code");    // 关联关系
+            mm_text_image.setSubType("related");    // 关联关系
+//            mm_text_image.setSubType("related");    // 关联关系
 
 
             // 11. 设置整个邮件的关系（将最终的混合"节点"作为邮件的内容添加到邮件对象）
