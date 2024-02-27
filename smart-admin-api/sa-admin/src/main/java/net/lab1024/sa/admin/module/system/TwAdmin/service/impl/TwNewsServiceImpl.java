@@ -50,10 +50,8 @@ public class TwNewsServiceImpl extends ServiceImpl<TwNewsMapper, TwNews>
     }
 
     @Override
-    public List<TwNews> listType(String type) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("type",type);
-        return this.list(queryWrapper);
+    public List<TwNews> listType() {
+        return this.list();
     }
 
 }
