@@ -1438,7 +1438,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         QueryWrapper<TwMyzc> queryWrapper6 = new QueryWrapper<>();
         queryWrapper6.select("IFNULL(SUM(num), 0) as myzc")
-                .eq("uid", uid)
+                .eq("userid", uid)
                 .eq("status", 2);
 
         List<Map<String, Object>> myzcResult = this.twMyzcDao.selectMaps(queryWrapper6);
