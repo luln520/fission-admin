@@ -1,5 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller.Req;
 
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
 import lombok.Data;
 
@@ -23,5 +24,7 @@ public class UserReq {
      private int type;
 
      private String language;
+
+     private Integer companyId;
 
 }

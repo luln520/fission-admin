@@ -798,6 +798,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         String language = userReq.getLanguage();
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
+        queryWrapper.eq("company_id",userReq.getCompanyId());
         TwUser one = this.getOne(queryWrapper);
         if (null == one) {
             if(language.equals("zh")){

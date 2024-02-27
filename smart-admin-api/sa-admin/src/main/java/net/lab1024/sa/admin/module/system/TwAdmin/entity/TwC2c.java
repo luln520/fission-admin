@@ -1,8 +1,5 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.entity;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
 
@@ -13,7 +10,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 /**
  * 
@@ -92,4 +88,15 @@ public class TwC2c implements Serializable {
     @ApiModelProperty("创建时间")
     private Date createTime;
 
+    @ApiModelProperty("团队路径")
+    private String path;
+
+    @ApiModelProperty("部门id")
+    private Integer department;
+
+    @ApiModelProperty(value = "用户code")
+    private String userCode;
+
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 }
