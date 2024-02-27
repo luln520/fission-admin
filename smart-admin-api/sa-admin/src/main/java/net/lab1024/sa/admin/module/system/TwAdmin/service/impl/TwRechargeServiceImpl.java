@@ -256,7 +256,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 twNotice.setPath(twUser.getPath());
                 twNoticeService.save(twNotice);
 
-                return ResponseDTO.okMsg("充值驳回成功");
+                return ResponseDTO.okMsg("充值成功");
             }
         }
         return null;
