@@ -75,4 +75,7 @@ public class TwNews implements Serializable {
     @ApiModelProperty("是否显示 0.不显示，1.显示")
     private Integer isShow;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
+
 }
