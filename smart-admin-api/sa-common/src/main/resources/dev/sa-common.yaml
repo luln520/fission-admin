@@ -1,9 +1,12 @@
 spring:
   # 数据库连接信息
   datasource:
-    url: jdbc:p6spy:mysql://206.238.199.169:3306/coin_admin_v2?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
-    username: coin
-    password: coin_123456
+#    url: jdbc:p6spy:mysql://206.238.199.169:3306/coin_admin_v2?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    url: jdbc:p6spy:mysql://206.238.199.177:3306/coin_admin_v2?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+#    username: coin
+#    password: coin_123456
+    username: coin_admin_v2
+    password: 77xYXM8sp4rDcHGx
     initial-size: 2
     min-idle: 2
     max-active: 10
@@ -28,7 +31,8 @@ spring:
   # redis 连接池配置信息
   redis:
     database: 1
-    host: 206.238.199.169
+#    host: 206.238.199.169
+    host: 206.238.199.177
     lettuce:
       pool:
         max-active: 5
@@ -37,7 +41,8 @@ spring:
         max-wait: 30000ms
     port: 6379
     timeout: 10000ms
-    password: coin_123456
+#    password: coin_123456
+    password: 77xYXM8sp4rDcHGx
 
   # 上传文件大小配置
   servlet:
