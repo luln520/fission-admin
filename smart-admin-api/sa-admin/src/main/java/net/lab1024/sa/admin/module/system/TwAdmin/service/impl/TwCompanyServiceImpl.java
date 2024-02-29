@@ -67,15 +67,15 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
                 return ResponseDTO.userErrorParam("账号重复");
             }
         }
-        twCompany.setCompanyPwd(getEncryptPwd(twCompany.getCompanyPwd()));
+        String encryptPwd = getEncryptPwd(twCompany.getCompanyPwd());
+        twCompany.setCompanyPwd(encryptPwd);
         TwCompany twCompany1 = SmartBeanUtil.copy(twCompany, TwCompany.class);
         this.saveOrUpdate(twCompany1);
 
         if(twCompany.getId() == null){
             EmployeeEntity entity  = new EmployeeEntity();
             // 设置密码 默认密码
-            String password = twCompany.getCompanyPwd();
-            entity.setLoginPwd(password);
+            entity.setLoginPwd(encryptPwd);
             entity.setLoginName(twCompany.getCompanyAccount());
             entity.setCompanyId(twCompany1.getId());
             entity.setDeletedFlag(Boolean.FALSE);
