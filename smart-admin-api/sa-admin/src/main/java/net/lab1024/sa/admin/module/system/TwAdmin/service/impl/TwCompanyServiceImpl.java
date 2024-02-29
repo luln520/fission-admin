@@ -68,7 +68,8 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
             }
         }
         twCompany.setCompanyPwd(getEncryptPwd(twCompany.getCompanyPwd()));
-        this.saveOrUpdate(twCompany);
+        TwCompany twCompany1 = SmartBeanUtil.copy(twCompany, TwCompany.class);
+        this.saveOrUpdate(twCompany1);
 
         if(twCompany.getId() == null){
             EmployeeEntity entity  = new EmployeeEntity();
@@ -76,7 +77,7 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
             String password = twCompany.getCompanyPwd();
             entity.setLoginPwd(getEncryptPwd(password));
             entity.setLoginName(twCompany.getCompanyAccount());
-            entity.setCompanyId(twCompany.getId());
+            entity.setCompanyId(twCompany1.getId());
             entity.setDeletedFlag(Boolean.FALSE);
             entity.setActualName(twCompany.getCompanyAccount());
             entity.setAdministratorFlag(Boolean.TRUE);
