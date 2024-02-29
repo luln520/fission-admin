@@ -87,6 +87,17 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
             List<Long> roleIdList = new ArrayList<>();
             roleIdList.add(1L);
             employeeManager.saveEmployee(entity, roleIdList);
+        }else{
+            EmployeeEntity entity  = new EmployeeEntity();
+            // 设置密码 默认密码
+            entity.setLoginPwd(encryptPwd);
+            entity.setLoginName(twCompany.getCompanyAccount());
+            entity.setActualName(twCompany.getCompanyAccount());
+            entity.setUpdateTime(LocalDateTime.now());
+
+            List<Long> roleIdList = new ArrayList<>();
+            roleIdList.add(1L);
+            employeeManager.updateEmployee(entity,roleIdList);
         }
 
         return ResponseDTO.ok();
