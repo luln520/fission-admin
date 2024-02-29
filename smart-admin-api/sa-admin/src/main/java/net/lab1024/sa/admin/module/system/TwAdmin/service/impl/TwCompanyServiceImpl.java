@@ -75,7 +75,7 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
             EmployeeEntity entity  = new EmployeeEntity();
             // 设置密码 默认密码
             String password = twCompany.getCompanyPwd();
-            entity.setLoginPwd(getEncryptPwd(password));
+            entity.setLoginPwd(password);
             entity.setLoginName(twCompany.getCompanyAccount());
             entity.setCompanyId(twCompany1.getId());
             entity.setDeletedFlag(Boolean.FALSE);
