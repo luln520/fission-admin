@@ -80,8 +80,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     private TwNoticeService twNoticeService;
     @Autowired
     private TwUserLogService twUserLogService;
-    @Autowired
-    private TwConfigService twConfigService;
 
     @Autowired
     private EmployeeService employeeService;
@@ -937,10 +935,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }
             }
 
-            QueryWrapper<TwConfig> queryConfig = new QueryWrapper<>();
-            queryConfig.eq("id", 1);
-            TwConfig tyonfig = twConfigService.getOne(queryConfig);    //获取体验金信息
-
 
             String invit1 = "0";
             String invit2 = "0";
@@ -1027,7 +1021,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 TwUserCoin twUserCoin = new TwUserCoin();
                 twUserCoin.setUserid(uid);
                 twUserCoin.setCompanyId(companyId);
-                twUserCoin.setUsdt(tyonfig.getTymoney());
                 twUserCoinService.save(twUserCoin);
 
                 captchaMap.remove(username);
