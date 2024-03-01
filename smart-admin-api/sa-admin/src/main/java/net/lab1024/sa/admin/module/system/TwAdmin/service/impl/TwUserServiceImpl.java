@@ -509,14 +509,21 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                return ResponseDTO.userErrorParam("手机号重复");
            }
 
-           EmployeeEntity byInvite = employeeService.getByInvite(invit);
-           if(byInvite == null){
-               return ResponseDTO.userErrorParam("没有此推荐人");
-           }
-           Long employeeId = byInvite.getEmployeeId();
-           Long departmentId = byInvite.getDepartmentId();
+           TwCompany twCompany = twCompanyService.getById(one.getCompanyId());
+           if(twCompany.getInviteType() == 1){
+               EmployeeEntity byInvite = employeeService.getByInvite(invit);
+               if(byInvite == null){
+                   return ResponseDTO.userErrorParam("没有此推荐人");
+               }
+               Long employeeId = byInvite.getEmployeeId();
+               Long departmentId = byInvite.getDepartmentId();
+               String path = "#"+employeeId +"#,";
 
-           String path = "#"+employeeId +"#,";
+               twUser.setInvit1(employeeId.toString());
+               twUser.setPath(path);
+               twUser.setDepatmentId(departmentId.intValue());
+           }
+
 
            String invitCode = generateRandomString();  //生成验证码
 
@@ -536,9 +543,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
            twUser.setUsername(username);
            twUser.setInvit(invitCode);
-           twUser.setInvit1(employeeId.toString());
-           twUser.setPath(path);
-           twUser.setDepatmentId(departmentId.intValue());
            twUser.setPassword(encryptPwd);
            twUser.setAreaCode("");
            twUser.setUserCode(usercode);
