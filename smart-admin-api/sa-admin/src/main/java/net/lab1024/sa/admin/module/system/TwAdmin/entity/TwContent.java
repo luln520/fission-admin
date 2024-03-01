@@ -76,4 +76,6 @@ public class TwContent implements Serializable {
     @ApiModelProperty("状态1显示2隐藏")
     private Integer status;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 }

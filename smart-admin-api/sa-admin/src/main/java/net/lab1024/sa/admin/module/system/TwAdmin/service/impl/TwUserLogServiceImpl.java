@@ -55,7 +55,7 @@ public class TwUserLogServiceImpl extends ServiceImpl<TwUserLogDao, TwUserLog> i
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwUserLog> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
             List<TwUserLog> list = baseMapper.listpage(objectPage, twUserVo);
             for (TwUserLog twUserLog: list){
@@ -72,7 +72,7 @@ public class TwUserLogServiceImpl extends ServiceImpl<TwUserLogDao, TwUserLog> i
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwUserLog> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());

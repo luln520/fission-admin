@@ -36,9 +36,10 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
     }
 
     @Override
-    public List<TwCoin> lists() {
+    public List<TwCoin> lists( int companyId) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("txstatus",1);
+        queryWrapper.eq("company_id",companyId);
         return this.list(queryWrapper);
     }
 

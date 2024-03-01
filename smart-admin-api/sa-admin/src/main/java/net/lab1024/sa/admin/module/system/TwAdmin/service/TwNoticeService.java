@@ -23,7 +23,7 @@ import java.util.List;
 public interface TwNoticeService extends IService<TwNotice> {
     IPage<TwNotice> listpage(PageParam pageParam, HttpServletRequest request);
 
-    ResponseDTO<List<TwNotice>>  notice(int uid);
+    ResponseDTO<List<TwNotice>>  notice(int uid,int companyId);
 
     ResponseDTO<TwNotice>  noticeDetail(int id);
     ResponseDTO  readone(int id);

@@ -81,19 +81,19 @@ const columns = [
     title: '订单号',
     dataIndex: 'orderNo',
     key: 'orderNo',
-    width: 250
+    width: 120
   },
   {
     title: '用户名',
     dataIndex: 'username',
     key: 'username',
-    width: 250
+    width: 150
   },
   {
     title: '用户ID',
     dataIndex: 'userCode',
     key: 'userCode',
-    width: 150
+    width: 100
   },
   {
     title: '币种名称',
@@ -111,19 +111,19 @@ const columns = [
     title: '申请时间',
     dataIndex: 'addtime',
     key: 'addtime',
-    width: 200
+    width: 100
   },
   {
     title: '审核时间',
     dataIndex: 'endtime',
     key: 'endtime',
-    width: 200
+    width: 100
   },
   {
     title: '提币地址',
     dataIndex: 'address',
     key: 'address',
-    width: 320
+    width: 120
   },
   {
     title: '提币数量',
@@ -136,22 +136,23 @@ const columns = [
     dataIndex: 'fee',
     key: 'fee',
     width: 120
-  }, {
+  },
+   {
     title: '实际到账',
     dataIndex: 'mum',
     key: 'mum',
-    width: 120
+    width: 100
   },
   {
     title: '状态',
     key: 'status',
     dataIndex: 'status',
-    width: 200,
+    width: 100,
   },
   {
     title: '操作',
     key: 'action',
-    width: 300,
+    width: 110,
     fixed: 'right',
   },
 ];

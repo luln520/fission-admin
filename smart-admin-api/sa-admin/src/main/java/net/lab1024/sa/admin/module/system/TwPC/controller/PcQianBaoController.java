@@ -33,8 +33,8 @@ public class PcQianBaoController {
     @ResponseBody
     @ApiOperation(value = "提币地址管理")
     @NoNeedLogin
-    public ResponseDTO<List<TwUserQianbao>> lists(@RequestParam int uid) {
-        return ResponseDTO.ok(twUserQianbaoService.lists(uid));
+    public ResponseDTO<List<TwUserQianbao>> lists(@RequestParam int uid,@RequestParam int companyId) {
+        return ResponseDTO.ok(twUserQianbaoService.lists(uid,companyId));
     }
 
     /**

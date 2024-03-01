@@ -46,8 +46,8 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
     }
 
     @Override
-    public BigDecimal sumUserCoin() {
-        return this.baseMapper.sumUserCoin();
+    public BigDecimal sumUserCoin(int companyId) {
+        return this.baseMapper.sumUserCoin(companyId);
     }
 
     @Override

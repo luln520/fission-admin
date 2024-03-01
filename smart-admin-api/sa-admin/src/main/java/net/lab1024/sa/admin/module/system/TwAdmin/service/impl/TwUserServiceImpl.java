@@ -1,54 +1,44 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service.impl;
 
-import cn.hutool.crypto.digest.MD5;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
-import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserDao;
-import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserQianbaoDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
-import net.lab1024.sa.admin.module.system.login.domain.LoginEmployeeDetail;
-import net.lab1024.sa.admin.module.system.login.domain.LoginForm;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
-import net.lab1024.sa.common.common.Email.SendEmailLib;
 import net.lab1024.sa.common.common.SMS.SendSmsLib;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
-import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
-import net.lab1024.sa.common.common.enumeration.UserTypeEnum;
 import net.lab1024.sa.common.common.util.CommonUtil;
 import net.lab1024.sa.common.module.support.config.ConfigKeyEnum;
 import net.lab1024.sa.common.module.support.config.ConfigService;
-import net.lab1024.sa.common.module.support.loginlog.LoginLogResultEnum;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import okhttp3.*;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.codec.digest.Md5Crypt;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.*;
@@ -90,8 +80,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     private TwNoticeService twNoticeService;
     @Autowired
     private TwUserLogService twUserLogService;
-    @Autowired
-    private TwConfigService twConfigService;
 
     @Autowired
     private EmployeeService employeeService;
@@ -113,28 +101,49 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Lazy
     private TwHysettingService twHysettingService;
 
+    @Autowired
+    private TwHyorderDao twHyorderDao;
+
+    @Autowired
+    private TwLeverOrderMapper twLeverOrderMapper;
+
+    @Autowired
+    private TwKjprofitDao twKjprofitDao;
+
+    @Autowired
+    private TwRechargeDao twRechargeDao;
+
+    @Autowired
+    private TwMyzcDao twMyzcDao;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
+
     @Override
-    public Integer countAllUsers() {
+    public Integer countAllUsers(int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_type",1);
+        queryWrapper.eq("company_id", companyId);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
     @Override
-    public Integer countTodayUsers(long startTime, long endTime) {
+    public Integer countTodayUsers(long startTime, long endTime,int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_type",1);
         queryWrapper.ge("addtime", startTime);
         queryWrapper.le("addtime", endTime);
+        queryWrapper.eq("company_id", companyId);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
     @Override
-    public Integer countLineUsers(String startTime, String endTime) {
+    public Integer countLineUsers(String startTime, String endTime,int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_type",1);
         queryWrapper.ge("lgtime", startTime);
         queryWrapper.le("lgtime", endTime);
+        queryWrapper.eq("company_id", companyId);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
@@ -154,7 +163,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         EmployeeEntity byId1 = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
             List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
             for(TwUser twUser:list){
@@ -261,7 +270,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId1.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
@@ -555,6 +564,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                twUserKuangji.setMin(twKuangji.getPricemin());
                twUserKuangji.setMax(twKuangji.getPricemax());
                twUserKuangji.setNum(1);
+               twUserKuangji.setCompanyId(twUser.getCompanyId());
                twUserKuangji.setKjId(twKuangji.getId());
                twUserKuangji.setKjName(twKuangji.getTitle());
                twUserKuangji.setUserId(uid);
@@ -739,6 +749,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twNotice.setUid(uid);
                 twNotice.setAccount(one.getUsername());
                 twNotice.setTitle(title);
+                twNotice.setCompanyId(one.getCompanyId());
                 twNotice.setDepartment(one.getDepatmentId());
                 twNotice.setPath(one.getPath());
                 twNotice.setContent(content);
@@ -759,6 +770,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twNotice.setTitle(title);
                     twNotice.setContent(content);
                     twNotice.setImgs(imgs);
+                    twNotice.setCompanyId(twUser.getCompanyId());
                     twNotice.setAddtime(new Date());
                     twNotice.setStatus(1);
                     twNoticeService.save(twNotice);
@@ -784,6 +796,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         String language = userReq.getLanguage();
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);
+        queryWrapper.eq("company_id",userReq.getCompanyId());
         TwUser one = this.getOne(queryWrapper);
         if (null == one) {
             if(language.equals("zh")){
@@ -819,7 +832,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         // 生成 登录token，保存token
         Boolean superPasswordFlag = superPassword.equals(requestPassword);
-        String token = tokenService.useToken(uid, username, superPasswordFlag);
+        String token = tokenService.useToken(uid, username,one.getCompanyId(), superPasswordFlag);
 
         //获取员工登录信息
         one.setToken(token);
@@ -836,7 +849,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         twUserLog.setUserid(uid);
         twUserLog.setUsername(one.getUsername());
         twUserLog.setType("登录");
+        twUserLog.setUsername(one.getUsername());
         twUserLog.setRemark("邮箱登录");
+        twUserLog.setCompanyId(one.getCompanyId());
         twUserLog.setDepartment(one.getDepatmentId());
         twUserLog.setPath(one.getPath());
         long timestampInSeconds = Instant.now().getEpochSecond();
@@ -921,10 +936,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }
             }
 
-            QueryWrapper<TwConfig> queryConfig = new QueryWrapper<>();
-            queryConfig.eq("id", 1);
-            TwConfig tyonfig = twConfigService.getOne(queryConfig);    //获取体验金信息
-
 
             String invit1 = "0";
             String invit2 = "0";
@@ -976,8 +987,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             }
 
 //            String address = CommonUtil.getAddress(ip);
-            String address = CommonUtil.getAddress(ip);
-
+//            String address = CommonUtil.getAddress(ip);
+            Integer companyId = byInvite.getCompanyId();
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
             TwUser invituserCode = this.getOne(queryWrapperInvite);
@@ -997,6 +1008,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setAreaCode("");
                 twUser.setPath(path);
                 twUser.setAddip(ip);
+                twUser.setCompanyId(companyId);
                 twUser.setDepatmentId(departmentId.intValue());
 //                twUser.setAddr(address);
                 long timestampInSeconds = Instant.now().getEpochSecond();
@@ -1009,7 +1021,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 Integer uid = twUser.getId();
                 TwUserCoin twUserCoin = new TwUserCoin();
                 twUserCoin.setUserid(uid);
-                twUserCoin.setUsdt(tyonfig.getTymoney());
+                twUserCoin.setCompanyId(companyId);
                 twUserCoinService.save(twUserCoin);
 
                 captchaMap.remove(username);
@@ -1020,6 +1032,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUserKuangji.setMin(twKuangji.getPricemin());
                     twUserKuangji.setMax(twKuangji.getPricemax());
                     twUserKuangji.setNum(1);
+                    twUserKuangji.setCompanyId(companyId);
                     twUserKuangji.setKjId(twKuangji.getId());
                     twUserKuangji.setKjName(twKuangji.getTitle());
                     twUserKuangji.setUserId(uid);
@@ -1067,6 +1080,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setUid(one.getId());
             twNotice.setDepartment(one.getDepatmentId());
             twNotice.setPath(one.getPath());
+            twNotice.setCompanyId(one.getCompanyId());
             twNotice.setAccount(one.getUsername());
             twNotice.setTitle("重置密码");
             twNotice.setTitleEn("reset Password");
@@ -1121,6 +1135,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }
             }
 
+
+
             twUser.setRzstatus(1);
             long timestampInSeconds = Instant.now().getEpochSecond();
             twUser.setRztime((int) (timestampInSeconds));
@@ -1131,6 +1147,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setAccount(twUser.getUsername());
             twNotice.setDepartment(twUser.getDepatmentId());
             twNotice.setPath(twUser.getPath());
+            twNotice.setCompanyId(twUser.getCompanyId());
             twNotice.setTitle("认证资料提交成功");
             twNotice.setTitleEn("Certification information submitted successfully");
             twNotice.setContent("实名资料提成功，耐心等待管理员审核");
@@ -1145,7 +1162,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             }
         }catch (Exception e){
             if(twUser.getLanguage().equals("zh")){
-                return ResponseDTO.userErrorParam("认证资料提交失败");
+                return ResponseDTO.okMsg("认证资料提交失败");
             }else{
                 return ResponseDTO.okMsg("Failed to submit the authentication materials");
             }
@@ -1184,6 +1201,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
             twAdminLog.setPath(one.getPath());
+            twAdminLog.setCompanyId(one.getCompanyId());
             twAdminLog.setRemark("用户 "+one.getRealName()+" 认证审核通过");
             return twAdminLogService.save(twAdminLog);
         }
@@ -1206,6 +1224,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
             twAdminLog.setPath(one.getPath());
+            twAdminLog.setCompanyId(one.getCompanyId());
             twAdminLog.setRemark("用户 "+one.getRealName()+" 认证审核驳回");
             return twAdminLogService.save(twAdminLog);
         }
@@ -1214,7 +1233,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public ResponseDTO code(String username,String area,int type,String language) throws IOException {
+    public ResponseDTO code(String username,String area,int type,String language,int companyId) throws IOException {
         if(type == 1){   //手机
             String code = this.codeRandom();
             String phone = area + username;
@@ -1229,7 +1248,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         if(type == 2){    //邮箱
             String code = this.codeRandom();
-            SendEmailLib.email(username,code);
+            QueryWrapper<TwCompany> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", companyId);
+            TwCompany one = twCompanyService.getOne(queryWrapper);
+            String companyMail = one.getCompanyMail();
+            String companyMailPwd = one.getCompanyMailPwd();
+            this.email(username,code,companyMail,companyMailPwd);
             captchaMap.put(username, code);
             if(language.equals("zh")){
                 return ResponseDTO.ok("验证码已发送");
@@ -1254,6 +1278,198 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 .build();
         Response response = client.newCall(request).execute();
         return ResponseDTO.ok(response);
+    }
+
+    @Override
+    public ResponseDTO usertj(int uid) {
+
+        BigDecimal winHyorder = new BigDecimal(0);
+        BigDecimal lossHyorder = new BigDecimal(0);
+        BigDecimal winLeverOrder = new BigDecimal(0);
+        BigDecimal lossLeverOrder = new BigDecimal(0);
+        BigDecimal kjOrder = new BigDecimal(0);
+        BigDecimal recharge = new BigDecimal(0);
+        BigDecimal myzc = new BigDecimal(0);
+
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(num), 0) as winHyorder")
+                .eq("is_win", 1)
+                .eq("uid", uid)
+                .eq("status", 2);
+
+        List<Map<String, Object>> winHyorderResult = this.twHyorderDao.selectMaps(queryWrapper);
+        if (winHyorderResult.isEmpty()) {
+            winHyorder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object winHyorderObject = winHyorderResult.get(0).get("winHyorder");
+        if (winHyorderObject instanceof BigDecimal) {
+            winHyorder =  ((BigDecimal) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Long) {
+            winHyorder =  BigDecimal.valueOf((Long) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Integer) {
+            winHyorder =  BigDecimal.valueOf((Integer) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            winHyorder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwHyorder> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.select("IFNULL(SUM(num), 0) as lossHyorder")
+                .eq("is_win", 2)
+                .eq("uid", uid)
+                .eq("status", 2);
+
+        List<Map<String, Object>> lossHyorderResult = this.twHyorderDao.selectMaps(queryWrapper1);
+        if (lossHyorderResult.isEmpty()) {
+            lossHyorder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object lossHyorderObject = lossHyorderResult.get(0).get("lossHyorder");
+        if (lossHyorderObject instanceof BigDecimal) {
+            lossHyorder =  ((BigDecimal) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossHyorderObject instanceof Long) {
+            lossHyorder =  BigDecimal.valueOf((Long) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossHyorderObject instanceof Integer) {
+            lossHyorder =  BigDecimal.valueOf((Integer) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            lossHyorder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwLeverOrder> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.select("IFNULL(SUM(num), 0) as winLeverOrder")
+                .eq("is_win", 1)
+                .eq("uid", uid)
+                .eq("status", 2);
+
+        List<Map<String, Object>> winLeverOrderResult = this.twLeverOrderMapper.selectMaps(queryWrapper2);
+        if (winLeverOrderResult.isEmpty()) {
+            winLeverOrder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object winLeverOrderResultObject = winLeverOrderResult.get(0).get("winLeverOrder");
+        if (winLeverOrderResultObject instanceof BigDecimal) {
+            winLeverOrder =  ((BigDecimal) winLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winLeverOrderResultObject instanceof Long) {
+            winLeverOrder =  BigDecimal.valueOf((Long) winLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winLeverOrderResultObject instanceof Integer) {
+            winLeverOrder =  BigDecimal.valueOf((Integer) winLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            winLeverOrder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwLeverOrder> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.select("IFNULL(SUM(num), 0) as lossLeverOrder")
+                .eq("is_win", 2)
+                .eq("uid", uid)
+                .eq("status", 2);
+
+
+        List<Map<String, Object>> lossLeverOrderResult = this.twLeverOrderMapper.selectMaps(queryWrapper3);
+        if (lossLeverOrderResult.isEmpty()) {
+            lossLeverOrder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object lossLeverOrderResultObject = lossLeverOrderResult.get(0).get("lossLeverOrder");
+        if (lossLeverOrderResultObject instanceof BigDecimal) {
+            lossLeverOrder =  ((BigDecimal) lossLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossLeverOrderResultObject instanceof Long) {
+            lossLeverOrder =  BigDecimal.valueOf((Long) lossLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossLeverOrderResultObject instanceof Integer) {
+            lossLeverOrder =  BigDecimal.valueOf((Integer) lossLeverOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            lossLeverOrder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwKjprofit> queryWrapper4 = new QueryWrapper<>();
+        queryWrapper4.select("IFNULL(SUM(num), 0) as kjOrder")
+                .eq("uid", uid);
+
+        List<Map<String, Object>> kjOrderResult = this.twKjprofitDao.selectMaps(queryWrapper4);
+        if (kjOrderResult.isEmpty()) {
+            kjOrder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object kjOrderResultObject = kjOrderResult.get(0).get("kjOrder");
+        if (kjOrderResultObject instanceof BigDecimal) {
+            kjOrder =  ((BigDecimal) kjOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (kjOrderResultObject instanceof Long) {
+            kjOrder =  BigDecimal.valueOf((Long) kjOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (kjOrderResultObject instanceof Integer) {
+            kjOrder =  BigDecimal.valueOf((Integer) kjOrderResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            kjOrder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwRecharge> queryWrapper5 = new QueryWrapper<>();
+        queryWrapper5.select("IFNULL(SUM(num), 0) as recharge")
+                .eq("uid", uid)
+                .eq("status", 2);
+
+        List<Map<String, Object>> rechargeResult = this.twRechargeDao.selectMaps(queryWrapper5);
+        if (rechargeResult.isEmpty()) {
+            recharge = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object rechargeResultObject = rechargeResult.get(0).get("recharge");
+        if (rechargeResultObject instanceof BigDecimal) {
+            recharge =  ((BigDecimal) rechargeResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (rechargeResultObject instanceof Long) {
+            recharge =  BigDecimal.valueOf((Long) rechargeResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (rechargeResultObject instanceof Integer) {
+            recharge =  BigDecimal.valueOf((Integer) rechargeResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            recharge =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        QueryWrapper<TwMyzc> queryWrapper6 = new QueryWrapper<>();
+        queryWrapper6.select("IFNULL(SUM(num), 0) as myzc")
+                .eq("userid", uid)
+                .eq("status", 2);
+
+        List<Map<String, Object>> myzcResult = this.twMyzcDao.selectMaps(queryWrapper6);
+        if (myzcResult.isEmpty()) {
+            myzc = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object myzcResultObject = myzcResult.get(0).get("myzc");
+        if (myzcResultObject instanceof BigDecimal) {
+            myzc =  ((BigDecimal) myzcResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (myzcResultObject instanceof Long) {
+            myzc =  BigDecimal.valueOf((Long) myzcResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (myzcResultObject instanceof Integer) {
+            myzc =  BigDecimal.valueOf((Integer) myzcResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            myzc =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        BigDecimal hyorder = winHyorder.subtract(lossHyorder);
+        BigDecimal leverOrder = winLeverOrder.subtract(lossLeverOrder);
+        BigDecimal totalWinOrder = winHyorder.add(winLeverOrder).add(kjOrder);
+        BigDecimal totalLossOrder = lossHyorder.add(lossLeverOrder);
+
+
+        Map<String, Object> results = new HashMap<>();
+        results.put("hyorderWinOrder",hyorder);        //用户合约盈利
+        results.put("leverWinOrder",leverOrder);       //用户杠杆盈利
+
+        results.put("totalWinOrder",totalWinOrder);   //用户总盈利
+        results.put("totalLossOrder",totalLossOrder); //用户总亏损
+        results.put("recharge",recharge);             //用户总充值
+        results.put("myzc",myzc);                     //用户总提现
+
+        return ResponseDTO.ok(results);
     }
 
     /**
@@ -1309,6 +1525,71 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         }
 
         return stringBuilder.toString();
+    }
+
+
+
+    //gmail邮箱的TLS方式
+    private  void gmailtls(Properties props) {
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+    }
+    public  void email(String email,String code,String companyMail,String companyMailPwd){
+        try{
+            //1.创建一封邮件的实例对象
+            Properties props = new Properties();
+            //选择ssl方式
+            gmailtls(props);
+
+            final String username = companyMail;// gmail 邮箱
+            final String password = companyMailPwd;// Google应用专用密码
+            // 当做多商户的时候需要使用getInstance, 如果只是一个邮箱发送的话就用getDefaultInstance
+            // Session.getDefaultInstance 会将username,password保存在session会话中
+            // Session.getInstance 不进行保存
+            Session session = Session.getInstance(props,
+                    new Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password);
+                        }
+                    });
+
+            MimeMessage msg = new MimeMessage(session);
+            //2.设置发件人地址
+            msg.setFrom(new InternetAddress(email));
+            /**
+             * 3.设置收件人地址（可以增加多个收件人、抄送、密送），即下面这一行代码书写多行
+             * MimeMessage.RecipientType.TO:发送
+             * MimeMessage.RecipientType.CC：抄送
+             * MimeMessage.RecipientType.BCC：密送
+             */
+            msg.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(email));
+            //4.设置邮件主题
+            msg.setSubject("To reset your password!", "UTF-8");
+
+            // 6. 创建文本"节点"
+            MimeBodyPart text = new MimeBodyPart();
+            // 这里添加图片的方式是将整个图片包含到邮件内容中, 实际上也可以以 http 链接的形式添加网络图片
+            text.setContent("<p>Your login verification code: "+code+"</p>",
+                    "text/html;charset=UTF-8");
+
+            // 7. （文本+图片）设置 文本 和 图片"节点"的关系（将 文本 和 图片"节点"合成一个混合"节点"）
+            MimeMultipart mm_text_image = new MimeMultipart();
+            mm_text_image.addBodyPart(text);
+            mm_text_image.setSubType("related");    // 关联关系
+//            mm_text_image.setSubType("related");    // 关联关系
+
+
+            // 11. 设置整个邮件的关系（将最终的混合"节点"作为邮件的内容添加到邮件对象）
+            msg.setContent(mm_text_image);
+            //设置邮件的发送时间,默认立即发送
+            msg.setSentDate(new Date());
+            Transport.send(msg);
+
+        }catch (Exception e){
+
+        }
     }
 
 

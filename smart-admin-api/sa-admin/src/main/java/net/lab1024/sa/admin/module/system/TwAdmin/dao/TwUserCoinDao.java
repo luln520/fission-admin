@@ -28,7 +28,7 @@ public interface TwUserCoinDao extends BaseMapper<TwUserCoin> {
 
     BigDecimal afternum(@Param("uid") int uid);
 
-    BigDecimal sumUserCoin();
+    BigDecimal sumUserCoin(@Param("companyId") int companyId);
 
     List<TwUserCoin> listpage(@Param("objectPage") Page<TwUserCoin> objectPage, @Param("obj") TwUserVo twUserVo);
 

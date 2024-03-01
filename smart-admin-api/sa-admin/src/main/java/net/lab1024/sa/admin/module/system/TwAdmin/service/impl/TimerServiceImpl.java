@@ -115,7 +115,7 @@ public class TimerServiceImpl {
      *     }
      * */
 
-    public void addlog(int uid, String username,BigDecimal money){
+    public void addlog(int uid, String username,BigDecimal money,int companyId){
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id",uid);
         TwUser twUser = twUserService.getOne(queryWrapper);
@@ -126,6 +126,7 @@ public class TimerServiceImpl {
         twBill.setUsername(username);
         twBill.setUserCode(twUser.getUserCode());
         twBill.setNum(money);
+        twBill.setCompanyId(companyId);
         twBill.setDepartment(twUser.getDepatmentId());
         twBill.setPath(twUser.getPath());
         twBill.setCoinname("usdt");
@@ -141,6 +142,7 @@ public class TimerServiceImpl {
         twNotice.setPath(twUser.getPath());
         twNotice.setDepartment(twUser.getDepatmentId());
         twNotice.setAccount(username);
+        twNotice.setCompanyId(twUser.getCompanyId());
         twNotice.setTitle("秒合约交易");
         twNotice.setTitleEn("second contract trading");
         twNotice.setContent("秒合约已平仓，请注意查收");
@@ -161,9 +163,6 @@ public class TimerServiceImpl {
             Integer uid = twKjorder.getUid();
             String username = twKjorder.getUsername();
             BigDecimal outnum = twKjorder.getOutnum();
-            QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("userid",uid);
-            TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
 
             QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
             queryWrapper4.eq("id",uid);
@@ -186,6 +185,7 @@ public class TimerServiceImpl {
                 twKjprofit1.setKid(twKjorder.getKid());
                 twKjprofit1.setKtitle(twKjorder.getKjtitle());
                 twKjprofit1.setNum(outnum);
+                twKjprofit1.setCompanyId(twUser.getCompanyId());
                 twKjprofit1.setCoin(coinname);
                 twKjprofit1.setAddtime(new Date());
                 twKjprofit1.setDay(DateUtil.str2DateDay(nowdate));
@@ -202,6 +202,7 @@ public class TimerServiceImpl {
                 twBill.setDepartment(twUser.getDepatmentId());
                 twBill.setNum(outnum);
                 twBill.setCoinname("usdt");
+                twBill.setCompanyId(twUser.getCompanyId());
                 twBill.setAfternum(twUserCoinService.afternum(uid));
                 twBill.setType(8);
                 twBill.setAddtime(new Date());
@@ -267,6 +268,7 @@ public class TimerServiceImpl {
                 twBill.setUid(uid);
                 twBill.setUsername(twKjorder.getUsername());
                 twBill.setUserCode(twUser.getUserCode());
+                twBill.setCompanyId(twUser.getCompanyId());
                 twBill.setPath(twUser.getPath());
                 twBill.setDepartment(twUser.getDepatmentId());
                 twBill.setNum(buynum);
@@ -292,16 +294,16 @@ public class TimerServiceImpl {
         queryWrapper.le("intselltime", nowtime);
         List<TwHyorder> list = twHyorderService.list(queryWrapper);
 
-
-        QueryWrapper<TwHysetting> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("id",1);
-        TwHysetting twHysetting = twHysettingService.getOne(queryWrapper1);
-        String hyYlid = twHysetting.getHyYlid();
-        String hyKsid = twHysetting.getHyKsid();
-        String[] winarr = hyYlid.split("\\|");
-        String[] lossarr = hyKsid.split("\\|");
-
         for (TwHyorder twHyorder:list){
+            Integer companyId = twHyorder.getCompanyId();
+            QueryWrapper<TwHysetting> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("company_id",twHyorder.getCompanyId());
+            TwHysetting twHysetting = twHysettingService.getOne(queryWrapper1);
+            String hyYlid = twHysetting.getHyYlid();
+            String hyKsid = twHysetting.getHyKsid();
+            String[] winarr = hyYlid.split("\\|");
+            String[] lossarr = hyKsid.split("\\|");
+
             String mapOrder = map.get(twHyorder.getOrderNo());
             if(StringUtils.isEmpty(mapOrder)) {
                 map.put(twHyorder.getOrderNo(), twHyorder.getOrderNo());
@@ -353,7 +355,7 @@ public class TimerServiceImpl {
                             twHyorderService.updateById(twHyorder);
 
                             //写财务日志
-                            addlog(uuid, username, money);
+                            addlog(uuid, username, money,companyId);
 
                             log.info("买涨已控盈利1=================================");
                         }
@@ -375,7 +377,7 @@ public class TimerServiceImpl {
 
 
                             //写财务日志
-                            addlog(uuid, username, num);
+                            addlog(uuid, username, num,companyId);
 
                             log.info("买涨已控亏损2=================================");
                         }
@@ -417,7 +419,7 @@ public class TimerServiceImpl {
                             twHyorderService.updateById(twHyorder);
 
                             //写财务日志
-                            addlog(uuid, username, money);
+                            addlog(uuid, username, money,companyId);
 
                             log.info("买涨指定盈利3=================================");
                         }
@@ -441,7 +443,7 @@ public class TimerServiceImpl {
 
 
                             //写财务日志
-                            addlog(uuid, username, num);
+                            addlog(uuid, username, num,companyId);
 
                             log.info("买涨指定亏损4=================================");
                         }
@@ -468,7 +470,7 @@ public class TimerServiceImpl {
                                 twHyorderService.updateById(twHyorder);
 
                                 //写财务日志
-                                addlog(uuid, username, money);
+                                addlog(uuid, username, money,companyId);
 
                                 log.info("买涨指定盈利5=================================");
 
@@ -491,7 +493,7 @@ public class TimerServiceImpl {
 
 
                                 //写财务日志
-                                addlog(uuid, username, num);
+                                addlog(uuid, username, num,companyId);
 
                                 log.info("买涨指定亏损6=================================");
                             }
@@ -502,7 +504,7 @@ public class TimerServiceImpl {
                                     twHyorder.setStatus(2);
                                     twHyorder.setIsWin(1);
                                     //写财务日志
-                                    addlog(uuid, username, money);
+                                    addlog(uuid, username, money,companyId);
 
                                     twHyorder.setSellprice(newprice);
                                     twHyorder.setPloss(ylnum);
@@ -513,7 +515,7 @@ public class TimerServiceImpl {
                                     twHyorder.setStatus(2);
                                     twHyorder.setIsWin(2);
                                     //写财务日志
-                                    addlog(uuid, username, num);
+                                    addlog(uuid, username, num,companyId);
 
                                     twHyorder.setSellprice(newprice);
                                     twHyorder.setPloss(num);
@@ -523,7 +525,7 @@ public class TimerServiceImpl {
                                     twHyorder.setStatus(2);
                                     twHyorder.setIsWin(2);
                                     //写财务日志
-                                    addlog(uuid, username, num);
+                                    addlog(uuid, username, num,companyId);
 
                                     twHyorder.setSellprice(newprice);
                                     twHyorder.setPloss(num);
@@ -560,7 +562,7 @@ public class TimerServiceImpl {
                             twHyorderService.updateById(twHyorder);
 
                             //写财务日志
-                            addlog(uuid, username, money);
+                            addlog(uuid, username, money,companyId);
                         }
 
                         if (kongyk == 2) { //亏损
@@ -581,7 +583,7 @@ public class TimerServiceImpl {
 
 
                             //写财务日志
-                            addlog(uuid, username, num);
+                            addlog(uuid, username, num,companyId);
                             log.info("合约指定亏损成功======================================");
                         }
                     }
@@ -620,8 +622,7 @@ public class TimerServiceImpl {
                             twHyorderService.updateById(twHyorder);
 
                             //写财务日志
-                            addlog(uuid, username, money);
-                            System.out.println("指定盈利ID======================================");
+                            addlog(uuid, username, money,companyId);
                         }
 
                         if (isLoseArray) { //如果有指定亏损ID，则按亏损结算
@@ -642,12 +643,10 @@ public class TimerServiceImpl {
 
 
                             //写财务日志
-                            addlog(uuid, username, num);
-                            System.out.println("合约指定亏损成功======================================");
+                            addlog(uuid, username, num,companyId);
                         }
 
                         if (!isWinArray && !isLoseArray) { //如果未指定盈利和亏损，则按单控的计算
-                            System.out.println("未指定盈利和亏损，则按单控的计算======================================");
                             if (kongyk == 1) { //盈利
                                 if (buyprice.compareTo(newprice) < 0) {
                                     sellprice = buyprice.subtract(randnum);
@@ -668,7 +667,7 @@ public class TimerServiceImpl {
                                 twHyorderService.updateById(twHyorder);
 
                                 //写财务日志
-                                addlog(uuid, username, money);
+                                addlog(uuid, username, money,companyId);
                             }
 
                             if (kongyk == 2) { //亏损
@@ -689,7 +688,7 @@ public class TimerServiceImpl {
 
 
                                 //写财务日志
-                                addlog(uuid, username, num);
+                                addlog(uuid, username, num,companyId);
                                 log.info("合约指定亏损成功======================================");
                             }
 
@@ -699,7 +698,7 @@ public class TimerServiceImpl {
                                     twHyorder.setStatus(2);
                                     twHyorder.setIsWin(2);
                                     //写财务日志
-                                    addlog(uuid, username, num);
+                                    addlog(uuid, username, num,companyId);
 
                                     twHyorder.setSellprice(newprice);
                                     twHyorder.setPloss(num);
@@ -709,7 +708,7 @@ public class TimerServiceImpl {
                                     twHyorder.setStatus(2);
                                     twHyorder.setIsWin(2);
                                     //写财务日志
-                                    addlog(uuid, username, num);
+                                    addlog(uuid, username, num,companyId);
 
                                     twHyorder.setSellprice(newprice);
                                     twHyorder.setPloss(num);
@@ -720,7 +719,7 @@ public class TimerServiceImpl {
                                     twHyorder.setStatus(2);
                                     twHyorder.setIsWin(1);
                                     //写财务日志
-                                    addlog(uuid, username, money);
+                                    addlog(uuid, username, money,companyId);
 
                                     twHyorder.setSellprice(newprice);
                                     twHyorder.setPloss(ylnum);

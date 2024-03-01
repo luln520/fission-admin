@@ -19,10 +19,12 @@
       :pagination="pagination" :bordered="true">
       <template #bodyCell="{ column, record }">
 
-        <template v-if="column.key === 'agentId'">
-          <span v-if="record.defaultOn == 1" style="color: red;">系统默认通道</span>
-          <span v-if="record.defaultOn != 1" style="color: green;">{{ record.defaultOn }}</span>
+        <template v-if="column.key === 'state'">
+          <span v-if="record.state == 0" style="color: red;">未回复</span>
+          <span v-if="record.state == 1" style="color: green;">已回复</span>
         </template>
+
+
         <template v-if="column.key === 'action'">
           <span>
             <a @click="() => {
@@ -35,8 +37,8 @@
   </a-card>
   <!-- 聊天框 -->
   <Msg v-if="isOpenMsg" :isOpen="isOpenMsg" @close="() => {
-      isOpenMsg = false;
-    }" :username="username" :id="userId" />
+    isOpenMsg = false;
+  }" :username="username" :id="userId" />
 </template>
 <script setup lang="ts">
 import { message } from 'ant-design-vue';
@@ -71,9 +73,9 @@ const columns = [
     width: 200
   },
   {
-    title: '未回复记录',
-    dataIndex: 'title',
-    key: 'title',
+    title: '回复状态',
+    dataIndex: 'state',
+    key: 'state',
     width: 100
   },
   {
@@ -99,9 +101,9 @@ async function tableChange(pag: { pageSize: number; current: number }) {
 }
 //启用禁用
 async function showInfo(userInfo) {
-  userId.value=userInfo.uid;
-  username.value=userInfo.username;
-  isOpenMsg.value=true;
+  userId.value = userInfo.uid;
+  username.value = userInfo.username;
+  isOpenMsg.value = true;
 }
 //获取表格数据
 async function loadData() {

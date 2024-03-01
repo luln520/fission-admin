@@ -45,6 +45,9 @@ public class TwUserKuangji implements Serializable {
     */
     @ApiModelProperty("用户id")
     private Integer userId;
+
+    @ApiModelProperty("公司id")
+    private Integer companyId;
     /**
     * 投资金额最小值
     */

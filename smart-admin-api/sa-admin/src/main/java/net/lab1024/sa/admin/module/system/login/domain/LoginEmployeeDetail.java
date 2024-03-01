@@ -55,6 +55,9 @@ public class LoginEmployeeDetail implements UserDetails, RequestUser {
     @ApiModelProperty("部门名称")
     private String departmentName;
 
+    @ApiModelProperty("公司id")
+    private int companyId;
+
     @ApiModelProperty("是否为超管")
     private Boolean administratorFlag;
 

@@ -9,6 +9,9 @@
         <if test="obj.symbol != null and obj.symbol !=''">
             and symbol = #{obj.symbol}
         </if>
+        <if test="obj.companyId != null and obj.companyId !=''">
+            and company_id = #{obj.companyId}
+        </if>
         order by create_time desc
     </select>
 

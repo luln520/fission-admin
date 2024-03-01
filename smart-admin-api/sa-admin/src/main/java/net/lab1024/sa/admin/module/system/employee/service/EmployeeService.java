@@ -231,7 +231,7 @@ public class EmployeeService {
         employeeDao.updateDisableFlag(employeeId, disableFlag);
 
         if (employeeEntity.getDisabledFlag()) {
-            tokenService.batchRemoveRedisToken(employeeId, UserTypeEnum.ADMIN_EMPLOYEE);
+            tokenService.batchRemoveRedisToken(employeeId, employeeEntity.getCompanyId(),UserTypeEnum.ADMIN_EMPLOYEE);
         }
 
         return ResponseDTO.ok();
@@ -244,6 +244,7 @@ public class EmployeeService {
      * @return
      */
     public ResponseDTO<String> batchUpdateDeleteFlag(List<Long> employeeIdList) {
+
         if (CollectionUtils.isEmpty(employeeIdList)) {
             return ResponseDTO.ok();
         }
@@ -259,9 +260,8 @@ public class EmployeeService {
             return updateEmployee;
         }).collect(Collectors.toList());
         employeeManager.updateBatchById(deleteList);
-
         for (Long employeeId : employeeIdList) {
-            tokenService.batchRemoveRedisToken(employeeId, UserTypeEnum.ADMIN_EMPLOYEE);
+            tokenService.batchRemoveRedisToken(employeeId,employeeEntityList.get(0).getCompanyId(),UserTypeEnum.ADMIN_EMPLOYEE);
         }
         return ResponseDTO.ok();
     }

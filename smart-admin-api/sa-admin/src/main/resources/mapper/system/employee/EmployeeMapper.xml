@@ -30,6 +30,11 @@
             <if test="queryForm.deletedFlag != null">
                 AND t_employee.deleted_flag = #{queryForm.deletedFlag}
             </if>
+
+            <if test="queryForm.companyId != null">
+                AND t_employee.company_id = #{queryForm.companyId}
+            </if>
+
         </where>
     </select>
 

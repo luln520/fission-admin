@@ -121,7 +121,7 @@ public class TwUser implements Serializable {
     @ApiModelProperty("注册时间j")
     private Integer addtime;
     /**
-    * 
+    *
     */
     @ApiModelProperty("")
     private Integer endtime;
@@ -186,12 +186,12 @@ public class TwUser implements Serializable {
     @ApiModelProperty("区号")
     private String areaCode;
     /**
-    * 
+    *
     */
     @ApiModelProperty("")
     private String realName;
     /**
-    * 
+    *
     */
     @ApiModelProperty("")
     private String area;
@@ -231,6 +231,9 @@ public class TwUser implements Serializable {
     @ApiModelProperty("部门id")
     private Integer depatmentId;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
+
     @ApiModelProperty("用户code")
     private String userCode;
 
@@ -247,7 +250,7 @@ public class TwUser implements Serializable {
 
     @TableField(exist = false)
     @ApiModelProperty("语言")
-    private String  language;
+    private String language;
 
     @TableField(exist = false)
     @ApiModelProperty("用户矿机单控")

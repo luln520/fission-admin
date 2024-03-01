@@ -46,16 +46,16 @@ public class PcLeverOrderController {
     @ResponseBody
     @ApiOperation(value = "获取杠杆止盈止损设置")
     @NoNeedLogin
-    public ResponseDTO<List<TwLeverSet>> getTwLeverSet(@RequestParam String symbol, @RequestParam int type){
-        return twLeverSetService.getTwLeverSet(symbol,type);
+    public ResponseDTO<List<TwLeverSet>> getTwLeverSet(@RequestParam String symbol, @RequestParam int type,@RequestParam int companyId){
+        return twLeverSetService.getTwLeverSet(symbol,type,companyId);
     }
 
     @GetMapping("/getTwLeverage")
     @ResponseBody
     @ApiOperation(value = "获取杠杆倍数")
     @NoNeedLogin
-    public ResponseDTO<List<TwLeverage>> getTwLeverage(@RequestParam String symbol){
-        return twLeverageService.getTwLeverage(symbol);
+    public ResponseDTO<List<TwLeverage>> getTwLeverage(@RequestParam String symbol,@RequestParam int companyId){
+        return twLeverageService.getTwLeverage(symbol,companyId);
     }
 
     @GetMapping("/creatorder")

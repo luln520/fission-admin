@@ -9,9 +9,9 @@
 -->
 <template>
   <div class="version" >
-    <a target="_blank" href="https://www.1024lab.net">
+    <!-- <a target="_blank" href="https://www.1024lab.net">
       SmartAdmin V2.x @copyright 【1024创新实验室】 Since 2012-{{ currentYear }}
-    </a>
+    </a> -->
   </div>
 </template>
 <script setup lang="ts">

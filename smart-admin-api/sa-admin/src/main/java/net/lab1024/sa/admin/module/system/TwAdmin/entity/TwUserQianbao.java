@@ -79,5 +79,7 @@ public class TwUserQianbao implements Serializable {
     @ApiModelProperty("状态")
     private Integer status;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 
 }

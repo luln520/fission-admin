@@ -47,13 +47,13 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
@@ -71,9 +71,10 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
     }
 
     @Override
-    public ResponseDTO<List<TwNotice>>  notice(int uid) {
+    public ResponseDTO<List<TwNotice>>  notice(int uid,int companyId) {
         QueryWrapper<TwNotice> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
+        queryWrapper.eq("company_id",companyId);
         return ResponseDTO.ok(this.list(queryWrapper));
     }
 

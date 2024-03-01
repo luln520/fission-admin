@@ -54,7 +54,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
             List<TwOnline> listpage = baseMapper.listpage(objectPage, pageParam);
             for (TwOnline twOnline:listpage){
@@ -75,7 +75,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
@@ -121,9 +121,10 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     }
 
     @Override
-    public List<TwOnline> lists(int uid) {
+    public List<TwOnline> lists(int uid,int companyId) {
         QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
+        queryWrapper.eq("company_id",companyId);
         queryWrapper.orderByDesc("id");
         return this.list(queryWrapper);
     }
@@ -142,10 +143,15 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             TwOnline one = getOne(queryWrapper);
             Integer uid = one.getUid();
 
+            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("id",uid);
+            TwUser user = twUserService.getOne(queryWrapper1);
+
             TwOnline one1 =new TwOnline();
             one1.setUid(one.getUid());
             one1.setUsername(one.getUsername());
             one1.setContent(content);
+            one1.setCompanyId(user.getCompanyId());
             one1.setType(1);
             one1.setAddtime(new Date());
             one1.setState(2);
@@ -172,6 +178,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             one1.setUid(one.getId());
             one1.setUsername(one.getUsername());
             one1.setContent(content);
+            one1.setCompanyId(one.getCompanyId());
             one1.setType(2);
             one1.setAddtime(new Date());
             this.save(one1);

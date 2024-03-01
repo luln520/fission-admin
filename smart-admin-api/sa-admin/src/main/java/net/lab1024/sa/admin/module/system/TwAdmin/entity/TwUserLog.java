@@ -84,4 +84,7 @@ public class TwUserLog implements Serializable {
 
     private  String username;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
+
 }

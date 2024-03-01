@@ -64,12 +64,13 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     private SerialNumberService serialNumberService;
 
     @Override
-    public BigDecimal sumDayWithdraw(String startTime, String endTime) {
+    public BigDecimal sumDayWithdraw(String startTime, String endTime,int companyId) {
         QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as dayWithdraw")
                 .ge("addtime", startTime)
                 .le("addtime", endTime)
-                .eq("status", 2);
+                .eq("status", 2)
+                .eq("company_id", companyId);
 
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
@@ -90,10 +91,11 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     }
 
     @Override
-    public BigDecimal sumAllWithdraw() {
+    public BigDecimal sumAllWithdraw(int companyId) {
         QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as allWithdraw")
-                .eq("status", 2);
+                .eq("status", 2)
+                .eq("company_id", companyId);
 
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
@@ -120,13 +122,13 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwMyzc> objectPage = new Page<>(twMyzcVo.getPageNum(), twMyzcVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twMyzcVo));
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwMyzc> objectPage = new Page<>(twMyzcVo.getPageNum(), twMyzcVo.getPageSize());
@@ -208,6 +210,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                     TwNotice twNotice = new TwNotice();
                     twNotice.setUid(uid);
                     twNotice.setAccount(one.getUsername());
+                    twNotice.setCompanyId(one.getCompanyId());
                     twNotice.setTitle("提币审核");
                     twNotice.setTitleEn("Coin Withdrawal Review");
                     twNotice.setContent("您的提币申请被驳回，请联系管理员");
@@ -257,6 +260,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
             TwNotice twNotice = new TwNotice();
             twNotice.setUid(one.getUserid());
             twNotice.setAccount(one.getUsername());
+            twNotice.setCompanyId(one.getCompanyId());
             twNotice.setTitle("提币审核");
             twNotice.setTitleEn("Coin Withdrawal Review");
             twNotice.setContent("您的提币申请已通过，请及时查询");
@@ -370,6 +374,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         twMyzc.setUsername(twUser.getUsername());
         twMyzc.setUserCode(twUser.getUserCode());
         twMyzc.setCoinname(twCoin.getName());
+        twMyzc.setCompanyId(twUser.getCompanyId());
         twMyzc.setNum(num);
         twMyzc.setAddress(address);
         twMyzc.setSort(1);
@@ -385,6 +390,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         twBill.setUsername(twUser.getUsername());
         twBill.setUserCode(twUser.getUserCode());
         twBill.setNum(num);
+        twBill.setCompanyId(twUser.getCompanyId());
         twBill.setDepartment(twUser.getDepatmentId());
         twBill.setPath(twUser.getPath());
         twBill.setCoinname(twCoin.getName());

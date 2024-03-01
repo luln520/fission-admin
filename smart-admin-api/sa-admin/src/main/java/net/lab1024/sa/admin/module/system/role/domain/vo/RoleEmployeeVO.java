@@ -20,5 +20,5 @@ public class RoleEmployeeVO {
 
     private String roleName;
 
-    private String key;
+    private String wordKey;
 }

@@ -11,7 +11,7 @@
 <template>
   <a-dropdown trigger="click" v-model:visible="show">
     <div @click="fetchMessage">
-      <a-badge :count="message ? message?.authCount + message?.myzcCount + message?.rechargeCount : 0">
+      <a-badge :count="(message&&message!={}) ? message?.authCount + message?.myzcCount + message?.rechargeCount : 0">
         <div style="width: 26px; height: 26px">
           <BellOutlined :style="{ fontSize: '18px' }" />
         </div>

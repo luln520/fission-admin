@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface TwHysettingService extends IService<TwHysetting> {
 
-    TwHysetting hysettingId();
+    TwHysetting hysettingId(int companyId);
 
     boolean setWin(int id, int type, int uid, HttpServletRequest request);
 

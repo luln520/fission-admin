@@ -86,5 +86,7 @@ public class TwUserCoin implements Serializable {
     @TableField(exist = false)
     private  String username;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 
 }

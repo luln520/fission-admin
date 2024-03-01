@@ -24,8 +24,8 @@ public class PcCodeController {
     @GetMapping("/code")
     @ApiOperation(value = "手机/邮箱验证码")
     @NoNeedLogin
-    public ResponseDTO code(@RequestParam String username,@RequestParam String area,@RequestParam int type,@RequestParam String language) throws IOException {
-        return twUserService.code(username,area,type,language);
+    public ResponseDTO code(@RequestParam String username,@RequestParam String area,@RequestParam int type,@RequestParam String language,@RequestParam int companyId) throws IOException {
+        return twUserService.code(username,area,type,language,companyId);
     }
 
     @GetMapping("/codeResp")

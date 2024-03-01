@@ -15,12 +15,16 @@
     </select>
 
     <select id="sumUserCoin" resultType="java.math.BigDecimal">
-        select ifnull(SUM(h.usdt),0) usdt from tw_user u  join tw_user_coin h on u.id=h.userid where user_type = 1;
+        select ifnull(SUM(h.usdt),0) usdt from tw_user u  join tw_user_coin h on u.id=h.userid where user_type = 1 and u.company_id = #{companyId};
     </select>
 
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin">
-        select * from tw_user_coin where 1=1 order by id desc
+        select * from tw_user_coin where 1=1
+        <if test="obj.companyId != null and obj.companyId !=''">
+            and company_id  = #{obj.companyId}
+        </if>
+        order by id desc
     </select>
 
 </mapper>

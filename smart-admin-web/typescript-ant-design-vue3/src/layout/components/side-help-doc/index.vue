@@ -77,7 +77,7 @@ import { smartSentry } from '/@/lib/smart-sentry';
   let feedbackMessageList = ref([]);
   onMounted(() => {
     // 默认先查询一次
-    queryFeedbackList();
+    // queryFeedbackList();
     scroll();
   });
 
@@ -132,8 +132,8 @@ import { smartSentry } from '/@/lib/smart-sentry';
   let helpDocList = ref([]);
   // 获取关联的文档集合
   async function queryHelpDocList(menuId) {
-    let res = await helpDocApi.queryHelpDocByRelationId(menuId);
-    helpDocList.value = res.data;
+    // let res = await helpDocApi.queryHelpDocByRelationId(menuId);
+    // helpDocList.value = res.data;
   }
 
   watch(
@@ -147,7 +147,7 @@ import { smartSentry } from '/@/lib/smart-sentry';
         smartSentry.captureError(e);
       }
       if (menuId > 0) {
-        queryHelpDocList(menuId);
+        //queryHelpDocList(menuId);
       }
     },
     {

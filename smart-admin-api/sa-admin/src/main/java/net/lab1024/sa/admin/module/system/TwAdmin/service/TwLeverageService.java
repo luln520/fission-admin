@@ -24,6 +24,6 @@ public interface TwLeverageService extends IService<TwLeverage> {
 
     TwLeverage find(int id);
 
-    ResponseDTO<List<TwLeverage>> getTwLeverage(String symbol);
+    ResponseDTO<List<TwLeverage>> getTwLeverage(String symbol,int companyId);
 
 }

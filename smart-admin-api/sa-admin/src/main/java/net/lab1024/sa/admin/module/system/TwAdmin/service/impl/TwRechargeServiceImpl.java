@@ -67,12 +67,13 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     @Autowired
     private SerialNumberService serialNumberService;
     @Override
-    public BigDecimal sumDayRecharge(String startTime, String endTime) {
+    public BigDecimal sumDayRecharge(String startTime, String endTime,int companyId) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as dayRecharge")
                 .ge("addtime", startTime)
                 .le("addtime", endTime)
-                .eq("status", 2);
+                .eq("status", 2)
+                .eq("company_id", companyId);
 
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
@@ -93,10 +94,11 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
-    public BigDecimal sumAllRecharge() {
+    public BigDecimal sumAllRecharge(int companyId) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as allRecharge")
-                .eq("status", 2);
+                .eq("status", 2)
+                .eq("company_id", companyId);
         List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
         if (result.isEmpty()) {
             return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -123,13 +125,13 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twRechargeVo));
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
@@ -191,6 +193,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twNotice.setContentEn("Your deposit record was rejected by the system, please contact customer service");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
+            twNotice.setCompanyId(twUser.getCompanyId());
             twNotice.setDepartment(twUser.getDepatmentId());
             twNotice.setPath(twUser.getPath());
             twNoticeService.save(twNotice);
@@ -228,6 +231,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 twBill.setUid(uid);
                 twBill.setUsername(one.getUsername());
                 twBill.setNum(one.getNum());
+                twBill.setCompanyId(one.getCompanyId());
                 twBill.setCoinname(one.getCoin());
                 twBill.setAfternum(twUserCoinService.afternum(uid));
                 twBill.setType(17);
@@ -247,11 +251,12 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 twNotice.setContentEn("Your recharge amount has arrived, please check it carefully");
                 twNotice.setAddtime(new Date());
                 twNotice.setStatus(1);
+                twNotice.setCompanyId(one.getCompanyId());
                 twNotice.setDepartment(twUser.getDepatmentId());
                 twNotice.setPath(twUser.getPath());
                 twNoticeService.save(twNotice);
 
-                return ResponseDTO.okMsg("充值驳回成功");
+                return ResponseDTO.okMsg("充值成功");
             }
         }
         return null;
@@ -280,6 +285,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twRecharge.setCoin(coinname);
             twRecharge.setOrderNo(orderNo);
             twRecharge.setNum(zznum);
+            twRecharge.setCompanyId(one.getCompanyId());
             twRecharge.setAddtime(new Date());
             twRecharge.setStatus(1);
             twRecharge.setUserCode(one.getUserCode());

@@ -27,7 +27,7 @@ import java.util.List;
  */
 public interface TwHyorderService extends IService<TwHyorder> {
 
-    int countUnClosedOrders();
+    int countUnClosedOrders(int companyId);
 
     TwHyorder hyorderId(int id);
 

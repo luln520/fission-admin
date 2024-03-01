@@ -50,11 +50,12 @@ public class TokenService {
      * @param superPasswordFlag 特殊万能密码标识
      * @return
      */
-    public String generateToken(Long userId, String userName, UserTypeEnum userTypeEnum, LoginDeviceEnum loginDeviceEnum, Boolean superPasswordFlag) {
+    public String generateToken(Long userId, String userName,int companyId, UserTypeEnum userTypeEnum, LoginDeviceEnum loginDeviceEnum, Boolean superPasswordFlag) {
         long nowTimeMilli = System.currentTimeMillis();
         Claims jwtClaims = Jwts.claims();
         jwtClaims.put(JwtConst.CLAIM_ID_KEY, userId);
         jwtClaims.put(JwtConst.CLAIM_NAME_KEY, userName);
+        jwtClaims.put(JwtConst.CLAIM_COMPANY_ID, companyId);
         jwtClaims.put(JwtConst.CLAIM_USER_TYPE_KEY, userTypeEnum.getValue());
         jwtClaims.put(JwtConst.CLAIM_DEVICE_KEY, loginDeviceEnum.getValue());
         jwtClaims.put(JwtConst.CLAIM_SUPER_PASSWORD_FLAG, superPasswordFlag);
@@ -71,15 +72,16 @@ public class TokenService {
 
         jwtBuilder.setExpiration(new Date(nowTimeMilli + tokenExpire * 24 * HOUR_TIME_MILLI));
         String token = jwtBuilder.compact();
-        String redisKey = this.generateTokenRedisKey(userId, userTypeEnum.getValue(), loginDeviceEnum.getValue());
+        String redisKey = this.generateTokenRedisKey(userId, userTypeEnum.getValue(),companyId, loginDeviceEnum.getValue());
         redisService.set(redisKey, token, tokenExpire * 24 * 3600);
         return token;
     }
-    public String useToken(Integer userId, String userName, Boolean superPasswordFlag) {
+    public String useToken(Integer userId, String userName,int companyId, Boolean superPasswordFlag) {
         long nowTimeMilli = System.currentTimeMillis();
         Claims jwtClaims = Jwts.claims();
         jwtClaims.put(JwtConst.CLAIM_ID_KEY, userId);
         jwtClaims.put(JwtConst.CLAIM_NAME_KEY, userName);
+        jwtClaims.put(JwtConst.CLAIM_COMPANY_ID, companyId);
         jwtClaims.put(JwtConst.CLAIM_SUPER_PASSWORD_FLAG, superPasswordFlag);
         JwtBuilder jwtBuilder = Jwts.builder()
                 .setClaims(jwtClaims)
@@ -106,8 +108,8 @@ public class TokenService {
      * @param device
      * @return
      */
-    private String generateTokenRedisKey(Long userId, Integer userType, Integer device) {
-        String userKey = userType + "_" + userId + "_" + device;
+    private String generateTokenRedisKey(Long userId, Integer userType,Integer companyId, Integer device) {
+        String userKey = userType + "_" + userId + "_" + companyId +"_"+ device;
         return redisService.generateRedisKey(RedisKeyConst.Support.TOKEN, userKey);
     }
 
@@ -154,8 +156,9 @@ public class TokenService {
         Long userId = Long.valueOf(tokenData.get(JwtConst.CLAIM_ID_KEY).toString());
         Integer userType = Integer.valueOf(tokenData.get(JwtConst.CLAIM_USER_TYPE_KEY).toString());
         Integer device = Integer.valueOf(tokenData.get(JwtConst.CLAIM_DEVICE_KEY).toString());
+        Integer companyId = Integer.valueOf(tokenData.get(JwtConst.CLAIM_COMPANY_ID).toString());
 
-        String redisKey = this.generateTokenRedisKey(userId, userType, device);
+        String redisKey = this.generateTokenRedisKey(userId, userType, companyId, device);
         redisService.delete(redisKey);
     }
 
@@ -229,7 +232,7 @@ public class TokenService {
 
         Long userId = null;
         Integer userType = null, device = null;
-
+        Integer companyId = null;
         if (null != parseJwtData.get(JwtConst.CLAIM_ID_KEY)) {
             userId = NumberUtils.toLong(parseJwtData.get(JwtConst.CLAIM_ID_KEY).toString(), -1);
             userId = userId == -1 ? null : userId;
@@ -245,11 +248,16 @@ public class TokenService {
             device = device == -1 ? null : device;
         }
 
+        if (null != parseJwtData.get(JwtConst.CLAIM_COMPANY_ID)) {
+            companyId = NumberUtils.toInt(parseJwtData.get(JwtConst.CLAIM_COMPANY_ID).toString(), -1);
+            companyId = companyId == -1 ? null : companyId;
+        }
+
         if (userId == null || userType == null || device == null) {
             return false;
         }
 
-        String redisKey = this.generateTokenRedisKey(userId, userType, device);
+        String redisKey = this.generateTokenRedisKey(userId, userType,companyId, device);
         String redisToken = redisService.get(redisKey);
         return token.equals(redisToken);
     }
@@ -298,9 +306,9 @@ public class TokenService {
     /**
      * 批量移除用户所有设备的token
      */
-    public void batchRemoveRedisToken(Long userId, UserTypeEnum userTypeEnum) {
+    public void batchRemoveRedisToken(Long userId,Integer companyId,UserTypeEnum userTypeEnum) {
         for (LoginDeviceEnum device : LoginDeviceEnum.values()) {
-            redisService.delete(this.generateTokenRedisKey(userId, userTypeEnum.getValue(), device.getValue()));
+            redisService.delete(this.generateTokenRedisKey(userId, userTypeEnum.getValue(),companyId, device.getValue()));
         }
     }
 }

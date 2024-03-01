@@ -51,9 +51,10 @@ public class TwLeverageServiceImpl extends ServiceImpl<TwLeverageMapper, TwLever
     }
 
     @Override
-    public ResponseDTO<List<TwLeverage>> getTwLeverage(String symbol) {
+    public ResponseDTO<List<TwLeverage>> getTwLeverage(String symbol,int companyId) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("symbol",symbol);
+        queryWrapper.eq("company_id",companyId);
         return ResponseDTO.ok(this.list(queryWrapper));
     }
 

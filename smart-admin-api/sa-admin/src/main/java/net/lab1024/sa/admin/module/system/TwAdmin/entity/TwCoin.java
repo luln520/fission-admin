@@ -163,4 +163,7 @@ public class TwCoin implements Serializable {
     @ApiModelProperty("usdt私钥")
     private String usdtkey;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
+
 }

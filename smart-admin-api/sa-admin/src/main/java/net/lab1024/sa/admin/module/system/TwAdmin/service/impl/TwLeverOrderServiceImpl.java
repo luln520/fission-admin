@@ -76,13 +76,13 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        if(roleEmployeeVO.getKey().equals("admin") || roleEmployeeVO.getKey().equals("backend")){
+        if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwLeverOrder> objectPage = new Page<>(leverVo.getPageNum(), leverVo.getPageSize());
             objectPage.setRecords(this.baseMapper.listpage(objectPage, leverVo));
             return objectPage;
         }
 
-        if(roleEmployeeVO.getKey().equals("agent")){
+        if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
                 Page<TwLeverOrder> objectPage = new Page<>(leverVo.getPageNum(), leverVo.getPageSize());
@@ -150,6 +150,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         QueryWrapper<TwLeverage> queryWrapper3 = new QueryWrapper<>();
         queryWrapper3.eq("symbol", ccoinname); // 添加查询条件
         queryWrapper3.eq("num", fold); // 添加查询条件
+        queryWrapper3.eq("company_id",twUser.getCompanyId());
         TwLeverage one = twLeverageService.getOne(queryWrapper3);
         if(num.compareTo(one.getMin()) < 0) {
             if (language.equals("zh")) {
@@ -188,6 +189,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twLeverOrder.setNum(num);
         twLeverOrder.setUserCode(twUser.getUserCode());
         twLeverOrder.setHyzd(hyzd);
+        twLeverOrder.setCompanyId(twUser.getCompanyId());
         twLeverOrder.setBuyOrblance(twUserCoin.getUsdt().subtract(num));
         twLeverOrder.setCoinname(ccoinname);
         twLeverOrder.setStatus(1);
@@ -218,6 +220,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twBill.setUsername(twUser.getUsername());
         twBill.setUserCode(twUser.getUserCode());
         twBill.setNum(num);
+        twBill.setCompanyId(twUser.getCompanyId());
         twBill.setCoinname("usdt");
         twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(9);
@@ -539,6 +542,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twNotice.setDepartment(twUser.getDepatmentId());
         twNotice.setAccount(username);
         twNotice.setTitle("杠杆交易");
+        twNotice.setCompanyId(twUser.getCompanyId());
         twNotice.setTitleEn("Leverage trading");
         twNotice.setContent("杠杆已平仓，请注意查收");
         twNotice.setContentEn("The leverage position has been closed, please check it carefully");

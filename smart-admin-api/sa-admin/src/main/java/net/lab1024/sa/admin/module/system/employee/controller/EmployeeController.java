@@ -90,10 +90,10 @@ public class EmployeeController extends AdminBaseController {
         return employeeService.getAllEmployeeByDepartmentId(departmentId, Boolean.FALSE);
     }
 
-    @ApiOperation("查询所有员工 @author 卓大")
-    @GetMapping("/employee/queryAll")
-    public ResponseDTO<List<EmployeeVO>> queryAllEmployee(@RequestParam(value = "disabledFlag", required = false) Boolean disabledFlag) {
-        return employeeService.queryAllEmployee(disabledFlag);
-    }
+//    @ApiOperation("查询所有员工 @author 卓大")
+//    @GetMapping("/employee/queryAll")
+//    public ResponseDTO<List<EmployeeVO>> queryAllEmployee(@RequestParam(value = "disabledFlag", required = false) Boolean disabledFlag) {
+//        return employeeService.queryAllEmployee(disabledFlag);
+//    }
 
 }

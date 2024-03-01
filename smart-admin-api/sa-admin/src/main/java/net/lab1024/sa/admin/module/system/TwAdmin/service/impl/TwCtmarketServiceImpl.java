@@ -100,11 +100,12 @@ public class TwCtmarketServiceImpl extends ServiceImpl<TwCtmarketDao, TwCtmarket
     }
 
     @Override
-    public List<AllsymbolRes> getallsymbol() {
+    public List<AllsymbolRes> getallsymbol(int companyId) {
         List<AllsymbolRes> allsymbolRes = new ArrayList<>();
 
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("status",1);
+        queryWrapper.eq("company_id",companyId);
         List<TwCtmarket> list = this.list(queryWrapper);
         for (TwCtmarket twCtmarket:list){
             String symbol = twCtmarket.getSymbol().toLowerCase().replace("/", "");

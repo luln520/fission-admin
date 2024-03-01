@@ -22,7 +22,7 @@ public interface TwCoinService extends IService<TwCoin> {
 
     IPage<TwCoin> listpage(PageParam pageParam);
 
-    List<TwCoin> lists();
+    List<TwCoin> lists( int companyId);
 
     boolean addOrUpdate(TwCoin twCoin);
 

@@ -29,6 +29,8 @@ public class RoleEntity {
 
     private String remark;
 
+    private String wordKey;
+
     /**
      * 更新时间
      */

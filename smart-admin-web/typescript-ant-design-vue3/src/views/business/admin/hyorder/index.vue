@@ -21,7 +21,7 @@
         <template v-if="column.key === 'hyzd'">
           <div v-if="record.hyzd == 1" style="color: green;">买涨</div>
           <div v-if="record.hyzd != 1" style="color: red;">买跌</div>
-          时间：{{ record.intselltime }}
+          时间：{{ timestampToStr(record.intselltime * 1000) }}
         </template>
 
         <template v-if="column.key === 'status'">
@@ -72,6 +72,7 @@ import { h, ref, onMounted } from 'vue';
 import { PlusCircleOutlined, UndoOutlined } from '@ant-design/icons-vue';
 import { tradeApi } from '/@/api/business/admin/trade-api';
 import AddOrEdit from "/@/components/edit/edit.vue"
+import { timestampToStr } from '/@/utils/util';
 const addOrEditRef = ref();
 const isOpenEdit = ref(false);
 const addOrEditType = ref(1);
@@ -99,13 +100,13 @@ const columns = [
     title: '会员账号',
     dataIndex: 'username',
     key: 'username',
-    width: 250
+    width: 120
   },
   {
     title: '用户ID',
     dataIndex: 'userCode',
     key: 'userCode',
-    width: 150
+    width: 100
   },
   {
     title: '交易对',
@@ -123,13 +124,13 @@ const columns = [
     title: '状态',
     dataIndex: 'status',
     key: 'status',
-    width: 130
+    width: 100
   },
   {
     title: '亏盈设置',
     dataIndex: 'kongyk',
     key: 'kongyk',
-    width: 130
+    width: 100
   },
   {
     title: '委托额度',
@@ -141,36 +142,36 @@ const columns = [
     title: '建仓单价',
     dataIndex: 'buyprice',
     key: 'buyprice',
-    width: 150
+    width: 100
   },
   {
     title: '平仓单价',
     dataIndex: 'sellprice',
     key: 'sellprice',
-    width: 150
+    width: 100
   },
   {
     title: '建仓时间',
     dataIndex: 'buytime',
     key: 'buytime',
-    width: 200
+    width: 100
   },
   {
     title: '亏盈额度',
     dataIndex: 'ploss',
     key: 'ploss',
-    width: 150
+    width: 80
   },
   {
     title: '买后余额',
     dataIndex: 'buyOrblance',
     key: 'buyOrblance',
-    width: 150
+    width: 100
   },
   {
     title: '操作',
     key: 'action',
-    width: 200,
+    width: 150,
     fixed: 'right',
   },
 ];

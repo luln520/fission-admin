@@ -58,9 +58,10 @@ public class TwUserQianbaoServiceImpl extends ServiceImpl<TwUserQianbaoDao, TwUs
         }
 
     @Override
-    public List<TwUserQianbao> lists(int uid) {
+    public List<TwUserQianbao> lists(int uid, int companyId) {
         QueryWrapper<TwUserQianbao> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userid", uid);
+        queryWrapper.eq("company_id", companyId);
         return this.list(queryWrapper);
     }
 
@@ -88,6 +89,7 @@ public class TwUserQianbaoServiceImpl extends ServiceImpl<TwUserQianbaoDao, TwUs
         twUserQianbao.setUserid(uid);
         twUserQianbao.setCoinname(twUser.getUsername());
         twUserQianbao.setCzline(czline);
+        twUserQianbao.setCompanyId(twUser.getCompanyId());
         twUserQianbao.setName(twCoin.getName());
         twUserQianbao.setRemark(remark);
         twUserQianbao.setAddr(address);

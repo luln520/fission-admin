@@ -60,6 +60,10 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String TW_COIN = "后台-币种配置表";
 
+        public static final String TW_C2C = "后台-C2C管理";
+
+        public static final String TW_COMPANY = "后台-公司管理";
+
         public static final String TW_FILE = "后台-文件";
 
         public static final String TW_CTMARKET = "后台-市场配置";
@@ -123,6 +127,7 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
         public static final String PC_INDEX = "PC-首页";
 
         public static final String PC_KUANGJI = "PC-矿机";
+        public static final String PC_COMPANY = "PC-公司";
 
         public static final String PC_LOGIN = "PC-用户登陆/注册";
 

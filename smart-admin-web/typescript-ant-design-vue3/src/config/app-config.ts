@@ -31,7 +31,7 @@ export const appDefaultConfig: AppConfig = {
   // 帮助文档
   helpDocFlag: false,
   // 网站名称
-  websiteName: 'GQ全球量化平台',
+  websiteName: 'CoinEx全球量化平台',
 };
 
 export const imageConfig = {

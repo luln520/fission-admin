@@ -34,8 +34,8 @@ public class PcCoinController {
     @GetMapping("/list")
     @ApiOperation(value = "账单列表")
     @NoNeedLogin
-    public ResponseDTO<List<TwCoin>> lists() {
-        return ResponseDTO.ok(twCoinService.lists());
+    public ResponseDTO<List<TwCoin>> lists(@RequestParam int companyId) {
+        return ResponseDTO.ok(twCoinService.lists(companyId));
     }
 
     /**
