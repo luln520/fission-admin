@@ -163,9 +163,6 @@ public class TimerServiceImpl {
             Integer uid = twKjorder.getUid();
             String username = twKjorder.getUsername();
             BigDecimal outnum = twKjorder.getOutnum();
-            QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("userid",uid);
-            TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
 
             QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
             queryWrapper4.eq("id",uid);
