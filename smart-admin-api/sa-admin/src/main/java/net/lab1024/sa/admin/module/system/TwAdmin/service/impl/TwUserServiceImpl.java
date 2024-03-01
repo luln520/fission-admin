@@ -920,12 +920,17 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     return ResponseDTO.userErrorParam("Please enter password！");
                 }
             }
+            Integer companyId = userReq.getCompanyId();
 
-            if(StringUtils.isEmpty(invit)){
-                if(language.equals("zh")){
-                    return ResponseDTO.userErrorParam("请输入邀请码！");
-                }else{
-                    return ResponseDTO.userErrorParam("Please enter the invitation code！");
+            TwCompany company = twCompanyService.getById(companyId);
+            int inviteType = company.getInviteType();
+            if(inviteType == 1){
+                if(StringUtils.isEmpty(invit)){
+                    if(language.equals("zh")){
+                        return ResponseDTO.userErrorParam("请输入邀请码！");
+                    }else{
+                        return ResponseDTO.userErrorParam("Please enter the invitation code！");
+                    }
                 }
             }
 
@@ -937,10 +942,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             Integer inivtId = 0;
             Long employeeId = 0L;
             EmployeeEntity byInvite = employeeService.getByInvite(invit);//获取代理人信息
-            Integer companyId = userReq.getCompanyId();
 
-            TwCompany company = twCompanyService.getById(companyId);
-            int inviteType = company.getInviteType();
             if(inviteType == 1){
                 QueryWrapper<TwUser> queryUser = new QueryWrapper<>();
                 queryUser.eq("invit", invit);
