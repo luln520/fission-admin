@@ -7,9 +7,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjorderDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjprofitDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCompany;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjprofit;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKjorderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKjprofitService;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Res.TwPCKjprofitVo;
@@ -45,6 +47,9 @@ public class TwKjprofitServiceImpl extends ServiceImpl<TwKjprofitDao, TwKjprofit
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
     @Override
     public IPage<TwKjprofit> listpage(TwKjprofitVo twKjprofitVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -52,6 +57,10 @@ public class TwKjprofitServiceImpl extends ServiceImpl<TwKjprofitDao, TwKjprofit
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        int companyId = byId.getCompanyId();
+        TwCompany company = twCompanyService.getById(companyId);
+        int inviteType = company.getInviteType();
 
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwKjprofit> objectPage = new Page<>(twKjprofitVo.getPageNum(), twKjprofitVo.getPageSize());
@@ -68,7 +77,9 @@ public class TwKjprofitServiceImpl extends ServiceImpl<TwKjprofitDao, TwKjprofit
                 return objectPage;
             }else{
                 Page<TwKjprofit> objectPage = new Page<>(twKjprofitVo.getPageNum(), twKjprofitVo.getPageSize());
-                twKjprofitVo.setEmployeeId(byId.getEmployeeId());
+                if(inviteType == 1){
+                    twKjprofitVo.setEmployeeId(byId.getEmployeeId());
+                }
                 objectPage.setRecords(baseMapper.listpage(objectPage, twKjprofitVo));
                 return objectPage;
             }

@@ -66,6 +66,9 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
 
     @Autowired
     private SerialNumberService serialNumberService;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
     @Override
     public BigDecimal sumDayRecharge(String startTime, String endTime,int companyId) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
@@ -125,6 +128,10 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
+        int companyId = byId.getCompanyId();
+        TwCompany company = twCompanyService.getById(companyId);
+        int inviteType = company.getInviteType();
+
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twRechargeVo));
@@ -140,7 +147,9 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 return objectPage;
             }else{
                 Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
-                twRechargeVo.setEmployeeId(byId.getEmployeeId());
+                if(inviteType == 1){
+                    twRechargeVo.setEmployeeId(byId.getEmployeeId());
+                }
                 objectPage.setRecords(baseMapper.listpage(objectPage, twRechargeVo));
                 return objectPage;
             }
