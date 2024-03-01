@@ -1200,6 +1200,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
             twAdminLog.setPath(one.getPath());
+            twAdminLog.setCompanyId(one.getCompanyId());
             twAdminLog.setRemark("用户 "+one.getRealName()+" 认证审核通过");
             return twAdminLogService.save(twAdminLog);
         }
@@ -1222,6 +1223,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setCreateTime((int) (epochMilli/1000));
             twAdminLog.setDepartment(one.getDepatmentId());
             twAdminLog.setPath(one.getPath());
+            twAdminLog.setCompanyId(one.getCompanyId());
             twAdminLog.setRemark("用户 "+one.getRealName()+" 认证审核驳回");
             return twAdminLogService.save(twAdminLog);
         }
