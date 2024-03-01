@@ -163,18 +163,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         EmployeeEntity byId1 = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
+        TwCompany twCompany = twCompanyService.getById(byId1.getCompanyId());
+        int inviteType = twCompany.getInviteType();
+
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
             List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
             for(TwUser twUser:list){
-                String paths = "";
-//                String path = twUser.getPath();
-//                String[] numberStrings = path.replace("#", "").split(",");
-//                int[] numbers = new int[numberStrings.length];
-//                for (int i = 0; i < numberStrings.length; i++) {
-//                    numbers[i] = Integer.parseInt(numberStrings[i]);
-//                }
-//                for (int num : numbers) {
+                if(inviteType == 1){
+                    String paths = "";
                     EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
                     if(byId == null){
                         QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
@@ -188,7 +185,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         String actualName = byId.getActualName();
                         paths += actualName +",";
                     }
-//                }
+                    twUser.setPath(paths);
+                }
                 QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper1.eq("userid", twUser.getId());
                 TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
@@ -197,7 +195,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }else {
                     twUser.setMoney(one.getUsdt());
                 }
-                twUser.setPath(paths);
 
 
                 QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
@@ -277,14 +274,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUserVo.setDepartmentId(byId1.getDepartmentId());
                 List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
                 for(TwUser twUser:list){
-                    String paths = "";
-//                    String path = twUser.getPath();
-//                    String[] numberStrings = path.replace("#", "").split(",");
-//                    int[] numbers = new int[numberStrings.length];
-//                    for (int i = 0; i < numberStrings.length; i++) {
-//                        numbers[i] = Integer.parseInt(numberStrings[i]);
-//                    }
-//                    for (int num : numbers) {
+                    if(inviteType == 1){
+
+                        String paths = "";
                         EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
                         if(byId == null){
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
@@ -298,7 +290,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             String actualName = byId.getActualName();
                             paths += actualName +",";
                         }
-//                    }
+                        twUser.setPath(paths);
+                    }
+
                     QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
                     queryWrapper1.eq("userid", twUser.getId());
                     TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
@@ -307,7 +301,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     }else {
                         twUser.setMoney(one.getUsdt());
                     }
-                    twUser.setPath(paths);
 
                     QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
                     queryWrapper4.eq("id",1);
@@ -380,17 +373,13 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 return objectPage;
             }else{
                 Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
-                twUserVo.setEmployeeId(byId1.getEmployeeId());
+                if(inviteType == 1){
+                    twUserVo.setEmployeeId(byId1.getEmployeeId());
+                }
                 List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
                 for(TwUser twUser:list){
-                    String paths = "";
-//                    String path = twUser.getPath();
-//                    String[] numberStrings = path.replace("#", "").split(",");
-//                    int[] numbers = new int[numberStrings.length];
-//                    for (int i = 0; i < numberStrings.length; i++) {
-//                        numbers[i] = Integer.parseInt(numberStrings[i]);
-//                    }
-//                    for (int num : numbers) {
+                    if(inviteType == 1){
+                        String paths = "";
                         EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
                         if(byId == null){
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
@@ -404,7 +393,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             String actualName = byId.getActualName();
                             paths += actualName +",";
                         }
-//                    }
+                        twUser.setPath(paths);
+                    }
+
                     QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
                     queryWrapper1.eq("userid", twUser.getId());
                     TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
@@ -413,7 +404,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     }else {
                         twUser.setMoney(one.getUsdt());
                     }
-                    twUser.setPath(paths);
 
                     QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
                     queryWrapper4.eq("id",1);
