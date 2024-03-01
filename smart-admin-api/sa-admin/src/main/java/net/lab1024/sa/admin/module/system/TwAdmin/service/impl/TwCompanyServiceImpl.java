@@ -60,13 +60,7 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
     @Override
     public ResponseDTO addOrUpdate(TwCompany twCompany) {
 
-        // 校验名称是否重复
-        if(twCompany.getId() == null){
-            EmployeeEntity employeeEntity = employeeDao.getByLoginName(twCompany.getCompanyAccount(), null);
-            if (null != employeeEntity) {
-                return ResponseDTO.userErrorParam("账号重复");
-            }
-        }
+
         String encryptPwd = getEncryptPwd(twCompany.getCompanyPwd());
         twCompany.setCompanyPwd(encryptPwd);
         TwCompany twCompany1 = SmartBeanUtil.copy(twCompany, TwCompany.class);
