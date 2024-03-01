@@ -509,7 +509,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                return ResponseDTO.userErrorParam("手机号重复");
            }
 
-           TwCompany twCompany = twCompanyService.getById(one.getCompanyId());
+           TwCompany twCompany = twCompanyService.getById(twUser.getCompanyId());
            if(twCompany.getInviteType() == 1){
                EmployeeEntity byInvite = employeeService.getByInvite(invit);
                if(byInvite == null){
