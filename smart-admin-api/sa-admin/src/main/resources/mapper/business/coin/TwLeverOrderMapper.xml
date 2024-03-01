@@ -15,6 +15,9 @@
         <if test="obj.companyId != null and obj.companyId !=''">
             and company_id = #{obj.companyId}
         </if>
+        <if test="obj.employeeId != null and obj.employeeId !=''">
+            and path like concat('%',#{obj.employeeId},'%')
+        </if>
         order by buytime desc
     </select>
 </mapper>

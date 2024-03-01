@@ -116,7 +116,7 @@ public class EmployeeService {
      */
     public synchronized ResponseDTO<String> addEmployee(EmployeeAddForm employeeAddForm) {
         // 校验名称是否重复
-        EmployeeEntity employeeEntity = employeeDao.getByLoginName(employeeAddForm.getLoginName(),employeeAddForm.getCompanyId(), null);
+        EmployeeEntity employeeEntity = employeeDao.getByLoginNames(employeeAddForm.getLoginName(),null);
         if (null != employeeEntity) {
             return ResponseDTO.userErrorParam("登录名重复");
         }
@@ -186,7 +186,7 @@ public class EmployeeService {
         }
 
 
-        EmployeeEntity existEntity = employeeDao.getByLoginName(employeeUpdateForm.getLoginName(),employeeUpdateForm.getCompanyId(), null);
+        EmployeeEntity existEntity = employeeDao.getByLoginNames(employeeUpdateForm.getLoginName(), null);
         if (null != existEntity && !Objects.equals(existEntity.getEmployeeId(), employeeId)) {
             return ResponseDTO.userErrorParam("登录名重复");
         }
