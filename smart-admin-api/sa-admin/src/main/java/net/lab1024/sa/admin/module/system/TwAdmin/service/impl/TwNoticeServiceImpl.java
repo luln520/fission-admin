@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMyzcDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwNoticeDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMyzcService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNoticeService;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
@@ -39,6 +40,9 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
     @Override
     public IPage<TwNotice> listpage(PageParam pageParam, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -46,6 +50,11 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+
+        int companyId = byId.getCompanyId();
+        TwCompany company = twCompanyService.getById(companyId);
+        int inviteType = company.getInviteType();
 
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
@@ -62,7 +71,9 @@ public class TwNoticeServiceImpl extends ServiceImpl<TwNoticeDao, TwNotice> impl
                 return objectPage;
             }else{
                 Page<TwNotice> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-                pageParam.setEmployeeId(byId.getEmployeeId());
+                if(inviteType == 1){
+                    pageParam.setEmployeeId(byId.getEmployeeId());
+                }
                 objectPage.setRecords(baseMapper.listpage(objectPage, pageParam));
                 return objectPage;
             }

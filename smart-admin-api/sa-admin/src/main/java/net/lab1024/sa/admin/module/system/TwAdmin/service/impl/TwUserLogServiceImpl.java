@@ -6,11 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserCoinDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserLogDao;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserLog;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserLogService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
@@ -46,6 +44,9 @@ public class TwUserLogServiceImpl extends ServiceImpl<TwUserLogDao, TwUserLog> i
     private TokenService tokenService;
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
     @Override
     public IPage<TwUserLog> listpage(TwUserVo twUserVo, HttpServletRequest request) {
 
@@ -54,6 +55,11 @@ public class TwUserLogServiceImpl extends ServiceImpl<TwUserLogDao, TwUserLog> i
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+
+        int companyId = byId.getCompanyId();
+        TwCompany company = twCompanyService.getById(companyId);
+        int inviteType = company.getInviteType();
 
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwUserLog> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
@@ -92,7 +98,9 @@ public class TwUserLogServiceImpl extends ServiceImpl<TwUserLogDao, TwUserLog> i
                 return objectPage;
             }else{
                 Page<TwUserLog> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
-                twUserVo.setEmployeeId(byId.getEmployeeId());
+                if(inviteType == 1){
+                    twUserVo.setEmployeeId(byId.getEmployeeId());
+                }
                 List<TwUserLog> list = baseMapper.listpage(objectPage, twUserVo);
                 for (TwUserLog twUserLog: list){
                     Integer userid = twUserLog.getUserid();

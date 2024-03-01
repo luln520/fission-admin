@@ -211,6 +211,10 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
+        int companyId = byId.getCompanyId();
+        TwCompany company = twCompanyService.getById(companyId);
+        int inviteType = company.getInviteType();
+
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwHyorder> objectPage = new Page<>(twHyorderVo.getPageNum(), twHyorderVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twHyorderVo));
@@ -226,7 +230,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
                 return objectPage;
             }else{
                 Page<TwHyorder> objectPage = new Page<>(twHyorderVo.getPageNum(), twHyorderVo.getPageSize());
-                twHyorderVo.setEmployeeId(byId.getEmployeeId());
+                if(inviteType == 1){
+                    twHyorderVo.setEmployeeId(byId.getEmployeeId());
+                }
                 objectPage.setRecords(baseMapper.listpage(objectPage, twHyorderVo));
                 return objectPage;
             }
@@ -249,15 +255,19 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             queryWrapper.eq("id", uid); // 添加查询条件
             TwUser twUser = twUserService.getOne(queryWrapper);
 
+            TwCompany company = twCompanyService.getById(twUser.getCompanyId());
+            int inviteType = company.getInviteType();
             String invite = "";
-            EmployeeEntity byInvite = employeeService.getById(Long.valueOf(twUser.getInvit1()));//获取代理人信息
-            if(byInvite == null){
-                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
-                queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
-                TwUser puser = twUserService.getOne(queryWrapper4);
-                invite = puser.getInvit1();
+            if(inviteType == 1){
+                EmployeeEntity byInvite = employeeService.getById(Long.valueOf(twUser.getInvit1()));//获取代理人信息
+                if(byInvite == null){
+                    QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+                    queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
+                    TwUser puser = twUserService.getOne(queryWrapper4);
+                    invite = puser.getInvit1();
+                }
+                invite = String.valueOf(byInvite.getEmployeeId());
             }
-            invite = String.valueOf(byInvite.getEmployeeId());
 
             //获取会员资产
             QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
@@ -289,7 +299,6 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             Integer companyId = twUser.getCompanyId();
             QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
             queryWrapper2.eq("id", companyId); // 添加查询条件
-            TwCompany company = twCompanyService.getOne(queryWrapper2);
             BigDecimal hyFee = company.getHyFee();
             BigDecimal hyfee = ctzed.subtract(hyFee);
             MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);

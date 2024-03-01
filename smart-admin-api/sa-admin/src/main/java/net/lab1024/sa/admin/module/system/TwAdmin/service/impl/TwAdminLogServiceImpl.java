@@ -11,6 +11,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMessageRep;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinCommentService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
@@ -55,6 +56,9 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
     private EmployeeService employeeService;
     @Autowired
     private TwOnlineDao twOnlineDao;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
     @Override
     public IPage<TwAdminLog> listpage(TwBillVo twBillVo,HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -62,6 +66,10 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        int companyId = byId.getCompanyId();
+        TwCompany company = twCompanyService.getById(companyId);
+        int inviteType = company.getInviteType();
 
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwAdminLog> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
@@ -78,7 +86,9 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
                 return objectPage;
             }else{
                 Page<TwAdminLog> objectPage = new Page<>(twBillVo.getPageNum(), twBillVo.getPageSize());
-                twBillVo.setEmployeeId(byId.getEmployeeId());
+                if(inviteType == 1){
+                    twBillVo.setEmployeeId(byId.getEmployeeId());
+                }
                 objectPage.setRecords(baseMapper.listpage(objectPage, twBillVo));
                 return objectPage;
             }

@@ -55,7 +55,7 @@ public interface EmployeeDao extends BaseMapper<EmployeeEntity> {
      * @param disabledFlag
      * @return
      */
-    EmployeeEntity getByLoginName(@Param("loginName") String loginName,
+    EmployeeEntity getByLoginNames(@Param("loginName") String loginName,
                                   @Param("disabledFlag") Boolean disabledFlag);
 
     /**

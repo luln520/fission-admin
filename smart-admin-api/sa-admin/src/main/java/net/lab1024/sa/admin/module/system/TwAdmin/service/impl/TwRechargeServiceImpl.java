@@ -66,6 +66,9 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
 
     @Autowired
     private SerialNumberService serialNumberService;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
     @Override
     public BigDecimal sumDayRecharge(String startTime, String endTime,int companyId) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
@@ -125,6 +128,10 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
+        int companyId = byId.getCompanyId();
+        TwCompany company = twCompanyService.getById(companyId);
+        int inviteType = company.getInviteType();
+
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twRechargeVo));
@@ -140,7 +147,9 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                 return objectPage;
             }else{
                 Page<TwRecharge> objectPage = new Page<>(twRechargeVo.getPageNum(), twRechargeVo.getPageSize());
-                twRechargeVo.setEmployeeId(byId.getEmployeeId());
+                if(inviteType == 1){
+                    twRechargeVo.setEmployeeId(byId.getEmployeeId());
+                }
                 objectPage.setRecords(baseMapper.listpage(objectPage, twRechargeVo));
                 return objectPage;
             }
@@ -272,11 +281,23 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
-    public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline,String  language) {
+    public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline,String  language,int companyId) {
         try {
             QueryWrapper<TwUser> query = new QueryWrapper<>();
             query.eq("id", uid);
             TwUser one = twUserService.getOne(query);
+
+            QueryWrapper<TwRecharge> rechargequery = new QueryWrapper<>();
+            rechargequery.eq("uid", uid);
+            rechargequery.eq("status", 1);
+            TwRecharge twRech = this.getOne(rechargequery);
+            if(twRech != null){
+                if(language.equals("zh")){
+                    return ResponseDTO.ok("凭证提交待审核");
+                }else{
+                    return ResponseDTO.ok("Voucher submitted for review");
+                }
+            }
 
             String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
             TwRecharge twRecharge = new TwRecharge();

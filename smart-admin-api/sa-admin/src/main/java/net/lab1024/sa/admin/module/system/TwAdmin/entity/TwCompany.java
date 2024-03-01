@@ -153,6 +153,9 @@ public class TwCompany implements Serializable {
     */
     @ApiModelProperty("矿机订单交易手续费")
     private BigDecimal kjFee;
+
+    @ApiModelProperty("邀请码开关（1.开，2.关)")
+    private int inviteType;
     /**
     * 创建时间
     */

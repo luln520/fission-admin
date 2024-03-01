@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjorderDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCompany;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjorderVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwKjorderService;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
@@ -32,6 +34,8 @@ public class TwKjorderServiceImpl extends ServiceImpl<TwKjorderDao, TwKjorder> i
     private TokenService tokenService;
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private TwCompanyService twCompanyService;
     @Override
     public IPage<TwKjorder> listpage(TwKjorderVo twKjorderVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -39,6 +43,10 @@ public class TwKjorderServiceImpl extends ServiceImpl<TwKjorderDao, TwKjorder> i
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        int companyId = byId.getCompanyId();
+        TwCompany company = twCompanyService.getById(companyId);
+        int inviteType = company.getInviteType();
 
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwKjorder> objectPage = new Page<>(twKjorderVo.getPageNum(), twKjorderVo.getPageSize());
@@ -54,7 +62,9 @@ public class TwKjorderServiceImpl extends ServiceImpl<TwKjorderDao, TwKjorder> i
                 return objectPage;
             }else{
                 Page<TwKjorder> objectPage = new Page<>(twKjorderVo.getPageNum(), twKjorderVo.getPageSize());
-                twKjorderVo.setEmployeeId(byId.getEmployeeId());
+                if(inviteType == 1){
+                    twKjorderVo.setEmployeeId(byId.getEmployeeId());
+                }
                 objectPage.setRecords(baseMapper.listpage(objectPage, twKjorderVo));
                 return objectPage;
             }

@@ -116,26 +116,26 @@ public class EmployeeService {
      */
     public synchronized ResponseDTO<String> addEmployee(EmployeeAddForm employeeAddForm) {
         // 校验名称是否重复
-        EmployeeEntity employeeEntity = employeeDao.getByLoginName(employeeAddForm.getLoginName(), null);
+        EmployeeEntity employeeEntity = employeeDao.getByLoginNames(employeeAddForm.getLoginName(),null);
         if (null != employeeEntity) {
             return ResponseDTO.userErrorParam("登录名重复");
         }
-        // 校验姓名是否重复
-        employeeEntity = employeeDao.getByActualName(employeeAddForm.getActualName(), null);
-        if (null != employeeEntity) {
-            return ResponseDTO.userErrorParam("姓名重复");
-        }
-        // 校验电话是否存在
-        employeeEntity = employeeDao.getByPhone(employeeAddForm.getPhone(), null);
-        if (null != employeeEntity) {
-            return ResponseDTO.userErrorParam("手机号已存在");
-        }
-        // 部门是否存在
-        Long departmentId = employeeAddForm.getDepartmentId();
-        DepartmentEntity department = departmentDao.selectById(departmentId);
-        if (department == null) {
-            return ResponseDTO.userErrorParam("部门不存在");
-        }
+//        // 校验姓名是否重复
+//        employeeEntity = employeeDao.getByActualName(employeeAddForm.getActualName(), null);
+//        if (null != employeeEntity) {
+//            return ResponseDTO.userErrorParam("姓名重复");
+//        }
+//        // 校验电话是否存在
+//        employeeEntity = employeeDao.getByPhone(employeeAddForm.getPhone(), null);
+//        if (null != employeeEntity) {
+//            return ResponseDTO.userErrorParam("手机号已存在");
+//        }
+//        // 部门是否存在
+//        Long departmentId = employeeAddForm.getDepartmentId();
+//        DepartmentEntity department = departmentDao.selectById(departmentId);
+//        if (department == null) {
+//            return ResponseDTO.userErrorParam("部门不存在");
+//        }
 
         EmployeeEntity entity = SmartBeanUtil.copy(employeeAddForm, EmployeeEntity.class);
         // 设置密码 默认密码
@@ -186,7 +186,7 @@ public class EmployeeService {
         }
 
 
-        EmployeeEntity existEntity = employeeDao.getByLoginName(employeeUpdateForm.getLoginName(), null);
+        EmployeeEntity existEntity = employeeDao.getByLoginNames(employeeUpdateForm.getLoginName(), null);
         if (null != existEntity && !Objects.equals(existEntity.getEmployeeId(), employeeId)) {
             return ResponseDTO.userErrorParam("登录名重复");
         }
@@ -398,7 +398,7 @@ public class EmployeeService {
      * @return
      */
     public EmployeeEntity getByLoginName(String loginName) {
-        return employeeDao.getByLoginName(loginName, null);
+        return employeeDao.getByLoginNames(loginName,null);
     }
     /**
      * 根据验证码获取员工

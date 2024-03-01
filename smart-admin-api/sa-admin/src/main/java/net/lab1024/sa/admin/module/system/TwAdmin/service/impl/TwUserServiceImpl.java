@@ -163,18 +163,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         EmployeeEntity byId1 = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
+        TwCompany twCompany = twCompanyService.getById(byId1.getCompanyId());
+        int inviteType = twCompany.getInviteType();
+
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
             List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
             for(TwUser twUser:list){
-                String paths = "";
-//                String path = twUser.getPath();
-//                String[] numberStrings = path.replace("#", "").split(",");
-//                int[] numbers = new int[numberStrings.length];
-//                for (int i = 0; i < numberStrings.length; i++) {
-//                    numbers[i] = Integer.parseInt(numberStrings[i]);
-//                }
-//                for (int num : numbers) {
+                if(inviteType == 1){
+                    String paths = "";
                     EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
                     if(byId == null){
                         QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
@@ -188,7 +185,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         String actualName = byId.getActualName();
                         paths += actualName +",";
                     }
-//                }
+                    twUser.setPath(paths);
+                }
                 QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper1.eq("userid", twUser.getId());
                 TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
@@ -197,11 +195,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }else {
                     twUser.setMoney(one.getUsdt());
                 }
-                twUser.setPath(paths);
 
 
                 QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
-                queryWrapper4.eq("id",1);
+                queryWrapper4.eq("company_id",twCompany.getId());
                 TwHysetting twHysetting = twHysettingService.getOne(queryWrapper4);
                 String hyYlid = twHysetting.getHyYlid();
                 String hyKsid = twHysetting.getHyKsid();
@@ -277,14 +274,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUserVo.setDepartmentId(byId1.getDepartmentId());
                 List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
                 for(TwUser twUser:list){
-                    String paths = "";
-//                    String path = twUser.getPath();
-//                    String[] numberStrings = path.replace("#", "").split(",");
-//                    int[] numbers = new int[numberStrings.length];
-//                    for (int i = 0; i < numberStrings.length; i++) {
-//                        numbers[i] = Integer.parseInt(numberStrings[i]);
-//                    }
-//                    for (int num : numbers) {
+                    if(inviteType == 1){
+
+                        String paths = "";
                         EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
                         if(byId == null){
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
@@ -298,7 +290,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             String actualName = byId.getActualName();
                             paths += actualName +",";
                         }
-//                    }
+                        twUser.setPath(paths);
+                    }
+
                     QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
                     queryWrapper1.eq("userid", twUser.getId());
                     TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
@@ -307,10 +301,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     }else {
                         twUser.setMoney(one.getUsdt());
                     }
-                    twUser.setPath(paths);
 
                     QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
-                    queryWrapper4.eq("id",1);
+                    queryWrapper4.eq("company_id",twCompany.getId());
                     TwHysetting twHysetting = twHysettingService.getOne(queryWrapper4);
                     String hyYlid = twHysetting.getHyYlid();
                     String hyKsid = twHysetting.getHyKsid();
@@ -380,17 +373,13 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 return objectPage;
             }else{
                 Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
-                twUserVo.setEmployeeId(byId1.getEmployeeId());
+                if(inviteType == 1){
+                    twUserVo.setEmployeeId(byId1.getEmployeeId());
+                }
                 List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
                 for(TwUser twUser:list){
-                    String paths = "";
-//                    String path = twUser.getPath();
-//                    String[] numberStrings = path.replace("#", "").split(",");
-//                    int[] numbers = new int[numberStrings.length];
-//                    for (int i = 0; i < numberStrings.length; i++) {
-//                        numbers[i] = Integer.parseInt(numberStrings[i]);
-//                    }
-//                    for (int num : numbers) {
+                    if(inviteType == 1){
+                        String paths = "";
                         EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
                         if(byId == null){
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
@@ -404,7 +393,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             String actualName = byId.getActualName();
                             paths += actualName +",";
                         }
-//                    }
+                        twUser.setPath(paths);
+                    }
+
                     QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
                     queryWrapper1.eq("userid", twUser.getId());
                     TwUserCoin one = twUserCoinService.getOne(queryWrapper1);
@@ -413,10 +404,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     }else {
                         twUser.setMoney(one.getUsdt());
                     }
-                    twUser.setPath(paths);
 
                     QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
-                    queryWrapper4.eq("id",1);
+                    queryWrapper4.eq("company_id",twCompany.getId());
                     TwHysetting twHysetting = twHysettingService.getOne(queryWrapper4);
                     String hyYlid = twHysetting.getHyYlid();
                     String hyKsid = twHysetting.getHyKsid();
@@ -509,14 +499,19 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                return ResponseDTO.userErrorParam("手机号重复");
            }
 
-           EmployeeEntity byInvite = employeeService.getByInvite(invit);
-           if(byInvite == null){
-               return ResponseDTO.userErrorParam("没有此推荐人");
-           }
-           Long employeeId = byInvite.getEmployeeId();
-           Long departmentId = byInvite.getDepartmentId();
+           TwCompany twCompany = twCompanyService.getById(twUser.getCompanyId());
+           if(twCompany.getInviteType() == 1){
+               EmployeeEntity byInvite = employeeService.getByInvite(invit);
+               if(byInvite == null){
+                   return ResponseDTO.userErrorParam("没有此推荐人");
+               }
+               Long employeeId = byInvite.getEmployeeId();
+               String path = "#"+employeeId +"#,";
 
-           String path = "#"+employeeId +"#,";
+               twUser.setInvit1(employeeId.toString());
+               twUser.setPath(path);
+           }
+
 
            String invitCode = generateRandomString();  //生成验证码
 
@@ -534,11 +529,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            String ip = CommonUtil.getClientIP(request);
            String locationByIP = CommonUtil.getAddress(ip);
 
+           twUser.setDepatmentId(1);
            twUser.setUsername(username);
            twUser.setInvit(invitCode);
-           twUser.setInvit1(employeeId.toString());
-           twUser.setPath(path);
-           twUser.setDepatmentId(departmentId.intValue());
            twUser.setPassword(encryptPwd);
            twUser.setAreaCode("");
            twUser.setUserCode(usercode);
@@ -936,43 +929,44 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }
             }
 
-
             String invit1 = "0";
             String invit2 = "0";
             String invit3 = "0";
             String path = "";
             String path1 = "";
             Integer inivtId = 0;
-            Long departmentId = 0L;
             Long employeeId = 0L;
             EmployeeEntity byInvite = employeeService.getByInvite(invit);//获取代理人信息
+            Integer companyId = userReq.getCompanyId();
 
-            QueryWrapper<TwUser> queryUser = new QueryWrapper<>();
-            queryUser.eq("invit", invit);
-            TwUser invitUser = this.getOne(queryUser);  //获取邀请人信息
-            if(byInvite == null){
-                if(invitUser == null){
-                    if(language.equals("zh")){
-                        return ResponseDTO.userErrorParam("推荐人不存在！");
+            TwCompany company = twCompanyService.getById(companyId);
+            int inviteType = company.getInviteType();
+            if(inviteType == 1){
+                QueryWrapper<TwUser> queryUser = new QueryWrapper<>();
+                queryUser.eq("invit", invit);
+                TwUser invitUser = this.getOne(queryUser);  //获取邀请人信息
+                if(byInvite == null){
+                    if(invitUser == null){
+                        if(language.equals("zh")){
+                            return ResponseDTO.userErrorParam("推荐人不存在！");
+                        }else{
+                            return ResponseDTO.userErrorParam("The recommender does not exist！");
+                        }
                     }else{
-                        return ResponseDTO.userErrorParam("The recommender does not exist！");
+                        invit1 = invitUser.getInvit1();
+                        inivtId = invitUser.getId();
+                        path1 = invitUser.getPath();
+                        if(StringUtils.isNotEmpty(path1)){  //拼接团队路径
+                            path = path1 +"#"+ inivtId+"#,";
+                        }else{
+                            path = "#"+inivtId.toString()+"#,";
+                        }
                     }
                 }else{
-                    invit1 = invitUser.getInvit1();
-                    departmentId = Long.valueOf(invitUser.getDepatmentId());
-                    inivtId = invitUser.getId();
-                    path1 = invitUser.getPath();
-                    if(StringUtils.isNotEmpty(path1)){  //拼接团队路径
-                        path = path1 +"#"+ inivtId+"#,";
-                    }else{
-                        path = "#"+inivtId.toString()+"#,";
-                    }
+                    employeeId = byInvite.getEmployeeId();
+                    invit1 =employeeId.toString();
+                    path = "#"+employeeId.toString()+"#,";
                 }
-            }else{
-                 employeeId = byInvite.getEmployeeId();
-                 invit1 =employeeId.toString();
-                 departmentId = byInvite.getDepartmentId();
-                 path = "#"+employeeId.toString()+"#,";
             }
 
             String invitCode = generateRandomString();  //生成验证码
@@ -988,7 +982,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
 //            String address = CommonUtil.getAddress(ip);
 //            String address = CommonUtil.getAddress(ip);
-            Integer companyId = byInvite.getCompanyId();
+
             QueryWrapper<TwUser> queryWrapperInvite = new QueryWrapper<>();
             queryWrapperInvite.eq("invit", invitCode);
             TwUser invituserCode = this.getOne(queryWrapperInvite);
@@ -1000,16 +994,18 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUser.setPhone(username);
                 }
                 twUser.setInvit(invitCode);
-                twUser.setInvit1(invit1);
-                twUser.setInvit2(invit2);
-                twUser.setInvit3(invit3);
+                if(inviteType == 1){
+                    twUser.setInvit1(invit1);
+                    twUser.setInvit2(invit2);
+                    twUser.setInvit3(invit3);
+                    twUser.setPath(path);
+                }
                 twUser.setType(type);
                 twUser.setUserCode(usercode);
                 twUser.setAreaCode("");
-                twUser.setPath(path);
                 twUser.setAddip(ip);
                 twUser.setCompanyId(companyId);
-                twUser.setDepatmentId(departmentId.intValue());
+                twUser.setDepatmentId(1);
 //                twUser.setAddr(address);
                 long timestampInSeconds = Instant.now().getEpochSecond();
                 twUser.setAddtime((int) (timestampInSeconds));

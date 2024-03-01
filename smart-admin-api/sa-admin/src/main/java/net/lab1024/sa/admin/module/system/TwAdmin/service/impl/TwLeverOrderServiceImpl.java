@@ -68,6 +68,9 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
     @Autowired
     private TwLeverageService twLeverageService;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
     @Override
     public IPage<TwLeverOrder> listpage(LeverVo leverVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -75,6 +78,10 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
+
+        int companyId = byId.getCompanyId();
+        TwCompany company = twCompanyService.getById(companyId);
+        int inviteType = company.getInviteType();
 
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwLeverOrder> objectPage = new Page<>(leverVo.getPageNum(), leverVo.getPageSize());
@@ -91,7 +98,9 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
                 return objectPage;
             }else{
                 Page<TwLeverOrder> objectPage = new Page<>(leverVo.getPageNum(), leverVo.getPageSize());
-                leverVo.setEmployeeId(byId.getEmployeeId());
+                if(inviteType == 1){
+                    leverVo.setEmployeeId(byId.getEmployeeId());
+                }
                 objectPage.setRecords(this.baseMapper.listpage(objectPage, leverVo));
                 return objectPage;
             }
@@ -112,15 +121,19 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         queryWrapper.eq("id", uid); // 添加查询条件
         TwUser twUser = twUserService.getOne(queryWrapper);
 
+        TwCompany company = twCompanyService.getById(twUser.getCompanyId());
+        int inviteType = company.getInviteType();
         String invite = "";
-        EmployeeEntity byInvite = employeeService.getById(Long.valueOf(twUser.getInvit1()));//获取代理人信息
-        if(byInvite == null){
-            QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
-            queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
-            TwUser puser = twUserService.getOne(queryWrapper4);
-            invite = puser.getInvit1();
+        if(inviteType == 1){
+            EmployeeEntity byInvite = employeeService.getById(Long.valueOf(twUser.getInvit1()));//获取代理人信息
+            if(byInvite == null){
+                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+                queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
+                TwUser puser = twUserService.getOne(queryWrapper4);
+                invite = puser.getInvit1();
+            }
+            invite = String.valueOf(byInvite.getEmployeeId());
         }
-        invite = String.valueOf(byInvite.getEmployeeId());
 
         //获取会员资产
         QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();

@@ -63,6 +63,9 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     @Autowired
     private SerialNumberService serialNumberService;
 
+    @Autowired
+    private TwCompanyService twCompanyService;
+
     @Override
     public BigDecimal sumDayWithdraw(String startTime, String endTime,int companyId) {
         QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
@@ -122,6 +125,11 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         EmployeeEntity byId = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
+
+        int companyId = byId.getCompanyId();
+        TwCompany company = twCompanyService.getById(companyId);
+        int inviteType = company.getInviteType();
+
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwMyzc> objectPage = new Page<>(twMyzcVo.getPageNum(), twMyzcVo.getPageSize());
             objectPage.setRecords(baseMapper.listpage(objectPage, twMyzcVo));
@@ -137,7 +145,9 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                 return objectPage;
             }else{
                 Page<TwMyzc> objectPage = new Page<>(twMyzcVo.getPageNum(), twMyzcVo.getPageSize());
-                twMyzcVo.setEmployeeId(byId.getEmployeeId());
+                if(inviteType == 1){
+                    twMyzcVo.setEmployeeId(byId.getEmployeeId());
+                }
                 objectPage.setRecords(baseMapper.listpage(objectPage, twMyzcVo));
                 return objectPage;
             }
