@@ -198,7 +198,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
 
                 QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
-                queryWrapper4.eq("id",1);
+                queryWrapper4.eq("company_id",twCompany.getId());
                 TwHysetting twHysetting = twHysettingService.getOne(queryWrapper4);
                 String hyYlid = twHysetting.getHyYlid();
                 String hyKsid = twHysetting.getHyKsid();
@@ -303,7 +303,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     }
 
                     QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
-                    queryWrapper4.eq("id",1);
+                    queryWrapper4.eq("company_id",twCompany.getId());
                     TwHysetting twHysetting = twHysettingService.getOne(queryWrapper4);
                     String hyYlid = twHysetting.getHyYlid();
                     String hyKsid = twHysetting.getHyKsid();
@@ -406,7 +406,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     }
 
                     QueryWrapper<TwHysetting> queryWrapper4 = new QueryWrapper<>();
-                    queryWrapper4.eq("id",1);
+                    queryWrapper4.eq("company_id",twCompany.getId());
                     TwHysetting twHysetting = twHysettingService.getOne(queryWrapper4);
                     String hyYlid = twHysetting.getHyYlid();
                     String hyKsid = twHysetting.getHyKsid();
@@ -936,7 +936,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             Integer inivtId = 0;
             Long employeeId = 0L;
             EmployeeEntity byInvite = employeeService.getByInvite(invit);//获取代理人信息
-            Integer companyId = byInvite.getCompanyId();
+            Integer companyId = userReq.getCompanyId();
 
             TwCompany company = twCompanyService.getById(companyId);
             int inviteType = company.getInviteType();
