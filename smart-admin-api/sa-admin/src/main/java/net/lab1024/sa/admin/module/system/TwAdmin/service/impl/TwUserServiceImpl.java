@@ -990,10 +990,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 TwUser twUser = new TwUser();
                 twUser.setUsername(username);
                 twUser.setPassword(encryptPwd);
+                twUser.setPhone(username);
                 if(type == 1){
-                    twUser.setPhone(username);
+                    twUser.setInvit(invitCode);
                 }
-                twUser.setInvit(invitCode);
                 if(inviteType == 1){
                     twUser.setInvit1(invit1);
                     twUser.setInvit2(invit2);
