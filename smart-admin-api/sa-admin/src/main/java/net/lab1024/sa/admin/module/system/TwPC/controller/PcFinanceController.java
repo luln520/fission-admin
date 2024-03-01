@@ -198,9 +198,10 @@ public class PcFinanceController {
                                @RequestParam String  payimg,
                                @RequestParam String  language,
                                @RequestParam BigDecimal zznum,
-                               @RequestParam String czline
+                               @RequestParam String czline,
+                               @RequestParam int companyId
                                 ) {
-        return twRechargeService.paycoin(uid,coinname,czaddress,payimg,zznum,czline,language);
+        return twRechargeService.paycoin(uid,coinname,czaddress,payimg,zznum,czline,language,companyId);
     }
 
 
