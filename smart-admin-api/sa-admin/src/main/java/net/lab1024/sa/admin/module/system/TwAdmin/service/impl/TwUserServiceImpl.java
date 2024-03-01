@@ -516,12 +516,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                    return ResponseDTO.userErrorParam("没有此推荐人");
                }
                Long employeeId = byInvite.getEmployeeId();
-               Long departmentId = byInvite.getDepartmentId();
                String path = "#"+employeeId +"#,";
 
                twUser.setInvit1(employeeId.toString());
                twUser.setPath(path);
-               twUser.setDepatmentId(departmentId.intValue());
            }
 
 
@@ -541,6 +539,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            String ip = CommonUtil.getClientIP(request);
            String locationByIP = CommonUtil.getAddress(ip);
 
+           twUser.setDepatmentId(1);
            twUser.setUsername(username);
            twUser.setInvit(invitCode);
            twUser.setPassword(encryptPwd);
