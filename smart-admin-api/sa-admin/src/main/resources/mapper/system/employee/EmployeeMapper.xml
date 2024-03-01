@@ -58,7 +58,7 @@
     <select id="getByLoginNames" resultType="net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity">
         SELECT *
         FROM t_employee where
-            and  login_name = #{loginName}
+              login_name = #{loginName}
             <if test="disabledFlag != null">
                 AND disabled_flag = #{disabledFlag}
             </if>
