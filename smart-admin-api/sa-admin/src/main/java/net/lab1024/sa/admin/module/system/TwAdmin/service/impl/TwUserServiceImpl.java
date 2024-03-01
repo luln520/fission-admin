@@ -944,7 +944,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             String path = "";
             String path1 = "";
             Integer inivtId = 0;
-            Long departmentId = 0L;
             Long employeeId = 0L;
             EmployeeEntity byInvite = employeeService.getByInvite(invit);//获取代理人信息
             Integer companyId = byInvite.getCompanyId();
@@ -964,7 +963,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         }
                     }else{
                         invit1 = invitUser.getInvit1();
-                        departmentId = Long.valueOf(invitUser.getDepatmentId());
                         inivtId = invitUser.getId();
                         path1 = invitUser.getPath();
                         if(StringUtils.isNotEmpty(path1)){  //拼接团队路径
@@ -976,7 +974,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }else{
                     employeeId = byInvite.getEmployeeId();
                     invit1 =employeeId.toString();
-                    departmentId = byInvite.getDepartmentId();
                     path = "#"+employeeId.toString()+"#,";
                 }
             }
@@ -1017,7 +1014,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setAreaCode("");
                 twUser.setAddip(ip);
                 twUser.setCompanyId(companyId);
-                twUser.setDepatmentId(departmentId.intValue());
+                twUser.setDepatmentId(1);
 //                twUser.setAddr(address);
                 long timestampInSeconds = Instant.now().getEpochSecond();
                 twUser.setAddtime((int) (timestampInSeconds));
