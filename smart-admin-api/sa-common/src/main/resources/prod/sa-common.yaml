@@ -70,9 +70,9 @@ logging:
           web:
             readers:
               operation:
-                CachingOperationNameGenerator: warn
+                CachingOperationNameGenerator: debug
             scanners:
-              ApiListingReferenceScanner: warn
+              ApiListingReferenceScanner: debug
 
 # 文件上传 配置
 file:
