@@ -287,6 +287,18 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             query.eq("id", uid);
             TwUser one = twUserService.getOne(query);
 
+            QueryWrapper<TwRecharge> rechargequery = new QueryWrapper<>();
+            rechargequery.eq("id", uid);
+            rechargequery.eq("status", 1);
+            TwRecharge twRech = this.getOne(rechargequery);
+            if(twRech != null){
+                if(language.equals("zh")){
+                    return ResponseDTO.ok("凭证提交待审核");
+                }else{
+                    return ResponseDTO.ok("Voucher submitted for review");
+                }
+            }
+
             String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
             TwRecharge twRecharge = new TwRecharge();
             twRecharge.setUid(uid);
