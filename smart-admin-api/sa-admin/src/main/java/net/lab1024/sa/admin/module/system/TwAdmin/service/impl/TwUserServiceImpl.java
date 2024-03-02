@@ -1030,6 +1030,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUserKuangji.setKjId(twKuangji.getId());
                     twUserKuangji.setKjName(twKuangji.getTitle());
                     twUserKuangji.setUserId(uid);
+                    twUserKuangji.setCompanyId(companyId);
                     twUserKuangji.setCreateTime(new Date());
                     twUserKuangjiService.save(twUserKuangji);
                 }
