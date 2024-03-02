@@ -248,6 +248,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUserKuangji.setMin(new BigDecimal(1000));
                         twUserKuangji.setMax(new BigDecimal(5000));
                         twUserKuangji.setNum(1);
+                        twUserKuangji.setCompanyId(twCompany.getId());
                         twUserKuangji.setKjId(twKuangji.getId());
                         twUserKuangji.setKjName(twKuangji.getTitle());
                         twUserKuangji.setUserId(userid);
@@ -354,6 +355,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             twUserKuangji.setMin(new BigDecimal(1000));
                             twUserKuangji.setMax(new BigDecimal(5000));
                             twUserKuangji.setNum(1);
+                            twUserKuangji.setCompanyId(twCompany.getId());
                             twUserKuangji.setKjId(twKuangji.getId());
                             twUserKuangji.setKjName(twKuangji.getTitle());
                             twUserKuangji.setUserId(userid);
@@ -457,6 +459,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             twUserKuangji.setMin(new BigDecimal(1000));
                             twUserKuangji.setMax(new BigDecimal(5000));
                             twUserKuangji.setNum(1);
+                            twUserKuangji.setCompanyId(twCompany.getId());
                             twUserKuangji.setKjId(twKuangji.getId());
                             twUserKuangji.setKjName(twKuangji.getTitle());
                             twUserKuangji.setUserId(userid);
