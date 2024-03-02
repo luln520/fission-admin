@@ -917,10 +917,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     return ResponseDTO.userErrorParam("Please enter password！");
                 }
             }
-            Integer companyId = userReq.getCompanyId();
 
-            TwCompany company = twCompanyService.getById(companyId);
-            int inviteType = company.getInviteType();
             if(inviteType == 1){
                 if(StringUtils.isEmpty(invit)){
                     if(language.equals("zh")){
