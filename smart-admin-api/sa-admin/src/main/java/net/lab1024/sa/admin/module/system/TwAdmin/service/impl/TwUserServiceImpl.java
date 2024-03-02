@@ -234,7 +234,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
 
                 List<TwUserKuangji> kjList = new ArrayList<>();
-                List<TwKuangji> list2 = twKuangjiService.list();
+                QueryWrapper<TwKuangji> queryWrapper5 = new QueryWrapper<>();
+                queryWrapper5.eq("company_id",twUser.getCompanyId());
+                List<TwKuangji> list2 = twKuangjiService.list(queryWrapper5);
                 for(TwKuangji twKuangji:list2){
                     Integer userid = twUser.getId();
                     Integer kjid = twKuangji.getId();
@@ -341,7 +343,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
 
                     List<TwUserKuangji> kjList = new ArrayList<>();
-                    List<TwKuangji> list2 = twKuangjiService.list();
+                    QueryWrapper<TwKuangji> queryWrapper5 = new QueryWrapper<>();
+                    queryWrapper5.eq("company_id",twUser.getCompanyId());
+                    List<TwKuangji> list2 = twKuangjiService.list(queryWrapper5);
                     for(TwKuangji twKuangji:list2){
                         Integer userid = twUser.getId();
                         Integer kjid = twKuangji.getId();
@@ -445,7 +449,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     }
 
                     List<TwUserKuangji> kjList = new ArrayList<>();
-                    List<TwKuangji> list2 = twKuangjiService.list();
+                    QueryWrapper<TwKuangji> queryWrapper5 = new QueryWrapper<>();
+                    queryWrapper5.eq("company_id",twUser.getCompanyId());
+                    List<TwKuangji> list2 = twKuangjiService.list(queryWrapper5);
                     for(TwKuangji twKuangji:list2){
                         Integer userid = twUser.getId();
                         Integer kjid = twKuangji.getId();
