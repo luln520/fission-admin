@@ -164,6 +164,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
             twUserKuang.setMax(twKuangji.getPricemax());
             twUserKuang.setKjName(twKuangji.getTitle());
             twUserKuang.setUpdateTime(new Date());
+            twUserKuang.setCompanyId(twKuangji.getCompanyId());
             twUserKuangjiService.updateById(twUserKuang);
         }
         return true;
