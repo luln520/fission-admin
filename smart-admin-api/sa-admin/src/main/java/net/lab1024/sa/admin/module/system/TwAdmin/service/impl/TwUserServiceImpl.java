@@ -241,6 +241,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
                     queryWrapper.eq("kj_id", kjid);
                     queryWrapper.eq("user_id", userid);
+                    queryWrapper.eq("company_id",twUser.getCompanyId());
                     TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
                     if(one2 == null){
                         TwUserKuangji twUserKuangji = new TwUserKuangji();
@@ -346,6 +347,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
                         queryWrapper.eq("kj_id", kjid);
                         queryWrapper.eq("user_id", userid);
+                        queryWrapper.eq("company_id",twUser.getCompanyId());
                         TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
                         if(one2 == null){
                             TwUserKuangji twUserKuangji = new TwUserKuangji();
@@ -448,6 +450,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
                         queryWrapper.eq("kj_id", kjid);
                         queryWrapper.eq("user_id", userid);
+                        queryWrapper.eq("company_id",twUser.getCompanyId());
                         TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
                         if(one2 == null){
                             TwUserKuangji twUserKuangji = new TwUserKuangji();
