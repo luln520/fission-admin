@@ -299,18 +299,16 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             Integer companyId = twUser.getCompanyId();
             QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
             queryWrapper2.eq("id", companyId); // 添加查询条件
-            BigDecimal hyFee = company.getHyFee();
-            BigDecimal hyfee = ctzed.subtract(hyFee);
-            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
-            BigDecimal divide = hyfee.divide(new BigDecimal(100), mathContext);
-            BigDecimal tmoney = ctzed.add(divide);
-            if(twUserCoin.getUsdt().compareTo(tmoney) < 0){
+            if(twUserCoin.getUsdt().compareTo(ctzed) < 0){
                 if(language.equals("zh")){
                     return ResponseDTO.userErrorParam("余额不足！");
                 }else{
                     return ResponseDTO.userErrorParam("Insufficient balance！");
                 }
             }
+
+            BigDecimal hyFee = company.getHyFee();
+            BigDecimal tmoney = ctzed.subtract(hyFee);
 
             String symbol = ccoinname.toLowerCase().replace("/", "");
             String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;

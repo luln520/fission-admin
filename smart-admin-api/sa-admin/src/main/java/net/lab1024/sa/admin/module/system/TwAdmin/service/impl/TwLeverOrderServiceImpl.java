@@ -173,8 +173,8 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
             }
         }
 
-
-            if(twUserCoin.getUsdt().compareTo(num) < 0){
+        BigDecimal leverFee = company.getLeverFee();
+        if(twUserCoin.getUsdt().compareTo(num) < 0){
             if(language.equals("zh")){
                 return ResponseDTO.userErrorParam("余额不足！");
             }else{
@@ -219,12 +219,12 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twLeverOrder.setBuyprice(close);
         twLeverOrder.setSellprice(new BigDecimal(0));
         twLeverOrder.setPloss(ploss);
-        twLeverOrder.setPremium(premium);
+        twLeverOrder.setPremium(leverFee);
         twLeverOrder.setKongyk(0);
         twLeverOrder.setInvit(invite);
         this.save(twLeverOrder);
         //扣除USDT额度
-        BigDecimal money = num.subtract(premium);
+        BigDecimal money = num.subtract(leverFee);
         twUserCoinService.decre(uid,money,twUserCoin.getUsdt());
 
         //创建财务日志
