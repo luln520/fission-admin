@@ -894,14 +894,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             //验证码
             String storedCaptcha = captchaMap.get(username);
 
-//            if (storedCaptcha == null) {
-//                // 验证码正确，移除验证码以防止重复使用
-//                if(language.equals("zh")){
-//                    return ResponseDTO.userErrorParam("验证码错误！");
-//                }else{
-//                    return ResponseDTO.userErrorParam("Verification code is wrong");
-//                }
-//            }
+            Integer companyId = userReq.getCompanyId();
+
+            TwCompany company = twCompanyService.getById(companyId);
+            int inviteType = company.getInviteType();
 
             if(storedCaptcha != null){
                 if (!storedCaptcha.equals(regcode)) {
