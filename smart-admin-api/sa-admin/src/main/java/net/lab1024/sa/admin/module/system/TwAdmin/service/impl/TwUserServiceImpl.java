@@ -893,14 +893,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             //验证码
             String storedCaptcha = captchaMap.get(username);
 
-//            if (storedCaptcha == null) {
-//                // 验证码正确，移除验证码以防止重复使用
-//                if(language.equals("zh")){
-//                    return ResponseDTO.userErrorParam("验证码错误！");
-//                }else{
-//                    return ResponseDTO.userErrorParam("Verification code is wrong");
-//                }
-//            }
+            Integer companyId = userReq.getCompanyId();
+
+            TwCompany company = twCompanyService.getById(companyId);
+            int inviteType = company.getInviteType();
 
             if(storedCaptcha != null){
                 if (!storedCaptcha.equals(regcode)) {
@@ -921,11 +917,13 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }
             }
 
-            if(StringUtils.isEmpty(invit)){
-                if(language.equals("zh")){
-                    return ResponseDTO.userErrorParam("请输入邀请码！");
-                }else{
-                    return ResponseDTO.userErrorParam("Please enter the invitation code！");
+            if(inviteType == 1){
+                if(StringUtils.isEmpty(invit)){
+                    if(language.equals("zh")){
+                        return ResponseDTO.userErrorParam("请输入邀请码！");
+                    }else{
+                        return ResponseDTO.userErrorParam("Please enter the invitation code！");
+                    }
                 }
             }
 
@@ -937,10 +935,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             Integer inivtId = 0;
             Long employeeId = 0L;
             EmployeeEntity byInvite = employeeService.getByInvite(invit);//获取代理人信息
-            Integer companyId = userReq.getCompanyId();
 
-            TwCompany company = twCompanyService.getById(companyId);
-            int inviteType = company.getInviteType();
             if(inviteType == 1){
                 QueryWrapper<TwUser> queryUser = new QueryWrapper<>();
                 queryUser.eq("invit", invit);
