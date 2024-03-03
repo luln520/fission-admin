@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
@@ -56,6 +57,7 @@ import java.util.concurrent.ConcurrentMap;
 
 @Service("twUserService")
 @Transactional
+@Slf4j
 public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements TwUserService {
 
     private static final String PASSWORD_SALT_FORMAT = "smart_%s_admin_$^&*";
@@ -1112,6 +1114,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public ResponseDTO auth(TwUser twUser) {
+        log.info("用户认证提交数据：user:",twUser);
         try{
             if(twUser.getLanguage().equals("zh")){
                 if(StringUtils.isEmpty(twUser.getPhone())){
