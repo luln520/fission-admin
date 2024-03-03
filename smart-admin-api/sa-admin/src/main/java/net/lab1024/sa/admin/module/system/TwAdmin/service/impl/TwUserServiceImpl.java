@@ -584,7 +584,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
            queryWrapper.eq("id", twUser.getId());
            TwUser one = this.getOne(queryWrapper);
-
+           if(one.getRzstatus() == 0){
+               one.setRzstatus(1);
+           }
            one.setJifen(twUser.getJifen());
            one.setStatus(twUser.getStatus());
            one.setUserType(twUser.getUserType());
