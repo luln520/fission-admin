@@ -1116,7 +1116,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Override
     public ResponseDTO auth(TwUser twUser) {
         log.info("用户认证提交数据：user{}:",twUser);
-        try{
             if(twUser.getLanguage().equals("zh")){
                 if(StringUtils.isEmpty(twUser.getPhone())){
                     return ResponseDTO.userErrorParam("手机号不能为空");
@@ -1170,13 +1169,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             }else{
                 return ResponseDTO.okMsg("The certification materials were submitted successfully");
             }
-        }catch (Exception e){
-            if(twUser.getLanguage().equals("zh")){
-                return ResponseDTO.okMsg("认证资料提交失败");
-            }else{
-                return ResponseDTO.okMsg("Failed to submit the authentication materials");
-            }
-        }
     }
 
     @Override
