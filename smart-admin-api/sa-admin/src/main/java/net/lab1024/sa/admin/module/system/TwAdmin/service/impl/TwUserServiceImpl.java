@@ -1114,7 +1114,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public ResponseDTO auth(TwUser twUser) {
-        log.info("用户认证提交数据：user:",twUser);
+        log.info("用户认证提交数据：user{}:",twUser);
         try{
             if(twUser.getLanguage().equals("zh")){
                 if(StringUtils.isEmpty(twUser.getPhone())){
