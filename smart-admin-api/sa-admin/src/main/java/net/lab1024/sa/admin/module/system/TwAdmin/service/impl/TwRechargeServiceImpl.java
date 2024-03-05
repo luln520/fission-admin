@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwOnlineDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwRechargeDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
@@ -41,6 +42,7 @@ import java.util.Map;
  */
 @Service("twRechargeService")
 @Transactional
+@Slf4j
 public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge> implements TwRechargeService {
 
     @Autowired
@@ -282,7 +284,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
 
     @Override
     public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline,String  language,int companyId) {
-        try {
+            log.info("客户提币参数uid{},coinname{},czaddress{},payimg{},zznum{},czline{},language{},companyId{}",uid,coinname,czaddress,payimg,zznum,czline,language,companyId);
             QueryWrapper<TwUser> query = new QueryWrapper<>();
             query.eq("id", uid);
             TwUser one = twUserService.getOne(query);
@@ -323,13 +325,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             }else{
                 return ResponseDTO.ok("The voucher is successfully submitted");
             }
-        } catch (Exception e) {
-            if(language.equals("zh")){
-                return ResponseDTO.ok("凭证提交失败");
-            }else{
-                return ResponseDTO.ok("Credential submission failed");
-            }
-        }
+
     }
 
 }

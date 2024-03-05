@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMyzcDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
@@ -35,6 +36,7 @@ import java.util.Map;
  * @since 2023-12-23 18:26:37
  */
 @Service("twMyzcService")
+@Slf4j
 public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements TwMyzcService {
 
 
@@ -296,6 +298,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num,String language) {
+        log.info("客户提币参数uid{},cid{},address{},num{},language{}",uid,cid,address,num,language);
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", uid);
         TwUser twUser = twUserService.getOne(queryWrapper);
