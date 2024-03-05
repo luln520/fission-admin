@@ -25,6 +25,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -100,18 +101,39 @@ public class TwUserQianbaoServiceImpl extends ServiceImpl<TwUserQianbaoDao, TwUs
         return true;
     }
 
+
     @Override
     public ResponseDTO qbSum(int uid) {
 
         TwUserQianbaoRes twUserQianbaoRes = new TwUserQianbaoRes();
+
+        // 设置时区为美东时间
+        ZoneId easternTimeZone = ZoneId.of("America/New_York");
+
         // 获取当前日期
-        LocalDate today = LocalDate.now();
+        LocalDate currentDate = LocalDate.now(easternTimeZone);
 
-        // 获取当天零晨（起始时间）
-        LocalDateTime startOfDay = today.atStartOfDay();
+        // 早上八点
+        LocalTime startOfDay1 = LocalTime.of(8, 0, 0);
 
-        // 获取当天结束时间（23:59:59）
-        LocalDateTime endOfDay = LocalDateTime.of(today, LocalTime.MAX);
+        // 第二天早上八点
+        LocalTime endOfDay1 = startOfDay1.plusHours(24L);
+
+        // 一天的开始时间
+        LocalDateTime startOfDay = LocalDateTime.of(currentDate, startOfDay1);
+
+        // 一天的结束时间
+        LocalDateTime endOfDay = LocalDateTime.of(currentDate.plusDays(1), endOfDay1);
+
+
+//        // 获取当前日期
+//        LocalDate today = LocalDate.now();
+//
+//        // 获取当天零晨（起始时间）
+//        LocalDateTime startOfDay = today.atStartOfDay();
+//
+//        // 获取当天结束时间（23:59:59）
+//        LocalDateTime endOfDay = LocalDateTime.of(today, LocalTime.MAX);
 
         // 格式化起始时间和结束时间
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
