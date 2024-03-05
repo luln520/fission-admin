@@ -20,11 +20,7 @@
 
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin">
-        select * from tw_user_coin where 1=1
-        <if test="obj.companyId != null and obj.companyId !=''">
-            and company_id  = #{obj.companyId}
-        </if>
-        order by id desc
+        select * from tw_user_coin where 1=1  and company_id  = #{obj.companyId}  order by id desc
     </select>
 
 </mapper>

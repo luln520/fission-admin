@@ -3,11 +3,7 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwCoinDao">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin">
-        select * from tw_coin where 1=1
-        <if test="obj.companyId != null and obj.companyId !=''">
-            and company_id = #{obj.companyId}
-        </if>
-        order by sort desc
+        select * from tw_coin where company_id = #{obj.companyId}  order by sort desc
     </select>
 
 </mapper>

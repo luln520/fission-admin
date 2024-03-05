@@ -3,15 +3,12 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserLogDao">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserLog">
-        select * from tw_user_log where 1=1
+        select * from tw_user_log where 1=1   and company_id  = #{obj.companyId}
         <if test="obj.departmentId != null">
             and department = #{obj.departmentId}
         </if>
         <if test="obj.employeeId != null and obj.employeeId !=''">
             and path like concat('%',#{obj.employeeId},'%')
-        </if>
-        <if test="obj.companyId != null and obj.companyId !=''">
-            and company_id  = #{obj.companyId}
         </if>
         order by id desc
     </select>
