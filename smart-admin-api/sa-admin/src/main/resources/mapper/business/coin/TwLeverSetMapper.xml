@@ -5,12 +5,9 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwLeverSetMapper">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwLeverSet">
-        select * from tw_lever_set where 1=1
+        select * from tw_lever_set where 1=1  and company_id  = #{obj.companyId}
         <if test="obj.symbol != null and obj.symbol !=''">
             and symbol = #{obj.symbol}
-        </if>
-        <if test="obj.companyId != null and obj.companyId !=''">
-            and company_id  = #{obj.companyId}
         </if>
         order by create_time desc
     </select>
