@@ -157,6 +157,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public IPage<TwUser> listUserpage(TwUserVo twUserVo,HttpServletRequest request) {
         List<TwUser>  list1 = new ArrayList<>();
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -165,7 +166,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         EmployeeEntity byId1 = employeeService.getById(uidToken);
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
-        TwCompany twCompany = twCompanyService.getById(byId1.getCompanyId());
+        TwCompany twCompany = twCompanyService.getById(twUserVo.getCompanyId());
         int inviteType = twCompany.getInviteType();
 
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
@@ -260,6 +261,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUserKuangjiService.save(twUserKuangji);
 
                         Integer id = twUserKuangji.getId();
+
+                        log.info("用户单控新增成功id{}",id);
                         twUserKuangji.setId(id);
                         kjList.add(twUserKuangji);
                     }else{
@@ -369,6 +372,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             twUserKuangjiService.save(twUserKuangji);
 
                             Integer id = twUserKuangji.getId();
+                            log.info("用户单控新增成功id{}",id);
                             twUserKuangji.setId(id);
                             kjList.add(twUserKuangji);
                         }else{
@@ -476,6 +480,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
                             Integer id = twUserKuangji.getId();
                             twUserKuangji.setId(id);
+                            log.info("用户单控新增成功id{}",id);
                             kjList.add(twUserKuangji);
                         }else{
                             kjList.add(one2);
