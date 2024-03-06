@@ -14,6 +14,7 @@ import net.lab1024.sa.admin.module.system.employee.manager.EmployeeManager;
 import net.lab1024.sa.admin.module.system.role.dao.RoleEmployeeDao;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.code.UserErrorCode;
+import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.PageResult;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.enumeration.UserTypeEnum;
@@ -26,6 +27,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -114,7 +116,12 @@ public class EmployeeService {
      * @param employeeAddForm
      * @return
      */
-    public synchronized ResponseDTO<String> addEmployee(EmployeeAddForm employeeAddForm) {
+    public synchronized ResponseDTO<String> addEmployee(EmployeeAddForm employeeAddForm, HttpServletRequest request) {
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = this.getById(uidToken);
+        int companyId = byId.getCompanyId();
         // 校验名称是否重复
         EmployeeEntity employeeEntity = employeeDao.getByLoginNames(employeeAddForm.getLoginName(),null);
         if (null != employeeEntity) {
@@ -146,6 +153,8 @@ public class EmployeeService {
         entity.setInvite(invite);
         // 保存数据
         entity.setDeletedFlag(Boolean.FALSE);
+        entity.setCompanyId(companyId);
+
         employeeManager.saveEmployee(entity, employeeAddForm.getRoleIdList());
 
         return ResponseDTO.ok(password);
@@ -170,7 +179,12 @@ public class EmployeeService {
      * @param employeeUpdateForm
      * @return
      */
-    public synchronized ResponseDTO<String> updateEmployee(EmployeeUpdateForm employeeUpdateForm) {
+    public synchronized ResponseDTO<String> updateEmployee(EmployeeUpdateForm employeeUpdateForm, HttpServletRequest request) {
+        //需要做token校验, 消息头的token优先于请求query参数的token
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = this.getById(uidToken);
+        int companyId = byId.getCompanyId();
 
         Long employeeId = employeeUpdateForm.getEmployeeId();
         EmployeeEntity employeeEntity = employeeDao.selectById(employeeId);
@@ -204,7 +218,7 @@ public class EmployeeService {
         // 不更新密码
         EmployeeEntity entity = SmartBeanUtil.copy(employeeUpdateForm, EmployeeEntity.class);
         entity.setLoginPwd(null);
-
+        entity.setCompanyId(companyId);
         // 更新数据
         employeeManager.updateEmployee(entity, employeeUpdateForm.getRoleIdList());
 

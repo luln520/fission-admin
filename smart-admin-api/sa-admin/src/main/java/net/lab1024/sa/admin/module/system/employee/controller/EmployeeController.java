@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -38,15 +39,15 @@ public class EmployeeController extends AdminBaseController {
     @ApiOperation(value = "添加员工(返回添加员工的密码) @author 卓大")
     @PostMapping("/employee/add")
     @PreAuthorize("@saAuth.checkPermission('system:employee:add')")
-    public ResponseDTO<String> addEmployee(@Valid @RequestBody EmployeeAddForm employeeAddForm) {
-        return employeeService.addEmployee(employeeAddForm);
+    public ResponseDTO<String> addEmployee(@Valid @RequestBody EmployeeAddForm employeeAddForm, HttpServletRequest httpServletRequest) {
+        return employeeService.addEmployee(employeeAddForm,httpServletRequest);
     }
 
     @ApiOperation(value = "更新员工 @author 卓大")
     @PostMapping("/employee/update")
     @PreAuthorize("@saAuth.checkPermission('system:employee:update')")
-    public ResponseDTO<String> updateEmployee(@Valid @RequestBody EmployeeUpdateForm employeeUpdateForm) {
-        return employeeService.updateEmployee(employeeUpdateForm);
+    public ResponseDTO<String> updateEmployee(@Valid @RequestBody EmployeeUpdateForm employeeUpdateForm, HttpServletRequest request) {
+        return employeeService.updateEmployee(employeeUpdateForm,request);
     }
 
     @ApiOperation(value = "更新员工禁用/启用状态 @author 卓大")
