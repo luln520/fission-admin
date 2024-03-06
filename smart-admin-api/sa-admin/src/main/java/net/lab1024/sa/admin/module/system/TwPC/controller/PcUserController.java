@@ -2,6 +2,7 @@ package net.lab1024.sa.admin.module.system.TwPC.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/pc/user")
 @Api(tags = {AdminSwaggerTagConst.PC.PC_USER})
+@Slf4j
 public class PcUserController {
 
     @Autowired
@@ -106,7 +108,9 @@ public class PcUserController {
     @ApiOperation(value = "用户提交实名认证")
     @NoNeedLogin
     public ResponseDTO auth(@RequestBody TwUser twUser) {
-        return twUserService.auth(twUser);
+        ResponseDTO auth = twUserService.auth(twUser);
+        log.info("用户认证提交返回数据：ResponseDTO{}:",auth);
+        return auth;
     }
 
     /**
