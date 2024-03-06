@@ -284,7 +284,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
 
     @Override
     public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline,String  language,int companyId) {
-            log.info("客户提币参数uid{},coinname{},czaddress{},payimg{},zznum{},czline{},language{},companyId{}",uid,coinname,czaddress,payimg,zznum,czline,language,companyId);
+            log.info("客户充值参数uid{},coinname{},czaddress{},payimg{},zznum{},czline{},language{},companyId{}",uid,coinname,czaddress,payimg,zznum,czline,language,companyId);
             QueryWrapper<TwUser> query = new QueryWrapper<>();
             query.eq("id", uid);
             TwUser one = twUserService.getOne(query);

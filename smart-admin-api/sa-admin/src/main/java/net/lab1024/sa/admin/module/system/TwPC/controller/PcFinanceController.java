@@ -2,6 +2,7 @@ package net.lab1024.sa.admin.module.system.TwPC.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/pc/finance")
 @Api(tags = {AdminSwaggerTagConst.PC.PC_FINANCE})
+@Slf4j
 public class PcFinanceController {
 
     @Autowired
@@ -147,7 +149,9 @@ public class PcFinanceController {
                                 @RequestParam String address,
                                 @RequestParam BigDecimal num,
                                 @RequestParam String language) {
-        return twMyzcService.tbhandle(uid,cid,address,num,language);
+        ResponseDTO tbhandle = twMyzcService.tbhandle(uid, cid, address, num, language);
+        log.info("客户提币返回参数ResponseDTO{}",tbhandle);
+        return tbhandle;
     }
 
     /**
@@ -201,7 +205,9 @@ public class PcFinanceController {
                                @RequestParam String czline,
                                @RequestParam int companyId
                                 ) {
-        return twRechargeService.paycoin(uid,coinname,czaddress,payimg,zznum,czline,language,companyId);
+        ResponseDTO paycoin = twRechargeService.paycoin(uid, coinname, czaddress, payimg, zznum, czline, language, companyId);
+        log.info("客户充值返回参数ResponseDTO{}",paycoin);
+        return paycoin;
     }
 
 
