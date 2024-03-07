@@ -24,5 +24,5 @@ public interface TwNewsService extends IService<TwNews> {
 
     TwNews find(int id);
 
-    List<TwNews> listType();
+    List<TwNews> listType(int companyId);
 }

@@ -27,8 +27,8 @@ public class PcNewsController {
     @GetMapping("/list")
     @ApiOperation(value = "新闻列表")
     @NoNeedLogin
-    public ResponseDTO<List<TwNews>> list() {
-        return ResponseDTO.ok(twNewsService.listType());
+    public ResponseDTO<List<TwNews>> list(@RequestParam int companyId) {
+        return ResponseDTO.ok(twNewsService.listType(companyId));
     }
 
     @GetMapping("/findType")
