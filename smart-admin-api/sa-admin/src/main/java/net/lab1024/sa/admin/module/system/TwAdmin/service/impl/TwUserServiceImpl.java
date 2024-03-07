@@ -691,6 +691,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setAdminId((int) byId.getEmployeeId());
             twAdminLog.setAdminUsername(byId.getActualName());
             twAdminLog.setAction("管理员手动减少");
+            twAdminLog.setCompanyId(one.getCompanyId());
             Instant instant = Instant.now();
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
@@ -708,6 +709,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twRecharge.setUsername(one.getUsername());
             twRecharge.setCoin("usdt");
             twRecharge.setNum(money);
+            twRecharge.setCompanyId(one.getCompanyId());
             twRecharge.setDepartment(one.getDepatmentId());
             twRecharge.setPath(one.getPath());
             twRecharge.setAddtime(new Date());
@@ -723,6 +725,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setAdminId((int) byId.getEmployeeId());
             twAdminLog.setAdminUsername(byId.getActualName());
             twAdminLog.setAction("管理员手动增加");
+            twAdminLog.setCompanyId(one.getCompanyId());
             Instant instant = Instant.now();
             long epochMilli = instant.toEpochMilli();
             twAdminLog.setCreateTime((int) (epochMilli/1000));
@@ -743,6 +746,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         twBill.setDepartment(one.getDepatmentId());
         twBill.setAfternum(twUserCoinService.afternum(uid));
         twBill.setType(1);
+        twBill.setCompanyId(one.getCompanyId());
         twBill.setAddtime(new Date());
         twBill.setSt(1);
         twBill.setRemark(remark);
@@ -1120,7 +1124,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public ResponseDTO auth(TwUser twUser) {
-        log.info("用户认证提交数据：user={}:",twUser);
+        log.info("用户认证提交数据：user{}:",twUser);
             if(twUser.getLanguage().equals("zh")){
                 if(StringUtils.isEmpty(twUser.getPhone())){
                     return ResponseDTO.userErrorParam("手机号不能为空");
