@@ -1120,7 +1120,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public ResponseDTO auth(TwUser twUser) {
-        log.info("用户认证提交数据：user{}:",twUser);
+        log.info("用户认证提交数据：user={}:",twUser);
             if(twUser.getLanguage().equals("zh")){
                 if(StringUtils.isEmpty(twUser.getPhone())){
                     return ResponseDTO.userErrorParam("手机号不能为空");
