@@ -19,6 +19,7 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
 import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -298,6 +299,14 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
                     return ResponseDTO.ok("凭证提交待审核");
                 }else{
                     return ResponseDTO.ok("Voucher submitted for review");
+                }
+            }
+
+            if(StringUtils.isEmpty(payimg)){
+                if(language.equals("zh")){
+                    return ResponseDTO.ok("请上传转账凭证图片");
+                }else{
+                    return ResponseDTO.ok("Please upload a picture of the transfer voucher");
                 }
             }
 
