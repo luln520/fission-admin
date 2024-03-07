@@ -30,4 +30,13 @@ public class PcCompanyController {
     public ResponseDTO<TwCompany> companyDomain(@RequestParam String domain) {
         return ResponseDTO.ok(twCompanyService.companyDomain(domain));
     }
+
+    @GetMapping("/info")
+    @NoNeedLogin
+    @ApiOperation(value = "根据id获取公司信息")
+    public ResponseDTO<TwCompany> companyId(@RequestParam int id) {
+        return ResponseDTO.ok(twCompanyService.detail(id));
+    }
+
+
 }
