@@ -1305,7 +1305,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         BigDecimal myzc = new BigDecimal(0);
 
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("IFNULL(SUM(num), 0) as winHyorder")
+        queryWrapper.select("IFNULL(SUM(ploss), 0) as winHyorder")
                 .eq("is_win", 1)
                 .eq("uid", uid)
                 .eq("status", 2);
