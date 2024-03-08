@@ -668,7 +668,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public boolean setMoney(int uid, int type, BigDecimal money,HttpServletRequest request) {
+    public boolean setMoney(int uid, int type, BigDecimal money,BigDecimal codeAmount,HttpServletRequest request) {
         String remark = "";
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", uid);
@@ -752,6 +752,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         twBill.setRemark(remark);
         twBillService.save(twBill);
 
+        one.setCodeAmount(codeAmount);
         this.updateById(one);
         return true;
     }
@@ -1025,6 +1026,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setUserCode(usercode);
                 twUser.setAreaCode("");
                 twUser.setAddip(ip);
+                twUser.setCodeAmount(new BigDecimal(0));
                 twUser.setCompanyId(companyId);
                 twUser.setDepatmentId(1);
 //                twUser.setAddr(address);
