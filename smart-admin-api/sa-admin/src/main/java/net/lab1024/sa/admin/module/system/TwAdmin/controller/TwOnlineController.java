@@ -79,5 +79,15 @@ public class TwOnlineController {
     public ResponseDTO backOnline(@RequestParam int uid, @RequestParam String content) {
         return twOnlineService.backOnline(uid,content);
     }
+
+
+    @GetMapping("/del")
+    @ResponseBody
+    @ApiOperation(value = "客服删除")
+    public ResponseDTO del(@RequestParam int id) {
+        return twOnlineService.del(id);
+    }
+
+
 }
 
