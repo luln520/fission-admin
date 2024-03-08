@@ -258,8 +258,8 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                 return  ResponseDTO.userErrorParam("充币订单不存在");
             }
 
-            if(one.getStatus() != 1){
-                return  ResponseDTO.userErrorParam("此订单已处理");
+            if(one.getStatus() == 2){
+                return  ResponseDTO.userErrorParam("订单已审核通过");
             }
 
             one.setEndtime(new Date());
