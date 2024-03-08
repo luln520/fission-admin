@@ -221,8 +221,11 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
         queryWrapper.eq("id", id);
         TwRecharge one = this.getOne(queryWrapper);
         if (one != null) {
+            if(one.getStatus() == 2){
+                return ResponseDTO.userErrorParam("订单已审核通过");
+            }
+
             Integer uid = one.getUid();
-            String coinname = one.getCoin().toLowerCase();
             BigDecimal num = one.getNum();
             one.setUpdatetime(new Date());
             one.setStatus(2);
