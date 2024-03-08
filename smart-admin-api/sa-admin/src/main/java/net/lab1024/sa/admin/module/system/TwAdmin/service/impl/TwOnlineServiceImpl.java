@@ -67,6 +67,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
                     Integer state = online.getState();
                     if(state == 0){
                         twOnline.setState(0);
+                        break;
                     }else{
                         twOnline.setState(1);
                     }
@@ -90,6 +91,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
                         Integer state = online.getState();
                         if(state == 0){
                             twOnline.setState(0);
+                            break;
                         }else{
                             twOnline.setState(1);
                         }
@@ -109,6 +111,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
                         Integer state = online.getState();
                         if(state == 0){
                             twOnline.setState(0);
+                            break;
                         }else{
                             twOnline.setState(1);
                         }
