@@ -27,6 +27,8 @@ public interface TwOnlineService extends IService<TwOnline> {
 
     List<TwOnline> getId(int id);
 
+    ResponseDTO del(int id);
+
     ResponseDTO backOnline(int id, String content);
 
     ResponseDTO sendMsg(int uid, String content);

@@ -228,6 +228,9 @@ public class TwUser implements Serializable {
     @ApiModelProperty("信用分")
     private Integer jifen;
 
+    @ApiModelProperty("打码量")
+    private BigDecimal codeAmount;
+
     @ApiModelProperty("部门id")
     private Integer depatmentId;
 

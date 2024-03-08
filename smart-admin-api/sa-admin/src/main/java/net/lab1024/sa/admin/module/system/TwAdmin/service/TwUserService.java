@@ -46,7 +46,7 @@ public interface TwUserService extends IService<TwUser> {
 
     boolean setUser(int id,int type,int uid);
 
-    boolean setMoney(int uid, int type, BigDecimal money,HttpServletRequest request);
+    boolean setMoney(int uid, int type, BigDecimal money,BigDecimal codeAmount,HttpServletRequest request);
 
     boolean userNotice(int uid,int type,String title, String content,String imgs);
 

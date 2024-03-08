@@ -136,6 +136,11 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     }
 
     @Override
+    public ResponseDTO del(int id) {
+        return ResponseDTO.ok(this.removeById(id));
+    }
+
+    @Override
     public ResponseDTO backOnline(int id, String content) {
         try{
             QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();

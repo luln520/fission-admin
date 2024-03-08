@@ -227,8 +227,8 @@ public class TwUserController {
     @GetMapping("/setMoney")
     @ApiOperation(value = "修改用户余额")
     @PreAuthorize("@saAuth.checkPermission('system:user:money')")
-    public ResponseDTO setMoney(@RequestParam int uid, @RequestParam int type, @RequestParam BigDecimal money,HttpServletRequest request) {
-        return ResponseDTO.ok(twUserService.setMoney(uid,type,money,request));
+    public ResponseDTO setMoney(@RequestParam int uid, @RequestParam int type, @RequestParam BigDecimal money,@RequestParam BigDecimal codeAmount,HttpServletRequest request) {
+        return ResponseDTO.ok(twUserService.setMoney(uid,type,money,codeAmount,request));
     }
 
 
