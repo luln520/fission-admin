@@ -10,7 +10,7 @@
         <if test="obj.employeeId != null and obj.employeeId !=''">
             and path like concat('%',#{obj.employeeId},'%')
         </if>
-        group by username order by state ASC,addtime desc
+        group by username,state order by state ASC,addtime desc
     </select>
 
     <select id="getId" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline">
