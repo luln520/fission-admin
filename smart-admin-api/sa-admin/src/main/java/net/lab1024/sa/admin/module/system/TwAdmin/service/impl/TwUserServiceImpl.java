@@ -1045,7 +1045,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
                 captchaMap.remove(username);
 
-                List<TwKuangji> list = twKuangjiService.list();
+                QueryWrapper<TwKuangji> queryWrapper4= new QueryWrapper<>();
+                queryWrapper4.eq("company_id",userReq.getCompanyId());
+                List<TwKuangji> list = twKuangjiService.list(queryWrapper4);
                 for(TwKuangji twKuangji:list){
                     TwUserKuangji twUserKuangji = new TwUserKuangji();
                     twUserKuangji.setMin(twKuangji.getPricemin());
