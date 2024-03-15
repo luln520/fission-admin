@@ -1079,10 +1079,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public ResponseDTO editpassword(UserReq userReq) {
-        try{
-            /**
-             * 验证账号
-             */
+
             String username = userReq.getUsername();
             String password = userReq.getPassword();
             String encryptPwd = getEncryptPwd(password); //MD5密码加密
@@ -1126,9 +1123,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
             captchaMap.remove(username);
             return ResponseDTO.ok("修改成功");
-        }catch (Exception e){
-            return ResponseDTO.ok("修改失败");
-        }
+
     }
 
     @Override
