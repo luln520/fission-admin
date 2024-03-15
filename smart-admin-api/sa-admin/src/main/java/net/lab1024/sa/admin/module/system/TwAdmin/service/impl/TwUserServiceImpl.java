@@ -1093,6 +1093,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
             //验证码
             String storedCaptcha = captchaMap.get(username);
+            if(storedCaptcha == null) {
+                if (userReq.getLanguage().equals("zh")) {
+                    return ResponseDTO.userErrorParam("验证码错误或过期！");
+                } else {
+                    return ResponseDTO.userErrorParam("Verification code is wrong or expired");
+                }
+            }
+
             if(storedCaptcha != null) {
                 if (!storedCaptcha.equals(userReq.getRegcode())) {
                     // 验证码正确，移除验证码以防止重复使用
