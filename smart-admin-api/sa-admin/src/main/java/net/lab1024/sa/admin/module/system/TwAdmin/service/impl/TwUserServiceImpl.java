@@ -1079,21 +1079,30 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public ResponseDTO editpassword(UserReq userReq) {
-        try{
-            /**
-             * 验证账号
-             */
+
             String username = userReq.getUsername();
             String password = userReq.getPassword();
             String encryptPwd = getEncryptPwd(password); //MD5密码加密
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("username", username);
+            queryWrapper.eq("company_id", userReq.getCompanyId());
             TwUser one = this.getOne(queryWrapper);
             if (null == one) {
                 return ResponseDTO.userErrorParam("用户名不存在！");
             }
 
-            //校验验证码
+            //验证码
+            String storedCaptcha = captchaMap.get(username);
+            if(storedCaptcha != null) {
+                if (!storedCaptcha.equals(userReq.getRegcode())) {
+                    // 验证码正确，移除验证码以防止重复使用
+                    if (userReq.getLanguage().equals("zh")) {
+                        return ResponseDTO.userErrorParam("验证码错误或过期！");
+                    } else {
+                        return ResponseDTO.userErrorParam("Verification code is wrong or expired");
+                    }
+                }
+            }
 
             one.setPassword(encryptPwd);
             this.updateById(one);
@@ -1104,17 +1113,17 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setPath(one.getPath());
             twNotice.setCompanyId(one.getCompanyId());
             twNotice.setAccount(one.getUsername());
-            twNotice.setTitle("重置密码");
-            twNotice.setTitleEn("reset Password");
-            twNotice.setContent("登陆密码重置成功");
-            twNotice.setContentEn("Login password reset successfully");
+            twNotice.setTitle("更新密码");
+            twNotice.setTitleEn("update Password");
+            twNotice.setContent("登陆更新密码成功");
+            twNotice.setContentEn("Login password update successfully");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNoticeService.save(twNotice);
+
+            captchaMap.remove(username);
             return ResponseDTO.ok("修改成功");
-        }catch (Exception e){
-            return ResponseDTO.ok("修改失败");
-        }
+
     }
 
     @Override

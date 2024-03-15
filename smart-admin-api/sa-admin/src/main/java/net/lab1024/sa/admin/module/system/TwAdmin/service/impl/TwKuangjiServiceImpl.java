@@ -95,6 +95,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
                 QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
                 queryWrapper1.eq("kj_id", kjid);
                 queryWrapper1.eq("user_id", userid);
+                queryWrapper1.eq("company_id",user.getCompanyId());
                 TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper1);
                 if(one == null){
                     TwUserKuangji twUserKuangji = new TwUserKuangji();

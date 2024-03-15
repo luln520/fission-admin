@@ -60,7 +60,7 @@ public class PcUserController {
      *       M("notice")->add($data); （写入通知表）
      * */
     @PostMapping("/editpassword")
-    @ApiOperation("用户重置密码")
+    @ApiOperation("用户更新密码")
     @NoNeedLogin
     public ResponseDTO editpassword(@Valid @RequestBody UserReq userReq) {
         return twUserService.editpassword(userReq);
