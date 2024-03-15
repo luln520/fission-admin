@@ -1093,7 +1093,18 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 return ResponseDTO.userErrorParam("用户名不存在！");
             }
 
-            //校验验证码
+            //验证码
+            String storedCaptcha = captchaMap.get(username);
+            if(storedCaptcha != null) {
+                if (!storedCaptcha.equals(userReq.getRegcode())) {
+                    // 验证码正确，移除验证码以防止重复使用
+                    if (userReq.getLanguage().equals("zh")) {
+                        return ResponseDTO.userErrorParam("验证码错误或过期！");
+                    } else {
+                        return ResponseDTO.userErrorParam("Verification code is wrong or expired");
+                    }
+                }
+            }
 
             one.setPassword(encryptPwd);
             this.updateById(one);
@@ -1111,6 +1122,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNoticeService.save(twNotice);
+
+            captchaMap.remove(username);
             return ResponseDTO.ok("修改成功");
         }catch (Exception e){
             return ResponseDTO.ok("修改失败");
