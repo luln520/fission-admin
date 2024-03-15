@@ -107,7 +107,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
                     twUserKuangji.setUserId(userid);
                     twUserKuangji.setCompanyId(user.getCompanyId());
                     twUserKuangji.setCreateTime(new Date());
-                    twUserKuangjiService.save(twUserKuangji);
+                    twUserKuangjiService.saveOrUpdate(twUserKuangji);
 
                     twKuangji.setMin(new BigDecimal(1000));
                     twKuangji.setMax(new BigDecimal(5000));

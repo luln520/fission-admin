@@ -406,5 +406,12 @@ public class TimerController {
     public void hycarryout()  {
         timerService.hycarryout();
     }
+
+
+
+    @Scheduled(cron = "0 */1 * * * ?")
+    public void kjUser() {
+        timerService.kjUser();
+    }
 }
 
