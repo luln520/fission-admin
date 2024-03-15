@@ -1104,10 +1104,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setPath(one.getPath());
             twNotice.setCompanyId(one.getCompanyId());
             twNotice.setAccount(one.getUsername());
-            twNotice.setTitle("重置密码");
-            twNotice.setTitleEn("reset Password");
-            twNotice.setContent("登陆密码重置成功");
-            twNotice.setContentEn("Login password reset successfully");
+            twNotice.setTitle("更新密码");
+            twNotice.setTitleEn("update Password");
+            twNotice.setContent("登陆更新密码成功");
+            twNotice.setContentEn("Login password update successfully");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNoticeService.save(twNotice);
