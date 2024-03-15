@@ -1088,6 +1088,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             String encryptPwd = getEncryptPwd(password); //MD5密码加密
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("username", username);
+            queryWrapper.eq("company_id", userReq.getCompanyId());
             TwUser one = this.getOne(queryWrapper);
             if (null == one) {
                 return ResponseDTO.userErrorParam("用户名不存在！");
