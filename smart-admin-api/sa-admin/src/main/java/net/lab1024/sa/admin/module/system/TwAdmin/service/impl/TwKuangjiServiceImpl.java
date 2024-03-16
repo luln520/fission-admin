@@ -190,6 +190,10 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
     @Override
     public boolean delete(int id) {
+        QueryWrapper queryWrapper3 = new QueryWrapper();
+        queryWrapper3.eq("kj_id", id); // 添加查询条件
+        twUserKuangjiService.remove(queryWrapper3);
+
         return this.removeById(id);
     }
 
