@@ -782,8 +782,8 @@ public class TimerServiceImpl {
                 TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper2);
                 if(one2 == null){
                     TwUserKuangji twUserKuangji = new TwUserKuangji();
-                    twUserKuangji.setMin(twKuangji.getMin());
-                    twUserKuangji.setMax(twKuangji.getMax());
+                    twUserKuangji.setMin(twKuangji.getPricemin());
+                    twUserKuangji.setMax(twKuangji.getPricemax());
                     twUserKuangji.setNum(1);
                     twUserKuangji.setCompanyId(twUser.getCompanyId());
                     twUserKuangji.setKjId(twKuangji.getId());
