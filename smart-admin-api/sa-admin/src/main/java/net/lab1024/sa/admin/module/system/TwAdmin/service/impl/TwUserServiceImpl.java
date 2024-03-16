@@ -248,29 +248,21 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     queryWrapper.eq("user_id", userid);
                     queryWrapper.eq("company_id",twUser.getCompanyId());
                     TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
-//                    if(one2 == null){
-//                        TwUserKuangji twUserKuangji = new TwUserKuangji();
-//                        twUserKuangji.setMin(new BigDecimal(1000));
-//                        twUserKuangji.setMax(new BigDecimal(5000));
-//                        twUserKuangji.setNum(1);
-//                        twUserKuangji.setCompanyId(twCompany.getId());
-//                        twUserKuangji.setKjId(twKuangji.getId());
-//                        twUserKuangji.setKjName(twKuangji.getTitle());
-//                        twUserKuangji.setUserId(userid);
-//                        twUserKuangji.setCreateTime(new Date());
-//                        twUserKuangjiService.save(twUserKuangji);
-//
-//                        Integer id = twUserKuangji.getId();
-//
-//                        log.info("用户单控新增成功id{}",id);
-//                        twUserKuangji.setId(id);
-//                        kjList.add(twUserKuangji);
-//                    }else{
-//                        kjList.add(one2);
-//                    }
-                    if(one2 != null){
+                    if(one2 == null){
+                        TwUserKuangji twUserKuangji = new TwUserKuangji();
+                        twUserKuangji.setMin(new BigDecimal(1000));
+                        twUserKuangji.setMax(new BigDecimal(5000));
+                        twUserKuangji.setNum(1);
+                        twUserKuangji.setCompanyId(twCompany.getId());
+                        twUserKuangji.setKjId(twKuangji.getId());
+                        twUserKuangji.setKjName(twKuangji.getTitle());
+                        twUserKuangji.setUserId(userid);
+                        twUserKuangji.setCreateTime(new Date());
+                        kjList.add(twUserKuangji);
+                    }else{
                         kjList.add(one2);
                     }
+
                 }
                 twUser.setTwUserKuangji(kjList);
                 list1.add(twUser);
@@ -362,26 +354,18 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         queryWrapper.eq("user_id", userid);
                         queryWrapper.eq("company_id",twUser.getCompanyId());
                         TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
-//                        if(one2 == null){
-//                            TwUserKuangji twUserKuangji = new TwUserKuangji();
-//                            twUserKuangji.setMin(new BigDecimal(1000));
-//                            twUserKuangji.setMax(new BigDecimal(5000));
-//                            twUserKuangji.setNum(1);
-//                            twUserKuangji.setCompanyId(twCompany.getId());
-//                            twUserKuangji.setKjId(twKuangji.getId());
-//                            twUserKuangji.setKjName(twKuangji.getTitle());
-//                            twUserKuangji.setUserId(userid);
-//                            twUserKuangji.setCreateTime(new Date());
-//                            twUserKuangjiService.save(twUserKuangji);
-//
-//                            Integer id = twUserKuangji.getId();
-//                            log.info("用户单控新增成功id{}",id);
-//                            twUserKuangji.setId(id);
-//                            kjList.add(twUserKuangji);
-//                        }else{
-//                            kjList.add(one2);
-//                        }
-                        if(one2 != null){
+                        if(one2 == null){
+                            TwUserKuangji twUserKuangji = new TwUserKuangji();
+                            twUserKuangji.setMin(new BigDecimal(1000));
+                            twUserKuangji.setMax(new BigDecimal(5000));
+                            twUserKuangji.setNum(1);
+                            twUserKuangji.setCompanyId(twCompany.getId());
+                            twUserKuangji.setKjId(twKuangji.getId());
+                            twUserKuangji.setKjName(twKuangji.getTitle());
+                            twUserKuangji.setUserId(userid);
+                            twUserKuangji.setCreateTime(new Date());
+                            kjList.add(twUserKuangji);
+                        }else{
                             kjList.add(one2);
                         }
                     }
@@ -472,26 +456,18 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         queryWrapper.eq("user_id", userid);
                         queryWrapper.eq("company_id",twUser.getCompanyId());
                         TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
-//                        if(one2 == null){
-//                            TwUserKuangji twUserKuangji = new TwUserKuangji();
-//                            twUserKuangji.setMin(new BigDecimal(1000));
-//                            twUserKuangji.setMax(new BigDecimal(5000));
-//                            twUserKuangji.setNum(1);
-//                            twUserKuangji.setCompanyId(twCompany.getId());
-//                            twUserKuangji.setKjId(twKuangji.getId());
-//                            twUserKuangji.setKjName(twKuangji.getTitle());
-//                            twUserKuangji.setUserId(userid);
-//                            twUserKuangji.setCreateTime(new Date());
-//                            twUserKuangjiService.save(twUserKuangji);
-//
-//                            Integer id = twUserKuangji.getId();
-//                            twUserKuangji.setId(id);
-//                            log.info("用户单控新增成功id{}",id);
-//                            kjList.add(twUserKuangji);
-//                        }else{
-//                            kjList.add(one2);
-//                        }
-                        if(one2 != null){
+                        if(one2 == null){
+                            TwUserKuangji twUserKuangji = new TwUserKuangji();
+                            twUserKuangji.setMin(new BigDecimal(1000));
+                            twUserKuangji.setMax(new BigDecimal(5000));
+                            twUserKuangji.setNum(1);
+                            twUserKuangji.setCompanyId(twCompany.getId());
+                            twUserKuangji.setKjId(twKuangji.getId());
+                            twUserKuangji.setKjName(twKuangji.getTitle());
+                            twUserKuangji.setUserId(userid);
+                            twUserKuangji.setCreateTime(new Date());
+                            kjList.add(twUserKuangji);
+                        }else{
                             kjList.add(one2);
                         }
                     }
