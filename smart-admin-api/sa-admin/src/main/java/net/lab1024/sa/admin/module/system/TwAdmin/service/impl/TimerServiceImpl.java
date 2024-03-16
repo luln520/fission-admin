@@ -782,15 +782,15 @@ public class TimerServiceImpl {
                 TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper2);
                 if(one2 == null){
                     TwUserKuangji twUserKuangji = new TwUserKuangji();
-                    twUserKuangji.setMin(new BigDecimal(1000));
-                    twUserKuangji.setMax(new BigDecimal(5000));
+                    twUserKuangji.setMin(twKuangji.getMin());
+                    twUserKuangji.setMax(twKuangji.getMax());
                     twUserKuangji.setNum(1);
                     twUserKuangji.setCompanyId(twUser.getCompanyId());
                     twUserKuangji.setKjId(twKuangji.getId());
                     twUserKuangji.setKjName(twKuangji.getTitle());
                     twUserKuangji.setUserId(userid);
                     twUserKuangji.setCreateTime(new Date());
-                    twUserKuangjiService.saveOrUpdate(twUserKuangji);
+                    twUserKuangjiService.save(twUserKuangji);
                     log.info("用户单控新增成功userid{}",userid);
                 }
             }
