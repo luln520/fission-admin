@@ -107,7 +107,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
                     twUserKuangji.setUserId(userid);
                     twUserKuangji.setCompanyId(user.getCompanyId());
                     twUserKuangji.setCreateTime(new Date());
-                    twUserKuangjiService.save(twUserKuangji);
+                    twUserKuangjiService.saveOrUpdate(twUserKuangji);
 
                     twKuangji.setMin(new BigDecimal(1000));
                     twKuangji.setMax(new BigDecimal(5000));
@@ -190,6 +190,10 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
 
     @Override
     public boolean delete(int id) {
+        QueryWrapper queryWrapper3 = new QueryWrapper();
+        queryWrapper3.eq("kj_id", id); // 添加查询条件
+        twUserKuangjiService.remove(queryWrapper3);
+
         return this.removeById(id);
     }
 

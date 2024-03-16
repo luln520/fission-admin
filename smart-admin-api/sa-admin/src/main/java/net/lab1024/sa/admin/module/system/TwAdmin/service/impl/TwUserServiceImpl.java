@@ -258,16 +258,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUserKuangji.setKjName(twKuangji.getTitle());
                         twUserKuangji.setUserId(userid);
                         twUserKuangji.setCreateTime(new Date());
-                        twUserKuangjiService.save(twUserKuangji);
-
-                        Integer id = twUserKuangji.getId();
-
-                        log.info("用户单控新增成功id{}",id);
-                        twUserKuangji.setId(id);
                         kjList.add(twUserKuangji);
                     }else{
                         kjList.add(one2);
                     }
+
                 }
                 twUser.setTwUserKuangji(kjList);
                 list1.add(twUser);
@@ -369,11 +364,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             twUserKuangji.setKjName(twKuangji.getTitle());
                             twUserKuangji.setUserId(userid);
                             twUserKuangji.setCreateTime(new Date());
-                            twUserKuangjiService.save(twUserKuangji);
-
-                            Integer id = twUserKuangji.getId();
-                            log.info("用户单控新增成功id{}",id);
-                            twUserKuangji.setId(id);
                             kjList.add(twUserKuangji);
                         }else{
                             kjList.add(one2);
@@ -476,11 +466,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             twUserKuangji.setKjName(twKuangji.getTitle());
                             twUserKuangji.setUserId(userid);
                             twUserKuangji.setCreateTime(new Date());
-                            twUserKuangjiService.save(twUserKuangji);
-
-                            Integer id = twUserKuangji.getId();
-                            twUserKuangji.setId(id);
-                            log.info("用户单控新增成功id{}",id);
                             kjList.add(twUserKuangji);
                         }else{
                             kjList.add(one2);
@@ -1045,22 +1030,22 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
                 captchaMap.remove(username);
 
-                QueryWrapper<TwKuangji> queryWrapper4= new QueryWrapper<>();
-                queryWrapper4.eq("company_id",userReq.getCompanyId());
-                List<TwKuangji> list = twKuangjiService.list(queryWrapper4);
-                for(TwKuangji twKuangji:list){
-                    TwUserKuangji twUserKuangji = new TwUserKuangji();
-                    twUserKuangji.setMin(twKuangji.getPricemin());
-                    twUserKuangji.setMax(twKuangji.getPricemax());
-                    twUserKuangji.setNum(1);
-                    twUserKuangji.setCompanyId(companyId);
-                    twUserKuangji.setKjId(twKuangji.getId());
-                    twUserKuangji.setKjName(twKuangji.getTitle());
-                    twUserKuangji.setUserId(uid);
-                    twUserKuangji.setCompanyId(companyId);
-                    twUserKuangji.setCreateTime(new Date());
-                    twUserKuangjiService.save(twUserKuangji);
-                }
+//                QueryWrapper<TwKuangji> queryWrapper4= new QueryWrapper<>();
+//                queryWrapper4.eq("company_id",userReq.getCompanyId());
+//                List<TwKuangji> list = twKuangjiService.list(queryWrapper4);
+//                for(TwKuangji twKuangji:list){
+//                    TwUserKuangji twUserKuangji = new TwUserKuangji();
+//                    twUserKuangji.setMin(twKuangji.getPricemin());
+//                    twUserKuangji.setMax(twKuangji.getPricemax());
+//                    twUserKuangji.setNum(1);
+//                    twUserKuangji.setCompanyId(companyId);
+//                    twUserKuangji.setKjId(twKuangji.getId());
+//                    twUserKuangji.setKjName(twKuangji.getTitle());
+//                    twUserKuangji.setUserId(uid);
+//                    twUserKuangji.setCompanyId(companyId);
+//                    twUserKuangji.setCreateTime(new Date());
+//                    twUserKuangjiService.save(twUserKuangji);
+//                }
 
                 if(language.equals("zh")){
                     return ResponseDTO.ok("注册成功！");

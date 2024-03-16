@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 @Service
@@ -50,9 +54,15 @@ public class TimerServiceImpl {
     @Autowired
     private TwUserService twUserService;
 
+    @Autowired
+    private TwKuangjiService twKuangjiService;
+
 
     @Autowired
     private TwKjprofitDao twKjprofitDao;
+
+    @Autowired
+    private TwUserKuangjiService twUserKuangjiService;
 
     private static final Map<String, String> map = new HashMap<>();
 
@@ -731,5 +741,60 @@ public class TimerServiceImpl {
                 }
             }
         }
+    }
+
+
+    public void kjUser(){
+        // 获取当前时间
+        Date now = new Date();
+        String nowDate = cn.hutool.core.date.DateUtil.format(now, "yyyy-MM-dd");
+        // 获取今日开始和结束时间
+        String startTime = nowDate + " 00:00:00";
+        String endTime = nowDate + " 23:59:59";
+
+
+        // 获取今天的日期
+        LocalDate today = LocalDate.now();
+
+        // 获取今天的开始时间和结束时间
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        // 将时间转换为时间戳（秒级别）
+        long startTimestamp = startOfDay.toEpochSecond(ZoneOffset.UTC);
+        long endTimestamp = endOfDay.toEpochSecond(ZoneOffset.UTC);
+
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.ge("addtime", startTimestamp);
+        queryWrapper.le("addtime", endTimestamp);
+        List<TwUser> list = twUserService.list(queryWrapper);
+        for(TwUser twUser:list){
+            QueryWrapper<TwKuangji> queryWrapper5 = new QueryWrapper<>();
+            queryWrapper5.eq("company_id",twUser.getCompanyId());
+            List<TwKuangji> list2 = twKuangjiService.list(queryWrapper5);
+            for(TwKuangji twKuangji:list2){
+                Integer userid = twUser.getId();
+                Integer kjid = twKuangji.getId();
+                QueryWrapper<TwUserKuangji> queryWrapper2= new QueryWrapper<>();
+                queryWrapper2.eq("kj_id", kjid);
+                queryWrapper2.eq("user_id", userid);
+                queryWrapper2.eq("company_id",twUser.getCompanyId());
+                TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper2);
+                if(one2 == null){
+                    TwUserKuangji twUserKuangji = new TwUserKuangji();
+                    twUserKuangji.setMin(twKuangji.getPricemin());
+                    twUserKuangji.setMax(twKuangji.getPricemax());
+                    twUserKuangji.setNum(1);
+                    twUserKuangji.setCompanyId(twUser.getCompanyId());
+                    twUserKuangji.setKjId(twKuangji.getId());
+                    twUserKuangji.setKjName(twKuangji.getTitle());
+                    twUserKuangji.setUserId(userid);
+                    twUserKuangji.setCreateTime(new Date());
+                    twUserKuangjiService.save(twUserKuangji);
+                    log.info("用户单控新增成功userid{}",userid);
+                }
+            }
+        }
+
     }
 }
