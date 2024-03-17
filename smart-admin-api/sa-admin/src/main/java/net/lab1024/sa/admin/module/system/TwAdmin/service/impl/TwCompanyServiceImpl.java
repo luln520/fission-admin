@@ -18,6 +18,7 @@ import net.lab1024.sa.admin.module.system.employee.manager.EmployeeManager;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.SmartBeanUtil;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,12 +61,11 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
     @Override
     public ResponseDTO addOrUpdate(TwCompany twCompany) {
 
-
-        String encryptPwd = getEncryptPwd(twCompany.getCompanyPwd());
-        twCompany.setCompanyPwd(encryptPwd);
         TwCompany twCompany1 = SmartBeanUtil.copy(twCompany, TwCompany.class);
 
         if(twCompany.getId() == null){
+            String encryptPwd = getEncryptPwd(twCompany.getCompanyPwd());
+            twCompany.setCompanyPwd(encryptPwd);
             EmployeeEntity entity  = new EmployeeEntity();
             // 设置密码 默认密码
             entity.setLoginPwd(encryptPwd);
@@ -83,12 +83,19 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
 
             this.save(twCompany1);
         }else{
+            String encryptPwd = "";
+            if(StringUtils.isNotEmpty(twCompany.getCompanyPwd())){
+                 encryptPwd = getEncryptPwd(twCompany.getCompanyPwd());
+                twCompany.setCompanyPwd(encryptPwd);
+            }
             this.updateById(twCompany);
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.like("login_name",twCompany.getCompanyAccount());
             EmployeeEntity one = employeeManager.getOne(queryWrapper);
             // 设置密码 默认密码
-            one.setLoginPwd(encryptPwd);
+            if(StringUtils.isNotEmpty(twCompany.getCompanyPwd())){
+                one.setLoginPwd(encryptPwd);
+            }
             one.setLoginName(twCompany.getCompanyAccount());
             one.setActualName(twCompany.getCompanyAccount());
             one.setUpdateTime(LocalDateTime.now());
