@@ -65,6 +65,14 @@ public class TwContent implements Serializable {
     */
     @ApiModelProperty("阿拉伯")
     private String contentAr;
+    @ApiModelProperty("德语")
+    private String contentDe;
+    @ApiModelProperty("法语")
+    private String contentFr;
+    @ApiModelProperty("葡萄牙语")
+    private String contentPt;
+    @ApiModelProperty("意大利语")
+    private String contentIt;
     /**
     * 添加时间
     */
