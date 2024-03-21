@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.lock.RedissonLockAnnotation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwLeverOrder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwLeverSet;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwLeverage;
@@ -80,6 +81,7 @@ public class PcLeverOrderController {
     @ResponseBody
     @ApiOperation(value = "平仓")
     @NoNeedLogin
+    @RedissonLockAnnotation(keyParts = "uid")
     public ResponseDTO closeorder(@RequestParam int uid,@RequestParam int lid,@RequestParam String language){
         return twLeverOrderService.closeorder(uid,lid,language);
     }

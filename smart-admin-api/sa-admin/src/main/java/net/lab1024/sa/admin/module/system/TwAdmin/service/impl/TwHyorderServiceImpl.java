@@ -251,6 +251,8 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
     @Override
     public ResponseDTO creatorder(int uid, int ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language) {
+        String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", uid); // 添加查询条件
             TwUser twUser = twUserService.getOne(queryWrapper);
@@ -318,8 +320,6 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             JSONObject jsonObject = JSONObject.parseObject(data.get(0).toString());
 
             BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
-
-            String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
 
             TwHyorder twHyorder = new TwHyorder();
             twHyorder.setUid(uid);
