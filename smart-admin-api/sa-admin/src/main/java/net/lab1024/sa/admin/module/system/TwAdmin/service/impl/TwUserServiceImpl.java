@@ -585,6 +585,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            one.setUserType(twUser.getUserType());
            one.setRztype(twUser.getRztype());
            one.setCardfm(twUser.getCardfm());
+           one.setPhone(twUser.getPhone());
            one.setCardzm(twUser.getCardzm());
            one.setUsername(twUser.getUsername());
            if(StringUtils.isNotEmpty(twUser.getPassword())){
