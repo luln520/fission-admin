@@ -4,13 +4,6 @@ import lombok.Data;
 import net.lab1024.sa.common.common.domain.PageParam;
 
 @Data
-public class TwUserVo extends PageParam {
-
-     private String username;
-
-     private String userCode;
-
-     private Integer rzstatus;
-
-
+public class OnlineVo extends PageParam {
+    private Integer state;
 }

@@ -13,4 +13,6 @@ public class TwMyzcVo extends PageParam {
 
         private String userCode;
 
+        private Integer status;
+
 }

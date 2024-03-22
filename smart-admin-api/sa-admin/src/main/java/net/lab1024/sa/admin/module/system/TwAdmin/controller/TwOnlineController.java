@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.OnlineVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwOnlineService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.PageParam;
@@ -35,8 +36,8 @@ public class TwOnlineController {
     @PostMapping("/list")
     @ApiOperation(value = "获取所有用户的聊天列表")
     @ResponseBody
-    public ResponseDTO<IPage<TwOnline>> list(@Valid @RequestBody PageParam pageParam, HttpServletRequest request) {
-        return ResponseDTO.ok(twOnlineService.listpage(pageParam,request));
+    public ResponseDTO<IPage<TwOnline>> list(@Valid @RequestBody OnlineVo onlineVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twOnlineService.listpage(onlineVo,request));
     }
 
 

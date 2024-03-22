@@ -10,6 +10,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.OnlineVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNoticeService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwOnlineService;
@@ -48,7 +49,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     @Autowired
     private EmployeeService employeeService;
     @Override
-    public IPage<TwOnline> listpage(PageParam pageParam, HttpServletRequest request) {
+    public IPage<TwOnline> listpage(OnlineVo onlineVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
         String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
@@ -56,8 +57,8 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
         RoleEmployeeVO roleEmployeeVO = employeeService.selectRoleByEmployeeId(uidToken);
 
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
-            Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-            List<TwOnline> listpage = baseMapper.listpage(objectPage, pageParam);
+            Page<TwOnline> objectPage = new Page<>(onlineVo.getPageNum(), onlineVo.getPageSize());
+            List<TwOnline> listpage = baseMapper.listpage(objectPage, onlineVo);
             for (TwOnline twOnline:listpage){
                 Integer uid = twOnline.getUid();
                 QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
@@ -80,8 +81,8 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
         if(roleEmployeeVO.getWordKey().equals("agent")){
             int supervisorFlag = byId.getSupervisorFlag();
             if(supervisorFlag == 1){
-                Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-                List<TwOnline> listpage = baseMapper.listpage(objectPage, pageParam);
+                Page<TwOnline> objectPage = new Page<>(onlineVo.getPageNum(), onlineVo.getPageSize());
+                List<TwOnline> listpage = baseMapper.listpage(objectPage, onlineVo);
                 for (TwOnline twOnline:listpage){
                     Integer uid = twOnline.getUid();
                     QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
@@ -100,8 +101,8 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
                 objectPage.setRecords(listpage);
                 return objectPage;
             }else{
-                Page<TwOnline> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
-                List<TwOnline> listpage = baseMapper.listpage(objectPage, pageParam);
+                Page<TwOnline> objectPage = new Page<>(onlineVo.getPageNum(), onlineVo.getPageSize());
+                List<TwOnline> listpage = baseMapper.listpage(objectPage, onlineVo);
                 for (TwOnline twOnline:listpage){
                     Integer uid = twOnline.getUid();
                     QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
