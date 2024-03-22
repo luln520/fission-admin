@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.lock.RedissonLockAnnotation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjprofit;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKuangji;
@@ -421,6 +422,7 @@ public class PcKuangJiController {
     @ResponseBody
     @ApiOperation(value = "购买独资矿机")
     @NoNeedLogin
+    @RedissonLockAnnotation(keyParts = "uid")
     public ResponseDTO buyKuangji(@RequestParam int uid, @RequestParam int kid, @RequestParam BigDecimal buynum,@RequestParam String language) {
         return twKuangjiService.buyKuangji(uid,kid,buynum,language);
     }

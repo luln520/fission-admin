@@ -4,6 +4,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.lock.RedissonLockAnnotation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
@@ -187,6 +188,7 @@ public class PcLoginController {
     @NoNeedLogin
     @PostMapping("/register")
     @ApiOperation("用户注册")
+    @RedissonLockAnnotation(keyParts = "username")
     public ResponseDTO register(@Valid @RequestBody UserReq userReq) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String ip = ServletUtil.getClientIP(request);

@@ -540,6 +540,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUser.setAreaCode("");
            twUser.setUserCode(usercode);
            twUser.setAddip(ip);
+           twUser.setPhone(phone);
            twUser.setAddr(locationByIP);
            twUser.setRealName(username);
            long timestampInSeconds = Instant.now().getEpochSecond();
@@ -584,6 +585,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            one.setUserType(twUser.getUserType());
            one.setRztype(twUser.getRztype());
            one.setCardfm(twUser.getCardfm());
+           one.setPhone(twUser.getPhone());
            one.setCardzm(twUser.getCardzm());
            one.setUsername(twUser.getUsername());
            if(StringUtils.isNotEmpty(twUser.getPassword())){
@@ -909,6 +911,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
             TwCompany company = twCompanyService.getById(companyId);
             int inviteType = company.getInviteType();
+
+            //验证码
+            if(storedCaptcha == null) {
+                if (userReq.getLanguage().equals("zh")) {
+                    return ResponseDTO.userErrorParam("验证码错误或过期！");
+                } else {
+                    return ResponseDTO.userErrorParam("Verification code is wrong or expired");
+                }
+            }
 
             if(storedCaptcha != null){
                 if (!storedCaptcha.equals(regcode)) {

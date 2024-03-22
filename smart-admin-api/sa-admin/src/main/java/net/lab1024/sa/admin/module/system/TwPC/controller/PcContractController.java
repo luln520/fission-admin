@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.TwPC.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.lock.RedissonLockAnnotation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
@@ -464,6 +465,7 @@ public class PcContractController {
     @ResponseBody
     @ApiOperation(value = "秒合约建仓")
     @NoNeedLogin
+    @RedissonLockAnnotation(keyParts = "uid")
     public ResponseDTO creatorder(@RequestParam int uid,
                                   @RequestParam int ctime,
                                   @RequestParam BigDecimal ctzed,
