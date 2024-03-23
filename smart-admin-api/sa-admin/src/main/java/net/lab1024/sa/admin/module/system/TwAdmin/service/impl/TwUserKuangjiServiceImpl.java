@@ -31,16 +31,20 @@ public class TwUserKuangjiServiceImpl extends ServiceImpl<TwUserKuangjiMapper, T
 //        one.setNum(twUserKuangji.getNum());
 //        one.setUpdateTime(new Date());
 //        return this.updateById(one);
+        if(twUserKuangji == null){
+            this.save(twUserKuangji);
+        }else{
+            QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("kj_id", twUserKuangji.getKjId());
+            queryWrapper.eq("user_id", twUserKuangji.getUserId());
+            TwUserKuangji one = this.getOne(queryWrapper);
+            one.setNum(twUserKuangji.getNum());
+            one.setMin(twUserKuangji.getMin());
+            one.setMax(twUserKuangji.getMax());
+            one.setFloatMin(twUserKuangji.getFloatMin());
+            this.updateById(one);
+        }
 
-        QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("kj_id", twUserKuangji.getKjId());
-        queryWrapper.eq("user_id", twUserKuangji.getUserId());
-        TwUserKuangji one = this.getOne(queryWrapper);
-        one.setNum(twUserKuangji.getNum());
-        one.setMin(twUserKuangji.getMin());
-        one.setMax(twUserKuangji.getMax());
-        one.setFloatMin(twUserKuangji.getFloatMin());
-        this.updateById(one);
 
 //        QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
 //        queryWrapper1.eq("user_id", twUserKuangji.getUserId());
