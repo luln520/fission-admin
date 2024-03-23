@@ -237,9 +237,9 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
                 }else{
                     if(buynum.compareTo(one.getFloatMin()) < 0){
                         if(language.equals("zh")){
-                            return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
+                            return ResponseDTO.userErrorParam("此矿机没有配额，请稍后再试！");
                         }else{
-                            return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
+                            return ResponseDTO.userErrorParam("This miner has no quota, please try again later!");
                         }
                     }
                 }
