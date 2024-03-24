@@ -168,63 +168,69 @@ public class TimerServiceImpl {
         queryWrapper.eq("status",1);
         List<TwKjorder> list = twKjorderService.list(queryWrapper);
         for(TwKjorder twKjorder:list){
-            String coinname="";
-            Integer kid = twKjorder.getKid();
-            Integer uid = twKjorder.getUid();
-            String username = twKjorder.getUsername();
-            BigDecimal outnum = twKjorder.getOutnum();
+            try{
+                String coinname="";
+                Integer kid = twKjorder.getKid();
+                Integer uid = twKjorder.getUid();
+                String username = twKjorder.getUsername();
+                BigDecimal outnum = twKjorder.getOutnum();
 
-            QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
-            queryWrapper4.eq("id",uid);
-            TwUser twUser = twUserService.getOne(queryWrapper4);
+                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+                queryWrapper4.eq("id",uid);
+                TwUser twUser = twUserService.getOne(queryWrapper4);
 
-            String nowdate = DateUtil.date2Str(new Date(), "yyyy-MM-dd");
-            QueryWrapper<TwKjprofit> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("uid",uid);
-            queryWrapper2.eq("kid",kid);
-            queryWrapper2.eq("day",nowdate);
-            TwKjprofit twKjprofit = twKjprofitService.getOne(queryWrapper2);
-            if(twKjprofit == null){
-                TwKjprofit twKjprofit1 = new TwKjprofit();
-                twKjprofit1.setUid(uid);
-                twKjprofit1.setOrderNo(twKjorder.getOrderNo());
-                twKjprofit1.setUsername(username);
-                twKjprofit1.setUserCode(twKjorder.getUserCode());
-                twKjprofit1.setPath(twUser.getPath());
-                twKjprofit1.setDepartment(twUser.getDepatmentId());
-                twKjprofit1.setKid(twKjorder.getKid());
-                twKjprofit1.setKtitle(twKjorder.getKjtitle());
-                twKjprofit1.setNum(outnum);
-                twKjprofit1.setCompanyId(twUser.getCompanyId());
-                twKjprofit1.setCoin(coinname);
-                twKjprofit1.setAddtime(new Date());
-                twKjprofit1.setDay(DateUtil.str2DateDay(nowdate));
-                twKjprofitService.save(twKjprofit1);
+                String nowdate = DateUtil.date2Str(new Date(), "yyyy-MM-dd");
+                QueryWrapper<TwKjprofit> queryWrapper2 = new QueryWrapper<>();
+                queryWrapper2.eq("uid",uid);
+                queryWrapper2.eq("kid",kid);
+                queryWrapper2.eq("day",nowdate);
+                TwKjprofit twKjprofit = twKjprofitService.getOne(queryWrapper2);
+                if(twKjprofit == null){
+                    TwKjprofit twKjprofit1 = new TwKjprofit();
+                    twKjprofit1.setUid(uid);
+                    twKjprofit1.setOrderNo(twKjorder.getOrderNo());
+                    twKjprofit1.setUsername(username);
+                    twKjprofit1.setUserCode(twKjorder.getUserCode());
+                    if(StringUtils.isNotEmpty(twUser.getPath())){
+                        twKjprofit1.setPath(twUser.getPath());
+                    }
+                    twKjprofit1.setDepartment(twUser.getDepatmentId());
+                    twKjprofit1.setKid(twKjorder.getKid());
+                    twKjprofit1.setKtitle(twKjorder.getKjtitle());
+                    twKjprofit1.setNum(outnum);
+                    twKjprofit1.setCompanyId(twUser.getCompanyId());
+                    twKjprofit1.setCoin(coinname);
+                    twKjprofit1.setAddtime(new Date());
+                    twKjprofit1.setDay(DateUtil.str2DateDay(nowdate));
+                    twKjprofitService.save(twKjprofit1);
 
 //                twUserCoinService.incre(uid,outnum,twUserCoin.getUsdt());
 
-                //写资金日志
-                TwBill twBill = new TwBill();
-                twBill.setUid(uid);
-                twBill.setUsername(username);
-                twBill.setUserCode(twUser.getUserCode());
-                twBill.setPath(twUser.getPath());
-                twBill.setDepartment(twUser.getDepatmentId());
-                twBill.setNum(outnum);
-                twBill.setCoinname("usdt");
-                twBill.setCompanyId(twUser.getCompanyId());
-                twBill.setAfternum(twUserCoinService.afternum(uid));
-                twBill.setType(8);
-                twBill.setAddtime(new Date());
-                twBill.setSt(1);
-                twBill.setRemark("矿机收益释放");
-                twBillService.save(twBill);
+                    //写资金日志
+                    TwBill twBill = new TwBill();
+                    twBill.setUid(uid);
+                    twBill.setUsername(username);
+                    twBill.setUserCode(twUser.getUserCode());
+                    twBill.setPath(twUser.getPath());
+                    twBill.setDepartment(twUser.getDepatmentId());
+                    twBill.setNum(outnum);
+                    twBill.setCoinname("usdt");
+                    twBill.setCompanyId(twUser.getCompanyId());
+                    twBill.setAfternum(twUserCoinService.afternum(uid));
+                    twBill.setType(8);
+                    twBill.setAddtime(new Date());
+                    twBill.setSt(1);
+                    twBill.setRemark("矿机收益释放");
+                    twBillService.save(twBill);
 
-                Integer synum = twKjorder.getSynum();
-                twKjorder.setSynum(synum + 1);
+                    Integer synum = twKjorder.getSynum();
+                    twKjorder.setSynum(synum + 1);
 
-                twKjorderService.updateById(twKjorder);
+                    twKjorderService.updateById(twKjorder);
 
+                }
+            }catch (Exception e){
+                continue;
             }
         }
     }

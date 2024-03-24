@@ -31,23 +31,30 @@ public class TwUserKuangjiServiceImpl extends ServiceImpl<TwUserKuangjiMapper, T
 //        one.setNum(twUserKuangji.getNum());
 //        one.setUpdateTime(new Date());
 //        return this.updateById(one);
-
-        QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("kj_id", twUserKuangji.getKjId());
-        queryWrapper.eq("user_id", twUserKuangji.getUserId());
-        TwUserKuangji one = this.getOne(queryWrapper);
-        one.setNum(twUserKuangji.getNum());
-        this.updateById(one);
-
-        QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("user_id", twUserKuangji.getUserId());
-        List<TwUserKuangji> list1 = this.list(queryWrapper1);
-        for(TwUserKuangji twUserKuang:list1){
-            twUserKuang.setMin(twUserKuangji.getMin());
-            twUserKuang.setMax(twUserKuangji.getMax());
-            twUserKuang.setUpdateTime(new Date());
-            this.updateById(twUserKuang);
+        if(twUserKuangji == null){
+            this.save(twUserKuangji);
+        }else{
+            QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("kj_id", twUserKuangji.getKjId());
+            queryWrapper.eq("user_id", twUserKuangji.getUserId());
+            TwUserKuangji one = this.getOne(queryWrapper);
+            one.setNum(twUserKuangji.getNum());
+            one.setMin(twUserKuangji.getMin());
+            one.setMax(twUserKuangji.getMax());
+            one.setFloatMin(twUserKuangji.getFloatMin());
+            this.updateById(one);
         }
+
+
+//        QueryWrapper<TwUserKuangji> queryWrapper1 = new QueryWrapper<>();
+//        queryWrapper1.eq("user_id", twUserKuangji.getUserId());
+//        List<TwUserKuangji> list1 = this.list(queryWrapper1);
+//        for(TwUserKuangji twUserKuang:list1){
+//            twUserKuang.setMin(twUserKuangji.getMin());
+//            twUserKuang.setMax(twUserKuangji.getMax());
+//            twUserKuang.setUpdateTime(new Date());
+//            this.updateById(twUserKuang);
+//        }
 
         return true;
     }

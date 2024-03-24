@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.OnlineVo;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,7 @@ import java.util.List;
  * @since 2023-12-23 18:27:16
  */
 public interface TwOnlineService extends IService<TwOnline> {
-    IPage<TwOnline> listpage(PageParam pageParam, HttpServletRequest request);
+    IPage<TwOnline> listpage(OnlineVo onlineVo, HttpServletRequest request);
 
     List<TwOnline> lists(int uid,int companyId);
 

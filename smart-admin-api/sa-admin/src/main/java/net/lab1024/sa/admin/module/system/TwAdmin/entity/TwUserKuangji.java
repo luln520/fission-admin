@@ -53,6 +53,9 @@ public class TwUserKuangji implements Serializable {
     */
     @ApiModelProperty("投资金额最小值")
     private BigDecimal min;
+
+    @ApiModelProperty("浮动最低金额")
+    private BigDecimal floatMin;
     /**
     * 投资金额最大值
     */

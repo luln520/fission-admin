@@ -226,13 +226,23 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         queryWrapper3.eq("user_id", user.getId()); // 添加查询条件
         queryWrapper3.eq("kj_id", kuangji.getId()); // 添加查询条件
         TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper3);
-        if(buynum.compareTo(one.getMin()) < 0){
-            if(language.equals("zh")){
-                return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
-            }else{
-                return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
-            }
-        }
+                if(buynum.compareTo(one.getFloatMin()) == 0){
+                    if(buynum.compareTo(one.getMin()) < 0){
+                        if(language.equals("zh")){
+                            return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
+                        }else{
+                            return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
+                        }
+                    }
+                }else{
+                    if(buynum.compareTo(one.getFloatMin()) < 0){
+                        if(language.equals("zh")){
+                            return ResponseDTO.userErrorParam("此矿机没有配额，请稍后再试！");
+                        }else{
+                            return ResponseDTO.userErrorParam("This miner has no quota, please try again later!");
+                        }
+                    }
+                }
 
         if(one.getMax().compareTo(buynum) < 0){
             if(language.equals("zh")){

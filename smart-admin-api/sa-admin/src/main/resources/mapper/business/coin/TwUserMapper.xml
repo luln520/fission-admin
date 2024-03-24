@@ -10,6 +10,9 @@
         <if test="obj.departmentId != null">
             and depatment_id = #{obj.departmentId}
         </if>
+        <if test="obj.rzstatus != null">
+            and rzstatus = #{obj.rzstatus}
+        </if>
         <if test="obj.userCode != null and obj.userCode !=''">
             and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>
