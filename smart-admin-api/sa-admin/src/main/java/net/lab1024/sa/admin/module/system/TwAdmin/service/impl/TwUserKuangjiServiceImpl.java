@@ -31,7 +31,7 @@ public class TwUserKuangjiServiceImpl extends ServiceImpl<TwUserKuangjiMapper, T
 //        one.setNum(twUserKuangji.getNum());
 //        one.setUpdateTime(new Date());
 //        return this.updateById(one);
-        if(twUserKuangji == null){
+        if(twUserKuangji.getId() == null){
             this.save(twUserKuangji);
         }else{
             QueryWrapper<TwUserKuangji> queryWrapper = new QueryWrapper<>();
