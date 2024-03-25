@@ -69,4 +69,6 @@ public interface TwUserService extends IService<TwUser> {
     ResponseDTO codeResp() throws IOException;
 
     ResponseDTO usertj(int uid) ;
+
+    ResponseDTO userdk(int uid) ;
 }
