@@ -204,6 +204,11 @@ public class TimerServiceImpl {
                     twKjprofit1.setDay(DateUtil.str2DateDay(nowdate));
                     twKjprofitService.save(twKjprofit1);
 
+                    Integer synum = twKjorder.getSynum();
+                    twKjorder.setSynum(synum + 1);
+
+                    twKjorderService.updateById(twKjorder);
+
 //                twUserCoinService.incre(uid,outnum,twUserCoin.getUsdt());
 
                     //写资金日志
@@ -222,11 +227,6 @@ public class TimerServiceImpl {
                     twBill.setSt(1);
                     twBill.setRemark("矿机收益释放");
                     twBillService.save(twBill);
-
-                    Integer synum = twKjorder.getSynum();
-                    twKjorder.setSynum(synum + 1);
-
-                    twKjorderService.updateById(twKjorder);
 
                 }
             }catch (Exception e){
