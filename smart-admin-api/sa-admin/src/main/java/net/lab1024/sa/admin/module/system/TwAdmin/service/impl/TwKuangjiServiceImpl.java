@@ -99,8 +99,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
                 TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper1);
                 if(one == null){
                     TwUserKuangji twUserKuangji = new TwUserKuangji();
-                    twUserKuangji.setMin(new BigDecimal(1000));
-                    twUserKuangji.setMax(new BigDecimal(5000));
+                    twUserKuangji.setMin(twKuangji.getPricemin());
+                    twUserKuangji.setMax(twKuangji.getPricemax());
                     twUserKuangji.setNum(1);
                     twUserKuangji.setKjId(twKuangji.getId());
                     twUserKuangji.setKjName(twKuangji.getTitle());
@@ -109,8 +109,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
                     twUserKuangji.setCreateTime(new Date());
                     twUserKuangjiService.saveOrUpdate(twUserKuangji);
 
-                    twKuangji.setMin(new BigDecimal(1000));
-                    twKuangji.setMax(new BigDecimal(5000));
+                    twKuangji.setMin(twKuangji.getPricemin());
+                    twKuangji.setMax(twKuangji.getPricemax());
                     twKuangji.setNum(1);
                     list.add(twKuangji);
                 }else{
@@ -126,8 +126,8 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
             Page<TwKuangji> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
             List<TwKuangji> twKuangjis = baseMapper.pcList(objectPage, pageParam);
             for(TwKuangji twKuangji:twKuangjis){
-                twKuangji.setMin(new BigDecimal(1000));
-                twKuangji.setMax(new BigDecimal(5000));
+                twKuangji.setMin(twKuangji.getPricemin());
+                twKuangji.setMax(twKuangji.getPricemax());
                 twKuangji.setNum(1);
                 list.add(twKuangji);
             }

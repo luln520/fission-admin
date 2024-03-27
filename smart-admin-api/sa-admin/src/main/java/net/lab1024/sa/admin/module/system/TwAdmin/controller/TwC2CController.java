@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwC2c;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwC2cBank;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.C2CVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwC2cService;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -32,6 +33,12 @@ public class TwC2CController {
         return ResponseDTO.ok(twC2cService.listpage(c2CVo,request));
     }
 
+    @GetMapping("/info")
+    @ApiOperation(value = "C2C详情")
+    public ResponseDTO<TwC2c> info(@RequestParam int  id) {
+        return twC2cService.info(id);
+    }
+
     @GetMapping("/reject")
     @ApiOperation(value = "C2C充值审核驳回")
     public ResponseDTO reject(@RequestParam int  id) {
@@ -57,5 +64,17 @@ public class TwC2CController {
     }
 
 
+    @PostMapping("/bankInfo")
+    @ApiOperation(value = "分配卡号")
+    public ResponseDTO bankInfo(@RequestBody TwC2cBank c2cBank) {
+        return twC2cService.bankInfo(c2cBank);
+    }
+
+
+    @GetMapping("/getBankInfo")
+    @ApiOperation(value = "分配卡号详情")
+    public ResponseDTO getBankInfo(@RequestParam String orderno) {
+        return twC2cService.getBankInfo(orderno);
+    }
 
 }

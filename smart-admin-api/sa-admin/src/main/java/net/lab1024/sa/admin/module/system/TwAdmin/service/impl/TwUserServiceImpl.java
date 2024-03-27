@@ -250,8 +250,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
                     if(one2 == null){
                         TwUserKuangji twUserKuangji = new TwUserKuangji();
-                        twUserKuangji.setMin(new BigDecimal(1000));
-                        twUserKuangji.setMax(new BigDecimal(5000));
+                        twUserKuangji.setMin(twKuangji.getPricemin());
+                        twUserKuangji.setMax(twKuangji.getPricemax());
                         twUserKuangji.setNum(1);
                         twUserKuangji.setCompanyId(twCompany.getId());
                         twUserKuangji.setKjId(twKuangji.getId());
@@ -356,8 +356,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
                         if(one2 == null){
                             TwUserKuangji twUserKuangji = new TwUserKuangji();
-                            twUserKuangji.setMin(new BigDecimal(1000));
-                            twUserKuangji.setMax(new BigDecimal(5000));
+                            twUserKuangji.setMin(twKuangji.getPricemin());
+                            twUserKuangji.setMax(twKuangji.getPricemax());
                             twUserKuangji.setNum(1);
                             twUserKuangji.setCompanyId(twCompany.getId());
                             twUserKuangji.setKjId(twKuangji.getId());
@@ -458,8 +458,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper);
                         if(one2 == null){
                             TwUserKuangji twUserKuangji = new TwUserKuangji();
-                            twUserKuangji.setMin(new BigDecimal(1000));
-                            twUserKuangji.setMax(new BigDecimal(5000));
+                            twUserKuangji.setMin(twKuangji.getPricemin());
+                            twUserKuangji.setMax(twKuangji.getPricemax());
                             twUserKuangji.setNum(1);
                             twUserKuangji.setCompanyId(twCompany.getId());
                             twUserKuangji.setKjId(twKuangji.getId());
