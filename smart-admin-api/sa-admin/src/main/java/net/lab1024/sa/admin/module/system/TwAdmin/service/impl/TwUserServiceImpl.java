@@ -870,12 +870,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         return ResponseDTO.ok(one);
     }
 
-    /**
-     * 验证码/邮箱还没实现
-     * @param userReq
-     * @param ip
-     * @return
-     */
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO register(UserReq userReq, String ip) {
@@ -1609,6 +1604,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
     }
+
+
     public  void email(String email,String code,String companyMail,String companyMailPwd){
         try{
             //1.创建一封邮件的实例对象
