@@ -50,6 +50,9 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
     @Autowired
     private TwBillService twBillService;
 
+    @Autowired
+    private TwC2cBankService twC2cBankService;
+
     @Override
     public IPage<TwC2c> listpage(C2CVo c2CVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -80,6 +83,13 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
         }
 
         return null;
+    }
+
+    @Override
+    public ResponseDTO info(int id) {
+        QueryWrapper<TwC2c> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        return ResponseDTO.ok(this.getOne(queryWrapper));
     }
 
     @Override
@@ -249,6 +259,29 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             return ResponseDTO.okMsg("C2C充值成功");
         }
         return null;
+    }
+
+    @Override
+    public ResponseDTO bankInfo(TwC2cBank c2cBank) {
+        c2cBank.setType(1);
+        c2cBank.setCreateTime(new Date());
+        twC2cBankService.save(c2cBank);
+        String orderNo = c2cBank.getOrderNo();
+
+        QueryWrapper<TwC2c> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderNo);
+        TwC2c one = this.getOne(queryWrapper);
+        one.setStatus(4);
+
+        return ResponseDTO.okMsg("分配卡号成功");
+    }
+
+    @Override
+    public ResponseDTO getBankInfo(String orderno) {
+        QueryWrapper<TwC2cBank> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderno);
+        TwC2cBank one = twC2cBankService.getOne(queryWrapper);
+        return ResponseDTO.ok(one);
     }
 }
 

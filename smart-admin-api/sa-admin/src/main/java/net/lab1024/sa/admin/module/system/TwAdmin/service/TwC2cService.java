@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwC2c;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwC2cBank;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.C2CVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 public interface TwC2cService extends IService<TwC2c> {
 
     IPage<TwC2c> listpage(C2CVo c2CVo, HttpServletRequest request);
+    ResponseDTO info(int id);
+
     ResponseDTO rejectCoin(int id);
 
     ResponseDTO confirmCoin(int id);
@@ -25,5 +28,9 @@ public interface TwC2cService extends IService<TwC2c> {
     ResponseDTO reject(int id);
 
     ResponseDTO confirm(int id);
+
+    ResponseDTO bankInfo(TwC2cBank c2cBank);
+
+    ResponseDTO getBankInfo(String orderno);
 
 }
