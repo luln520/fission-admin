@@ -870,12 +870,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         return ResponseDTO.ok(one);
     }
 
-    /**
-     * 验证码/邮箱还没实现
-     * @param userReq
-     * @param ip
-     * @return
-     */
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO register(UserReq userReq, String ip) {
@@ -1308,6 +1303,51 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         return ResponseDTO.ok(response);
     }
 
+    public ResponseDTO userdk(int uid) {
+
+        HashMap map = new HashMap();
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", uid);
+        TwUser one = this.getOne(queryWrapper);
+        if(one != null){
+            Integer companyId = one.getCompanyId();
+            QueryWrapper<TwHysetting> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("company_id",companyId);
+            TwHysetting twHysetting = twHysettingService.getOne(queryWrapper1);
+            String hyYlid = twHysetting.getHyYlid();
+            String hyKsid = twHysetting.getHyKsid();
+            String[] winarr = hyYlid.split("\\|");
+            String[] lossarr = hyKsid.split("\\|");
+
+            boolean isWinArray = false;
+            boolean isLoseArray = false;
+            for (String win : winarr) {
+                if (win.equals(uid)) {
+                    isWinArray = true;
+                    break; // 如果找到匹配，可以提前退出循环
+                }
+            }
+            for (String win : lossarr) {
+                if (win.equals(uid)) {
+                    isLoseArray = true;
+                    break; // 如果找到匹配，可以提前退出循环
+                }
+            }
+            if(isWinArray){
+                map.put("isWin","1");
+            }
+
+            if(isLoseArray){
+                map.put("isLose","1");
+            }
+
+            if (!isWinArray && !isLoseArray) {
+                map.put("noWinLose","1");
+            }
+        }
+        return ResponseDTO.ok();
+    }
+
     @Override
     public ResponseDTO usertj(int uid) {
 
@@ -1564,6 +1604,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
     }
+
+
     public  void email(String email,String code,String companyMail,String companyMailPwd){
         try{
             //1.创建一封邮件的实例对象

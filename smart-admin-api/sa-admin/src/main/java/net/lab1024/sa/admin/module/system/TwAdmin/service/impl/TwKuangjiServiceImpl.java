@@ -226,7 +226,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         queryWrapper3.eq("user_id", user.getId()); // 添加查询条件
         queryWrapper3.eq("kj_id", kuangji.getId()); // 添加查询条件
         TwUserKuangji one = twUserKuangjiService.getOne(queryWrapper3);
-                if(buynum.compareTo(one.getFloatMin()) == 0){
+                if(new BigDecimal(0).compareTo(one.getFloatMin()) == 0){
                     if(buynum.compareTo(one.getMin()) < 0){
                         if(language.equals("zh")){
                             return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
