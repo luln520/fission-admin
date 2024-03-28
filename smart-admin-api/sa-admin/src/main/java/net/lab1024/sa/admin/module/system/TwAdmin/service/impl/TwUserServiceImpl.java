@@ -755,10 +755,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twNotice.setUid(uid);
                 twNotice.setAccount(one.getUsername());
                 twNotice.setTitle(title);
+                twNotice.setTitleEn(title);
                 twNotice.setCompanyId(one.getCompanyId());
                 twNotice.setDepartment(one.getDepatmentId());
                 twNotice.setPath(one.getPath());
                 twNotice.setContent(content);
+                twNotice.setContentEn(content);
                 twNotice.setImgs(imgs);
                 twNotice.setAddtime(new Date());
                 twNotice.setStatus(1);
@@ -774,7 +776,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twNotice.setPath(twUser.getPath());
                     twNotice.setAccount(twUser.getUsername());
                     twNotice.setTitle(title);
+                    twNotice.setTitleEn(title);
                     twNotice.setContent(content);
+                    twNotice.setContentEn(content);
                     twNotice.setImgs(imgs);
                     twNotice.setCompanyId(twUser.getCompanyId());
                     twNotice.setAddtime(new Date());
