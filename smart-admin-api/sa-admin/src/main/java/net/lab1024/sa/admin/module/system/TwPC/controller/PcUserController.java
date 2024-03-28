@@ -75,5 +75,13 @@ public class PcUserController {
         return twUserService.userdk(uid);
     }
 
+    @GetMapping("/editPwd")
+    @ResponseBody
+    @ApiOperation(value = "更新密码")
+    @NoNeedLogin
+    public ResponseDTO editPasword(@RequestParam int uid,@RequestParam String oldPwd,@RequestParam String newPwd,@RequestParam  String language) {
+        return twUserService.editPasword(uid,oldPwd,newPwd,language);
+    }
+
 }
 

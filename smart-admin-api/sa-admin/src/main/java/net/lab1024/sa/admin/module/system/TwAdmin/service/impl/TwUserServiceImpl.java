@@ -755,10 +755,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twNotice.setUid(uid);
                 twNotice.setAccount(one.getUsername());
                 twNotice.setTitle(title);
+                twNotice.setTitleEn(title);
                 twNotice.setCompanyId(one.getCompanyId());
                 twNotice.setDepartment(one.getDepatmentId());
                 twNotice.setPath(one.getPath());
                 twNotice.setContent(content);
+                twNotice.setContentEn(content);
                 twNotice.setImgs(imgs);
                 twNotice.setAddtime(new Date());
                 twNotice.setStatus(1);
@@ -774,7 +776,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twNotice.setPath(twUser.getPath());
                     twNotice.setAccount(twUser.getUsername());
                     twNotice.setTitle(title);
+                    twNotice.setTitleEn(title);
                     twNotice.setContent(content);
+                    twNotice.setContentEn(content);
                     twNotice.setImgs(imgs);
                     twNotice.setCompanyId(twUser.getCompanyId());
                     twNotice.setAddtime(new Date());
@@ -1078,8 +1082,13 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             queryWrapper.eq("username", username);
             queryWrapper.eq("company_id", userReq.getCompanyId());
             TwUser one = this.getOne(queryWrapper);
-            if (null == one) {
-                return ResponseDTO.userErrorParam("用户名不存在！");
+
+            if(one == null){
+                if (userReq.getLanguage().equals("zh")) {
+                    return ResponseDTO.userErrorParam("用户名不存在");
+                }else{
+                    return ResponseDTO.userErrorParam("Username does not exist");
+                }
             }
 
             //验证码
@@ -1121,7 +1130,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNoticeService.save(twNotice);
 
             captchaMap.remove(username);
+
+        if (userReq.getLanguage().equals("zh")) {
             return ResponseDTO.ok("修改成功");
+        }else{
+            return ResponseDTO.ok("Successfully modified");
+        }
 
     }
 
@@ -1346,6 +1360,49 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             }
         }
         return ResponseDTO.ok();
+    }
+
+    @Override
+    public ResponseDTO editPasword(int uid, String oldword, String newword,String language) {
+
+
+        String oldwd = getEncryptPwd(oldword); //MD5密码加密
+        String newPwd = getEncryptPwd(newword); //MD5密码加密
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", uid);
+        TwUser one = this.getOne(queryWrapper);
+
+        if(!oldwd.equals(one.getPassword())){
+            if(language.equals("zh")){
+                return ResponseDTO.ok("原密码填写错误");
+            }else{
+                return ResponseDTO.ok("The original password was entered incorrectly");
+            }
+        }
+
+
+        one.setPassword(newPwd);
+        this.updateById(one);
+
+        TwNotice twNotice = new TwNotice();
+        twNotice.setUid(one.getId());
+        twNotice.setDepartment(one.getDepatmentId());
+        twNotice.setPath(one.getPath());
+        twNotice.setCompanyId(one.getCompanyId());
+        twNotice.setAccount(one.getUsername());
+        twNotice.setTitle("更新密码");
+        twNotice.setTitleEn("update Password");
+        twNotice.setContent("登陆更新密码成功");
+        twNotice.setContentEn("Login password update successfully");
+        twNotice.setAddtime(new Date());
+        twNotice.setStatus(1);
+        twNoticeService.save(twNotice);
+
+        if(language.equals("zh")){
+            return ResponseDTO.ok("修改成功");
+        }else{
+            return ResponseDTO.ok("Successfully modified");
+        }
     }
 
     @Override
