@@ -137,5 +137,13 @@ public class TwKuangmController {
         return ResponseDTO.ok(twKuangjiService.addkj(twKuangji));
     }
 
+
+    @GetMapping("/redeem")
+    @ResponseBody
+    @ApiOperation(value = "矿机赎回")
+    public ResponseDTO redeem(@RequestParam int id) {
+        return twKjorderService.redeem(id);
+    }
+
 }
 
