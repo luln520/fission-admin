@@ -577,7 +577,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
            queryWrapper.eq("id", twUser.getId());
            TwUser one = this.getOne(queryWrapper);
-           if(one.getRzstatus() == 0){
+           if(one.getRzstatus() == 0 || one.getRzstatus() ==3){
                one.setRzstatus(1);
            }
            one.setJifen(twUser.getJifen());
@@ -1374,9 +1374,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         if(!oldwd.equals(one.getPassword())){
             if(language.equals("zh")){
-                return ResponseDTO.ok("原密码填写错误");
+                return ResponseDTO.userErrorParam("原密码填写错误");
             }else{
-                return ResponseDTO.ok("The original password was entered incorrectly");
+                return ResponseDTO.userErrorParam("The original password was entered incorrectly");
             }
         }
 
