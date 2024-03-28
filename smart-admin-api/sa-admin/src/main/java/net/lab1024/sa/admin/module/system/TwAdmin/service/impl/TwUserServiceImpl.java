@@ -577,7 +577,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
            queryWrapper.eq("id", twUser.getId());
            TwUser one = this.getOne(queryWrapper);
-           if(one.getRzstatus() == 0){
+           if(one.getRzstatus() == 0 || one.getRzstatus() ==3){
                one.setRzstatus(1);
            }
            one.setJifen(twUser.getJifen());
