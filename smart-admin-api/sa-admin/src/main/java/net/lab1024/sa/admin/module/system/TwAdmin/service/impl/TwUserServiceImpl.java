@@ -1142,7 +1142,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Override
     public ResponseDTO<TwUser> userInfo(String userCode) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_code", userCode;
+        queryWrapper.eq("user_code", userCode);
         TwUser one = this.getOne(queryWrapper);
         return ResponseDTO.ok(one);
     }
