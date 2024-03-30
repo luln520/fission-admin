@@ -1140,10 +1140,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public ResponseDTO<TwUser> userInfo(String token) {
-        Long uidToken = tokenService.getUIDToken(token);
+    public ResponseDTO<TwUser> userInfo(String userCode) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", uidToken.intValue());
+        queryWrapper.eq("user_code", userCode;
         TwUser one = this.getOne(queryWrapper);
         return ResponseDTO.ok(one);
     }
