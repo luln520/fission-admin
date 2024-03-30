@@ -1141,9 +1141,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public ResponseDTO<TwUser> userInfo(String userCode) {
+        log.info("用户信息获取：userInfo{}:",userCode);
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_code", userCode);
         TwUser one = this.getOne(queryWrapper);
+        log.info("用户信息获取返回：one{}:",one);
         return ResponseDTO.ok(one);
     }
 
