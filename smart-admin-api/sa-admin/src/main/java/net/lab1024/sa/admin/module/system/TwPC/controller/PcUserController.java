@@ -35,8 +35,8 @@ public class PcUserController {
     @GetMapping("/userInfo")
     @ApiOperation("获取用户信息")
     @NoNeedLogin
-    public ResponseDTO userInfo(@RequestParam String userCode) {
-        return twUserService.userInfo(userCode);
+    public ResponseDTO userInfo(@RequestParam String userCode,@RequestParam String companyId) {
+        return twUserService.userInfo(userCode,companyId);
     }
 
     @PostMapping("/editpassword")
