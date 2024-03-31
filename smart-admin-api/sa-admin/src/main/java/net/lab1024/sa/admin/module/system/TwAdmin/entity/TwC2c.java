@@ -77,6 +77,9 @@ public class TwC2c implements Serializable {
      */
     @ApiModelProperty("状态 1.待支付 2.审核通过 3.审核拒绝 4.分配卡号")
     private Integer status;
+
+    @ApiModelProperty("银行卡类型：1.银行卡 2.革命 3.wise")
+    private Integer bankType;
     /**
      * 备注
      */
