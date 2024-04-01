@@ -870,7 +870,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         twUserLog.setAddr(one.getAddr());
         twUserLog.setStatus(1);
         twUserLogService.save(twUserLog);
-
+         log.info("用户登录返回信息 user{}",one);
         return ResponseDTO.ok(one);
     }
 
