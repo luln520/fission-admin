@@ -3,7 +3,7 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwOnlineDao">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline">
-        select * from (select id,uid,username,addtime,state from tw_online  where 1=1  and company_id  = #{obj.companyId}
+        select * from (select id,uid,username,max( addtime ) addtime,state from tw_online  where 1=1  and company_id  = #{obj.companyId}
         <if test="obj.departmentId != null">
             and department = #{obj.departmentId}
         </if>
