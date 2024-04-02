@@ -11,6 +11,9 @@
         <if test="obj.userCode != null and obj.userCode !=''">
             and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>
+        <if test="obj.type != null">
+            and type = #{obj.type}
+        </if>
         <if test="obj.departmentId != null">
             and department = #{obj.departmentId}
         </if>

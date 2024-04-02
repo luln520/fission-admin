@@ -14,5 +14,5 @@ public class C2CVo extends PageParam {
     private String userCode;
 
     @ApiModelProperty("类型:1.充值.2.提现")
-    private String type;
+    private Integer type;
 }
