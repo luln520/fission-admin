@@ -256,10 +256,18 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
 
     @Override
     public ResponseDTO bankInfo(TwC2cBank c2cBank) {
-        c2cBank.setType(1);
-        c2cBank.setCreateTime(new Date());
-        twC2cBankService.saveOrUpdate(c2cBank);
         String orderNo = c2cBank.getOrderNo();
+        QueryWrapper<TwC2cBank> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("order_no", orderNo);
+        TwC2cBank one1 = twC2cBankService.getOne(queryWrapper1);
+        if(one1 == null){
+            c2cBank.setType(1);
+            c2cBank.setCreateTime(new Date());
+            twC2cBankService.saveOrUpdate(c2cBank);
+        }else{
+            c2cBank.setId(one1.getId());
+            twC2cBankService.updateById(c2cBank);
+        }
 
         QueryWrapper<TwC2c> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("order_no", orderNo);
