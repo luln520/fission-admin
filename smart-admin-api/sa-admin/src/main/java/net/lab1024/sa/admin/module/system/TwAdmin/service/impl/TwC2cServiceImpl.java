@@ -110,21 +110,20 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
                 one.setStatus(3);
                 this.updateById(one);
 
-                Integer uid = one.getUid();
 
                 QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
-                queryWrapper2.eq("id", uid);
+                queryWrapper2.eq("user_code", one.getUserCode());
                 TwUser twUser = twUserService.getOne(queryWrapper2);
 
 
                 TwBill twBill = new TwBill();
-                twBill.setUid(uid);
+                twBill.setUid(twUser.getId());
                 twBill.setUserCode(twUser.getUserCode());
                 twBill.setUsername(one.getUsername());
                 twBill.setNum(one.getDzNum());
                 twBill.setPath(twUser.getPath());
                 twBill.setDepartment(twUser.getDepatmentId());
-                twBill.setAfternum(twUserCoinService.afternum(uid));
+                twBill.setAfternum(twUserCoinService.afternum(twUser.getId()));
                 twBill.setType(19);
                 twBill.setAddtime(new Date());
                 twBill.setRemark("C2C提币审核驳回");
@@ -154,23 +153,22 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             if(one.getStatus() != 1){
                 return  ResponseDTO.userErrorParam("此订单已处理");
             }
-            Integer uid = one.getUid();
 
             one .setStatus(2);
             this.updateById(one);
 
             QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("id", one.getUid());
+            queryWrapper2.eq("user_code", one.getUserCode());
             TwUser twUser = twUserService.getOne(queryWrapper2);
 
             TwBill twBill = new TwBill();
-            twBill.setUid(uid);
+            twBill.setUid(twUser.getId());
             twBill.setUserCode(twUser.getUserCode());
             twBill.setUsername(one.getUsername());
             twBill.setNum(one.getDzNum());
             twBill.setPath(twUser.getPath());
             twBill.setDepartment(twUser.getDepatmentId());
-            twBill.setAfternum(twUserCoinService.afternum(uid));
+            twBill.setAfternum(twUserCoinService.afternum(twUser.getId()));
             twBill.setType(18);
             twBill.setAddtime(new Date());
             twBill.setRemark("C2C提币审核成功");
@@ -200,20 +198,19 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             one.setStatus(3);
             this.updateById(one);
 
-            Integer uid = one.getUid();
 
             QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("id", one.getUid());
+            queryWrapper2.eq("user_code", one.getUserCode());
             TwUser twUser = twUserService.getOne(queryWrapper2);
 
             TwBill twBill = new TwBill();
-            twBill.setUid(uid);
+            twBill.setUid(twUser.getId());
             twBill.setUserCode(twUser.getUserCode());
             twBill.setUsername(one.getUsername());
             twBill.setNum(one.getDzNum());
             twBill.setPath(twUser.getPath());
             twBill.setDepartment(twUser.getDepatmentId());
-            twBill.setAfternum(twUserCoinService.afternum(uid));
+            twBill.setAfternum(twUserCoinService.afternum(twUser.getId()));
             twBill.setType(19);
             twBill.setAddtime(new Date());
             twBill.setRemark("C2C充值审核驳回");
@@ -234,23 +231,19 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             one.setStatus(2);
             this.updateById(one); //修改订单状态
 
-            one.setStatus(2);
-            this.updateById(one);
-
-            Integer uid = one.getUid();
 
             QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("id", one.getUid());
+            queryWrapper2.eq("user_code", one.getUserCode());
             TwUser twUser = twUserService.getOne(queryWrapper2);
 
             TwBill twBill = new TwBill();
-            twBill.setUid(uid);
+            twBill.setUid(twUser.getId());
             twBill.setUserCode(twUser.getUserCode());
             twBill.setUsername(one.getUsername());
             twBill.setNum(one.getDzNum());
             twBill.setPath(twUser.getPath());
             twBill.setDepartment(twUser.getDepatmentId());
-            twBill.setAfternum(twUserCoinService.afternum(uid));
+            twBill.setAfternum(twUserCoinService.afternum(twUser.getId()));
             twBill.setType(18);
             twBill.setAddtime(new Date());
             twBill.setRemark("C2C充值审核成功");
