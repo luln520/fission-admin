@@ -66,7 +66,7 @@ public class TwC2c implements Serializable {
      * 1.锁定 2.未锁定
      */
     @ApiModelProperty("1.锁定 2.未锁定")
-    private Integer lock;
+    private Integer isLock;
     /**
      * 类型:1.充值.2.提现
      */
