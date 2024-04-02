@@ -121,6 +121,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
                 twBill.setUserCode(twUser.getUserCode());
                 twBill.setUsername(one.getUsername());
                 twBill.setNum(one.getDzNum());
+                twBill.setCoinname("USDT");
                 twBill.setPath(twUser.getPath());
                 twBill.setDepartment(twUser.getDepatmentId());
                 twBill.setAfternum(twUserCoinService.afternum(twUser.getId()));
@@ -166,6 +167,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twBill.setUserCode(twUser.getUserCode());
             twBill.setUsername(one.getUsername());
             twBill.setNum(one.getDzNum());
+            twBill.setCoinname("USDT");
             twBill.setPath(twUser.getPath());
             twBill.setDepartment(twUser.getDepatmentId());
             twBill.setAfternum(twUserCoinService.afternum(twUser.getId()));
@@ -184,7 +186,6 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
 
     @Override
     public ResponseDTO reject(int id) {
-        try {
             QueryWrapper<TwC2c> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", id);
             TwC2c one = this.getOne(queryWrapper);
@@ -208,6 +209,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twBill.setUserCode(twUser.getUserCode());
             twBill.setUsername(one.getUsername());
             twBill.setNum(one.getDzNum());
+            twBill.setCoinname("USDT");
             twBill.setPath(twUser.getPath());
             twBill.setDepartment(twUser.getDepatmentId());
             twBill.setAfternum(twUserCoinService.afternum(twUser.getId()));
@@ -217,9 +219,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twBillService.save(twBill);
 
             return ResponseDTO.okMsg("C2C充值审核驳回成功");
-        } catch (Exception e) {
-            return ResponseDTO.userErrorParam("C2C充值审核驳回失败");
-        }
+
     }
 
     @Override
@@ -240,6 +240,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twBill.setUid(twUser.getId());
             twBill.setUserCode(twUser.getUserCode());
             twBill.setUsername(one.getUsername());
+            twBill.setCoinname("USDT");
             twBill.setNum(one.getDzNum());
             twBill.setPath(twUser.getPath());
             twBill.setDepartment(twUser.getDepatmentId());
