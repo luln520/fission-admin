@@ -103,9 +103,6 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
                     return  ResponseDTO.userErrorParam("提币订单不存在");
                 }
 
-                if(one.getStatus() != 1){
-                    return  ResponseDTO.userErrorParam("此订单已处理");
-                }
 
                 one.setStatus(3);
                 this.updateById(one);
@@ -151,10 +148,6 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
                 return  ResponseDTO.userErrorParam("提币订单不存在");
             }
 
-            if(one.getStatus() != 1){
-                return  ResponseDTO.userErrorParam("此订单已处理");
-            }
-
             one .setStatus(2);
             this.updateById(one);
 
@@ -191,10 +184,6 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             TwC2c one = this.getOne(queryWrapper);
             if (one == null) {
                 return ResponseDTO.userErrorParam("C2C充值订单不存在");
-            }
-
-            if (one.getStatus() != 1) {
-                return ResponseDTO.userErrorParam("此订单已处理");
             }
             one.setStatus(3);
             this.updateById(one);
