@@ -7,9 +7,7 @@
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwC2c">
         select * from tw_c2c where 1=1 and company_id  = #{obj.companyId}
-        <if test="obj.username != null and obj.username !=''">
-            and username like concat('%',#{obj.username},'%')
-        </if>
+
         <if test="obj.userCode != null and obj.userCode !=''">
             and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>
