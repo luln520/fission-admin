@@ -1,13 +1,11 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwArea;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwC2c;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwC2cBank;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.C2CVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAreaService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwC2cService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -15,8 +13,6 @@ import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -27,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/pc/c2c")
 @Api(tags = {AdminSwaggerTagConst.PC.PC_C2C})
-public class TwC2CController {
+public class PcC2CController {
 
     @Autowired
     private TwC2cService twC2cService;
