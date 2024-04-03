@@ -13,6 +13,8 @@ import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
+import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
 * @author 1
@@ -52,6 +55,12 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
 
     @Autowired
     private TwC2cBankService twC2cBankService;
+
+    @Autowired
+    private SerialNumberService serialNumberService;
+
+    @Autowired
+    private TwAreaService twAreaService;
 
     @Override
     public IPage<TwC2c> listpage(C2CVo c2CVo, HttpServletRequest request) {
@@ -274,6 +283,118 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
         queryWrapper.eq("order_no", orderno);
         TwC2cBank one = twC2cBankService.getOne(queryWrapper);
         return ResponseDTO.ok(one);
+    }
+
+    @Override
+    public ResponseDTO cz(int uid, int country, BigDecimal num, int bankType,String language) {
+        QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("id", uid);
+        TwUser twUser = twUserService.getOne(queryWrapper2);
+
+        QueryWrapper<TwArea> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("id", country);
+        TwArea area = twAreaService.getOne(queryWrapper3);
+        if(twUser != null){
+            Integer companyId = twUser.getCompanyId();
+            String userCode = twUser.getUserCode();
+            String invit = twUser.getInvit();
+            String path = twUser.getPath();
+            Integer depatmentId = twUser.getDepatmentId();
+            String username = twUser.getUsername();
+
+            String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+            TwC2c twC2c = new TwC2c();
+            twC2c.setUid(uid);
+            twC2c.setStatus(1);
+            twC2c.setAgent(invit);
+            twC2c.setPath(path);
+            twC2c.setDepartment(depatmentId);
+            twC2c.setUserCode(userCode);
+            twC2c.setCompanyId(companyId);
+            twC2c.setCountry(area.getNameZh());
+            twC2c.setType(1);
+            twC2c.setBankType(bankType);
+            twC2c.setCreateTime(new Date());
+            twC2c.setCzNum(num);
+            twC2c.setDzNum(num);
+            twC2c.setOrderNo(orderNo);
+            twC2c.setUsername(username);
+            this.saveOrUpdate(twC2c);
+        }
+        if(language.equals("zh")){
+            return ResponseDTO.ok("正在匹配！");
+        }else{
+            return ResponseDTO.ok("matching！");
+        }
+    }
+
+    @Override
+    public ResponseDTO czImg(String orderNo,String img,String language) {
+        QueryWrapper<TwC2c> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("order_no", orderNo);
+        TwC2c one = this.getOne(queryWrapper2);
+        if(one == null){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("订单不存在！");
+            }else{
+                return ResponseDTO.userErrorParam("Order does not exist！");
+            }
+        }
+        one.setImg(img);
+        this.updateById(one);
+        return ResponseDTO.ok();
+    }
+
+    @Override
+    public ResponseDTO c2ctx(TwC2cBank twC2cBank) {
+        QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("user_code", twC2cBank.getUserCode());
+        TwUser twUser = twUserService.getOne(queryWrapper2);
+
+        QueryWrapper<TwArea> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("id", twC2cBank.getCountryId());
+        TwArea area = twAreaService.getOne(queryWrapper3);
+        if(twUser != null){
+            Integer companyId = twUser.getCompanyId();
+            String userCode = twUser.getUserCode();
+            String invit = twUser.getInvit();
+            String path = twUser.getPath();
+            Integer depatmentId = twUser.getDepatmentId();
+            String username = twUser.getUsername();
+
+            String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+            TwC2c twC2c = new TwC2c();
+            twC2c.setUid(twUser.getId());
+            twC2c.setStatus(1);
+            twC2c.setAgent(invit);
+            twC2c.setPath(path);
+            twC2c.setDepartment(depatmentId);
+            twC2c.setUserCode(userCode);
+            twC2c.setCompanyId(companyId);
+            twC2c.setCountry(area.getNameZh());
+            twC2c.setType(2);
+            twC2c.setBankType(twC2cBank.getBankType());
+            twC2c.setCreateTime(new Date());
+            twC2c.setCzNum(twC2cBank.getNum());
+            twC2c.setDzNum(twC2cBank.getNum());
+            twC2c.setOrderNo(orderNo);
+            twC2c.setUsername(username);
+            this.saveOrUpdate(twC2c);
+
+            twC2cBank.setType(2);
+            twC2cBank.setCreateTime(new Date());
+            twC2cBankService.saveOrUpdate(twC2cBank);
+        }
+             return ResponseDTO.ok();
+    }
+
+    @Override
+    public ResponseDTO<List<TwC2c>> czList(int type, int uid) {
+        QueryWrapper<TwC2c> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("type", type);
+        queryWrapper2.eq("uid", type);
+        queryWrapper2.orderByDesc("create_time");
+        return ResponseDTO.ok(this.list(queryWrapper2));
     }
 }
 

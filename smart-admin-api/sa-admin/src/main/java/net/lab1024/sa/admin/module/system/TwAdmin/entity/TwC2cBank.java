@@ -6,8 +6,10 @@ import javax.validation.constraints.NotNull;
 
 import java.io.Serializable;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -95,5 +97,21 @@ public class TwC2cBank implements Serializable {
     */
     @ApiModelProperty("创建时间")
     private Date createTime;
+
+    @TableField(exist = false)
+    @ApiModelProperty("语言")
+    private String language;
+
+    @TableField(exist = false)
+    @ApiModelProperty("支付方式")
+    private int bankType;
+
+    @TableField(exist = false)
+    @ApiModelProperty("国家id")
+    private int countryId;
+
+    @TableField(exist = false)
+    @ApiModelProperty("提现金额")
+    private BigDecimal num;
 
 }

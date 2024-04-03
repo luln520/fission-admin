@@ -124,6 +124,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String PC_FINANCE = "PC-钱包";
 
+        public static final String PC_C2C = "PC-C2C管理";
+
         public static final String PC_INDEX = "PC-首页";
 
         public static final String PC_KUANGJI = "PC-矿机";

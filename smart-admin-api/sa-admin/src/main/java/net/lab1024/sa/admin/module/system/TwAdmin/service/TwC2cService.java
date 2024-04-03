@@ -8,8 +8,11 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.C2CVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
 * @author 1
@@ -32,5 +35,14 @@ public interface TwC2cService extends IService<TwC2c> {
     ResponseDTO bankInfo(TwC2cBank c2cBank);
 
     ResponseDTO getBankInfo(String orderno);
+
+    ResponseDTO cz(int  uid,  int country,  BigDecimal num,  int bankType,String language);
+
+    ResponseDTO czImg(String orderNo,String img,String language);
+
+    ResponseDTO c2ctx(TwC2cBank twC2cBank);
+
+    ResponseDTO<List<TwC2c>> czList(int type, int uid);
+
 
 }
