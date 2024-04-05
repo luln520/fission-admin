@@ -396,6 +396,13 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
         queryWrapper2.orderByDesc("create_time");
         return ResponseDTO.ok(this.list(queryWrapper2));
     }
+
+    @Override
+    public ResponseDTO<TwC2c> info(String orderNo) {
+        QueryWrapper<TwC2c> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("order_no", orderNo);
+        return ResponseDTO.ok(this.getOne(queryWrapper2));
+    }
 }
 
 

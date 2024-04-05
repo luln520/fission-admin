@@ -66,4 +66,11 @@ public class PcC2CController {
     public ResponseDTO<List<TwC2c>> czList(@RequestParam int type,@RequestParam int uid) {
         return twC2cService.czList(type,uid);
     }
+
+    @GetMapping("/info")
+    @ApiOperation(value = "用充值 提款 单条记录")
+    @NoNeedLogin
+    public ResponseDTO<TwC2c> info(@RequestParam String orderNo) {
+        return twC2cService.info(orderNo);
+    }
 }

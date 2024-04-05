@@ -44,5 +44,8 @@ public interface TwC2cService extends IService<TwC2c> {
 
     ResponseDTO<List<TwC2c>> czList(int type, int uid);
 
+    ResponseDTO<TwC2c> info(String orderNo);
+
+
 
 }
