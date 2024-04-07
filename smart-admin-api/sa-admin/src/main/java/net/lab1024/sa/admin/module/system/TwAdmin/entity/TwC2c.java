@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -102,4 +103,8 @@ public class TwC2c implements Serializable {
 
     @ApiModelProperty("公司id")
     private Integer companyId;
+
+    @TableField(exist = false)
+    @ApiModelProperty("银行卡详情")
+    private TwC2cBank twC2cBank;
 }
