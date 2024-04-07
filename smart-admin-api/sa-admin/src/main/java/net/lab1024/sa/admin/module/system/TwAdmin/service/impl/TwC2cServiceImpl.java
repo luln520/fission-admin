@@ -287,6 +287,21 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
 
     @Override
     public ResponseDTO cz(int uid, int country, BigDecimal num, int bankType,String language) {
+        QueryWrapper<TwC2c> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("type",1);
+        queryWrapper1.eq("uid",uid);
+        queryWrapper1.eq("status", 2).or().eq("status", 3);
+        TwC2c one = this.getOne(queryWrapper1);
+        if(one != null){
+            if(language != null){
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("你还有支付订单未完成，去完成！");
+                }else{
+                    return ResponseDTO.userErrorParam("You still have unfinished payment orders, go and complete them.！");
+                }
+            }
+        }
+
         QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("id", uid);
         TwUser twUser = twUserService.getOne(queryWrapper2);
@@ -305,7 +320,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
             TwC2c twC2c = new TwC2c();
             twC2c.setUid(uid);
-            twC2c.setStatus(1);
+            twC2c.setStatus(4);
             twC2c.setAgent(invit);
             twC2c.setPath(path);
             twC2c.setDepartment(depatmentId);
