@@ -165,6 +165,12 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             queryWrapper2.eq("user_code", one.getUserCode());
             TwUser twUser = twUserService.getOne(queryWrapper2);
 
+            QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
+            queryWrapper3.eq("userid", twUser.getId());
+            TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
+            //减少资产
+            twUserCoinService.decre(twUser.getId(), one.getDzNum(), twUserCoin.getUsdt());
+
             TwBill twBill = new TwBill();
             twBill.setUid(twUser.getId());
             twBill.setUserCode(twUser.getUserCode());
@@ -234,6 +240,12 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
             queryWrapper2.eq("user_code", one.getUserCode());
             TwUser twUser = twUserService.getOne(queryWrapper2);
+
+            QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
+            queryWrapper3.eq("userid", twUser.getId());
+            TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
+            //增加资产
+            twUserCoinService.incre(twUser.getId(), one.getDzNum(), twUserCoin.getUsdt());
 
             TwBill twBill = new TwBill();
             twBill.setUid(twUser.getId());
