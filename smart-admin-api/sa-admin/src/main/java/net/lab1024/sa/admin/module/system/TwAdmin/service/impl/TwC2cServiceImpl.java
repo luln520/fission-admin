@@ -378,7 +378,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
             TwC2c twC2c = new TwC2c();
             twC2c.setUid(twUser.getId());
-            twC2c.setStatus(1);
+            twC2c.setStatus(4);
             twC2c.setAgent(invit);
             twC2c.setPath(path);
             twC2c.setDepartment(depatmentId);
