@@ -271,7 +271,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
         QueryWrapper<TwC2c> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("order_no", orderNo);
         TwC2c one = this.getOne(queryWrapper);
-        one.setStatus(4);
+        one.setStatus(1);
         this.updateById(one);
 
         return ResponseDTO.okMsg("分配卡号成功");
