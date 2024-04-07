@@ -421,6 +421,8 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             this.saveOrUpdate(twC2c);
 
             twC2cBank.setType(2);
+            twC2cBank.setOrderNo(orderNo);
+            twC2cBank.setUsername(username);
             twC2cBank.setUid(twUser.getId());
             twC2cBank.setCreateTime(new Date());
             twC2cBankService.saveOrUpdate(twC2cBank);
