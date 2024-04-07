@@ -35,6 +35,9 @@ public class TwC2cBank implements Serializable {
     /**
     * 用户id
     */
+    @ApiModelProperty("uid")
+    private Integer uid;
+
     @ApiModelProperty("用户code")
     private String userCode;
     /**

@@ -256,21 +256,24 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
     @Override
     public ResponseDTO bankInfo(TwC2cBank c2cBank) {
         String orderNo = c2cBank.getOrderNo();
+        QueryWrapper<TwC2c> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderNo);
+        TwC2c one = this.getOne(queryWrapper);
+
         QueryWrapper<TwC2cBank> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("order_no", orderNo);
         TwC2cBank one1 = twC2cBankService.getOne(queryWrapper1);
         if(one1 == null){
             c2cBank.setType(1);
+            c2cBank.setUid(one.getUid());
             c2cBank.setCreateTime(new Date());
             twC2cBankService.saveOrUpdate(c2cBank);
         }else{
             c2cBank.setId(one1.getId());
+            c2cBank.setUid(one.getUid());
             twC2cBankService.updateById(c2cBank);
         }
 
-        QueryWrapper<TwC2c> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("order_no", orderNo);
-        TwC2c one = this.getOne(queryWrapper);
         one.setStatus(1);
         this.updateById(one);
 
@@ -290,7 +293,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
         QueryWrapper<TwC2c> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("type",1);
         queryWrapper1.eq("uid",uid);
-        queryWrapper1.eq("status", 2).or().eq("status", 3);
+        queryWrapper1.eq("status", 1).or().eq("status", 4);
         TwC2c one = this.getOne(queryWrapper1);
         if(one != null){
             if(language != null){
@@ -365,7 +368,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
         String language = twC2cBank.getLanguage();
         QueryWrapper<TwC2c> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("type",2);
-        queryWrapper1.eq("status", 2).or().eq("status", 3);
+        queryWrapper1.eq("status", 1).or().eq("status", 4);
         TwC2c one = this.getOne(queryWrapper1);
         if(one != null){
             if(language.equals("zh")){
@@ -410,6 +413,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             this.saveOrUpdate(twC2c);
 
             twC2cBank.setType(2);
+            twC2cBank.setUid(twUser.getId());
             twC2cBank.setCreateTime(new Date());
             twC2cBankService.saveOrUpdate(twC2cBank);
         }
