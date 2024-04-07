@@ -347,6 +347,18 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
 
     @Override
     public ResponseDTO c2ctx(TwC2cBank twC2cBank) {
+        String language = twC2cBank.getLanguage();
+        QueryWrapper<TwC2c> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("status", 2).or().eq("status", 3);
+        TwC2c one = this.getOne(queryWrapper1);
+        if(one != null){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("你还有支付订单未完成，去完成！");
+            }else{
+                return ResponseDTO.userErrorParam("You still have unfinished payment orders, go and complete them.！");
+            }
+        }
+
         QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("user_code", twC2cBank.getUserCode());
         TwUser twUser = twUserService.getOne(queryWrapper2);
@@ -392,7 +404,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
     public ResponseDTO<List<TwC2c>> czList(int type, int uid) {
         QueryWrapper<TwC2c> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("type", type);
-        queryWrapper2.eq("uid", type);
+        queryWrapper2.eq("uid", uid);
         queryWrapper2.orderByDesc("create_time");
         List<TwC2c> list = this.list(queryWrapper2);
         for (TwC2c twC2c:list){
