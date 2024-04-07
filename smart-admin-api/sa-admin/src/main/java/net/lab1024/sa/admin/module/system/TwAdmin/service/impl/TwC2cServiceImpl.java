@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -290,10 +291,13 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
 
     @Override
     public ResponseDTO cz(int uid, int country, BigDecimal num, int bankType,String language) {
+        List<String> typeList = new ArrayList<>();
+        typeList.add("1");
+        typeList.add("4");
         QueryWrapper<TwC2c> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("type",1);
         queryWrapper1.eq("uid",uid);
-        queryWrapper1.eq("status", 1).or().eq("status", 4);
+        queryWrapper1.in("status",typeList);
         TwC2c one = this.getOne(queryWrapper1);
         if(one != null){
             if(language != null){
@@ -366,9 +370,13 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
     @Override
     public ResponseDTO c2ctx(TwC2cBank twC2cBank) {
         String language = twC2cBank.getLanguage();
+        List<String> typeList = new ArrayList<>();
+        typeList.add("1");
+        typeList.add("4");
         QueryWrapper<TwC2c> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("type",2);
-        queryWrapper1.eq("status", 1).or().eq("status", 4);
+        queryWrapper1.eq("uid",twC2cBank.getUid());
+        queryWrapper1.in("status",typeList);
         TwC2c one = this.getOne(queryWrapper1);
         if(one != null){
             if(language.equals("zh")){
