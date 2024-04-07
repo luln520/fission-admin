@@ -349,6 +349,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
     public ResponseDTO c2ctx(TwC2cBank twC2cBank) {
         String language = twC2cBank.getLanguage();
         QueryWrapper<TwC2c> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("type",2);
         queryWrapper1.eq("status", 2).or().eq("status", 3);
         TwC2c one = this.getOne(queryWrapper1);
         if(one != null){
