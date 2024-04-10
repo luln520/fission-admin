@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwCurrencyMapper">
+    <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCurrency">
+        select * from tw_currency where 1=1 and company_id = #{obj.companyId}
+        <if test="obj.currency != null and obj.currency !=''">
+            and currency  = #{obj.currency}
+        </if>
+        order by create_time desc
+    </select>
+</mapper>

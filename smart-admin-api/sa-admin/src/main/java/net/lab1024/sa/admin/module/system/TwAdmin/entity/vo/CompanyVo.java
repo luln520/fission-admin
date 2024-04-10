@@ -10,4 +10,7 @@ public class CompanyVo extends PageParam {
     @ApiModelProperty("平台名称")
     private String companyName;
 
+    @ApiModelProperty("货币名称")
+    private String currency;
+
 }
