@@ -38,6 +38,9 @@ public class TwC2c implements Serializable {
      */
     @ApiModelProperty("用户名")
     private String username;
+
+    @ApiModelProperty("转账人姓名")
+    private String transferName;
     /**
      * 国家
      */

@@ -49,8 +49,8 @@ public class PcC2CController {
     @GetMapping("/czImg")
     @ApiOperation(value = "C2C充值转账交易图片")
     @NoNeedLogin
-    public ResponseDTO<TwC2c> czImg(@RequestParam String  orderNo,@RequestParam String img,@RequestParam String language) {
-        return twC2cService.czImg(orderNo,img,language);
+    public ResponseDTO<TwC2c> czImg(@RequestParam String  orderNo,@RequestParam String img,@RequestParam String language,@RequestParam String transferName) {
+        return twC2cService.czImg(orderNo,img,language,transferName);
     }
 
     @PostMapping("/tx")

@@ -363,7 +363,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
     }
 
     @Override
-    public ResponseDTO czImg(String orderNo,String img,String language) {
+    public ResponseDTO czImg(String orderNo,String img,String language,String transferName) {
         QueryWrapper<TwC2c> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("order_no", orderNo);
         TwC2c one = this.getOne(queryWrapper2);
@@ -375,6 +375,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             }
         }
         one.setImg(img);
+        one.setTransferName(transferName);
         this.updateById(one);
         return ResponseDTO.ok();
     }

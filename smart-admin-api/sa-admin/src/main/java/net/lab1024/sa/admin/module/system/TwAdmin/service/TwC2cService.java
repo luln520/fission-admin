@@ -38,7 +38,7 @@ public interface TwC2cService extends IService<TwC2c> {
 
     ResponseDTO cz(int  uid,  int country,  BigDecimal num,  int bankType,String language);
 
-    ResponseDTO czImg(String orderNo,String img,String language);
+    ResponseDTO czImg(String orderNo,String img,String language,String transferName);
 
     ResponseDTO c2ctx(TwC2cBank twC2cBank);
 
