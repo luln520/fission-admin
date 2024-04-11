@@ -1,18 +1,23 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwArea;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwC2c;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwC2cBank;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCurrency;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.CompanyVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAreaService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwC2cService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCurrencyService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -31,6 +36,9 @@ public class PcC2CController {
 
     @Autowired
     private TwAreaService twAreaService;
+
+    @Autowired
+    private TwCurrencyService twCurrencyService;
 
     @GetMapping("/arealist")
     @ApiOperation(value = "获取国家")
@@ -72,5 +80,12 @@ public class PcC2CController {
     @NoNeedLogin
     public ResponseDTO<TwC2c> info(@RequestParam String orderNo) {
         return twC2cService.info(orderNo);
+    }
+
+
+    @PostMapping("/list")
+    @ApiOperation(value = "货币列表")
+    public ResponseDTO<IPage<TwCurrency>> listpage(@Valid @RequestBody CompanyVo companyVo) {
+        return ResponseDTO.ok(twCurrencyService.listpage(companyVo));
     }
 }
