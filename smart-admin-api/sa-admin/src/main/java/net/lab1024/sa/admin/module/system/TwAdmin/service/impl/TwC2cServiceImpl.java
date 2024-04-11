@@ -343,7 +343,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
 
             BigDecimal rate = twCurrency.getRate();
             MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
-            BigDecimal bigDecimal = rate.divide(rate, mathContext).multiply(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal bigDecimal = rate.divide(num, mathContext).setScale(2, RoundingMode.HALF_UP);
 
             String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
             TwC2c twC2c = new TwC2c();
