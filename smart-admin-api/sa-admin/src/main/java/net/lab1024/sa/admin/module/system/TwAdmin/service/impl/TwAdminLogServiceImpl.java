@@ -9,10 +9,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMessageRep;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinCommentService;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
@@ -59,6 +56,10 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
 
     @Autowired
     private TwCompanyService twCompanyService;
+
+    @Autowired
+    private TwC2cMapper twC2cMapper;
+
     @Override
     public IPage<TwAdminLog> listpage(TwBillVo twBillVo,HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -155,6 +156,16 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
                 queryWrapper2.eq("status", 1);
                 queryWrapper2.eq("company_id", companyId);
                 messageRep.setRechargeCount(twRechargeDao.selectCount(queryWrapper2).intValue());
+
+                QueryWrapper<TwC2c> queryWrapper3 = new QueryWrapper<>();
+                queryWrapper3.eq("status", 4);
+                queryWrapper3.eq("company_id", companyId);
+                messageRep.setBankCount(twC2cMapper.selectCount(queryWrapper3).intValue());
+
+                QueryWrapper<TwC2c> queryWrapper4 = new QueryWrapper<>();
+                queryWrapper4.eq("status", 1);
+                queryWrapper4.eq("company_id", companyId);
+                messageRep.setC2CCount(twC2cMapper.selectCount(queryWrapper4).intValue());
 
                 return messageRep;
             }

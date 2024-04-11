@@ -18,6 +18,12 @@ public class TwMessageRep {
     @ApiModelProperty("客服消息")
     private int onlineCount;
 
+    @ApiModelProperty("C2C卡号分配")
+    private int bankCount;
+
+    @ApiModelProperty("C2C消息")
+    private int C2CCount;
+
     private Long employeeId;
 
     private Long departmentId;
