@@ -63,6 +63,9 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
     @Autowired
     private TwAreaService twAreaService;
 
+    @Autowired
+    private TwCurrencyService twCurrencyService;
+
     @Override
     public IPage<TwC2c> listpage(C2CVo c2CVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -302,7 +305,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
     }
 
     @Override
-    public ResponseDTO cz(int uid, int country, BigDecimal num, int bankType,String language) {
+    public ResponseDTO cz(int uid, int currenyId, BigDecimal num, int bankType,String language) {
         List<String> typeList = new ArrayList<>();
         typeList.add("1");
         typeList.add("4");
@@ -325,9 +328,9 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
         queryWrapper2.eq("id", uid);
         TwUser twUser = twUserService.getOne(queryWrapper2);
 
-        QueryWrapper<TwArea> queryWrapper3 = new QueryWrapper<>();
-        queryWrapper3.eq("id", country);
-        TwArea area = twAreaService.getOne(queryWrapper3);
+        QueryWrapper<TwCurrency> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("id", currenyId);
+        TwCurrency twCurrency = twCurrencyService.getOne(queryWrapper3);
         if(twUser != null){
             Integer companyId = twUser.getCompanyId();
             String userCode = twUser.getUserCode();
@@ -336,6 +339,8 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             Integer depatmentId = twUser.getDepatmentId();
             String username = twUser.getUsername();
 
+            BigDecimal rate = twCurrency.getRate();
+            BigDecimal bigDecimal = num.multiply(rate).setScale(6, BigDecimal.ROUND_HALF_UP);
             String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
             TwC2c twC2c = new TwC2c();
             twC2c.setUid(uid);
@@ -345,12 +350,13 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twC2c.setDepartment(depatmentId);
             twC2c.setUserCode(userCode);
             twC2c.setCompanyId(companyId);
-            twC2c.setCountry(area.getNameZh());
+            twC2c.setCurrenyName(twCurrency.getName());
+            twC2c.setCurreny(twCurrency.getCurrency());
             twC2c.setType(1);
             twC2c.setBankType(bankType);
             twC2c.setCreateTime(new Date());
-            twC2c.setCzNum(num);
-            twC2c.setDzNum(num);
+            twC2c.setCzNum(bigDecimal);
+            twC2c.setDzNum(bigDecimal);
             twC2c.setOrderNo(orderNo);
             twC2c.setUsername(username);
             this.saveOrUpdate(twC2c);
@@ -423,7 +429,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twC2c.setDepartment(depatmentId);
             twC2c.setUserCode(userCode);
             twC2c.setCompanyId(companyId);
-            twC2c.setCountry(area.getNameZh());
+//            twC2c.setCountry(area.getNameZh());
             twC2c.setType(2);
             twC2c.setBankType(twC2cBank.getBankType());
             twC2c.setCreateTime(new Date());

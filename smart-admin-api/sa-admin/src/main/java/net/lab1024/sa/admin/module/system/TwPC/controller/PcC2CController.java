@@ -42,8 +42,8 @@ public class PcC2CController {
     @GetMapping("/cz")
     @ApiOperation(value = "C2C充值")
     @NoNeedLogin
-    public ResponseDTO<TwC2c> cz(@RequestParam int  uid, @RequestParam int countryId, @RequestParam BigDecimal num,@RequestParam int bankType,@RequestParam String language) {
-        return twC2cService.cz(uid,countryId,num,bankType,language);
+    public ResponseDTO<TwC2c> cz(@RequestParam int  uid, @RequestParam int currenyId, @RequestParam BigDecimal num,@RequestParam int bankType,@RequestParam String language) {
+        return twC2cService.cz(uid,currenyId,num,bankType,language);
     }
 
     @GetMapping("/czImg")
