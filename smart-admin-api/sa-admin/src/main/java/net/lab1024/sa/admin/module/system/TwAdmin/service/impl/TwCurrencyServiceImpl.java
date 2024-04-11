@@ -50,6 +50,7 @@ implements TwCurrencyService {
         if(twCurrency.getId() == null){
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.eq("currency",twCurrency.getCurrency());
+            queryWrapper.eq("company_id",twCurrency.getCompanyId());
             TwCurrency one = this.getOne(queryWrapper);
             if(one != null){
                 return ResponseDTO.userErrorParam("货币已存在");

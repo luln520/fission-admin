@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -340,7 +342,9 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             String username = twUser.getUsername();
 
             BigDecimal rate = twCurrency.getRate();
-            BigDecimal bigDecimal = num.multiply(rate).setScale(6, BigDecimal.ROUND_HALF_UP);
+            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
+            BigDecimal bigDecimal = rate.divide(rate, mathContext).multiply(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
+
             String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
             TwC2c twC2c = new TwC2c();
             twC2c.setUid(uid);
@@ -355,7 +359,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twC2c.setType(1);
             twC2c.setBankType(bankType);
             twC2c.setCreateTime(new Date());
-            twC2c.setCzNum(bigDecimal);
+            twC2c.setCzNum(num);
             twC2c.setDzNum(bigDecimal);
             twC2c.setOrderNo(orderNo);
             twC2c.setUsername(username);
