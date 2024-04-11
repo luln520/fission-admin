@@ -85,6 +85,7 @@ public class PcC2CController {
 
     @PostMapping("/list")
     @ApiOperation(value = "货币列表")
+    @NoNeedLogin
     public ResponseDTO<IPage<TwCurrency>> listpage(@Valid @RequestBody CompanyVo companyVo) {
         return ResponseDTO.ok(twCurrencyService.listpage(companyVo));
     }
