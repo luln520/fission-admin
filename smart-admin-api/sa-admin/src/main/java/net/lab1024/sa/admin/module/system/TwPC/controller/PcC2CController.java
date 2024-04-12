@@ -81,6 +81,12 @@ public class PcC2CController {
     public ResponseDTO<TwC2c> info(@RequestParam String orderNo) {
         return twC2cService.info(orderNo);
     }
+    @GetMapping("/close")
+    @ApiOperation(value = "取消订单")
+    @NoNeedLogin
+    public ResponseDTO<TwC2c> close(@RequestParam String orderNo) {
+        return twC2cService.close(orderNo);
+    }
 
 
     @PostMapping("/list")

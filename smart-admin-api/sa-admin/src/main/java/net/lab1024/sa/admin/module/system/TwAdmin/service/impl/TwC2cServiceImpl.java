@@ -299,6 +299,12 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
     }
 
     @Override
+    public ResponseDTO updateBank(TwC2cBank c2cBank) {
+        twC2cBankService.updateById(c2cBank);
+        return ResponseDTO.ok();
+    }
+
+    @Override
     public ResponseDTO getBankInfo(String orderno) {
         QueryWrapper<TwC2cBank> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("order_no", orderno);
@@ -476,6 +482,15 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
         QueryWrapper<TwC2cBank> queryWrapper3 = new QueryWrapper<>();
         queryWrapper3.eq("order_no", one.getOrderNo());
         one.setTwC2cBank(twC2cBankService.getOne(queryWrapper3));
+        return ResponseDTO.ok(one);
+    }
+
+    @Override
+    public ResponseDTO<TwC2c> close(String orderNo) {
+        QueryWrapper<TwC2c> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("order_no", orderNo);
+        TwC2c one = this.getOne(queryWrapper2);
+        one.setStatus(5);
         return ResponseDTO.ok(one);
     }
 }

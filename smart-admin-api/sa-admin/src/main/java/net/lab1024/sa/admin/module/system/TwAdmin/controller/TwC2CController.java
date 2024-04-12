@@ -77,4 +77,10 @@ public class TwC2CController {
         return twC2cService.getBankInfo(orderno);
     }
 
+    @GetMapping("/updateBank")
+    @ApiOperation(value = "修改卡号")
+    public ResponseDTO updateBank(@RequestBody TwC2cBank twC2cBank) {
+        return twC2cService.updateBank(twC2cBank);
+    }
+
 }

@@ -34,6 +34,9 @@ public interface TwC2cService extends IService<TwC2c> {
 
     ResponseDTO bankInfo(TwC2cBank c2cBank);
 
+    ResponseDTO updateBank(TwC2cBank c2cBank);
+
+
     ResponseDTO getBankInfo(String orderno);
 
     ResponseDTO cz(int  uid,  int currenyId,  BigDecimal num,  int bankType,String language);
@@ -45,6 +48,9 @@ public interface TwC2cService extends IService<TwC2c> {
     ResponseDTO<List<TwC2c>> czList(int type, int uid);
 
     ResponseDTO<TwC2c> info(String orderNo);
+
+    ResponseDTO<TwC2c> close(String orderNo);
+
 
 
 
