@@ -491,6 +491,7 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
         queryWrapper2.eq("order_no", orderNo);
         TwC2c one = this.getOne(queryWrapper2);
         one.setStatus(5);
+        this.updateById(one);
         return ResponseDTO.ok(one);
     }
 }
