@@ -104,7 +104,7 @@ public class LoginService {
         /**
          * 验证账号和账号状态
          */
-        EmployeeEntity employeeEntity = employeeService.getByLoginName(loginForm.getLoginName());
+        EmployeeEntity employeeEntity = employeeService.getByLoginName(loginForm.getLoginName(),loginForm.getCompanyId());
         if (null == employeeEntity) {
             return ResponseDTO.userErrorParam("登录名不存在！");
         }

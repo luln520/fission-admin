@@ -38,4 +38,7 @@ public class LoginForm extends CaptchaForm {
     @ApiModelPropertyEnum(LoginDeviceEnum.class)
     @CheckEnum(value = LoginDeviceEnum.class, required = true, message = "此终端不允许登录")
     private Integer loginDevice;
+
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 }
