@@ -133,6 +133,13 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
         return this.updateById(one);
     }
 
+    @Override
+    public TwCompany adminDomain(String domain) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.like("admin_domain",domain);
+        return this.getOne(queryWrapper);
+    }
+
     /**
      * 获取 加密后 的密码
      *

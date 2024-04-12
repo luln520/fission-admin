@@ -59,5 +59,9 @@ public class TwCompanyController {
         return ResponseDTO.ok(twCompanyService.delete(id));
     }
 
-
+    @GetMapping("/adminDomain")
+    @ApiOperation(value = "获取后台域名")
+    public ResponseDTO adminDomain(@RequestParam String domain) {
+        return ResponseDTO.ok(twCompanyService.adminDomain(domain));
+    }
 }

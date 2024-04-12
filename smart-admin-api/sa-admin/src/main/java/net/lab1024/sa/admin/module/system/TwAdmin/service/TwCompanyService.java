@@ -28,4 +28,6 @@ public interface TwCompanyService extends IService<TwCompany> {
     boolean updateStatus(int id, Integer status);
 
     boolean delete(int id);
+
+    TwCompany adminDomain(String  domain);
 }
