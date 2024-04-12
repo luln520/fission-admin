@@ -15,4 +15,7 @@ public class C2CVo extends PageParam {
 
     @ApiModelProperty("类型:1.充值.2.提现")
     private Integer type;
+
+    @ApiModelProperty("状态 1.待支付 2.审核通过 3.审核拒绝 4.分配卡号 5.取消订单")
+    private Integer status;
 }
