@@ -61,6 +61,7 @@ public class TwCompanyController {
 
     @GetMapping("/adminDomain")
     @ApiOperation(value = "获取后台域名")
+    @NoNeedLogin
     public ResponseDTO adminDomain(@RequestParam String domain) {
         return ResponseDTO.ok(twCompanyService.adminDomain(domain));
     }
