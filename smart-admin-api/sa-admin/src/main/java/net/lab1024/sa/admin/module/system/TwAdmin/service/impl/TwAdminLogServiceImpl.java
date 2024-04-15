@@ -136,11 +136,13 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
 
             QueryWrapper<TwC2c> queryWrapper4 = new QueryWrapper<>();
             queryWrapper4.eq("status", 4);
+            queryWrapper4.eq("type", 1);
             queryWrapper4.eq("company_id", companyId);
             messageRep.setBankCount(twC2cMapper.selectCount(queryWrapper4).intValue());
 
             QueryWrapper<TwC2c> queryWrapper5 = new QueryWrapper<>();
             queryWrapper5.eq("status", 1);
+            queryWrapper5.eq("type", 1);
             queryWrapper5.eq("company_id", companyId);
             messageRep.setC2CCount(twC2cMapper.selectCount(queryWrapper5).intValue());
 
@@ -169,11 +171,13 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
 
                 QueryWrapper<TwC2c> queryWrapper3 = new QueryWrapper<>();
                 queryWrapper3.eq("status", 4);
+                queryWrapper3.eq("type", 1);
                 queryWrapper3.eq("company_id", companyId);
                 messageRep.setBankCount(twC2cMapper.selectCount(queryWrapper3).intValue());
 
                 QueryWrapper<TwC2c> queryWrapper4 = new QueryWrapper<>();
                 queryWrapper4.eq("status", 1);
+                queryWrapper4.eq("type", 1);
                 queryWrapper4.eq("company_id", companyId);
                 messageRep.setC2CCount(twC2cMapper.selectCount(queryWrapper4).intValue());
 
