@@ -156,6 +156,9 @@ public class TwCompany implements Serializable {
 
     @ApiModelProperty("邀请码开关（1.开，2.关)")
     private int inviteType;
+
+    @ApiModelProperty("APP下载开关  1.开 2.关")
+    private int appStatus;
     /**
     * 创建时间
     */
