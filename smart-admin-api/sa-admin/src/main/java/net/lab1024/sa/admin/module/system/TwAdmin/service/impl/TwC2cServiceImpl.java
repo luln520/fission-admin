@@ -257,6 +257,8 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twBill.setUserCode(twUser.getUserCode());
             twBill.setUsername(one.getUsername());
             twBill.setCoinname("USDT");
+            twBill.setSt(1);
+            twBill.setCompanyId(twUser.getCompanyId());
             twBill.setNum(one.getDzNum());
             twBill.setPath(twUser.getPath());
             twBill.setDepartment(twUser.getDepatmentId());
