@@ -177,6 +177,7 @@ public class TwAdminLogServiceImpl extends ServiceImpl<TwAdminLogDao, TwAdminLog
 
                 QueryWrapper<TwC2c> queryWrapper4 = new QueryWrapper<>();
                 queryWrapper4.eq("status", 1);
+                queryWrapper4.isNotNull("img");
                 queryWrapper4.eq("type", 1);
                 queryWrapper4.eq("company_id", companyId);
                 messageRep.setC2CCount(twC2cMapper.selectCount(queryWrapper4).intValue());
