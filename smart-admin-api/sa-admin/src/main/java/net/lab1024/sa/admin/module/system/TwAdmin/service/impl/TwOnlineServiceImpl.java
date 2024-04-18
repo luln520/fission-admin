@@ -22,6 +22,7 @@ import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.module.support.token.TokenService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
@@ -127,17 +128,31 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     }
 
     @Override
-    public List<TwOnline> lists(int uid,int companyId) {
-        QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("uid",uid);
-        queryWrapper.eq("company_id",companyId);
-        queryWrapper.orderByDesc("id");
-        return this.list(queryWrapper);
+    public List<TwOnline> lists(int uid,String uuid,int companyId) {
+        if(StringUtils.isEmpty(uuid)){
+            QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("uuid",uuid);
+            queryWrapper.eq("company_id",companyId);
+            queryWrapper.orderByDesc("id");
+            return this.list(queryWrapper);
+        }else{
+            QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("uid",uid);
+            queryWrapper.eq("company_id",companyId);
+            queryWrapper.orderByDesc("id");
+            return this.list(queryWrapper);
+        }
+
     }
 
     @Override
     public List<TwOnline> getId(int id) {
         return baseMapper.getId(id);
+    }
+
+    @Override
+    public List<TwOnline> getUUId(String uuid) {
+        return baseMapper.getUUId(uuid);
     }
 
     @Override
@@ -169,6 +184,31 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             this.save(one1);
 
             this.baseMapper.updateState(uid);
+
+            return ResponseDTO.ok("回复成功");
+
+        }catch (Exception e){
+            return ResponseDTO.userErrorParam("回复失败");
+        }
+    }
+    @Override
+    public ResponseDTO backOnlineUuid(String uuid, String content) {
+        try{
+            QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("uuid",uuid);
+            queryWrapper.orderByDesc("addtime").last("LIMIT 1"); // Replace "your_date_column" with the actual column you want to use for ordering.
+            TwOnline one = getOne(queryWrapper);
+
+            TwOnline one1 =new TwOnline();
+            one1.setUid(one.getUid());
+            one1.setContent(content);
+            one1.setCompanyId(one.getCompanyId());
+            one1.setType(1);
+            one1.setAddtime(new Date());
+            one1.setState(2);
+            this.save(one1);
+
+            this.baseMapper.updateStateUuid(uuid);
 
             return ResponseDTO.ok("回复成功");
 

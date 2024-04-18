@@ -53,6 +53,13 @@ public class TwOnlineController {
         return ResponseDTO.ok(twOnlineService.getId(uid));
     }
 
+    @GetMapping("/getUUId")
+    @ResponseBody
+    @ApiOperation(value = "获取单个用户的对话信息")
+    public ResponseDTO<List<TwOnline>> getUUId(@RequestParam String uuid) {
+        return ResponseDTO.ok(twOnlineService.getUUId(uuid));
+    }
+
     /**
      * 客服回复  表 online
      * 接收：uid (被回复用户的 id)  content（回复内容）
@@ -81,14 +88,18 @@ public class TwOnlineController {
         return twOnlineService.backOnline(uid,content);
     }
 
-
+    @GetMapping("/backOnlineUuid")
+    @ResponseBody
+    @ApiOperation(value = "客服回复")
+    public ResponseDTO backOnlineUuid(@RequestParam String uuid, @RequestParam String content) {
+        return twOnlineService.backOnlineUuid(uuid,content);
+    }
     @GetMapping("/del")
     @ResponseBody
     @ApiOperation(value = "客服删除")
     public ResponseDTO del(@RequestParam int id) {
         return twOnlineService.del(id);
     }
-
 
 }
 

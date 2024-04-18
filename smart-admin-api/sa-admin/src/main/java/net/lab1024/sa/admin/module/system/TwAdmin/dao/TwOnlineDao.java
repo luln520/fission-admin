@@ -24,8 +24,11 @@ public interface TwOnlineDao extends BaseMapper<TwOnline> {
 
     List<TwOnline> getId(@Param("id") int id);
 
+    List<TwOnline> getUUId(@Param("uuid") String uuid);
+
 
     int updateState(@Param("uid") int uid);
+    int updateStateUuid(@Param("uuid") String uuid);
 
 }
 

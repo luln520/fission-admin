@@ -33,8 +33,8 @@ public class PcOnlineController {
     @ResponseBody
     @ApiOperation(value = "获取聊天列表")
     @NoNeedLogin
-    public ResponseDTO<List<TwOnline>> lists(@RequestParam int uid,@RequestParam int companyId) {
-        return ResponseDTO.ok(twOnlineService.lists(uid,companyId));
+    public ResponseDTO<List<TwOnline>> lists(@RequestParam int uid,@RequestParam String  uuid,@RequestParam int companyId) {
+        return ResponseDTO.ok(twOnlineService.lists(uid,uuid,companyId));
     }
     /**
      * 发送聊天

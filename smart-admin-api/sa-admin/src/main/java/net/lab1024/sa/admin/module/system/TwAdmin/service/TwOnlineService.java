@@ -24,13 +24,17 @@ import java.util.List;
 public interface TwOnlineService extends IService<TwOnline> {
     IPage<TwOnline> listpage(OnlineVo onlineVo, HttpServletRequest request);
 
-    List<TwOnline> lists(int uid,int companyId);
+    List<TwOnline> lists(int uid,String uuid,int companyId);
 
     List<TwOnline> getId(int id);
+
+    List<TwOnline> getUUId(String uuid);
 
     ResponseDTO del(int id);
 
     ResponseDTO backOnline(int id, String content);
+    ResponseDTO backOnlineUuid(String uuid, String content);
+
 
     ResponseDTO sendMsg(int uid, String content,String uuid,int type, int companyId);
 
