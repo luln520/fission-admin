@@ -200,7 +200,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             TwOnline one = getOne(queryWrapper);
 
             TwOnline one1 =new TwOnline();
-            one1.setUid(one.getUid());
+            one1.setUuid(uuid);
             one1.setContent(content);
             one1.setCompanyId(one.getCompanyId());
             one1.setType(1);
