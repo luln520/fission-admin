@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -177,27 +178,37 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     }
 
     @Override
-    public ResponseDTO sendMsg(int uid, String content) {
-        try{
-            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("id",uid);
+    public ResponseDTO sendMsg(int uid, String content,int type, int companyId) {
+            if(type  == 1){
+                QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("id",uid);
 
-            TwUser one = twUserService.getOne(queryWrapper);
+                TwUser one = twUserService.getOne(queryWrapper);
 
-            TwOnline one1 =new TwOnline();
-            one1.setUid(one.getId());
-            one1.setUsername(one.getUsername());
-            one1.setContent(content);
-            one1.setCompanyId(one.getCompanyId());
-            one1.setType(2);
-            one1.setAddtime(new Date());
-            this.save(one1);
+                TwOnline one1 =new TwOnline();
+                one1.setUid(one.getId());
+                one1.setUsername(one.getUsername());
+                one1.setContent(content);
+                one1.setCompanyId(one.getCompanyId());
+                one1.setType(2);
+                one1.setAddtime(new Date());
+                this.save(one1);
 
-            return ResponseDTO.userErrorParam("发送成功");
+                return ResponseDTO.userErrorParam("发送成功");
+            }
 
-        }catch (Exception e){
-            return ResponseDTO.userErrorParam("发送失败");
-        }
+            if(type  == 2){
+                TwOnline one1 =new TwOnline();
+                one1.setUid(uid);
+                one1.setContent(content);
+                one1.setCompanyId(companyId);
+                one1.setType(2);
+                one1.setAddtime(new Date());
+                this.save(one1);
 
+                return ResponseDTO.userErrorParam("发送成功");
+            }
+
+            return null;
     }
 }

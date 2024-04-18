@@ -37,6 +37,9 @@ public class TwOnline implements Serializable {
     */
     @ApiModelProperty("会员ID")
     private Integer uid;
+
+    @ApiModelProperty("uuid")
+    private String uuid;
     /**
     * 会员账号
     */

@@ -32,6 +32,6 @@ public interface TwOnlineService extends IService<TwOnline> {
 
     ResponseDTO backOnline(int id, String content);
 
-    ResponseDTO sendMsg(int uid, String content);
+    ResponseDTO sendMsg(int uid, String content,int type, int companyId);
 
 }
