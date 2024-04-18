@@ -56,8 +56,8 @@ public class PcOnlineController {
     @ResponseBody
     @ApiOperation(value = "发送聊天")
     @NoNeedLogin
-    public ResponseDTO sendMsg(@RequestParam int uid,@RequestParam String content,@RequestParam int type,@RequestParam int companyId) {
-        return ResponseDTO.ok(twOnlineService.sendMsg(uid,content,type,companyId));
+    public ResponseDTO sendMsg(@RequestParam int uid,@RequestParam String content,@RequestParam String uuid,@RequestParam int type,@RequestParam int companyId) {
+        return ResponseDTO.ok(twOnlineService.sendMsg(uid,content,uuid,type,companyId));
     }
 
 }

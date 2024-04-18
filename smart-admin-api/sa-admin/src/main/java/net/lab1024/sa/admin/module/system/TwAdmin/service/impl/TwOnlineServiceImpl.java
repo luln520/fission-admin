@@ -178,7 +178,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     }
 
     @Override
-    public ResponseDTO sendMsg(int uid, String content,int type, int companyId) {
+    public ResponseDTO sendMsg(int uid, String content,String uuid,int type, int companyId) {
             if(type  == 1){
                 QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("id",uid);
@@ -199,7 +199,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
 
             if(type  == 2){
                 TwOnline one1 =new TwOnline();
-                one1.setUid(uid);
+                one1.setUuid(uuid);
                 one1.setContent(content);
                 one1.setCompanyId(companyId);
                 one1.setType(2);
