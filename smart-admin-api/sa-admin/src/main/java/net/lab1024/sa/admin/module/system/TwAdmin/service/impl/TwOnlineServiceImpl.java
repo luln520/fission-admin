@@ -129,7 +129,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
 
     @Override
     public List<TwOnline> lists(int uid,String uuid,int companyId) {
-        if(StringUtils.isEmpty(uuid)){
+        if(StringUtils.isNotEmpty(uuid)){
             QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("uuid",uuid);
             queryWrapper.eq("company_id",companyId);
