@@ -266,7 +266,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     public ResponseDTO upStatus(int uid, int companyId) {
         QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
-        queryWrapper.eq("status",2);
+        queryWrapper.eq("status",1);
         queryWrapper.eq("company_id",companyId);
         List<TwOnline> list = this.list(queryWrapper);
         for (TwOnline twOnline:list){
@@ -276,7 +276,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
 
         QueryWrapper<TwNotice> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("uid",uid);
-        queryWrapper1.eq("status",1);
+        queryWrapper1.eq("status",2);
         queryWrapper1.eq("company_id",companyId);
         List<TwNotice> list1 = twNoticeService.list(queryWrapper1);
         for (TwNotice twNotice:list1){
@@ -291,7 +291,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     public ResponseDTO upUuidStatus(String uuid, int companyId) {
         QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uuid",uuid);
-        queryWrapper.eq("status",2);
+        queryWrapper.eq("status",1);
         queryWrapper.eq("company_id",companyId);
         List<TwOnline> list = this.list(queryWrapper);
         for (TwOnline twOnline:list){
@@ -323,7 +323,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
         TwMessageRep messageRep = new TwMessageRep();
         QueryWrapper<TwOnline> queryWrapper= new QueryWrapper<>();
         queryWrapper.eq("uuid",uuid);
-        queryWrapper.eq("status",1);
+        queryWrapper.eq("status",2);
         queryWrapper.eq("company_id",companyId);
         messageRep.setUserCount(twOnlineDao.selectCount(queryWrapper).intValue());
 
