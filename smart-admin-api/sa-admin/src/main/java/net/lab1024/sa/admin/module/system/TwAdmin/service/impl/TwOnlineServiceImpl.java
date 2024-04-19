@@ -240,7 +240,6 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
                 one1.setContent(content);
                 one1.setCompanyId(one.getCompanyId());
                 one1.setType(2);
-                one1.setStatus(2);
                 one1.setAddtime(new Date());
                 this.save(one1);
 
