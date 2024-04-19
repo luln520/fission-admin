@@ -11,6 +11,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwNotice;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.OnlineVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMessageRep;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwNoticeService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwOnlineService;
@@ -50,6 +51,8 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     private TokenService tokenService;
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private TwOnlineDao twOnlineDao;
     @Override
     public IPage<TwOnline> listpage(OnlineVo onlineVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -250,5 +253,30 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             }
 
             return null;
+    }
+
+    @Override
+    public ResponseDTO upStatus(int uid, int companyId) {
+        QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid",uid);
+        queryWrapper.eq("status",2);
+        queryWrapper.eq("company_id",companyId);
+        List<TwOnline> list = this.list(queryWrapper);
+        for (TwOnline twOnline:list){
+            twOnline.setStatus(1);
+            this.updateById(twOnline);
+        }
+        return ResponseDTO.ok();
+    }
+
+    @Override
+    public ResponseDTO userMsg(int uid, int companyId) {
+        TwMessageRep messageRep = new TwMessageRep();
+        QueryWrapper<TwOnline> queryWrapper= new QueryWrapper<>();
+        queryWrapper.eq("uid",uid);
+        queryWrapper.eq("status",1);
+        queryWrapper.eq("company_id",companyId);
+        messageRep.setUserCount(twOnlineDao.selectCount(queryWrapper).intValue());
+        return ResponseDTO.ok(messageRep);
     }
 }

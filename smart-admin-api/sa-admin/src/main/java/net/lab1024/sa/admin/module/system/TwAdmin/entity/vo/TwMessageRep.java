@@ -24,6 +24,9 @@ public class TwMessageRep {
     @ApiModelProperty("C2C消息")
     private int C2CCount;
 
+    @ApiModelProperty("用户消息")
+    private int userCount;
+
     private Long employeeId;
 
     private Long departmentId;

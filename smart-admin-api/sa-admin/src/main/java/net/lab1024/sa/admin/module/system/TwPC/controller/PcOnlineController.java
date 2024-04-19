@@ -60,5 +60,21 @@ public class PcOnlineController {
         return ResponseDTO.ok(twOnlineService.sendMsg(uid,content,uuid,type,companyId));
     }
 
+    @GetMapping("/upStatus")
+    @ResponseBody
+    @ApiOperation(value = "用户查看修改状态")
+    @NoNeedLogin
+    public ResponseDTO upStatus(@RequestParam int uid,@RequestParam int companyId) {
+        return ResponseDTO.ok(twOnlineService.upStatus(uid,companyId));
+    }
+
+    @GetMapping("/userMsg")
+    @ResponseBody
+    @ApiOperation(value = "用户未读通知消息")
+    @NoNeedLogin
+    public ResponseDTO userMsg(@RequestParam int uid,@RequestParam int companyId) {
+        return ResponseDTO.ok(twOnlineService.userMsg(uid,companyId));
+    }
+
 }
 
