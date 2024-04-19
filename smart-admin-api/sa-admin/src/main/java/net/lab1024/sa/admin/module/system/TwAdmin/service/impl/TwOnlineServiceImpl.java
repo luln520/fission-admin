@@ -265,7 +265,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     public ResponseDTO upStatus(int uid, int companyId) {
         QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
-        queryWrapper.eq("status",1);
+        queryWrapper.eq("status",2);
         queryWrapper.eq("company_id",companyId);
         List<TwOnline> list = this.list(queryWrapper);
         for (TwOnline twOnline:list){
