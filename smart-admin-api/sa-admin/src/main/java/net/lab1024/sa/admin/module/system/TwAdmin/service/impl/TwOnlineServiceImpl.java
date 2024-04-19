@@ -252,7 +252,6 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
                 one1.setContent(content);
                 one1.setCompanyId(companyId);
                 one1.setType(2);
-                one1.setStatus(2);
                 one1.setAddtime(new Date());
                 this.save(one1);
 
@@ -291,7 +290,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     public ResponseDTO upUuidStatus(String uuid, int companyId) {
         QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uuid",uuid);
-        queryWrapper.eq("status",1);
+        queryWrapper.eq("status",2);
         queryWrapper.eq("company_id",companyId);
         List<TwOnline> list = this.list(queryWrapper);
         for (TwOnline twOnline:list){
