@@ -184,6 +184,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             one1.setType(1);
             one1.setAddtime(new Date());
             one1.setState(2);
+            one1.setStatus(2);
             this.save(one1);
 
             this.baseMapper.updateState(uid);
@@ -209,6 +210,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             one1.setType(1);
             one1.setAddtime(new Date());
             one1.setState(2);
+            one1.setStatus(2);
             this.save(one1);
 
             this.baseMapper.updateStateUuid(uuid);
