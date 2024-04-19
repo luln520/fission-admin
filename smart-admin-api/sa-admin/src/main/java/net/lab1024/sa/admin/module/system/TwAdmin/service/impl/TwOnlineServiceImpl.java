@@ -53,6 +53,10 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     private EmployeeService employeeService;
     @Autowired
     private TwOnlineDao twOnlineDao;
+    @Autowired
+    private TwNoticeService twNoticeService;
+    @Autowired
+    private TwNoticeDao twNoticeDao;
     @Override
     public IPage<TwOnline> listpage(OnlineVo onlineVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -236,6 +240,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
                 one1.setContent(content);
                 one1.setCompanyId(one.getCompanyId());
                 one1.setType(2);
+                one1.setStatus(2);
                 one1.setAddtime(new Date());
                 this.save(one1);
 
@@ -248,6 +253,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
                 one1.setContent(content);
                 one1.setCompanyId(companyId);
                 one1.setType(2);
+                one1.setStatus(2);
                 one1.setAddtime(new Date());
                 this.save(one1);
 
@@ -268,6 +274,17 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             twOnline.setStatus(1);
             this.updateById(twOnline);
         }
+
+        QueryWrapper<TwNotice> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("uid",uid);
+        queryWrapper1.eq("status",1);
+        queryWrapper1.eq("company_id",companyId);
+        List<TwNotice> list1 = twNoticeService.list(queryWrapper1);
+        for (TwNotice twNotice:list1){
+            twNotice.setStatus(2);
+            twNoticeService.updateById(twNotice);
+        }
+
         return ResponseDTO.ok();
     }
 
@@ -290,9 +307,15 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
         TwMessageRep messageRep = new TwMessageRep();
         QueryWrapper<TwOnline> queryWrapper= new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
-        queryWrapper.eq("status",1);
+        queryWrapper.eq("status",2);
         queryWrapper.eq("company_id",companyId);
         messageRep.setUserCount(twOnlineDao.selectCount(queryWrapper).intValue());
+
+        QueryWrapper<TwNotice> queryWrapper1= new QueryWrapper<>();
+        queryWrapper1.eq("uid",uid);
+        queryWrapper1.eq("status",1);
+        queryWrapper1.eq("company_id",companyId);
+        messageRep.setNoticeCount(twNoticeDao.selectCount(queryWrapper1).intValue());
         return ResponseDTO.ok(messageRep);
     }
 
@@ -304,6 +327,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
         queryWrapper.eq("status",1);
         queryWrapper.eq("company_id",companyId);
         messageRep.setUserCount(twOnlineDao.selectCount(queryWrapper).intValue());
+
         return ResponseDTO.ok(messageRep);
     }
 }

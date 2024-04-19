@@ -27,6 +27,9 @@ public class TwMessageRep {
     @ApiModelProperty("用户消息")
     private int userCount;
 
+    @ApiModelProperty("通知消息")
+    private int noticeCount;
+
     private Long employeeId;
 
     private Long departmentId;
