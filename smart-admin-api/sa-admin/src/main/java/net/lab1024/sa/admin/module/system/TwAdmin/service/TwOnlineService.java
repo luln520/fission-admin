@@ -38,6 +38,8 @@ public interface TwOnlineService extends IService<TwOnline> {
 
     ResponseDTO sendMsg(int uid, String content,String uuid,int type, int companyId);
     ResponseDTO upStatus(int uid, int companyId);
+    ResponseDTO upUuidStatus(String uuid, int companyId);
     ResponseDTO userMsg(int uid, int companyId);
+    ResponseDTO userUuidMsg(String uuid, int companyId);
 
 }

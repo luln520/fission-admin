@@ -270,10 +270,35 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
     }
 
     @Override
+    public ResponseDTO upUuidStatus(String uuid, int companyId) {
+        QueryWrapper<TwOnline> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uuid",uuid);
+        queryWrapper.eq("status",2);
+        queryWrapper.eq("company_id",companyId);
+        List<TwOnline> list = this.list(queryWrapper);
+        for (TwOnline twOnline:list){
+            twOnline.setStatus(1);
+            this.updateById(twOnline);
+        }
+        return ResponseDTO.ok();
+    }
+
+    @Override
     public ResponseDTO userMsg(int uid, int companyId) {
         TwMessageRep messageRep = new TwMessageRep();
         QueryWrapper<TwOnline> queryWrapper= new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
+        queryWrapper.eq("status",1);
+        queryWrapper.eq("company_id",companyId);
+        messageRep.setUserCount(twOnlineDao.selectCount(queryWrapper).intValue());
+        return ResponseDTO.ok(messageRep);
+    }
+
+    @Override
+    public ResponseDTO userUuidMsg(String uuid, int companyId) {
+        TwMessageRep messageRep = new TwMessageRep();
+        QueryWrapper<TwOnline> queryWrapper= new QueryWrapper<>();
+        queryWrapper.eq("uuid",uuid);
         queryWrapper.eq("status",1);
         queryWrapper.eq("company_id",companyId);
         messageRep.setUserCount(twOnlineDao.selectCount(queryWrapper).intValue());
