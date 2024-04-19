@@ -279,7 +279,7 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
         queryWrapper1.eq("company_id",companyId);
         List<TwNotice> list1 = twNoticeService.list(queryWrapper1);
         for (TwNotice twNotice:list1){
-            twNotice.setStatus(2);
+            twNotice.setStatus(1);
             twNoticeService.updateById(twNotice);
         }
 
