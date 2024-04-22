@@ -1242,6 +1242,20 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setPath(one.getPath());
             twAdminLog.setCompanyId(one.getCompanyId());
             twAdminLog.setRemark("用户 "+one.getRealName()+" 认证审核通过");
+
+//            TwNotice twNotice = new TwNotice();
+//            twNotice.setUid(uid);
+//            twNotice.setPath(one.getPath());
+//            twNotice.setDepartment(one.getDepatmentId());
+//            twNotice.setAccount(one.getUsername());
+//            twNotice.setCompanyId(one.getCompanyId());
+//            twNotice.setTitle("认证资料审核通过");
+//            twNotice.setTitleEn("second contract trading");
+//            twNotice.setContent("秒合约已平仓，请注意查收");
+//            twNotice.setContentEn("The second contract has been closed, please check it carefully");
+//            twNotice.setAddtime(new Date());
+//            twNotice.setStatus(1);
+//            twNoticeService.save(twNotice);
             return twAdminLogService.save(twAdminLog);
         }
 

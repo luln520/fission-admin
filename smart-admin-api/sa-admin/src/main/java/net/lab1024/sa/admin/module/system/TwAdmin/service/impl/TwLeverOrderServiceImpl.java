@@ -174,7 +174,8 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         }
 
         BigDecimal leverFee = company.getLeverFee();
-        if(twUserCoin.getUsdt().compareTo(num) < 0){
+        BigDecimal nums = num.add(leverFee);
+        if(twUserCoin.getUsdt().compareTo(nums) < 0){
             if(language.equals("zh")){
                 return ResponseDTO.userErrorParam("余额不足！");
             }else{
@@ -203,7 +204,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twLeverOrder.setUserCode(twUser.getUserCode());
         twLeverOrder.setHyzd(hyzd);
         twLeverOrder.setCompanyId(twUser.getCompanyId());
-        twLeverOrder.setBuyOrblance(twUserCoin.getUsdt().subtract(num));
+        twLeverOrder.setBuyOrblance(twUserCoin.getUsdt().subtract(nums));
         twLeverOrder.setCoinname(ccoinname);
         twLeverOrder.setStatus(1);
         twLeverOrder.setIsWin(0);
@@ -224,8 +225,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twLeverOrder.setInvit(invite);
         this.save(twLeverOrder);
         //扣除USDT额度
-        BigDecimal money = num.subtract(leverFee);
-        twUserCoinService.decre(uid,money,twUserCoin.getUsdt());
+        twUserCoinService.decre(uid,nums,twUserCoin.getUsdt());
 
         //创建财务日志
         TwBill twBill = new TwBill();

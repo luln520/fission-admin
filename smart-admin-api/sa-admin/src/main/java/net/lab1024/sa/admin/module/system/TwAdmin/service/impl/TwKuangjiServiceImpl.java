@@ -265,13 +265,19 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
             }
         }
 
+        Integer companyId = user.getCompanyId();
+        QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("id", companyId); // 添加查询条件
+        TwCompany company = twCompanyService.getOne(queryWrapper2);
+        BigDecimal kjFee = company.getKjFee();
+
 
         QueryWrapper queryUserCoin = new QueryWrapper();
         queryUserCoin.eq("userid",uid);
         TwUserCoin twUserCoin = twUserCoinService.getOne(queryUserCoin);
-
+        BigDecimal bynums = buynum.add(kjFee);
         BigDecimal usdt = twUserCoin.getUsdt();  //默认取usdt
-        if(usdt.compareTo(buynum) < 0 ){
+        if(usdt.compareTo(bynums) < 0 ){
             if(language.equals("zh")){
                 return ResponseDTO.userErrorParam("账户余额不足！");
             }else{
@@ -279,11 +285,6 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
             }
         }
 
-        Integer companyId = user.getCompanyId();
-        QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.eq("id", companyId); // 添加查询条件
-        TwCompany company = twCompanyService.getOne(queryWrapper2);
-        BigDecimal kjFee = company.getKjFee();
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
         //建仓矿机订单数据
         TwKjorder twKjorder = new TwKjorder();
@@ -305,8 +306,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorder.setOutcoin(kuangji.getOutcoin());
         MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
         BigDecimal outnu = buynum.multiply(kuangji.getDayoutnum().divide(new BigDecimal(100),mathContext)).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal outnum = outnu.subtract(kjFee);
-        twKjorder.setOutnum(outnum);
+        twKjorder.setOutnum(outnu);
 //        twKjorder.setOutusdt(kuangji.getDayoutnum());
         twKjorder.setAddtime(new Date());
         twKjorder.setEndtime(addDay(new Date(),kuangji.getCycle()));
@@ -317,7 +317,7 @@ public class TwKuangjiServiceImpl extends ServiceImpl<TwKuangjiDao, TwKuangji> i
         twKjorderService.save(twKjorder);
 
         //扣除会员额度
-        twUserCoinService.decre(uid,buynum,twUserCoin.getUsdt());
+        twUserCoinService.decre(uid,bynums,twUserCoin.getUsdt());
 
         TwBill twBill = new TwBill();
         twBill.setUid(uid);

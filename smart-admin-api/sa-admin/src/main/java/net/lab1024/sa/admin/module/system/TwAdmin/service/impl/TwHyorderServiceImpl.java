@@ -298,10 +298,12 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
 //            BigDecimal hySxf = twHysetting.getHySxf();
 
-            Integer companyId = twUser.getCompanyId();
-            QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
-            queryWrapper2.eq("id", companyId); // 添加查询条件
-            if(twUserCoin.getUsdt().compareTo(ctzed) < 0){
+//            Integer companyId = twUser.getCompanyId();
+//            QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
+//            queryWrapper2.eq("id", companyId); // 添加查询条件
+            BigDecimal hyFee = company.getHyFee();
+            BigDecimal tmoneys= ctzed.add(hyFee);
+            if(twUserCoin.getUsdt().compareTo(tmoneys) < 0){
                 if(language.equals("zh")){
                     return ResponseDTO.userErrorParam("余额不足！");
                 }else{
@@ -309,8 +311,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
                 }
             }
 
-            BigDecimal hyFee = company.getHyFee();
-            BigDecimal tmoney = ctzed.subtract(hyFee);
+
 
             String symbol = ccoinname.toLowerCase().replace("/", "");
             String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
@@ -330,7 +331,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twHyorder.setCompanyId(twUser.getCompanyId());
             twHyorder.setUserCode(twUser.getUserCode());
             twHyorder.setHyzd(ctzfx);
-            twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoney));
+            twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
             twHyorder.setCoinname(ccoinname);
             twHyorder.setStatus(1);
             twHyorder.setIsWin(0);
@@ -348,7 +349,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twHyorder.setInvit(invite);
             this.save(twHyorder);
             //扣除USDT额度
-            twUserCoinService.decre(uid,tmoney,twUserCoin.getUsdt());
+            twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
 
             //创建财务日志
             TwBill twBill = new TwBill();
