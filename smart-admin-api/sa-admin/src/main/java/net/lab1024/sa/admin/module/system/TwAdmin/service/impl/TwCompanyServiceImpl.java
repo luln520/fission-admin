@@ -92,7 +92,7 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
             }
             this.updateById(twCompany);
             QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.like("login_name",twCompany.getCompanyAccount());
+            queryWrapper.eq("login_name",twCompany.getCompanyAccount());
             EmployeeEntity one = employeeManager.getOne(queryWrapper);
             // 设置密码 默认密码
             if(StringUtils.isNotEmpty(twCompany.getCompanyPwd())){
