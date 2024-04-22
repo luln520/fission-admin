@@ -1695,7 +1695,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
              */
             msg.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(email));
             //4.设置邮件主题
-            msg.setSubject("To reset your password!", "UTF-8");
+            msg.setSubject("Email verification code："+code, "UTF-8");
 
             // 6. 创建文本"节点"
             MimeBodyPart text = new MimeBodyPart();
