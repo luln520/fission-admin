@@ -1292,6 +1292,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             String phone = area + username;
             SendSmsLib.phone(phone,code);
             captchaMap.put(username, code);
+            log.info("用户注册手机号{]:"+phone+"手机验证码{}:"+code);
             if(language.equals("zh")){
                 return ResponseDTO.ok("验证码已发送");
             }else{
@@ -1308,6 +1309,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             String companyMailPwd = one.getCompanyMailPwd();
             this.email(username,code,companyMail,companyMailPwd);
             captchaMap.put(username, code);
+            log.info("用户邮箱手机号{]:"+username+"邮箱验证码{}:"+code);
             if(language.equals("zh")){
                 return ResponseDTO.ok("验证码已发送");
             }else{

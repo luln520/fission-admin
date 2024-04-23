@@ -224,10 +224,10 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                     twNotice.setUid(uid);
                     twNotice.setAccount(one.getUsername());
                     twNotice.setCompanyId(one.getCompanyId());
-                    twNotice.setTitle("提币审核");
-                    twNotice.setTitleEn("Coin Withdrawal Review");
-                    twNotice.setContent("您的提币申请被驳回，请联系管理员");
-                    twNotice.setContentEn("Your coin withdrawal application has been rejected, please contact the administrator");
+                    twNotice.setTitle("提币审核驳回");
+                    twNotice.setTitleEn("Withdrawal review rejected");
+                    twNotice.setContent("您的提币申请被驳回，请联系客服");
+                    twNotice.setContentEn("Your coin withdrawal application has been rejected, please contact customer service");
                     twNotice.setAddtime(new Date());
                     twNotice.setStatus(1);
                     twNotice.setPath(twUser.getPath());

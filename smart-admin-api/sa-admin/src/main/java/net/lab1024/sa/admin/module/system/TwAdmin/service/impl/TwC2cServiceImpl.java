@@ -68,6 +68,9 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
     @Autowired
     private TwCurrencyService twCurrencyService;
 
+    @Autowired
+    private TwNoticeService twNoticeService;
+
     @Override
     public IPage<TwC2c> listpage(C2CVo c2CVo, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
@@ -142,6 +145,20 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
                 twBill.setRemark("C2C提币审核驳回");
                 twBillService.save(twBill);
 
+                TwNotice twNotice = new TwNotice();
+                twNotice.setUid(twUser.getId());
+                twNotice.setAccount(twUser.getUsername());
+                twNotice.setCompanyId(twUser.getCompanyId());
+                twNotice.setTitle("C2C提币审核驳回");
+                twNotice.setTitleEn("C2C currency withdrawal review rejected");
+                twNotice.setContent("C2C提币审核驳回，请联系客服!");
+                twNotice.setContentEn("C2C currency withdrawal review is rejected, please contact customer service!");
+                twNotice.setAddtime(new Date());
+                twNotice.setStatus(1);
+                twNotice.setPath(twUser.getPath());
+                twNotice.setDepartment(twUser.getDepatmentId());
+                twNoticeService.save(twNotice);
+
                 return ResponseDTO.okMsg("操作成功");
 
             }else{
@@ -190,6 +207,19 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twBill.setRemark("C2C提币审核成功");
             twBillService.save(twBill);
 
+            TwNotice twNotice = new TwNotice();
+            twNotice.setUid(twUser.getId());
+            twNotice.setAccount(twUser.getUsername());
+            twNotice.setCompanyId(twUser.getCompanyId());
+            twNotice.setTitle("C2C提币审核成功");
+            twNotice.setTitleEn("C2C currency withdrawal review successful");
+            twNotice.setContent("C2C提币审核成功，请联系客服!");
+            twNotice.setContentEn("C2C currency withdrawal review is successful, please contact customer service!");
+            twNotice.setAddtime(new Date());
+            twNotice.setStatus(1);
+            twNotice.setPath(twUser.getPath());
+            twNotice.setDepartment(twUser.getDepatmentId());
+            twNoticeService.save(twNotice);
 
             return ResponseDTO.okMsg("操作成功");
         }catch (Exception e){
@@ -227,6 +257,20 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twBill.setAddtime(new Date());
             twBill.setRemark("C2C充值审核驳回");
             twBillService.save(twBill);
+
+            TwNotice twNotice = new TwNotice();
+            twNotice.setUid(twUser.getId());
+            twNotice.setAccount(twUser.getUsername());
+            twNotice.setCompanyId(twUser.getCompanyId());
+            twNotice.setTitle("C2C充值审核驳回");
+            twNotice.setTitleEn("C2C recharge review rejected");
+            twNotice.setContent("C2C充值审核驳回，请联系客服!");
+            twNotice.setContentEn("C2C recharge review is rejected, please contact customer service!");
+            twNotice.setAddtime(new Date());
+            twNotice.setStatus(1);
+            twNotice.setPath(twUser.getPath());
+            twNotice.setDepartment(twUser.getDepatmentId());
+            twNoticeService.save(twNotice);
 
             return ResponseDTO.okMsg("C2C充值审核驳回成功");
 
@@ -268,6 +312,20 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twBill.setRemark("C2C充值审核成功");
             twBillService.save(twBill);
 
+            TwNotice twNotice = new TwNotice();
+            twNotice.setUid(twUser.getId());
+            twNotice.setAccount(twUser.getUsername());
+            twNotice.setCompanyId(twUser.getCompanyId());
+            twNotice.setTitle("C2C充值审核成功");
+            twNotice.setTitleEn("C2C recharge review successful");
+            twNotice.setContent("C2C充值审核成功，请您注意查收!");
+            twNotice.setContentEn("The C2C recharge review was successful, please check carefully!");
+            twNotice.setAddtime(new Date());
+            twNotice.setStatus(1);
+            twNotice.setPath(twUser.getPath());
+            twNotice.setDepartment(twUser.getDepatmentId());
+            twNoticeService.save(twNotice);
+
             return ResponseDTO.okMsg("C2C充值成功");
         }
         return null;
@@ -296,6 +354,20 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
 
         one.setStatus(1);
         this.updateById(one);
+
+        TwNotice twNotice = new TwNotice();
+        twNotice.setUid(one.getUid());
+        twNotice.setAccount(one.getUsername());
+        twNotice.setCompanyId(one.getCompanyId());
+        twNotice.setTitle("分配卡号成功");
+        twNotice.setTitleEn("Card number assigned successfully");
+        twNotice.setContent("您的卡号分配成功，请提交资料凭证!");
+        twNotice.setContentEn("Your card number is assigned successfully, please submit the information voucher!");
+        twNotice.setAddtime(new Date());
+        twNotice.setStatus(1);
+        twNotice.setPath(one.getPath());
+        twNotice.setDepartment(one.getDepartment());
+        twNoticeService.save(twNotice);
 
         return ResponseDTO.okMsg("分配卡号成功");
     }
