@@ -273,16 +273,6 @@ public class TwOnlineServiceImpl extends ServiceImpl<TwOnlineDao, TwOnline> impl
             this.updateById(twOnline);
         }
 
-        QueryWrapper<TwNotice> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("uid",uid);
-        queryWrapper1.eq("status",1);
-        queryWrapper1.eq("company_id",companyId);
-        List<TwNotice> list1 = twNoticeService.list(queryWrapper1);
-        for (TwNotice twNotice:list1){
-            twNotice.setStatus(2);
-            twNoticeService.updateById(twNotice);
-        }
-
         return ResponseDTO.ok();
     }
 
