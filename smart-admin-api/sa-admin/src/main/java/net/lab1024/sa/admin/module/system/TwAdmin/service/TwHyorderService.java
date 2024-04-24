@@ -47,4 +47,6 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     ResponseDTO creatorder(int uid,int ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl,String language);
 
+    ResponseDTO orderNo(String orderNo);
+
 }

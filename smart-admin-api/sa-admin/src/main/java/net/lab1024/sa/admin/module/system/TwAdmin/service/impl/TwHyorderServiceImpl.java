@@ -368,9 +368,16 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twBill.setRemark("购买"+ ccoinname + "秒合约");
             twBillService.save(twBill);
         if(language.equals("zh")){
-            return ResponseDTO.ok("建仓成功！");
+            return ResponseDTO.ok(orderNo);
         }else{
-            return ResponseDTO.ok("Position opening successful！");
+            return ResponseDTO.ok(orderNo);
         }
+    }
+
+    @Override
+    public ResponseDTO orderNo(String orderNo) {
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderNo);
+        return ResponseDTO.ok(this.getOne(queryWrapper));
     }
 }

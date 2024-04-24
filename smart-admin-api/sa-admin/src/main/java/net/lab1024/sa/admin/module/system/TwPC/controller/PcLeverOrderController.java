@@ -86,5 +86,12 @@ public class PcLeverOrderController {
         return twLeverOrderService.closeorder(uid,lid,language);
     }
 
+    @GetMapping("/orderNo")
+    @ResponseBody
+    @ApiOperation(value = "订单号查询")
+    @NoNeedLogin
+    public ResponseDTO orderNo(@RequestParam String orderNo) {
+        return ResponseDTO.ok(twLeverOrderService.orderNo(orderNo));
+    }
 
 }

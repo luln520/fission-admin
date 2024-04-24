@@ -28,4 +28,6 @@ public interface TwLeverOrderService extends IService<TwLeverOrder> {
 
     ResponseDTO editKonglo(int kongyk, int id);
 
+    ResponseDTO orderNo(String orderNo);
+
 }

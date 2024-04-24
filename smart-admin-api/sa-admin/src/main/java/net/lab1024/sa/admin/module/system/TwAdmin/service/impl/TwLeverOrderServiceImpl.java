@@ -244,9 +244,9 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twBill.setRemark("购买"+ ccoinname + "杠杆交易");
         twBillService.save(twBill);
         if(language.equals("zh")){
-            return ResponseDTO.ok("建仓成功！");
+            return ResponseDTO.ok(orderNo);
         }else{
-            return ResponseDTO.ok("Position opening successful！");
+            return ResponseDTO.ok(orderNo);
         }
     }
 
@@ -517,6 +517,13 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
             this.updateById(twLeverOrder);
         }
          return ResponseDTO.ok();
+    }
+
+    @Override
+    public ResponseDTO orderNo(String orderNo) {
+        QueryWrapper<TwLeverOrder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderNo);
+        return ResponseDTO.ok(this.getOne(queryWrapper));
     }
 
     public BigDecimal getnewprice(String url){

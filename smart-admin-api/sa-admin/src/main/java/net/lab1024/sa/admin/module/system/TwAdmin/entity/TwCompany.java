@@ -159,6 +159,9 @@ public class TwCompany implements Serializable {
 
     @ApiModelProperty("APP下载开关  1.开 2.关")
     private int appStatus;
+
+    @ApiModelProperty("C2C提现状态：1 ：开 2 ：关")
+    private int c2ctxStatus;
     /**
     * 创建时间
     */

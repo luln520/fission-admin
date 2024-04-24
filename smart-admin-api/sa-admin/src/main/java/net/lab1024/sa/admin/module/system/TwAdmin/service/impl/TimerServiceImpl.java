@@ -130,6 +130,7 @@ public class TimerServiceImpl {
         queryWrapper.eq("id",uid);
         TwUser twUser = twUserService.getOne(queryWrapper);
 
+
         //创建财务日志
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
