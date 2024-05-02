@@ -170,51 +170,6 @@ public class TimerController {
         timerService.endkjsy();
     }
 
-    /**
-     * 自动按风控比例设置订单的盈亏比例  5秒执行一次
-     * 表：hyorder，hysetting
-     * 大致逻辑：
-     *         1.查询 hyorder没有指定输赢的数量   hyorder count(id) where status=1 and kongy=0
-     *         2.查询  hysetting where id=1
-     *         3.判断 hy_fkgl 字段hy_fkgl>0  不满足就不执行下面的
-     *         4.计算输赢数量（取整）   输数量：没有指定输盈的数量* hy_fkgl的值/100    赢数量：没有指定输盈的数量-输数量
-     *         5.数据库截取对应的数量   hyorder where status=1 and kongy=0 order by num asc limit （输赢数量）
-     *         6.分别遍历 取出来的输赢数据   判断时间然后 输：update hyorder set kongyk=2 where id=?
-     *                                                  赢：update hyorder set kongyk=1 where id=?
-     *
-     * 参考代码：
-     *     //自动按风控比例设置订单的盈亏比例 5秒执行一次
-     *     public function setwl()
-     *     {
-     *         $where['status'] = 1;
-     *         $where['kongyk'] = 0;
-     *         $count = M("hyorder")->where($where)->count();
-     *         $setting = M("hysetting")->where(array('id' => 1))->find();
-     *         if ($setting['hy_fkgl'] > 0) {
-     *             $ylcount = intval($count * $setting['hy_fkgl'] / 100);
-     *             $kscount = $count - $ylcount;
-     *             if ($ylcount > 0) {
-     *                 $yllist = M("hyorder")->where($where)->order("num asc")->limit($ylcount)->select();
-     *                 foreach ($yllist as $k => $v) {
-     *                     $yid = $v['id'];
-     *                     if (time() >= $v['intselltime']) {
-     *                         M("hyorder")->where(array('id' => $yid))->save(array('kongyk' => 1));
-     *                     }
-     *                 }
-     *             }
-     *             if ($kscount > 0) {
-     *                 $kslist = M("hyorder")->where($where)->order("num asc")->limit($kscount)->select();
-     *                 foreach ($kslist as $k => $v) {
-     *                     $kid = $v['id'];
-     *                     if (time() >= $v['intselltime']) {
-     *                         M("hyorder")->where(array('id' => $kid))->save(array('kongyk' => 2));
-     *                     }
-     *                 }
-     *             }
-     *         }
-     *     }
-     * */
-
 
 
 
@@ -229,5 +184,18 @@ public class TimerController {
     public void kjUser() {
         timerService.kjUser();
     }
+
+    @Scheduled(cron = "0 0 8 * * ?")
+    public void curreny() {
+        timerService.curreny();
+    }
+
+    @Scheduled(cron = "0 0 8 * * ?")
+    public void currenyList() {
+        timerService.currenyList();
+    }
+
+
+
 }
 

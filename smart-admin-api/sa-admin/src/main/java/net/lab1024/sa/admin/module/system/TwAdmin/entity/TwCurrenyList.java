@@ -16,17 +16,18 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 /**
-* 货币表
-* @TableName tw_currency
+* 货币汇率总表
+* @TableName tw_curreny_list
 */
 @Data
-@TableName("tw_currency")
-@ApiModel(value = "货币表", description = "")
-public class TwCurrency implements Serializable {
+@TableName("tw_curreny_list")
+@ApiModel(value = "货币汇率总表", description = "")
+public class TwCurrenyList implements Serializable {
 
     /**
     * 
     */
+    @ApiModelProperty("")
     private Integer id;
     /**
     * 货币名称
@@ -34,24 +35,23 @@ public class TwCurrency implements Serializable {
     @ApiModelProperty("货币名称")
     private String name;
     /**
-    * 货币名称
+    * 名称英文
     */
-    @ApiModelProperty("货币名称")
-    private String currency;
+    @ApiModelProperty("名称英文")
+    private String nameEn;
     /**
-    * 汇率
+    * 货币汇率
     */
-    @ApiModelProperty("汇率")
-    private BigDecimal rate;
-
-    @ApiModelProperty("公司ID")
-    private int companyId;
+    @ApiModelProperty("货币汇率")
+    private BigDecimal currenyRate;
     /**
     * 创建时间
     */
     @ApiModelProperty("创建时间")
     private Date createTime;
-
+    /**
+    * 更新时间
+    */
     @ApiModelProperty("更新时间")
     private Date updateTime;
 

@@ -10,6 +10,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjorderDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjprofitDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.CommonUtil;
 import net.lab1024.sa.common.common.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -63,6 +64,12 @@ public class TimerServiceImpl {
 
     @Autowired
     private TwUserKuangjiService twUserKuangjiService;
+
+    @Autowired
+    private TwCurrencyService twCurrencyService;
+
+    @Autowired
+    private TwCurrenyListService twCurrenyListService;
 
     private static final Map<String, String> map = new HashMap<>();
 
@@ -803,5 +810,53 @@ public class TimerServiceImpl {
             }
         }
 
+    }
+
+    public void curreny(){
+        QueryWrapper<TwCurrency> queryWrapper5 = new QueryWrapper<>();
+        List<TwCurrency> list = twCurrencyService.list(queryWrapper5);
+        for(TwCurrency twCurrency:list){
+            String currency = twCurrency.getCurrency();
+            QueryWrapper<TwCurrenyList> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("name_en", currency);
+            TwCurrenyList one = twCurrenyListService.getOne(queryWrapper1);
+            if(one != null){
+                BigDecimal currenyRate = one.getCurrenyRate();
+                twCurrency.setRate(currenyRate);
+                twCurrency.setUpdateTime(new Date());
+                twCurrencyService.updateById(twCurrency);
+            }
+        }
+    }
+
+
+    public void currenyList() {
+        String str = "https://open.er-api.com/v6/latest/USD";
+        Map<String, Object> map = CommonUtil.doGet(str, "");
+        JSONObject res = JSONObject.parseObject(map.get("res").toString());
+        String rates = JSONObject.parseObject(res.get("rates").toString()).toString();
+        String replace = rates.replace("{", "");
+        String replace1 = replace.replace("}", "");
+        String[] split = replace1.split(",");
+        for(int  i = 0 ; i <split.length ; i++){
+            TwCurrenyList twCurrenyList = new TwCurrenyList();
+            String srate = split[i];
+            String[] split1 = srate.split(":");
+            String name = split1[0].replace("\"", "");
+            String price = split1[1];
+            QueryWrapper<TwCurrenyList> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("name_en", name); // 添加查询条件
+            TwCurrenyList one = twCurrenyListService.getOne(queryWrapper1);
+            if(one == null){
+                twCurrenyList.setNameEn(name);
+                twCurrenyList.setCurrenyRate(new BigDecimal(price));
+                twCurrenyList.setCreateTime(new Date());
+                twCurrenyListService.save(twCurrenyList);
+            }else{
+                one.setCurrenyRate(new BigDecimal(price));
+                one.setUpdateTime(new Date());
+                twCurrenyListService.updateById(one);
+            }
+        }
     }
 }
