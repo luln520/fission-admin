@@ -111,4 +111,9 @@ public class TwRecharge implements Serializable {
     @ApiModelProperty("公司id")
     private Integer companyId;
 
+    @ApiModelProperty("货币充值数")
+    private BigDecimal currenyNum;
+    @ApiModelProperty("货币充值数")
+    private String currenyName;
+
 }
