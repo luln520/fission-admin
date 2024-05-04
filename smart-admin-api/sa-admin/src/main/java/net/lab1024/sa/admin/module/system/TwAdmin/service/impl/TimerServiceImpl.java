@@ -831,6 +831,7 @@ public class TimerServiceImpl {
 
 
     public void currenyList() {
+        log.info("货币汇率进入=============================================");
         String str = "https://open.er-api.com/v6/latest/USD";
         Map<String, Object> map = CommonUtil.doGet(str, "");
         JSONObject res = JSONObject.parseObject(map.get("res").toString());
