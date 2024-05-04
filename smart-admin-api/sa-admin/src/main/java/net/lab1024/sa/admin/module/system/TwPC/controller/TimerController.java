@@ -58,7 +58,8 @@ public class TimerController {
         timerService.curreny();
     }
 
-    @Scheduled(cron = "0 0 8 * * ?")
+
+    @Scheduled(cron = "0 0 7 * * ?")
     public void currenyList() {
         timerService.currenyList();
     }
