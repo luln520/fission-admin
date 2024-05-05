@@ -202,10 +202,12 @@ public class PcFinanceController {
                                @RequestParam String  payimg,
                                @RequestParam String  language,
                                @RequestParam BigDecimal zznum,
+                               @RequestParam BigDecimal currenyNum,
+                               @RequestParam String currenyName,
                                @RequestParam String czline,
                                @RequestParam int companyId
                                 ) {
-        ResponseDTO paycoin = twRechargeService.paycoin(uid, coinname, czaddress, payimg, zznum, czline, language, companyId);
+        ResponseDTO paycoin = twRechargeService.paycoin(uid, coinname, czaddress, payimg, zznum, currenyNum,currenyName,czline, language, companyId);
         log.info("客户充值返回参数ResponseDTO{}",paycoin);
         return paycoin;
     }

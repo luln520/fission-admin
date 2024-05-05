@@ -287,7 +287,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
-    public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, String czline,String  language,int companyId) {
+    public ResponseDTO paycoin(int uid, String coinname, String czaddress, String payimg, BigDecimal zznum, BigDecimal currenyNum,String currenyName,String czline,String  language,int companyId) {
             log.info("客户充值参数uid={},coinname={},czaddress={},payimg={},zznum={},czline={},language={},companyId={}",uid,coinname,czaddress,payimg,zznum,czline,language,companyId);
             QueryWrapper<TwUser> query = new QueryWrapper<>();
             query.eq("id", uid);
@@ -320,6 +320,8 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twRecharge.setCoin(coinname);
             twRecharge.setOrderNo(orderNo);
             twRecharge.setNum(zznum);
+            twRecharge.setCurrenyNum(currenyNum);
+            twRecharge.setCurrenyName(currenyName);
             twRecharge.setCompanyId(one.getCompanyId());
             twRecharge.setAddtime(new Date());
             twRecharge.setStatus(1);
