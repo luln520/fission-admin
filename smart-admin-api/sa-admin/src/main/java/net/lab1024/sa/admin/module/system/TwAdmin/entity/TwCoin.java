@@ -37,6 +37,12 @@ public class TwCoin implements Serializable {
     */
     @ApiModelProperty("币种代码")
     private String name;
+
+    @ApiModelProperty("币种代码英文")
+    private String nameEn;
+
+    @ApiModelProperty("币种LOGO")
+    private String img;
     /**
     * 充值网络
     */
