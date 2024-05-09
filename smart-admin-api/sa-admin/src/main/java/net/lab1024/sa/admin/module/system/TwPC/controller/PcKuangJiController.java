@@ -422,7 +422,6 @@ public class PcKuangJiController {
     @ResponseBody
     @ApiOperation(value = "购买独资矿机")
     @NoNeedLogin
-    @RedissonLockAnnotation(keyParts = "uid")
     public ResponseDTO buyKuangji(@RequestParam int uid, @RequestParam int kid, @RequestParam BigDecimal buynum,@RequestParam String language) {
         return twKuangjiService.buyKuangji(uid,kid,buynum,language);
     }
