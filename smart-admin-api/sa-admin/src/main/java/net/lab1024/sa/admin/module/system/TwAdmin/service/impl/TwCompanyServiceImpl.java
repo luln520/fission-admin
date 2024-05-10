@@ -101,7 +101,7 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
             one.setLoginName(twCompany.getCompanyAccount());
             one.setActualName(twCompany.getCompanyAccount());
             one.setUpdateTime(LocalDateTime.now());
-
+            one.setCompanyId(twCompany1.getId());
             List<Long> roleIdList = new ArrayList<>();
             roleIdList.add(1L);
             employeeManager.updateEmployee(one,roleIdList);
