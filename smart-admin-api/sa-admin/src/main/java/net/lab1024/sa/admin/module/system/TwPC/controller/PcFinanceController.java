@@ -148,8 +148,10 @@ public class PcFinanceController {
                                 @RequestParam int cid,
                                 @RequestParam String address,
                                 @RequestParam BigDecimal num,
+                                @RequestParam BigDecimal currenyNum,
+                                @RequestParam String currenyName,
                                 @RequestParam String language) {
-        ResponseDTO tbhandle = twMyzcService.tbhandle(uid, cid, address, num, language);
+        ResponseDTO tbhandle = twMyzcService.tbhandle(uid, cid, address, num, currenyNum,currenyName,language);
         log.info("客户提币返回参数ResponseDTO{}",tbhandle);
         return tbhandle;
     }

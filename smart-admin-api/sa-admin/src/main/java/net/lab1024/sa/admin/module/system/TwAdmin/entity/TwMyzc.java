@@ -117,5 +117,8 @@ public class TwMyzc implements Serializable {
     @ApiModelProperty("公司id")
     private Integer companyId;
 
-
+    @ApiModelProperty("提币充值数")
+    private BigDecimal currenyNum;
+    @ApiModelProperty("提币名称")
+    private String currenyName;
 }

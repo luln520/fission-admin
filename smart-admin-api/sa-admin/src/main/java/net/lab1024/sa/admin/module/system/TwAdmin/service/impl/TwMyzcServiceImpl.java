@@ -298,7 +298,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num,String language) {
+    public ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num,BigDecimal currenyNum,String currenyName,String language) {
         log.info("客户提币参数uid={},cid={},address={},num={},language={}",uid,cid,address,num,language);
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", uid);
@@ -390,6 +390,8 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         twMyzc.setCoinname(twCoin.getName());
         twMyzc.setCompanyId(twUser.getCompanyId());
         twMyzc.setNum(num);
+        twMyzc.setCurrenyNum(currenyNum);
+        twMyzc.setCurrenyName(currenyName);
         twMyzc.setAddress(address);
         twMyzc.setSort(1);
         twMyzc.setMum(tnum);
