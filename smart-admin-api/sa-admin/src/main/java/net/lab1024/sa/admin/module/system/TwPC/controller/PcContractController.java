@@ -97,7 +97,7 @@ public class PcContractController {
     @NoNeedLogin
     @RedissonLockAnnotation(keyParts = "uid")
     public ResponseDTO creatorder(@RequestParam int uid,
-                                  @RequestParam int ctime,
+                                  @RequestParam String ctime,
                                   @RequestParam BigDecimal ctzed,
                                   @RequestParam String ccoinname,
                                   @RequestParam int ctzfx,

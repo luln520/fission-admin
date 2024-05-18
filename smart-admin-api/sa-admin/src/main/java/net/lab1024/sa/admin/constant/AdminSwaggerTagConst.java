@@ -104,6 +104,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String PC_CONTENT = "行情";
 
+        public static final String TW_PLEDGE = "贷款设置";
+
 
     }
 
@@ -148,6 +150,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
         public static final String PC_USER = "PC-用户";
 
         public static final String PC_NEWS = "PC-新闻";
+
+        public static final String PC_PLEDGE = "PC-贷款";
 
         public static final String PC_LEVERORDER = "PC-杠杆订单表";
     }

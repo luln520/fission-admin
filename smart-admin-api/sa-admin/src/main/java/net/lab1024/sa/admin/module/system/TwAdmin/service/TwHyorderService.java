@@ -45,7 +45,7 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     boolean editKongyK(Integer kongyk, int id);
 
-    ResponseDTO creatorder(int uid,int ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl,String language);
+    ResponseDTO creatorder(int uid,String ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl,String language);
 
     ResponseDTO orderNo(String orderNo);
 

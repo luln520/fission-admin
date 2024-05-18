@@ -248,6 +248,38 @@ public class DateUtil {
 
     }
 
+    public static Date dateToDate(Date date, int time,String type) {
+
+        // 创建一个Calendar对象，并将其设置为当前时间
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        if(type.equals("S")){    //秒
+            calendar.add(Calendar.SECOND, time);
+        }
+        if(type.equals("M")){     //分钟
+            calendar.add(Calendar.MINUTE, time);
+        }
+        if(type.equals("H")){     //小时
+            calendar.add(Calendar.HOUR, time);
+        }
+        if(type.equals("D")){     //天
+            calendar.add(Calendar.DAY_OF_YEAR, time);
+        }
+        if(type.equals("W")){     //周
+            calendar.add(Calendar.WEEK_OF_YEAR, time);
+        }
+        if(type.equals("MON")){    //月
+            calendar.add(Calendar.MONTH, time);
+        }
+        if(type.equals("YEAR")){   //年
+            calendar.add(Calendar.YEAR, time);
+        }
+
+        // 获取减去指定秒数后的Date对象
+        return calendar.getTime();
+
+    }
 
     /**
      * 两个时间相差描述

@@ -112,7 +112,7 @@ public class TwHyorder implements Serializable {
     * 结算分钟数
     */
     @ApiModelProperty("结算分钟数")
-    private Integer time;
+    private String time;
     /**
     * 控制盈亏1盈利2亏损0未指定
     */

@@ -24,7 +24,7 @@ public class HyorderOneRes {
     @ApiModelProperty("建仓单价")
     private BigDecimal buyprice;
     @ApiModelProperty("结算分钟数")
-    private int time;
+    private String time;
     @ApiModelProperty("投资金额")
     private BigDecimal num;
     @ApiModelProperty("合约涨跌1买涨2买跌")

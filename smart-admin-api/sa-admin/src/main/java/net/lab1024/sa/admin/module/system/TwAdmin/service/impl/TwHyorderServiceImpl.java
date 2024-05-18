@@ -106,7 +106,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         String coinname = twHyorder.getCoinname();
         BigDecimal buyprice = twHyorder.getBuyprice();
         hyorderOneRes.setBuyprice(buyprice);
-        Integer time = twHyorder.getTime() * 60;
+        String time = twHyorder.getTime();
         hyorderOneRes.setTime(time);
         BigDecimal num = twHyorder.getNum();
         hyorderOneRes.setNum(num);
@@ -251,7 +251,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
-    public ResponseDTO creatorder(int uid, int ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language) {
+    public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language) {
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
 
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -323,6 +323,48 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
             BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
 
+            int time = 0;
+            Date selltime = new Date();
+            // 使用正则表达式分割字符串，非数字字符作为分隔符
+            String[] parts = ctime.split("\\D+");
+
+            // 输出第一个部分（即数字部分）
+            if (parts.length > 0) {
+                time = Integer.parseInt(parts[0]);
+            }else{
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("结算周期有误！");
+                }else{
+                    return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
+                }
+            }
+
+            // 使用正则表达式将所有数字字符替换为空字符串
+            String nonDigits = ctime.replaceAll("\\d", "");
+
+           String upperCase = nonDigits.toUpperCase();
+           if(upperCase.contains("S")){
+                 selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            }
+            if(upperCase.contains("M")){
+                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            }
+            if(upperCase.contains("H")){
+                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            }
+            if(upperCase.contains("D")){
+                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            }
+            if(upperCase.contains("W")){
+                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            }
+            if(upperCase.contains("MON")){
+                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            }
+            if(upperCase.contains("YEAR")){
+                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            }
+
             TwHyorder twHyorder = new TwHyorder();
             twHyorder.setUid(uid);
             twHyorder.setOrderNo(orderNo);
@@ -339,7 +381,6 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twHyorder.setPath(twUser.getPath());
             twHyorder.setDepartment(twUser.getDepatmentId());
             twHyorder.setBuytime(new Date());
-            Date selltime = DateUtil.secondsDateAddSeconds(new Date(), ctime * 60);
             twHyorder.setSelltime(selltime);
             twHyorder.setIntselltime((int) (selltime.getTime()/1000));
             twHyorder.setBuyprice(close);

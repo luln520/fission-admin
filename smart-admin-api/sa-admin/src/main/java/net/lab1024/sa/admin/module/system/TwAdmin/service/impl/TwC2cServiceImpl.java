@@ -264,8 +264,8 @@ public class TwC2cServiceImpl extends ServiceImpl<TwC2cMapper, TwC2c>
             twNotice.setCompanyId(twUser.getCompanyId());
             twNotice.setTitle("C2C充值审核驳回");
             twNotice.setTitleEn("C2C recharge review rejected");
-            twNotice.setContent("C2C充值审核驳回，请联系客服!");
-            twNotice.setContentEn("C2C recharge review is rejected, please contact customer service!");
+            twNotice.setContent("C2C充值审核驳回，请注意查收!");
+            twNotice.setContentEn("C2C recharge review is rejected, please check carefully!");
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNotice.setPath(twUser.getPath());
