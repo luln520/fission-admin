@@ -263,10 +263,10 @@ public class DateUtil {
         if(type.equals("H")){     //小时
             calendar.add(Calendar.HOUR, time);
         }
-        if(type.equals("D")){     //天
+        if(type.equals("DAY")){     //天
             calendar.add(Calendar.DAY_OF_YEAR, time);
         }
-        if(type.equals("W")){     //周
+        if(type.equals("WEEK")){     //周
             calendar.add(Calendar.WEEK_OF_YEAR, time);
         }
         if(type.equals("MON")){    //月

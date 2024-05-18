@@ -352,10 +352,10 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             if(upperCase.contains("H")){
                 selltime = DateUtil.dateToDate(new Date(),time,upperCase);
             }
-            if(upperCase.contains("D")){
+            if(upperCase.contains("DAY")){
                 selltime = DateUtil.dateToDate(new Date(),time,upperCase);
             }
-            if(upperCase.contains("W")){
+            if(upperCase.contains("WEEK")){
                 selltime = DateUtil.dateToDate(new Date(),time,upperCase);
             }
             if(upperCase.contains("MON")){
