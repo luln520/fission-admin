@@ -345,25 +345,28 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
            String upperCase = nonDigits.toUpperCase();
            if(upperCase.contains("S")){
                  selltime = DateUtil.dateToDate(new Date(),time,upperCase);
-            }
-            if(upperCase.contains("M")){
+            }else if(upperCase.contains("M")){
+                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            } else if(upperCase.contains("H")){
+                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            }else if(upperCase.contains("DAY")){
                 selltime = DateUtil.dateToDate(new Date(),time,upperCase);
             }
-            if(upperCase.contains("H")){
+           else if(upperCase.contains("WEEK")){
                 selltime = DateUtil.dateToDate(new Date(),time,upperCase);
             }
-            if(upperCase.contains("DAY")){
+           else if(upperCase.contains("MON")){
                 selltime = DateUtil.dateToDate(new Date(),time,upperCase);
             }
-            if(upperCase.contains("WEEK")){
+           else if(upperCase.contains("YEAR")){
                 selltime = DateUtil.dateToDate(new Date(),time,upperCase);
-            }
-            if(upperCase.contains("MON")){
-                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
-            }
-            if(upperCase.contains("YEAR")){
-                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
-            }
+            }else{
+               if(language.equals("zh")){
+                   return ResponseDTO.userErrorParam("结算周期有误！");
+               }else{
+                   return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
+               }
+           }
 
             TwHyorder twHyorder = new TwHyorder();
             twHyorder.setUid(uid);
