@@ -12,5 +12,7 @@ public class TwUserVo extends PageParam {
 
      private Integer rzstatus;
 
+     private Integer userType;
+
 
 }

@@ -13,6 +13,9 @@
         <if test="obj.rzstatus != null">
             and rzstatus = #{obj.rzstatus}
         </if>
+        <if test="obj.userType != null">
+            and user_type = #{obj.userType}
+        </if>
         <if test="obj.userCode != null and obj.userCode !=''">
             and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>
