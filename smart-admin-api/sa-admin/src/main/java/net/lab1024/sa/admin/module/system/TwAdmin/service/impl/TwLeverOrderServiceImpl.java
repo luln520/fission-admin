@@ -251,6 +251,144 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
     }
 
     @Override
+    public ResponseDTO creatorderNew(int uid, String ccoinname, int win, int loss, int fold, int hyzd, BigDecimal num, BigDecimal ploss, BigDecimal premium, String language, BigDecimal lossPrice, BigDecimal winPrice, BigDecimal boomPrice) {
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", uid); // 添加查询条件
+        TwUser twUser = twUserService.getOne(queryWrapper);
+
+        TwCompany company = twCompanyService.getById(twUser.getCompanyId());
+        int inviteType = company.getInviteType();
+        String invite = "";
+        if(inviteType == 1){
+            EmployeeEntity byInvite = employeeService.getById(Long.valueOf(twUser.getInvit1()));//获取代理人信息
+            if(byInvite == null){
+                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+                queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
+                TwUser puser = twUserService.getOne(queryWrapper4);
+                invite = puser.getInvit1();
+            }
+            invite = String.valueOf(byInvite.getEmployeeId());
+        }
+
+        //获取会员资产
+        QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("userid", uid); // 添加查询条件
+        TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
+
+        if(twUser.getRzstatus() != 2){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("请先完成实名认证！");
+            }else{
+                return ResponseDTO.userErrorParam("Please complete real-name authentication first！");
+            }
+        }
+
+        if(twUser.getBuyOn() == 2){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("您的账户已被禁止交易，请联系客服！");
+            }else{
+                return ResponseDTO.userErrorParam("Your account has been banned from trading, please contact customer service！");
+            }
+        }
+
+//            if(ctzed.compareTo(twHysetting.getHyMin()) < 0){
+//                ResponseDTO.userErrorParam("不能小于最低投资额度");
+//            }
+
+        QueryWrapper<TwLeverage> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("symbol", ccoinname); // 添加查询条件
+        queryWrapper3.eq("num", fold); // 添加查询条件
+        queryWrapper3.eq("company_id",twUser.getCompanyId());
+        TwLeverage one = twLeverageService.getOne(queryWrapper3);
+        if(num.compareTo(one.getMin()) < 0) {
+            if (language.equals("zh")) {
+                return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
+            } else {
+                return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
+            }
+        }
+
+        BigDecimal leverFee = company.getLeverFee();
+        BigDecimal nums = num.add(leverFee);
+        if(twUserCoin.getUsdt().compareTo(nums) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("余额不足！");
+            }else{
+                return ResponseDTO.userErrorParam("Insufficient balance！");
+            }
+        }
+
+        String symbol = ccoinname.toLowerCase().replace("/", "");
+        String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
+        log.info("火币调用api路径：{}"+ str);
+        Map<String, Object> map = CommonUtil.executeGet(str);
+        log.info("火币调用api 返回参数：{}" +map);
+        JSONObject res = JSONObject.parseObject(map.get("res").toString());
+        JSONArray data = JSONArray.parseArray(res.get("data").toString());
+        JSONObject jsonObject = JSONObject.parseObject(data.get(0).toString());
+
+        BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
+
+        String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+
+        TwLeverOrder twLeverOrder = new TwLeverOrder();
+        twLeverOrder.setUid(uid);
+        twLeverOrder.setOrderNo(orderNo);
+        twLeverOrder.setUsername(twUser.getUsername());
+        twLeverOrder.setNum(num);
+        twLeverOrder.setUserCode(twUser.getUserCode());
+        twLeverOrder.setHyzd(hyzd);
+        twLeverOrder.setCompanyId(twUser.getCompanyId());
+        twLeverOrder.setBuyOrblance(twUserCoin.getUsdt().subtract(nums));
+        twLeverOrder.setCoinname(ccoinname);
+        twLeverOrder.setStatus(1);
+        twLeverOrder.setIsWin(0);
+        twLeverOrder.setLossPrice(lossPrice);
+        twLeverOrder.setLoss(loss);
+        twLeverOrder.setWin(win);
+        twLeverOrder.setWinPrice(winPrice);
+        twLeverOrder.setBoomPrice(boomPrice);
+        twLeverOrder.setFold(fold);
+        twLeverOrder.setPath(twUser.getPath());
+        twLeverOrder.setDepartment(twUser.getDepatmentId());
+        twLeverOrder.setBuytime(new Date());
+//        Date selltime = DateUtil.secondsDateAddSeconds(new Date(), ctime * 60);
+//        twLeverOrder.setSelltime(selltime);
+//        twLeverOrder.setIntselltime((int) (selltime.getTime()/1000));
+        twLeverOrder.setBuyprice(close);
+        twLeverOrder.setSellprice(new BigDecimal(0));
+        twLeverOrder.setPloss(ploss);
+        twLeverOrder.setPremium(leverFee);
+        twLeverOrder.setKongyk(0);
+        twLeverOrder.setInvit(invite);
+        this.save(twLeverOrder);
+        //扣除USDT额度
+        twUserCoinService.decre(uid,nums,twUserCoin.getUsdt());
+
+        //创建财务日志
+        TwBill twBill = new TwBill();
+        twBill.setUid(uid);
+        twBill.setUsername(twUser.getUsername());
+        twBill.setUserCode(twUser.getUserCode());
+        twBill.setNum(num);
+        twBill.setCompanyId(twUser.getCompanyId());
+        twBill.setCoinname("usdt");
+        twBill.setAfternum(twUserCoinService.afternum(uid));
+        twBill.setType(9);
+        twBill.setPath(twUser.getPath());
+        twBill.setDepartment(twUser.getDepatmentId());
+        twBill.setAddtime(new Date());
+        twBill.setSt(2);
+        twBill.setRemark("购买"+ ccoinname + "杠杆交易");
+        twBillService.save(twBill);
+        if(language.equals("zh")){
+            return ResponseDTO.ok(orderNo);
+        }else{
+            return ResponseDTO.ok(orderNo);
+        }
+    }
+
+    @Override
     public ResponseDTO closeorder(int uid, int lid,String language) {
         QueryWrapper<TwLeverOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
@@ -524,6 +662,102 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         QueryWrapper<TwLeverOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("order_no", orderNo);
         return ResponseDTO.ok(this.getOne(queryWrapper));
+    }
+
+    @Override
+    public ResponseDTO addnum(int uid, BigDecimal num, String orderNo, String language, BigDecimal boomPrice) {
+
+        QueryWrapper<TwLeverOrder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderNo);
+        TwLeverOrder one = this.getOne(queryWrapper);
+
+        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id", uid); // 添加查询条件
+        TwUser twUser = twUserService.getOne(queryWrapper1);
+
+        TwCompany company = twCompanyService.getById(twUser.getCompanyId());
+
+        //获取会员资产
+        QueryWrapper<TwUserCoin> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("userid", uid); // 添加查询条件
+        TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper2);
+
+
+        BigDecimal leverFee = company.getLeverFee();
+        BigDecimal nums = num.add(leverFee);
+        if(twUserCoin.getUsdt().compareTo(nums) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("余额不足！");
+            }else{
+                return ResponseDTO.userErrorParam("Insufficient balance！");
+            }
+        }
+        BigDecimal num1 = one.getNum();
+        one.setNum(num1.add(num));
+        one.setBoomPrice(boomPrice);
+        this.updateById(one);
+        //减少资产
+        twUserCoinService.decre(uid,nums,twUserCoin.getUsdt());
+        if(language.equals("zh")){
+            return ResponseDTO.userErrorParam("操作成功！");
+        }else{
+            return ResponseDTO.userErrorParam("The operation was successful！");
+        }
+    }
+
+    @Override
+    public ResponseDTO strutcnum(int uid, BigDecimal num, String orderNo, String language,  BigDecimal boomPrice) {
+        QueryWrapper<TwLeverOrder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderNo);
+        TwLeverOrder one = this.getOne(queryWrapper);
+
+        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id", uid); // 添加查询条件
+        TwUser twUser = twUserService.getOne(queryWrapper1);
+
+        TwCompany company = twCompanyService.getById(twUser.getCompanyId());
+
+        //获取会员资产
+        QueryWrapper<TwUserCoin> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("userid", uid); // 添加查询条件
+        TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper2);
+        BigDecimal leverFee = company.getLeverFee();
+        BigDecimal nums = num.add(leverFee);
+        BigDecimal num1 = one.getNum();
+        BigDecimal subtract = num1.subtract(num);
+        if(new BigDecimal(0).compareTo(subtract) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("仓位不足！");
+            }else{
+                return ResponseDTO.userErrorParam("Insufficient positions！");
+            }
+        }
+
+        one.setNum(subtract);
+        one.setBoomPrice(boomPrice);
+        this.updateById(one);
+        //减少资产
+        twUserCoinService.decre(uid,nums,twUserCoin.getUsdt());
+        if(language.equals("zh")){
+            return ResponseDTO.userErrorParam("操作成功！");
+        }else{
+            return ResponseDTO.userErrorParam("The operation was successful！");
+        }
+    }
+
+    @Override
+    public ResponseDTO editLossWin(int uid, String orderNo, String language, BigDecimal lossPrice, BigDecimal winPrice) {
+        QueryWrapper<TwLeverOrder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderNo);
+        TwLeverOrder one = this.getOne(queryWrapper);
+        one.setWinPrice(winPrice);
+        one.setLossPrice(lossPrice);
+        this.updateById(one);
+        if(language.equals("zh")){
+            return ResponseDTO.userErrorParam("操作成功！");
+        }else{
+            return ResponseDTO.userErrorParam("The operation was successful！");
+        }
     }
 
     public BigDecimal getnewprice(String url){
