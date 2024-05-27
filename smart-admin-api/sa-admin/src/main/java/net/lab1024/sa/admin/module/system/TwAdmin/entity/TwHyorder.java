@@ -147,4 +147,7 @@ public class TwHyorder implements Serializable {
 
     @ApiModelProperty("公司id")
     private Integer companyId;
+
+    @ApiModelProperty("订单类型 （1.用户订单,2模拟订单）")
+    private Integer orderType;
 }

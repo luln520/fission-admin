@@ -24,10 +24,16 @@ public interface TwLeverOrderService extends IService<TwLeverOrder> {
 
     ResponseDTO creatorder(int uid, String ccoinname, int win, int loss, int fold, int hyzd, BigDecimal num, BigDecimal ploss,BigDecimal premium,String language);
 
+    ResponseDTO creatorderNew(int uid, String ccoinname, int win, int loss, int fold, int hyzd, BigDecimal num, BigDecimal ploss,BigDecimal premium,String language,  BigDecimal lossPrice,BigDecimal winPrice, BigDecimal boomPrice );
+
     ResponseDTO closeorder(int uid, int lid,String language);
 
     ResponseDTO editKonglo(int kongyk, int id);
 
     ResponseDTO orderNo(String orderNo);
+
+    ResponseDTO addnum(int uid,BigDecimal num,String orderNo,String language,BigDecimal boomPrice);
+    ResponseDTO strutcnum(int uid,BigDecimal num,String orderNo,String language,BigDecimal boomPrice);
+    ResponseDTO editLossWin(int uid,String orderNo,String language,BigDecimal lossPrice,BigDecimal winPrice);
 
 }

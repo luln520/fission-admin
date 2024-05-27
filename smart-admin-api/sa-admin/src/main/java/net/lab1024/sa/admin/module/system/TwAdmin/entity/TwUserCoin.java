@@ -23,7 +23,7 @@ import org.hibernate.validator.constraints.Length;
 */
 @Data
 @TableName("tw_user_coin")
-@ApiModel(value="广告图片表", description="")
+@ApiModel(value="用户币种表", description="")
 public class TwUserCoin implements Serializable {
 
     /**

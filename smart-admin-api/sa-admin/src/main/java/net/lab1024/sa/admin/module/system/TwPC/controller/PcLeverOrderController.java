@@ -94,4 +94,62 @@ public class PcLeverOrderController {
         return ResponseDTO.ok(twLeverOrderService.orderNo(orderNo));
     }
 
+    @GetMapping("/creatorderNew")
+    @ResponseBody
+    @ApiOperation(value = "杠杆建仓")
+    @NoNeedLogin
+    public ResponseDTO creatorderNew(@RequestParam int uid,            //用户id
+                                  @RequestParam String ccoinname,   //币种
+                                  @RequestParam int win,            //止赢
+                                  @RequestParam int loss,           //止损
+                                  @RequestParam int fold,           //倍数
+                                  @RequestParam int hyzd,           //1.做多 2做空
+                                  @RequestParam BigDecimal num,     //数量
+                                  @RequestParam BigDecimal ploss,   //利润
+                                  @RequestParam BigDecimal premium, //手续费
+                                  @RequestParam String language,
+                                  @RequestParam BigDecimal lossPrice, //止损价格
+                                  @RequestParam BigDecimal winPrice, //止盈价格
+                                  @RequestParam BigDecimal boomPrice  ){
+        return twLeverOrderService.creatorderNew(uid,ccoinname,win,loss,fold,hyzd,num,ploss,premium,language,lossPrice,winPrice,boomPrice);
+    }
+
+    @GetMapping("/addnum")
+    @ResponseBody
+    @ApiOperation(value = "加仓")
+    @NoNeedLogin
+    public ResponseDTO addnum(       @RequestParam int uid,            //用户id
+                                     @RequestParam String orderNo,   //币种
+                                     @RequestParam BigDecimal num,     //数量
+                                     @RequestParam String language,
+                                     @RequestParam BigDecimal boomPrice  ){
+        return twLeverOrderService.addnum(uid,num,orderNo,language,boomPrice);
+    }
+
+    @GetMapping("/strutcnum")
+    @ResponseBody
+    @ApiOperation(value = "减仓")
+    @NoNeedLogin
+    public ResponseDTO strutcnum(       @RequestParam int uid,            //用户id
+                                     @RequestParam String orderNo,   //币种
+                                     @RequestParam BigDecimal num,     //数量
+                                     @RequestParam String language,
+                                     @RequestParam BigDecimal boomPrice  ){
+        return twLeverOrderService.strutcnum(uid,num,orderNo,language,boomPrice);
+    }
+
+
+    @GetMapping("/editLossWin")
+    @ResponseBody
+    @ApiOperation(value = "修改止盈止损")
+    @NoNeedLogin
+    public ResponseDTO editLossWin(     @RequestParam int uid,            //用户id
+                                        @RequestParam String orderNo,   //币种
+                                        @RequestParam String language,
+                                        @RequestParam BigDecimal lossPrice, //止损价格
+                                        @RequestParam BigDecimal winPrice //止盈价格
+                                         ){
+        return twLeverOrderService.editLossWin(uid,orderNo,language,lossPrice,winPrice);
+    }
+
 }

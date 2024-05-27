@@ -23,20 +23,20 @@ public class TimerController {
     private TimerServiceImpl timerService;
 
 
-    @Scheduled(cron = "0 0 8 * * ?")
+//    @Scheduled(cron = "0 0 8 * * ?")
+////    @Scheduled(cron = "0 */1 * * * ?")
+//    public void autokjsy() {
+//        timerService.autokjsy();
+//    }
+
+
+//    /**
+//     * 矿机到期时间结算
+//     */
 //    @Scheduled(cron = "0 */1 * * * ?")
-    public void autokjsy() {
-        timerService.autokjsy();
-    }
-
-
-    /**
-     * 矿机到期时间结算
-     */
-    @Scheduled(cron = "0 */1 * * * ?")
-    public void endkjsy() {
-        timerService.endkjsy();
-    }
+//    public void endkjsy() {
+//        timerService.endkjsy();
+//    }
 
 
 
@@ -46,23 +46,28 @@ public class TimerController {
         timerService.hycarryout();
     }
 
-
-
-    @Scheduled(cron = "0 */1 * * * ?")
-    public void kjUser() {
-        timerService.kjUser();
-    }
-
-    @Scheduled(cron = "0 0 8 * * ?")
-    public void curreny() {
-        timerService.curreny();
+    @Scheduled(cron = "*/5 * * * * ?")
+    public void mockhycarryout()  {
+        timerService.mockhycarryout();
     }
 
 
-    @Scheduled(cron = "0 0 7 * * ?")
-    public void currenyList() {
-        timerService.currenyList();
-    }
+
+//    @Scheduled(cron = "0 */1 * * * ?")
+//    public void kjUser() {
+//        timerService.kjUser();
+//    }
+//
+//    @Scheduled(cron = "0 0 8 * * ?")
+//    public void curreny() {
+//        timerService.curreny();
+//    }
+//
+//
+//    @Scheduled(cron = "0 0 7 * * ?")
+//    public void currenyList() {
+//        timerService.currenyList();
+//    }
 
 
 

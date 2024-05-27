@@ -252,46 +252,60 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
     @Override
     public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language) {
-        String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
 
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", uid); // 添加查询条件
             TwUser twUser = twUserService.getOne(queryWrapper);
-
-            TwCompany company = twCompanyService.getById(twUser.getCompanyId());
-            int inviteType = company.getInviteType();
-            String invite = "";
-            if(inviteType == 1){
-                EmployeeEntity byInvite = employeeService.getById(Long.valueOf(twUser.getInvit1()));//获取代理人信息
-                if(byInvite == null){
-                    QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
-                    queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
-                    TwUser puser = twUserService.getOne(queryWrapper4);
-                    invite = puser.getInvit1();
-                }
-                invite = String.valueOf(byInvite.getEmployeeId());
+            Integer userType = twUser.getUserType();
+            if(userType == 1){
+                userOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language) ;
+            }
+            if(userType == 2){
+                mockUserOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language) ;
             }
 
-            //获取会员资产
-            QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("userid", uid); // 添加查询条件
-            TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
+            return null;
+    }
 
-            if(twUser.getRzstatus() != 2){
-                if(language.equals("zh")){
-                    return ResponseDTO.userErrorParam("请先完成实名认证！");
-                }else{
-                    return ResponseDTO.userErrorParam("Please complete real-name authentication first！");
-                }
-            }
+    public ResponseDTO userOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language){
 
-            if(twUser.getBuyOn() == 2){
-                if(language.equals("zh")){
-                    return ResponseDTO.userErrorParam("您的账户已被禁止交易，请联系客服！");
-                }else{
-                    return ResponseDTO.userErrorParam("Your account has been banned from trading, please contact customer service！");
-                }
+        Integer uid = twUser.getId();
+        String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+
+        TwCompany company = twCompanyService.getById(twUser.getCompanyId());
+        int inviteType = company.getInviteType();
+        String invite = "";
+        if(inviteType == 1){
+            EmployeeEntity byInvite = employeeService.getById(Long.valueOf(twUser.getInvit1()));//获取代理人信息
+            if(byInvite == null){
+                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+                queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
+                TwUser puser = twUserService.getOne(queryWrapper4);
+                invite = puser.getInvit1();
             }
+            invite = String.valueOf(byInvite.getEmployeeId());
+        }
+
+        //获取会员资产
+        QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("userid", uid); // 添加查询条件
+        TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
+
+        if(twUser.getRzstatus() != 2){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("请先完成实名认证！");
+            }else{
+                return ResponseDTO.userErrorParam("Please complete real-name authentication first！");
+            }
+        }
+
+        if(twUser.getBuyOn() == 2){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("您的账户已被禁止交易，请联系客服！");
+            }else{
+                return ResponseDTO.userErrorParam("Your account has been banned from trading, please contact customer service！");
+            }
+        }
 
 //            if(ctzed.compareTo(twHysetting.getHyMin()) < 0){
 //                ResponseDTO.userErrorParam("不能小于最低投资额度");
@@ -302,116 +316,283 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 //            Integer companyId = twUser.getCompanyId();
 //            QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
 //            queryWrapper2.eq("id", companyId); // 添加查询条件
-            BigDecimal hyFee = company.getHyFee();
-            BigDecimal tmoneys= ctzed.add(hyFee);
-            if(twUserCoin.getUsdt().compareTo(tmoneys) < 0){
-                if(language.equals("zh")){
-                    return ResponseDTO.userErrorParam("余额不足！");
-                }else{
-                    return ResponseDTO.userErrorParam("Insufficient balance！");
-                }
-            }
-
-
-
-            String symbol = ccoinname.toLowerCase().replace("/", "");
-            String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
-            Map<String, Object> map = CommonUtil.executeGet(str);
-            JSONObject res = JSONObject.parseObject(map.get("res").toString());
-            JSONArray data = JSONArray.parseArray(res.get("data").toString());
-            JSONObject jsonObject = JSONObject.parseObject(data.get(0).toString());
-
-            BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
-
-            int time = 0;
-            Date selltime = new Date();
-            // 使用正则表达式分割字符串，非数字字符作为分隔符
-            String[] parts = ctime.split("\\D+");
-
-            // 输出第一个部分（即数字部分）
-            if (parts.length > 0) {
-                time = Integer.parseInt(parts[0]);
+        BigDecimal hyFee = company.getHyFee();
+        BigDecimal tmoneys= ctzed.add(hyFee);
+        if(twUserCoin.getUsdt().compareTo(tmoneys) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("余额不足！");
             }else{
-                if(language.equals("zh")){
-                    return ResponseDTO.userErrorParam("结算周期有误！");
-                }else{
-                    return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
-                }
+                return ResponseDTO.userErrorParam("Insufficient balance！");
             }
+        }
 
-            // 使用正则表达式将所有数字字符替换为空字符串
-            String nonDigits = ctime.replaceAll("\\d", "");
 
-           String upperCase = nonDigits.toUpperCase();
-           if(upperCase.contains("S")){
-                 selltime = DateUtil.dateToDate(new Date(),time,upperCase);
-            }else if(upperCase.contains("M")){
-                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
-            } else if(upperCase.contains("H")){
-                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
-            }else if(upperCase.contains("DAY")){
-                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
-            }
-           else if(upperCase.contains("WEEK")){
-                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
-            }
-           else if(upperCase.contains("MON")){
-                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
-            }
-           else if(upperCase.contains("YEAR")){
-                selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+
+        String symbol = ccoinname.toLowerCase().replace("/", "");
+        String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
+        Map<String, Object> map = CommonUtil.executeGet(str);
+        JSONObject res = JSONObject.parseObject(map.get("res").toString());
+        JSONArray data = JSONArray.parseArray(res.get("data").toString());
+        JSONObject jsonObject = JSONObject.parseObject(data.get(0).toString());
+
+        BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
+
+        int time = 0;
+        Date selltime = new Date();
+        // 使用正则表达式分割字符串，非数字字符作为分隔符
+        String[] parts = ctime.split("\\D+");
+
+        // 输出第一个部分（即数字部分）
+        if (parts.length > 0) {
+            time = Integer.parseInt(parts[0]);
+        }else{
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("结算周期有误！");
             }else{
-               if(language.equals("zh")){
-                   return ResponseDTO.userErrorParam("结算周期有误！");
-               }else{
-                   return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
-               }
-           }
+                return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
+            }
+        }
 
-            TwHyorder twHyorder = new TwHyorder();
-            twHyorder.setUid(uid);
-            twHyorder.setOrderNo(orderNo);
-            twHyorder.setUsername(twUser.getUsername());
-            twHyorder.setNum(ctzed);
-            twHyorder.setHybl(cykbl);
-            twHyorder.setCompanyId(twUser.getCompanyId());
-            twHyorder.setUserCode(twUser.getUserCode());
-            twHyorder.setHyzd(ctzfx);
-            twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
-            twHyorder.setCoinname(ccoinname);
-            twHyorder.setStatus(1);
-            twHyorder.setIsWin(0);
-            twHyorder.setPath(twUser.getPath());
-            twHyorder.setDepartment(twUser.getDepatmentId());
-            twHyorder.setBuytime(new Date());
-            twHyorder.setSelltime(selltime);
-            twHyorder.setIntselltime((int) (selltime.getTime()/1000));
-            twHyorder.setBuyprice(close);
-            twHyorder.setSellprice(new BigDecimal(0));
-            twHyorder.setPloss(new BigDecimal(0));
-            twHyorder.setTime(ctime);
-            twHyorder.setKongyk(0);
-            twHyorder.setInvit(invite);
-            this.save(twHyorder);
-            //扣除USDT额度
-            twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
+        // 使用正则表达式将所有数字字符替换为空字符串
+        String nonDigits = ctime.replaceAll("\\d", "");
 
-            //创建财务日志
-            TwBill twBill = new TwBill();
-            twBill.setUserCode(twUser.getUserCode());
-            twBill.setUid(uid);
-            twBill.setUsername(twUser.getUsername());
-            twBill.setNum(ctzed);
-            twBill.setCompanyId(twUser.getCompanyId());
-            twBill.setCoinname("usdt");
-            twBill.setAfternum(twUserCoinService.afternum(uid));
-            twBill.setType(3);
-            twBill.setPath(twUser.getPath());
-            twBill.setDepartment(twUser.getDepatmentId());
-            twBill.setAddtime(new Date());
-            twBill.setSt(2);
-            twBill.setRemark("购买"+ ccoinname + "秒合约");
-            twBillService.save(twBill);
+        String upperCase = nonDigits.toUpperCase();
+        if(upperCase.contains("S")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }else if(upperCase.contains("M")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        } else if(upperCase.contains("H")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }else if(upperCase.contains("DAY")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }
+        else if(upperCase.contains("WEEK")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }
+        else if(upperCase.contains("MON")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }
+        else if(upperCase.contains("YEAR")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }else{
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("结算周期有误！");
+            }else{
+                return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
+            }
+        }
+
+        TwHyorder twHyorder = new TwHyorder();
+        twHyorder.setUid(uid);
+        twHyorder.setOrderNo(orderNo);
+        twHyorder.setUsername(twUser.getUsername());
+        twHyorder.setNum(ctzed);
+        twHyorder.setHybl(cykbl);
+        twHyorder.setCompanyId(twUser.getCompanyId());
+        twHyorder.setUserCode(twUser.getUserCode());
+        twHyorder.setHyzd(ctzfx);
+        twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
+        twHyorder.setCoinname(ccoinname);
+        twHyorder.setStatus(1);
+        twHyorder.setIsWin(0);
+        twHyorder.setOrderType(1);
+        twHyorder.setPath(twUser.getPath());
+        twHyorder.setDepartment(twUser.getDepatmentId());
+        twHyorder.setBuytime(new Date());
+        twHyorder.setSelltime(selltime);
+        twHyorder.setIntselltime((int) (selltime.getTime()/1000));
+        twHyorder.setBuyprice(close);
+        twHyorder.setSellprice(new BigDecimal(0));
+        twHyorder.setPloss(new BigDecimal(0));
+        twHyorder.setTime(ctime);
+        twHyorder.setKongyk(0);
+        twHyorder.setInvit(invite);
+        this.save(twHyorder);
+        //扣除USDT额度
+        twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
+
+        //创建财务日志
+        TwBill twBill = new TwBill();
+        twBill.setUserCode(twUser.getUserCode());
+        twBill.setUid(uid);
+        twBill.setUsername(twUser.getUsername());
+        twBill.setNum(ctzed);
+        twBill.setCompanyId(twUser.getCompanyId());
+        twBill.setCoinname("usdt");
+        twBill.setAfternum(twUserCoinService.afternum(uid));
+        twBill.setType(3);
+        twBill.setPath(twUser.getPath());
+        twBill.setDepartment(twUser.getDepatmentId());
+        twBill.setAddtime(new Date());
+        twBill.setSt(2);
+        twBill.setRemark("购买"+ ccoinname + "秒合约");
+        twBillService.save(twBill);
+        if(language.equals("zh")){
+            return ResponseDTO.ok(orderNo);
+        }else{
+            return ResponseDTO.ok(orderNo);
+        }
+    }
+    public ResponseDTO mockUserOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language){
+        Integer uid = twUser.getId();
+
+        String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+
+        TwCompany company = twCompanyService.getById(twUser.getCompanyId());
+        int inviteType = company.getInviteType();
+        String invite = "";
+        if(inviteType == 1){
+            EmployeeEntity byInvite = employeeService.getById(Long.valueOf(twUser.getInvit1()));//获取代理人信息
+            if(byInvite == null){
+                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+                queryWrapper4.eq("id", twUser.getInvit1()); // 添加查询条件
+                TwUser puser = twUserService.getOne(queryWrapper4);
+                invite = puser.getInvit1();
+            }
+            invite = String.valueOf(byInvite.getEmployeeId());
+        }
+
+        //获取会员资产
+        QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("userid", uid); // 添加查询条件
+        TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
+
+//        if(twUser.getRzstatus() != 2){
+//            if(language.equals("zh")){
+//                return ResponseDTO.userErrorParam("请先完成实名认证！");
+//            }else{
+//                return ResponseDTO.userErrorParam("Please complete real-name authentication first！");
+//            }
+//        }
+
+        if(twUser.getBuyOn() == 2){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("您的账户已被禁止交易，请联系客服！");
+            }else{
+                return ResponseDTO.userErrorParam("Your account has been banned from trading, please contact customer service！");
+            }
+        }
+
+//            if(ctzed.compareTo(twHysetting.getHyMin()) < 0){
+//                ResponseDTO.userErrorParam("不能小于最低投资额度");
+//            }
+
+//            BigDecimal hySxf = twHysetting.getHySxf();
+
+//            Integer companyId = twUser.getCompanyId();
+//            QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
+//            queryWrapper2.eq("id", companyId); // 添加查询条件
+        BigDecimal hyFee = company.getHyFee();
+        BigDecimal tmoneys= ctzed.add(hyFee);
+        if(twUserCoin.getUsdt().compareTo(tmoneys) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("余额不足！");
+            }else{
+                return ResponseDTO.userErrorParam("Insufficient balance！");
+            }
+        }
+
+
+
+        String symbol = ccoinname.toLowerCase().replace("/", "");
+        String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
+        Map<String, Object> map = CommonUtil.executeGet(str);
+        JSONObject res = JSONObject.parseObject(map.get("res").toString());
+        JSONArray data = JSONArray.parseArray(res.get("data").toString());
+        JSONObject jsonObject = JSONObject.parseObject(data.get(0).toString());
+
+        BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
+
+        int time = 0;
+        Date selltime = new Date();
+        // 使用正则表达式分割字符串，非数字字符作为分隔符
+        String[] parts = ctime.split("\\D+");
+
+        // 输出第一个部分（即数字部分）
+        if (parts.length > 0) {
+            time = Integer.parseInt(parts[0]);
+        }else{
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("结算周期有误！");
+            }else{
+                return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
+            }
+        }
+
+        // 使用正则表达式将所有数字字符替换为空字符串
+        String nonDigits = ctime.replaceAll("\\d", "");
+
+        String upperCase = nonDigits.toUpperCase();
+        if(upperCase.contains("S")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }else if(upperCase.contains("M")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        } else if(upperCase.contains("H")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }else if(upperCase.contains("DAY")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }
+        else if(upperCase.contains("WEEK")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }
+        else if(upperCase.contains("MON")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }
+        else if(upperCase.contains("YEAR")){
+            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+        }else{
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("结算周期有误！");
+            }else{
+                return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
+            }
+        }
+
+        TwHyorder twHyorder = new TwHyorder();
+        twHyorder.setUid(uid);
+        twHyorder.setOrderNo(orderNo);
+        twHyorder.setUsername(twUser.getUsername());
+        twHyorder.setNum(ctzed);
+        twHyorder.setHybl(cykbl);
+        twHyorder.setCompanyId(twUser.getCompanyId());
+        twHyorder.setUserCode(twUser.getUserCode());
+        twHyorder.setHyzd(ctzfx);
+        twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
+        twHyorder.setCoinname(ccoinname);
+        twHyorder.setStatus(1);
+        twHyorder.setIsWin(0);
+        twHyorder.setOrderType(2);
+        twHyorder.setPath(twUser.getPath());
+        twHyorder.setDepartment(twUser.getDepatmentId());
+        twHyorder.setBuytime(new Date());
+        twHyorder.setSelltime(selltime);
+        twHyorder.setIntselltime((int) (selltime.getTime()/1000));
+        twHyorder.setBuyprice(close);
+        twHyorder.setSellprice(new BigDecimal(0));
+        twHyorder.setPloss(new BigDecimal(0));
+        twHyorder.setTime(ctime);
+        twHyorder.setKongyk(0);
+        twHyorder.setInvit(invite);
+        this.save(twHyorder);
+        //扣除USDT额度
+        twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
+
+//        //创建财务日志
+//        TwBill twBill = new TwBill();
+//        twBill.setUserCode(twUser.getUserCode());
+//        twBill.setUid(uid);
+//        twBill.setUsername(twUser.getUsername());
+//        twBill.setNum(ctzed);
+//        twBill.setCompanyId(twUser.getCompanyId());
+//        twBill.setCoinname("usdt");
+//        twBill.setAfternum(twUserCoinService.afternum(uid));
+//        twBill.setType(3);
+//        twBill.setPath(twUser.getPath());
+//        twBill.setDepartment(twUser.getDepatmentId());
+//        twBill.setAddtime(new Date());
+//        twBill.setSt(2);
+//        twBill.setRemark("购买"+ ccoinname + "秒合约");
+//        twBillService.save(twBill);
         if(language.equals("zh")){
             return ResponseDTO.ok(orderNo);
         }else{

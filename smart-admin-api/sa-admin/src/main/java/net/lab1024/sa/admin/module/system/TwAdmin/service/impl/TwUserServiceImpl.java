@@ -121,6 +121,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Autowired
     private TwCompanyService twCompanyService;
 
+    @Autowired
+    private TwMockUserCoinService twMockUserCoinService;
+
     @Override
     public Integer countAllUsers(int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -1038,24 +1041,13 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUserCoin.setCompanyId(companyId);
                 twUserCoinService.save(twUserCoin);
 
+                TwMockUserCoin twMockUserCoin= new TwMockUserCoin();
+                twMockUserCoin.setUserid(uid);
+                twMockUserCoin.setCompanyId(companyId);
+                twMockUserCoinService.save(twMockUserCoin);
+
                 captchaMap.remove(username);
 
-//                QueryWrapper<TwKuangji> queryWrapper4= new QueryWrapper<>();
-//                queryWrapper4.eq("company_id",userReq.getCompanyId());
-//                List<TwKuangji> list = twKuangjiService.list(queryWrapper4);
-//                for(TwKuangji twKuangji:list){
-//                    TwUserKuangji twUserKuangji = new TwUserKuangji();
-//                    twUserKuangji.setMin(twKuangji.getPricemin());
-//                    twUserKuangji.setMax(twKuangji.getPricemax());
-//                    twUserKuangji.setNum(1);
-//                    twUserKuangji.setCompanyId(companyId);
-//                    twUserKuangji.setKjId(twKuangji.getId());
-//                    twUserKuangji.setKjName(twKuangji.getTitle());
-//                    twUserKuangji.setUserId(uid);
-//                    twUserKuangji.setCompanyId(companyId);
-//                    twUserKuangji.setCreateTime(new Date());
-//                    twUserKuangjiService.save(twUserKuangji);
-//                }
 
                 if(language.equals("zh")){
                     return ResponseDTO.ok("注册成功！");

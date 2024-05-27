@@ -35,16 +35,19 @@ public class TimerServiceImpl {
     private TwUserCoinService twUserCoinService;
 
     @Autowired
+    private TwMockUserCoinService twMockUserCoinService;
+
+    @Autowired
     private TwBillService twBillService;
 
     @Autowired
     private TwNoticeService twNoticeService;
 
-    @Autowired
-    private TwKjorderService twKjorderService;
-
-    @Autowired
-    private TwKjprofitService twKjprofitService;
+//    @Autowired
+//    private TwKjorderService twKjorderService;
+//
+//    @Autowired
+//    private TwKjprofitService twKjprofitService;
 
     @Autowired
     private TwHyorderService twHyorderService;
@@ -54,22 +57,22 @@ public class TimerServiceImpl {
 
     @Autowired
     private TwUserService twUserService;
+//
+//    @Autowired
+//    private TwKuangjiService twKuangjiService;
 
-    @Autowired
-    private TwKuangjiService twKuangjiService;
-
-
-    @Autowired
-    private TwKjprofitDao twKjprofitDao;
-
-    @Autowired
-    private TwUserKuangjiService twUserKuangjiService;
-
-    @Autowired
-    private TwCurrencyService twCurrencyService;
-
-    @Autowired
-    private TwCurrenyListService twCurrenyListService;
+//
+//    @Autowired
+//    private TwKjprofitDao twKjprofitDao;
+//
+//    @Autowired
+//    private TwUserKuangjiService twUserKuangjiService;
+//
+//    @Autowired
+//    private TwCurrencyService twCurrencyService;
+//
+//    @Autowired
+//    private TwCurrenyListService twCurrenyListService;
 
     private static final Map<String, String> map = new HashMap<>();
 
@@ -171,150 +174,151 @@ public class TimerServiceImpl {
     }
 
 
-    public void autokjsy(){
-        QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status",1);
-        List<TwKjorder> list = twKjorderService.list(queryWrapper);
-        for(TwKjorder twKjorder:list){
-            try{
-                String coinname="";
-                Integer kid = twKjorder.getKid();
-                Integer uid = twKjorder.getUid();
-                String username = twKjorder.getUsername();
-                BigDecimal outnum = twKjorder.getOutnum();
-
-                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
-                queryWrapper4.eq("id",uid);
-                TwUser twUser = twUserService.getOne(queryWrapper4);
-
-                String nowdate = DateUtil.date2Str(new Date(), "yyyy-MM-dd");
-                QueryWrapper<TwKjprofit> queryWrapper2 = new QueryWrapper<>();
-                queryWrapper2.eq("uid",uid);
-                queryWrapper2.eq("kid",kid);
-                queryWrapper2.eq("day",nowdate);
-                TwKjprofit twKjprofit = twKjprofitService.getOne(queryWrapper2);
-                if(twKjprofit == null){
-                    TwKjprofit twKjprofit1 = new TwKjprofit();
-                    twKjprofit1.setUid(uid);
-                    twKjprofit1.setOrderNo(twKjorder.getOrderNo());
-                    twKjprofit1.setUsername(username);
-                    twKjprofit1.setUserCode(twKjorder.getUserCode());
-                    if(StringUtils.isNotEmpty(twUser.getPath())){
-                        twKjprofit1.setPath(twUser.getPath());
-                    }
-                    twKjprofit1.setDepartment(twUser.getDepatmentId());
-                    twKjprofit1.setKid(twKjorder.getKid());
-                    twKjprofit1.setKtitle(twKjorder.getKjtitle());
-                    twKjprofit1.setNum(outnum);
-                    twKjprofit1.setCompanyId(twUser.getCompanyId());
-                    twKjprofit1.setCoin(coinname);
-                    twKjprofit1.setAddtime(new Date());
-                    twKjprofit1.setDay(DateUtil.str2DateDay(nowdate));
-                    twKjprofitService.save(twKjprofit1);
-
-                    Integer synum = twKjorder.getSynum();
-                    twKjorder.setSynum(synum + 1);
-
-                    twKjorderService.updateById(twKjorder);
-
-//                twUserCoinService.incre(uid,outnum,twUserCoin.getUsdt());
-
-                    //写资金日志
-                    TwBill twBill = new TwBill();
-                    twBill.setUid(uid);
-                    twBill.setUsername(username);
-                    twBill.setUserCode(twUser.getUserCode());
-                    twBill.setPath(twUser.getPath());
-                    twBill.setDepartment(twUser.getDepatmentId());
-                    twBill.setNum(outnum);
-                    twBill.setCoinname("usdt");
-                    twBill.setCompanyId(twUser.getCompanyId());
-                    twBill.setAfternum(twUserCoinService.afternum(uid));
-                    twBill.setType(8);
-                    twBill.setAddtime(new Date());
-                    twBill.setSt(1);
-                    twBill.setRemark("矿机收益释放");
-                    twBillService.save(twBill);
-
-                }
-            }catch (Exception e){
-                continue;
-            }
-        }
-    }
-
-    public void endkjsy(){
-        Integer nowtime = (int) (System.currentTimeMillis()/1000);
-        QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status",1);
-        queryWrapper.le("intendtime", nowtime);
-        List<TwKjorder> list = twKjorderService.list(queryWrapper);
-        if(list.size() > 0){
-            for(TwKjorder twKjorder:list){
-
-                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
-                queryWrapper4.eq("id",twKjorder.getUid());
-                TwUser twUser = twUserService.getOne(queryWrapper4);
-
-                QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
-                queryWrapper3.eq("userid",twKjorder.getUid());
-                TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
-
-                Integer uid = twKjorder.getUid();
-                BigDecimal buynum1 = twKjorder.getBuynum();
-                BigDecimal buynum = new BigDecimal(0);
-                QueryWrapper<TwKjprofit> queryWrapper1 = new QueryWrapper<>();
-                queryWrapper1.select("IFNULL(SUM(num), 0) as num")
-                        .eq("kid", twKjorder.getKid())
-                        .eq("uid", twKjorder.getUid());
-                List<Map<String, Object>> result = twKjprofitDao.selectMaps(queryWrapper1);
-                if (result.isEmpty()) {
-                    buynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
-                }
-
-                Object totalNumObject = result.get(0).get("num");
-                if (totalNumObject instanceof BigDecimal) {
-                    buynum = ((BigDecimal) totalNumObject).setScale(2, RoundingMode.HALF_UP);
-                } else if (totalNumObject instanceof Long) {
-                    buynum = BigDecimal.valueOf((Long) totalNumObject).setScale(2, RoundingMode.HALF_UP);
-                } else if (totalNumObject instanceof Integer) {
-                    buynum = BigDecimal.valueOf((Integer) totalNumObject).setScale(2, RoundingMode.HALF_UP);
-                } else {
-                    // 处理其他可能的类型
-                    buynum = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
-                }
-                BigDecimal add = buynum.add(buynum1);
-                //增加资产
-                twUserCoinService.incre(uid,add,twUserCoin.getUsdt());
-
-                //写资金日志
-                TwBill twBill = new TwBill();
-                twBill.setUid(uid);
-                twBill.setUsername(twKjorder.getUsername());
-                twBill.setUserCode(twUser.getUserCode());
-                twBill.setCompanyId(twUser.getCompanyId());
-                twBill.setPath(twUser.getPath());
-                twBill.setDepartment(twUser.getDepatmentId());
-                twBill.setNum(buynum);
-                twBill.setCoinname("usdt");
-                twBill.setAfternum(twUserCoinService.afternum(uid));
-                twBill.setType(8);
-                twBill.setAddtime(new Date());
-                twBill.setSt(1);
-                twBill.setRemark("矿机到期收益释放");
-                twBillService.save(twBill);
-
-
-                twKjorder.setStatus(3);
-                twKjorderService.updateById(twKjorder);
-            }
-        }
-    }
+//    public void autokjsy(){
+//        QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("status",1);
+//        List<TwKjorder> list = twKjorderService.list(queryWrapper);
+//        for(TwKjorder twKjorder:list){
+//            try{
+//                String coinname="";
+//                Integer kid = twKjorder.getKid();
+//                Integer uid = twKjorder.getUid();
+//                String username = twKjorder.getUsername();
+//                BigDecimal outnum = twKjorder.getOutnum();
+//
+//                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+//                queryWrapper4.eq("id",uid);
+//                TwUser twUser = twUserService.getOne(queryWrapper4);
+//
+//                String nowdate = DateUtil.date2Str(new Date(), "yyyy-MM-dd");
+//                QueryWrapper<TwKjprofit> queryWrapper2 = new QueryWrapper<>();
+//                queryWrapper2.eq("uid",uid);
+//                queryWrapper2.eq("kid",kid);
+//                queryWrapper2.eq("day",nowdate);
+//                TwKjprofit twKjprofit = twKjprofitService.getOne(queryWrapper2);
+//                if(twKjprofit == null){
+//                    TwKjprofit twKjprofit1 = new TwKjprofit();
+//                    twKjprofit1.setUid(uid);
+//                    twKjprofit1.setOrderNo(twKjorder.getOrderNo());
+//                    twKjprofit1.setUsername(username);
+//                    twKjprofit1.setUserCode(twKjorder.getUserCode());
+//                    if(StringUtils.isNotEmpty(twUser.getPath())){
+//                        twKjprofit1.setPath(twUser.getPath());
+//                    }
+//                    twKjprofit1.setDepartment(twUser.getDepatmentId());
+//                    twKjprofit1.setKid(twKjorder.getKid());
+//                    twKjprofit1.setKtitle(twKjorder.getKjtitle());
+//                    twKjprofit1.setNum(outnum);
+//                    twKjprofit1.setCompanyId(twUser.getCompanyId());
+//                    twKjprofit1.setCoin(coinname);
+//                    twKjprofit1.setAddtime(new Date());
+//                    twKjprofit1.setDay(DateUtil.str2DateDay(nowdate));
+//                    twKjprofitService.save(twKjprofit1);
+//
+//                    Integer synum = twKjorder.getSynum();
+//                    twKjorder.setSynum(synum + 1);
+//
+//                    twKjorderService.updateById(twKjorder);
+//
+////                twUserCoinService.incre(uid,outnum,twUserCoin.getUsdt());
+//
+//                    //写资金日志
+//                    TwBill twBill = new TwBill();
+//                    twBill.setUid(uid);
+//                    twBill.setUsername(username);
+//                    twBill.setUserCode(twUser.getUserCode());
+//                    twBill.setPath(twUser.getPath());
+//                    twBill.setDepartment(twUser.getDepatmentId());
+//                    twBill.setNum(outnum);
+//                    twBill.setCoinname("usdt");
+//                    twBill.setCompanyId(twUser.getCompanyId());
+//                    twBill.setAfternum(twUserCoinService.afternum(uid));
+//                    twBill.setType(8);
+//                    twBill.setAddtime(new Date());
+//                    twBill.setSt(1);
+//                    twBill.setRemark("矿机收益释放");
+//                    twBillService.save(twBill);
+//
+//                }
+//            }catch (Exception e){
+//                continue;
+//            }
+//        }
+//    }
+//
+//    public void endkjsy(){
+//        Integer nowtime = (int) (System.currentTimeMillis()/1000);
+//        QueryWrapper<TwKjorder> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("status",1);
+//        queryWrapper.le("intendtime", nowtime);
+//        List<TwKjorder> list = twKjorderService.list(queryWrapper);
+//        if(list.size() > 0){
+//            for(TwKjorder twKjorder:list){
+//
+//                QueryWrapper<TwUser> queryWrapper4 = new QueryWrapper<>();
+//                queryWrapper4.eq("id",twKjorder.getUid());
+//                TwUser twUser = twUserService.getOne(queryWrapper4);
+//
+//                QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
+//                queryWrapper3.eq("userid",twKjorder.getUid());
+//                TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
+//
+//                Integer uid = twKjorder.getUid();
+//                BigDecimal buynum1 = twKjorder.getBuynum();
+//                BigDecimal buynum = new BigDecimal(0);
+//                QueryWrapper<TwKjprofit> queryWrapper1 = new QueryWrapper<>();
+//                queryWrapper1.select("IFNULL(SUM(num), 0) as num")
+//                        .eq("kid", twKjorder.getKid())
+//                        .eq("uid", twKjorder.getUid());
+//                List<Map<String, Object>> result = twKjprofitDao.selectMaps(queryWrapper1);
+//                if (result.isEmpty()) {
+//                    buynum  = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+//                }
+//
+//                Object totalNumObject = result.get(0).get("num");
+//                if (totalNumObject instanceof BigDecimal) {
+//                    buynum = ((BigDecimal) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+//                } else if (totalNumObject instanceof Long) {
+//                    buynum = BigDecimal.valueOf((Long) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+//                } else if (totalNumObject instanceof Integer) {
+//                    buynum = BigDecimal.valueOf((Integer) totalNumObject).setScale(2, RoundingMode.HALF_UP);
+//                } else {
+//                    // 处理其他可能的类型
+//                    buynum = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+//                }
+//                BigDecimal add = buynum.add(buynum1);
+//                //增加资产
+//                twUserCoinService.incre(uid,add,twUserCoin.getUsdt());
+//
+//                //写资金日志
+//                TwBill twBill = new TwBill();
+//                twBill.setUid(uid);
+//                twBill.setUsername(twKjorder.getUsername());
+//                twBill.setUserCode(twUser.getUserCode());
+//                twBill.setCompanyId(twUser.getCompanyId());
+//                twBill.setPath(twUser.getPath());
+//                twBill.setDepartment(twUser.getDepatmentId());
+//                twBill.setNum(buynum);
+//                twBill.setCoinname("usdt");
+//                twBill.setAfternum(twUserCoinService.afternum(uid));
+//                twBill.setType(8);
+//                twBill.setAddtime(new Date());
+//                twBill.setSt(1);
+//                twBill.setRemark("矿机到期收益释放");
+//                twBillService.save(twBill);
+//
+//
+//                twKjorder.setStatus(3);
+//                twKjorderService.updateById(twKjorder);
+//            }
+//        }
+//    }
 
     public  void hycarryout() {
         long nowtime = System.currentTimeMillis()/1000;
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
+        queryWrapper.eq("order_type",1);
         queryWrapper.le("intselltime", nowtime);
         List<TwHyorder> list = twHyorderService.list(queryWrapper);
 
@@ -758,106 +762,214 @@ public class TimerServiceImpl {
     }
 
 
-    public void kjUser(){
-        // 获取当前时间
-        Date now = new Date();
-        String nowDate = cn.hutool.core.date.DateUtil.format(now, "yyyy-MM-dd");
-        // 获取今日开始和结束时间
-        String startTime = nowDate + " 00:00:00";
-        String endTime = nowDate + " 23:59:59";
+    public  void mockhycarryout() {
+        long nowtime = System.currentTimeMillis()/1000;
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status",1);
+        queryWrapper.eq("order_type",2);
+        queryWrapper.le("intselltime", nowtime);
+        List<TwHyorder> list = twHyorderService.list(queryWrapper);
+
+        for (TwHyorder twHyorder:list){
+            String mapOrder = map.get(twHyorder.getOrderNo());
+            if(StringUtils.isEmpty(mapOrder)) {
+                map.put(twHyorder.getOrderNo(), twHyorder.getOrderNo());
+                String coinname = twHyorder.getCoinname();
+                String symbol = coinname.toLowerCase().replace("/", "");
+                String url = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol=" + symbol;
+                BigDecimal newprice = getnewprice(url);
+                BigDecimal buyprice = twHyorder.getBuyprice();
+                Integer hyzd = twHyorder.getHyzd();  //合约方向
+                String uid = twHyorder.getUid().toString();
+                Integer uuid = twHyorder.getUid();
+                BigDecimal num = twHyorder.getNum();
+                BigDecimal hybl = twHyorder.getHybl();
+                MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
+                BigDecimal ylnum = num.multiply(hybl.divide(new BigDecimal(100), mathContext));
+                BigDecimal money = num.add(ylnum);  //盈利金额
+
+                QueryWrapper<TwMockUserCoin> queryWrapper3 = new QueryWrapper<>();
+                queryWrapper3.eq("userid", uid);
+                TwMockUserCoin twUserCoin = twMockUserCoinService.getOne(queryWrapper3);
+
+                //买涨
+                if (hyzd == 1) {
+                    if (buyprice.compareTo(newprice) < 0) {   //盈利
+                        twMockUserCoinService.incre(uuid, money, twUserCoin.getUsdt());
+                        twHyorder.setStatus(2);
+                        twHyorder.setIsWin(1);
+                        //写财务日志
+//                        addlog(uuid, username, money,companyId);
+
+                        twHyorder.setSellprice(newprice);
+                        twHyorder.setPloss(ylnum);
+                        twHyorderService.updateById(twHyorder);
+                        log.info("买涨指定盈利7=================================");
+
+                    } else if (newprice.compareTo(buyprice) == 0) {
+                        twHyorder.setStatus(2);
+                        twHyorder.setIsWin(2);
+                        //写财务日志
+//                        addlog(uuid, username, num,companyId);
+
+                        twHyorder.setSellprice(newprice);
+                        twHyorder.setPloss(num);
+                        twHyorderService.updateById(twHyorder);
+                        log.info("买涨指定亏损8=================================");
+                    } else if (newprice.compareTo(buyprice) < 0) {   //亏损
+                        twHyorder.setStatus(2);
+                        twHyorder.setIsWin(2);
+                        //写财务日志
+//                        addlog(uuid, username, num,companyId);
+
+                        twHyorder.setSellprice(newprice);
+                        twHyorder.setPloss(num);
+                        twHyorderService.updateById(twHyorder);
+                        log.info("买涨指定亏损9=================================");
+                    }
 
 
-        // 获取今天的日期
-        LocalDate today = LocalDate.now();
+                }
+                //买跌
+                if (hyzd == 2) {
 
-        // 获取今天的开始时间和结束时间
-        LocalDateTime startOfDay = today.atStartOfDay();
-        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+                    if (buyprice.compareTo(newprice) < 0) {   //亏损
+                        twHyorder.setStatus(2);
+                        twHyorder.setIsWin(2);
+                        //写财务日志
+//                        addlog(uuid, username, num,companyId);
 
-        // 将时间转换为时间戳（秒级别）
-        long startTimestamp = startOfDay.toEpochSecond(ZoneOffset.UTC);
-        long endTimestamp = endOfDay.toEpochSecond(ZoneOffset.UTC);
+                        twHyorder.setSellprice(newprice);
+                        twHyorder.setPloss(num);
+                        twHyorderService.updateById(twHyorder);
 
-        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.ge("addtime", startTimestamp);
-        queryWrapper.le("addtime", endTimestamp);
-        List<TwUser> list = twUserService.list(queryWrapper);
-        for(TwUser twUser:list){
-            QueryWrapper<TwKuangji> queryWrapper5 = new QueryWrapper<>();
-            queryWrapper5.eq("company_id",twUser.getCompanyId());
-            List<TwKuangji> list2 = twKuangjiService.list(queryWrapper5);
-            for(TwKuangji twKuangji:list2){
-                Integer userid = twUser.getId();
-                Integer kjid = twKuangji.getId();
-                QueryWrapper<TwUserKuangji> queryWrapper2= new QueryWrapper<>();
-                queryWrapper2.eq("kj_id", kjid);
-                queryWrapper2.eq("user_id", userid);
-                queryWrapper2.eq("company_id",twUser.getCompanyId());
-                TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper2);
-                if(one2 == null){
-                    TwUserKuangji twUserKuangji = new TwUserKuangji();
-                    twUserKuangji.setMin(twKuangji.getPricemin());
-                    twUserKuangji.setMax(twKuangji.getPricemax());
-                    twUserKuangji.setNum(1);
-                    twUserKuangji.setCompanyId(twUser.getCompanyId());
-                    twUserKuangji.setKjId(twKuangji.getId());
-                    twUserKuangji.setKjName(twKuangji.getTitle());
-                    twUserKuangji.setUserId(userid);
-                    twUserKuangji.setCreateTime(new Date());
-                    twUserKuangjiService.save(twUserKuangji);
-                    log.info("用户单控新增成功userid{}",userid);
+                    } else if (newprice.compareTo(buyprice) == 0) {
+                        twHyorder.setStatus(2);
+                        twHyorder.setIsWin(2);
+                        //写财务日志
+//                        addlog(uuid, username, num,companyId);
+
+                        twHyorder.setSellprice(newprice);
+                        twHyorder.setPloss(num);
+                        twHyorderService.updateById(twHyorder);
+
+                    } else if (newprice.compareTo(buyprice) < 0) {   //盈利
+                        twMockUserCoinService.incre(uuid, money, twUserCoin.getUsdt());
+                        twHyorder.setStatus(2);
+                        twHyorder.setIsWin(1);
+                        //写财务日志
+//                        addlog(uuid, username, money,companyId);
+
+                        twHyorder.setSellprice(newprice);
+                        twHyorder.setPloss(ylnum);
+                        twHyorderService.updateById(twHyorder);
+                    }
                 }
             }
         }
-
     }
 
-    public void curreny(){
-        QueryWrapper<TwCurrency> queryWrapper5 = new QueryWrapper<>();
-        List<TwCurrency> list = twCurrencyService.list(queryWrapper5);
-        for(TwCurrency twCurrency:list){
-            String currency = twCurrency.getCurrency();
-            QueryWrapper<TwCurrenyList> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("name_en", currency);
-            TwCurrenyList one = twCurrenyListService.getOne(queryWrapper1);
-            if(one != null){
-                BigDecimal currenyRate = one.getCurrenyRate();
-                twCurrency.setRate(currenyRate);
-                twCurrency.setUpdateTime(new Date());
-                twCurrencyService.updateById(twCurrency);
-            }
-        }
-    }
-
-
-    public void currenyList() {
-        log.info("货币汇率进入=============================================");
-        String str = "https://open.er-api.com/v6/latest/USD";
-        Map<String, Object> map = CommonUtil.doGet(str, "");
-        JSONObject res = JSONObject.parseObject(map.get("res").toString());
-        String rates = JSONObject.parseObject(res.get("rates").toString()).toString();
-        String replace = rates.replace("{", "");
-        String replace1 = replace.replace("}", "");
-        String[] split = replace1.split(",");
-        for(int  i = 0 ; i <split.length ; i++){
-            TwCurrenyList twCurrenyList = new TwCurrenyList();
-            String srate = split[i];
-            String[] split1 = srate.split(":");
-            String name = split1[0].replace("\"", "");
-            String price = split1[1];
-            QueryWrapper<TwCurrenyList> queryWrapper1 = new QueryWrapper<>();
-            queryWrapper1.eq("name_en", name); // 添加查询条件
-            TwCurrenyList one = twCurrenyListService.getOne(queryWrapper1);
-            if(one == null){
-                twCurrenyList.setNameEn(name);
-                twCurrenyList.setCurrenyRate(new BigDecimal(price));
-                twCurrenyList.setCreateTime(new Date());
-                twCurrenyListService.save(twCurrenyList);
-            }else{
-                one.setCurrenyRate(new BigDecimal(price));
-                one.setUpdateTime(new Date());
-                twCurrenyListService.updateById(one);
-            }
-        }
-    }
+//
+//    public void kjUser(){
+//        // 获取当前时间
+//        Date now = new Date();
+//        String nowDate = cn.hutool.core.date.DateUtil.format(now, "yyyy-MM-dd");
+//        // 获取今日开始和结束时间
+//        String startTime = nowDate + " 00:00:00";
+//        String endTime = nowDate + " 23:59:59";
+//
+//
+//        // 获取今天的日期
+//        LocalDate today = LocalDate.now();
+//
+//        // 获取今天的开始时间和结束时间
+//        LocalDateTime startOfDay = today.atStartOfDay();
+//        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+//
+//        // 将时间转换为时间戳（秒级别）
+//        long startTimestamp = startOfDay.toEpochSecond(ZoneOffset.UTC);
+//        long endTimestamp = endOfDay.toEpochSecond(ZoneOffset.UTC);
+//
+//        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.ge("addtime", startTimestamp);
+//        queryWrapper.le("addtime", endTimestamp);
+//        List<TwUser> list = twUserService.list(queryWrapper);
+//        for(TwUser twUser:list){
+//            QueryWrapper<TwKuangji> queryWrapper5 = new QueryWrapper<>();
+//            queryWrapper5.eq("company_id",twUser.getCompanyId());
+//            List<TwKuangji> list2 = twKuangjiService.list(queryWrapper5);
+//            for(TwKuangji twKuangji:list2){
+//                Integer userid = twUser.getId();
+//                Integer kjid = twKuangji.getId();
+//                QueryWrapper<TwUserKuangji> queryWrapper2= new QueryWrapper<>();
+//                queryWrapper2.eq("kj_id", kjid);
+//                queryWrapper2.eq("user_id", userid);
+//                queryWrapper2.eq("company_id",twUser.getCompanyId());
+//                TwUserKuangji one2 = twUserKuangjiService.getOne(queryWrapper2);
+//                if(one2 == null){
+//                    TwUserKuangji twUserKuangji = new TwUserKuangji();
+//                    twUserKuangji.setMin(twKuangji.getPricemin());
+//                    twUserKuangji.setMax(twKuangji.getPricemax());
+//                    twUserKuangji.setNum(1);
+//                    twUserKuangji.setCompanyId(twUser.getCompanyId());
+//                    twUserKuangji.setKjId(twKuangji.getId());
+//                    twUserKuangji.setKjName(twKuangji.getTitle());
+//                    twUserKuangji.setUserId(userid);
+//                    twUserKuangji.setCreateTime(new Date());
+//                    twUserKuangjiService.save(twUserKuangji);
+//                    log.info("用户单控新增成功userid{}",userid);
+//                }
+//            }
+//        }
+//
+//    }
+//
+//    public void curreny(){
+//        QueryWrapper<TwCurrency> queryWrapper5 = new QueryWrapper<>();
+//        List<TwCurrency> list = twCurrencyService.list(queryWrapper5);
+//        for(TwCurrency twCurrency:list){
+//            String currency = twCurrency.getCurrency();
+//            QueryWrapper<TwCurrenyList> queryWrapper1 = new QueryWrapper<>();
+//            queryWrapper1.eq("name_en", currency);
+//            TwCurrenyList one = twCurrenyListService.getOne(queryWrapper1);
+//            if(one != null){
+//                BigDecimal currenyRate = one.getCurrenyRate();
+//                twCurrency.setRate(currenyRate);
+//                twCurrency.setUpdateTime(new Date());
+//                twCurrencyService.updateById(twCurrency);
+//            }
+//        }
+//    }
+//
+//
+//    public void currenyList() {
+//        log.info("货币汇率进入=============================================");
+//        String str = "https://open.er-api.com/v6/latest/USD";
+//        Map<String, Object> map = CommonUtil.doGet(str, "");
+//        JSONObject res = JSONObject.parseObject(map.get("res").toString());
+//        String rates = JSONObject.parseObject(res.get("rates").toString()).toString();
+//        String replace = rates.replace("{", "");
+//        String replace1 = replace.replace("}", "");
+//        String[] split = replace1.split(",");
+//        for(int  i = 0 ; i <split.length ; i++){
+//            TwCurrenyList twCurrenyList = new TwCurrenyList();
+//            String srate = split[i];
+//            String[] split1 = srate.split(":");
+//            String name = split1[0].replace("\"", "");
+//            String price = split1[1];
+//            QueryWrapper<TwCurrenyList> queryWrapper1 = new QueryWrapper<>();
+//            queryWrapper1.eq("name_en", name); // 添加查询条件
+//            TwCurrenyList one = twCurrenyListService.getOne(queryWrapper1);
+//            if(one == null){
+//                twCurrenyList.setNameEn(name);
+//                twCurrenyList.setCurrenyRate(new BigDecimal(price));
+//                twCurrenyList.setCreateTime(new Date());
+//                twCurrenyListService.save(twCurrenyList);
+//            }else{
+//                one.setCurrenyRate(new BigDecimal(price));
+//                one.setUpdateTime(new Date());
+//                twCurrenyListService.updateById(one);
+//            }
+//        }
+//    }
 }

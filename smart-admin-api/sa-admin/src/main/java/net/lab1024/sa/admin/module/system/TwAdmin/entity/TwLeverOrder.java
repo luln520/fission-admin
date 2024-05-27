@@ -70,11 +70,21 @@ public class TwLeverOrder implements Serializable {
     */
     @ApiModelProperty("止损")
     private Integer loss;
+
     /**
-    * 止盈
-    */
+     * 止盈
+     */
     @ApiModelProperty("止盈")
     private Integer win;
+
+    @ApiModelProperty("止损价格")
+    private BigDecimal lossPrice;
+
+    @ApiModelProperty("止盈价格")
+    private BigDecimal winPrice;
+
+    @ApiModelProperty("爆仓价格")
+    private BigDecimal boomPrice;
     /**
     * 倍数
     */
@@ -150,5 +160,8 @@ public class TwLeverOrder implements Serializable {
 
     @ApiModelProperty("公司id")
     private Integer companyId;
+
+    @ApiModelProperty("订单类型 （1.用户订单,2模拟订单）")
+    private Integer orderType;
 
 }
