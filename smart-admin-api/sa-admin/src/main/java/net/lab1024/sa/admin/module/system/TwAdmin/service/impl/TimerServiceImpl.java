@@ -828,7 +828,6 @@ public class TimerServiceImpl {
                         log.info("买涨指定亏损9=================================");
                     }
 
-
                 }
                 //买跌
                 if (hyzd == 2) {
