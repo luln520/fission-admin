@@ -124,6 +124,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Autowired
     private TwMockUserCoinService twMockUserCoinService;
 
+    @Autowired
+    private TwUserInviteService twUserInviteService;
+
+    @Autowired
+    private TwUserAgentService twUserAgentService;
+
+    @Autowired
+    private TwUserTeamService twUserTeamService;
+
     @Override
     public Integer countAllUsers(int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -906,6 +915,19 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }
             }
 
+
+            QueryWrapper<TwUserInvite> queryInvite1 = new QueryWrapper<>();
+            queryInvite1.eq("username", username);
+            queryInvite1.eq("user_code", invit);
+            TwUserInvite twUserInvite1 = twUserInviteService.getOne(queryInvite1);
+            if(twUserInvite1 != null){
+                if(language.equals("zh")){
+                    return ResponseDTO.userErrorParam("已被此用户邀请！");
+                }else{
+                    return ResponseDTO.userErrorParam("has been invited by this user");
+                }
+            }
+
             //验证码
             String storedCaptcha = captchaMap.get(username);
 
@@ -961,10 +983,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             Long employeeId = 0L;
             EmployeeEntity byInvite = employeeService.getByInvite(invit);//获取代理人信息
 
+            QueryWrapper<TwUser> queryUser = new QueryWrapper<>();
+            queryUser.eq("invit", invit);
+            TwUser invitUser = this.getOne(queryUser);  //获取邀请人信息
             if(inviteType == 1){
-                QueryWrapper<TwUser> queryUser = new QueryWrapper<>();
-                queryUser.eq("invit", invit);
-                TwUser invitUser = this.getOne(queryUser);  //获取邀请人信息
                 if(byInvite == null){
                     if(invitUser == null){
                         if(language.equals("zh")){
@@ -1045,6 +1067,89 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twMockUserCoin.setUserid(uid);
                 twMockUserCoin.setCompanyId(companyId);
                 twMockUserCoinService.save(twMockUserCoin);
+
+
+                Integer inviteId = invitUser.getId();
+                TwUserInvite twUserInvite = new TwUserInvite();
+                twUserInvite.setUid(uid);
+                twUserInvite.setInvitUid(inviteId);
+                twUserInvite.setCompanyId(companyId);
+                twUserInvite.setCreateTime(new Date());
+                twUserInvite.setUserCode(invit);
+                twUserInvite.setUsername(username);
+                twUserInviteService.save(twUserInvite);
+
+                QueryWrapper<TwUserInvite> queryInvite = new QueryWrapper<>();
+                queryInvite.eq("uid", inviteId);
+                TwUserInvite threeUid = twUserInviteService.getOne(queryInvite);
+
+                QueryWrapper<TwUserInvite> queryInvite2 = new QueryWrapper<>();
+                queryInvite2.eq("uid", threeUid.getInvitUid());
+                TwUserInvite twoUid = twUserInviteService.getOne(queryInvite2);
+
+                QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
+                queryInvite3.eq("uid", twoUid.getInvitUid());
+                TwUserInvite oneUid = twUserInviteService.getOne(queryInvite3);
+
+                TwUserAgent twUserAgent = new TwUserAgent();
+                if(threeUid == null){
+                    twUserAgent.setThreeUid(0);
+                }
+                if(twoUid == null){
+                    twUserAgent.setTwoUid(0);
+                }
+                if(oneUid == null){
+                    twUserAgent.setOneUid(0);
+                }
+                if(threeUid != null){
+                    twUserAgent.setThreeUid(threeUid.getId());
+
+                    QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
+                    queryTeam.eq("uid", threeUid.getInvitUid());
+                    TwUserTeam threeTeam = twUserTeamService.getOne(queryTeam);
+                    threeTeam.setVoidNum(threeTeam.getVoidNum()+1);
+                    threeTeam.setTotal(threeTeam.getTotal()+1);
+                    twUserTeamService.updateById(threeTeam);
+                }
+                if(twoUid != null){
+                    twUserAgent.setTwoUid(twoUid.getId());
+
+                    QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
+                    queryTeam.eq("uid", twoUid.getInvitUid());
+                    TwUserTeam twoTeam = twUserTeamService.getOne(queryTeam);
+                    twoTeam.setVoidNum(twoTeam.getVoidNum()+1);
+                    twoTeam.setTotal(twoTeam.getTotal()+1);
+                    twUserTeamService.updateById(twoTeam);
+                }
+                if(oneUid != null){
+                    twUserAgent.setOneUid(oneUid.getId());
+
+                    QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
+                    queryTeam.eq("uid", oneUid.getInvitUid());
+                    TwUserTeam oneTeam = twUserTeamService.getOne(queryTeam);
+                    oneTeam.setVoidNum(oneTeam.getVoidNum()+1);
+                    oneTeam.setTotal(oneTeam.getTotal()+1);
+                    twUserTeamService.updateById(oneTeam);
+                }
+                twUserAgent.setDepartment(1);
+                twUserAgent.setUid(uid);
+                twUserAgent.setPath(path);
+                twUserAgent.setCreateTime(new Date());
+                twUserAgent.setCompanyId(companyId);
+                twUserAgentService.save(twUserAgent);
+
+
+
+                TwUserTeam  twUserTeam = new TwUserTeam();
+                twUserTeam.setNum(0);
+                twUserTeam.setTotal(0);
+                twUserTeam.setVoidNum(0);
+                twUserTeam.setAmount(new BigDecimal(0));
+                twUserTeam.setCompanyId(companyId);
+                twUserTeam.setPath(path);
+                twUserTeam.setDepartment(1);
+                twUserTeam.setCreateTime(new Date());
+                twUserTeamService.save(twUserTeam);
 
                 captchaMap.remove(username);
 
@@ -1193,6 +1298,61 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setAddtime(new Date());
             twNotice.setStatus(1);
             twNoticeService.save(twNotice);
+
+
+        QueryWrapper<TwUserInvite> queryInvite = new QueryWrapper<>();
+        queryInvite.eq("uid", twUser.getInvit());
+        TwUserInvite threeUid = twUserInviteService.getOne(queryInvite);
+
+        QueryWrapper<TwUserInvite> queryInvite2 = new QueryWrapper<>();
+        queryInvite2.eq("uid", threeUid.getInvitUid());
+        TwUserInvite twoUid = twUserInviteService.getOne(queryInvite2);
+
+        QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
+        queryInvite3.eq("uid", twoUid.getInvitUid());
+        TwUserInvite oneUid = twUserInviteService.getOne(queryInvite3);
+
+        TwUserAgent twUserAgent = new TwUserAgent();
+        if(threeUid == null){
+            twUserAgent.setThreeUid(0);
+        }
+        if(twoUid == null){
+            twUserAgent.setTwoUid(0);
+        }
+        if(oneUid == null){
+            twUserAgent.setOneUid(0);
+        }
+        if(threeUid != null){
+            twUserAgent.setThreeUid(threeUid.getId());
+
+            QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
+            queryTeam.eq("uid", threeUid.getInvitUid());
+            TwUserTeam threeTeam = twUserTeamService.getOne(queryTeam);
+            threeTeam.setVoidNum(threeTeam.getVoidNum()-1);
+            threeTeam.setTotal(threeTeam.getNum()+1);
+            twUserTeamService.updateById(threeTeam);
+        }
+        if(twoUid != null){
+            twUserAgent.setTwoUid(twoUid.getId());
+
+            QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
+            queryTeam.eq("uid", twoUid.getInvitUid());
+            TwUserTeam twoTeam = twUserTeamService.getOne(queryTeam);
+            twoTeam.setVoidNum(twoTeam.getVoidNum()-1);
+            twoTeam.setTotal(twoTeam.getNum()+1);
+            twUserTeamService.updateById(twoTeam);
+        }
+        if(oneUid != null){
+            twUserAgent.setOneUid(oneUid.getId());
+
+            QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
+            queryTeam.eq("uid", oneUid.getInvitUid());
+            TwUserTeam oneTeam = twUserTeamService.getOne(queryTeam);
+            oneTeam.setVoidNum(oneTeam.getVoidNum()-1);
+            oneTeam.setTotal(oneTeam.getNum()+1);
+            twUserTeamService.updateById(oneTeam);
+        }
+
             if(twUser.getLanguage().equals("zh")){
                 return ResponseDTO.okMsg("认证资料提交成功");
             }else{

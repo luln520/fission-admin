@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserAgentMapper">
+
+    <resultMap id="BaseResultMap" type="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="uid" column="uid" jdbcType="INTEGER"/>
+            <result property="oneUid" column="one_uid" jdbcType="INTEGER"/>
+            <result property="twoUid" column="two_uid" jdbcType="INTEGER"/>
+            <result property="threeUid" column="three_uid" jdbcType="INTEGER"/>
+            <result property="companyId" column="company_id" jdbcType="INTEGER"/>
+            <result property="path" column="path" jdbcType="VARCHAR"/>
+            <result property="department" column="department" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,uid,one_uid,
+        two_uid,three_uid,company_id,
+        path,department,create_time
+    </sql>
+</mapper>

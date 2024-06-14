@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwReportMapper">
+
+    <resultMap id="BaseResultMap" type="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwReport">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="dayDate" column="day_date" jdbcType="TIMESTAMP"/>
+            <result property="registrant" column="registrant" jdbcType="INTEGER"/>
+            <result property="active" column="active" jdbcType="INTEGER"/>
+            <result property="order" column="order" jdbcType="INTEGER"/>
+            <result property="orderNum" column="order_num" jdbcType="DECIMAL"/>
+            <result property="profitNum" column="profit_num" jdbcType="DECIMAL"/>
+            <result property="recharge" column="recharge" jdbcType="INTEGER"/>
+            <result property="rechargeNum" column="recharge_num" jdbcType="DECIMAL"/>
+            <result property="payout" column="payout" jdbcType="INTEGER"/>
+            <result property="payoutTotal" column="payout_total" jdbcType="INTEGER"/>
+            <result property="payoutNum" column="payout_num" jdbcType="DECIMAL"/>
+            <result property="customerLoss" column="customer_loss" jdbcType="DECIMAL"/>
+            <result property="totalAmount" column="total_amount" jdbcType="DECIMAL"/>
+            <result property="companyId" column="company_id" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,day_date,registrant,
+        active,order,order_num,
+        profit_num,recharge,recharge_num,
+        payout,payout_total,payout_num,
+        customer_loss,total_amount,company_id,
+        create_time,update_time
+    </sql>
+</mapper>

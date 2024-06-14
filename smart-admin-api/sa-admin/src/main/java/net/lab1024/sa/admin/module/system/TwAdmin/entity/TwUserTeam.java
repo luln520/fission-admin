@@ -1,0 +1,82 @@
+package net.lab1024.sa.admin.module.system.TwAdmin.entity;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
+
+import java.io.Serializable;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+/**
+* 会员团队
+* @TableName tw_user_team
+*/
+@Data
+@TableName("tw_user_team")
+@ApiModel(value="会员团队", description="")
+public class TwUserTeam implements Serializable {
+
+    /**
+    * 
+    */
+    @NotNull(message="[]不能为空")
+    @ApiModelProperty("")
+    private Integer id;
+    /**
+    * 用户id
+    */
+    @ApiModelProperty("用户id")
+    private Integer uid;
+    /**
+    * 直推总人数
+    */
+    @ApiModelProperty("直推总人数")
+    private Integer total;
+    /**
+    * 团队无效人数
+    */
+    @ApiModelProperty("团队无效人数")
+    private Integer voidNum;
+    /**
+    * 团队有效人数
+    */
+    @ApiModelProperty("团队有效人数")
+    private Integer num;
+    /**
+    * 团队总充值
+    */
+    @ApiModelProperty("团队总充值")
+    private BigDecimal amount;
+    /**
+    * 公司id
+    */
+    @ApiModelProperty("公司id")
+    private Integer companyId;
+    /**
+    * 
+    */
+    @Size(max= 500,message="编码长度不能超过500")
+    @ApiModelProperty("")
+    @Length(max= 500,message="编码长度不能超过500")
+    private String path;
+    /**
+    * 
+    */
+    @ApiModelProperty("")
+    private Integer department;
+    /**
+    * 创建时间
+    */
+    @ApiModelProperty("创建时间")
+    private Date createTime;
+
+
+}
