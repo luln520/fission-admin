@@ -3,16 +3,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.1024lab</groupId>
-    <artifactId>sa-parent</artifactId>
+    <artifactId>sa-fission-parent</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
-    <name>sa-parent</name>
+    <name>sa-fission-parent</name>
     <description>SmartAdmin project</description>
 
 	<modules>
-        <module>sa-common</module>
-		<module>sa-admin</module>
+        <module>sa-fission-common</module>
+		<module>sa-fission-admin</module>
     </modules>
 
     <properties>

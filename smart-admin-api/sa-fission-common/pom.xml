@@ -3,15 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.1024lab</groupId>
-        <artifactId>sa-parent</artifactId>
+        <artifactId>sa-fission-parent</artifactId>
         <version>1.0.0</version>
 		<relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>sa-common</artifactId>
+    <artifactId>sa-fission-common</artifactId>
     <version>1.0.0</version>
 
-    <name>sa-common</name>
+    <name>sa-fission-common</name>
     <description>sa-common project</description>
 
     <dependencies>

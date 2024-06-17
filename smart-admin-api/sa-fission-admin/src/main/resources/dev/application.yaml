@@ -15,7 +15,7 @@ spring:
 
 # 项目配置
 project:
-  name: sa-admin
+  name: sa-fission-admin
   module: net.lab1024.sa.admin.module
 
 # swagger文档

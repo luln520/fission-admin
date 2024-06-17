@@ -3,23 +3,23 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.1024lab</groupId>
-        <artifactId>sa-parent</artifactId>
+        <artifactId>sa-fission-parent</artifactId>
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>sa-admin</artifactId>
+    <artifactId>sa-fission-admin</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>sa-admin</name>
+    <name>sa-fission-admin</name>
     <description>sa-admin project</description>
 
     <dependencies>
 
         <dependency>
             <groupId>net.1024lab</groupId>
-            <artifactId>sa-common</artifactId>
+            <artifactId>sa-fission-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
