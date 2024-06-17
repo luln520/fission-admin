@@ -971,4 +971,12 @@ public class TimerServiceImpl {
 //            }
 //        }
 //    }
+
+    public static void main(String[] args) {
+                String str = "https://open.er-api.com/v6/latest/USD";
+        Map<String, Object> map = CommonUtil.doGet(str, "");
+        JSONObject res = JSONObject.parseObject(map.get("res").toString());
+        String rates = JSONObject.parseObject(res.get("rates").toString()).toString();
+        System.out.println(rates);
+    }
 }
