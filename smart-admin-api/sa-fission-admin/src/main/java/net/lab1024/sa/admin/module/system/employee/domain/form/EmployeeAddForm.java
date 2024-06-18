@@ -51,7 +51,6 @@ public class EmployeeAddForm {
     private Boolean disabledFlag;
 
     @ApiModelProperty("手机号")
-    @NotNull(message = "手机号不能为空")
     private String phone;
 
     @ApiModelProperty("角色列表")

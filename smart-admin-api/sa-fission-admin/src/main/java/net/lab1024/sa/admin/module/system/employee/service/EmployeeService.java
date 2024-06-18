@@ -2,6 +2,9 @@ package net.lab1024.sa.admin.module.system.employee.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserInvite;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserTeam;
 import net.lab1024.sa.admin.module.system.department.dao.DepartmentDao;
 import net.lab1024.sa.admin.module.system.department.domain.entity.DepartmentEntity;
 import net.lab1024.sa.admin.module.system.department.domain.vo.DepartmentVO;
@@ -28,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.stream.Collectors;

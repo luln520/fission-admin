@@ -45,7 +45,7 @@ public class PcLoginController {
     @NoNeedLogin
     @PostMapping("/register")
     @ApiOperation("用户注册")
-    @RedissonLockAnnotation(keyParts = "username")
+//    @RedissonLockAnnotation(keyParts = "username")
     public ResponseDTO register(@Valid @RequestBody UserReq userReq) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String ip = ServletUtil.getClientIP(request);

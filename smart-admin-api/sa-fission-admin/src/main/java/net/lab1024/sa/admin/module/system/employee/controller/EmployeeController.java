@@ -7,6 +7,7 @@ import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.employee.domain.form.*;
 import net.lab1024.sa.admin.module.system.employee.domain.vo.EmployeeVO;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.PageResult;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.SmartRequestUtil;
@@ -39,6 +40,7 @@ public class EmployeeController extends AdminBaseController {
     @ApiOperation(value = "添加员工(返回添加员工的密码) @author 卓大")
     @PostMapping("/employee/add")
     @PreAuthorize("@saAuth.checkPermission('system:employee:add')")
+    @NoNeedLogin
     public ResponseDTO<String> addEmployee(@Valid @RequestBody EmployeeAddForm employeeAddForm, HttpServletRequest httpServletRequest) {
         return employeeService.addEmployee(employeeAddForm,httpServletRequest);
     }
