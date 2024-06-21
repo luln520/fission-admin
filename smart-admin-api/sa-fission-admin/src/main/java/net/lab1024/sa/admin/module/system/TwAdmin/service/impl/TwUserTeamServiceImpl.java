@@ -19,6 +19,7 @@ import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +44,7 @@ public class TwUserTeamServiceImpl extends ServiceImpl<TwUserTeamMapper, TwUserT
     private TwCompanyService twCompanyService;
 
     @Autowired
+    @Lazy
     private TwUserService twUserService;
     @Override
     public IPage<TwUserTeam> listpage(TeamVo teamVo, HttpServletRequest request) {

@@ -40,6 +40,7 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
     @Autowired
     private TwCompanyService twCompanyService;
 
+    @Lazy
     @Autowired
     private TwUserService twUserService;
     @Override
