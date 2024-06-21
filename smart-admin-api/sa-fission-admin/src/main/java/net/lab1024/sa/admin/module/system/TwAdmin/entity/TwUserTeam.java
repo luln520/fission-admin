@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -63,9 +64,7 @@ public class TwUserTeam implements Serializable {
     /**
     * 
     */
-    @Size(max= 500,message="编码长度不能超过500")
     @ApiModelProperty("")
-    @Length(max= 500,message="编码长度不能超过500")
     private String path;
     /**
     * 
@@ -77,6 +76,11 @@ public class TwUserTeam implements Serializable {
     */
     @ApiModelProperty("创建时间")
     private Date createTime;
+
+
+    @TableField(exist = false)
+    @ApiModelProperty("用户code")
+    private String userCode;
 
 
 }

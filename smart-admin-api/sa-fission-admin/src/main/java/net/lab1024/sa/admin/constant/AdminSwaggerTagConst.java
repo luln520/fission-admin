@@ -50,6 +50,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String SYSTEM_DATA_TRACER = "系统-";
 
+        public static final String TW_REPORT = "报表";
+
         public static final String TW_CONTENT = "后台-内容管理";
 
         public static final String TW_ADMINLOG = "后台-管理员操作日志";
@@ -95,6 +97,10 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
         public static final String TW_USERCOIN = "后台-用户财产";
 
         public static final String TW_USER = "后台-用户";
+
+        public static final String TW_USERAGENT = "后台-会员代理";
+
+        public static final String TW_USERTEAM = "后台-会员团队";
 
         public static final String TW_USERLOG = "后台-会员登录日志";
 

@@ -4,21 +4,23 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserAgentMapper">
 
-    <resultMap id="BaseResultMap" type="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="uid" column="uid" jdbcType="INTEGER"/>
-            <result property="oneUid" column="one_uid" jdbcType="INTEGER"/>
-            <result property="twoUid" column="two_uid" jdbcType="INTEGER"/>
-            <result property="threeUid" column="three_uid" jdbcType="INTEGER"/>
-            <result property="companyId" column="company_id" jdbcType="INTEGER"/>
-            <result property="path" column="path" jdbcType="VARCHAR"/>
-            <result property="department" column="department" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-    </resultMap>
-
-    <sql id="Base_Column_List">
-        id,uid,one_uid,
-        two_uid,three_uid,company_id,
-        path,department,create_time
-    </sql>
+    <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent">
+        select * from tw_user_agent where 1=1 and company_id  = #{obj.companyId}
+        <if test="obj.uid != null and obj.uid !=''">
+            and uid = #{obj.uid}
+        </if>
+        <if test="obj.oneUid != null and obj.oneUid !=''">
+            and one_uid = #{obj.oneUid}
+        </if>
+        <if test="obj.twoUid != null and obj.twoUid !=''">
+            and two_uid = #{obj.twoUid}
+        </if>
+        <if test="obj.threeUid != null and obj.threeUid !=''">
+            and three_uid = #{obj.threeUid}
+        </if>
+        <if test="obj.employeeId != null and obj.employeeId !=''">
+            and path like concat('%',#{obj.employeeId},'%')
+        </if>
+        order by create_time desc
+    </select>
 </mapper>

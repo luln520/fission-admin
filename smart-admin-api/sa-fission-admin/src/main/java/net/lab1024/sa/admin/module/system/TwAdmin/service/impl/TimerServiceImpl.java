@@ -1,5 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -12,7 +13,6 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.CommonUtil;
-import net.lab1024.sa.common.common.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +42,16 @@ public class TimerServiceImpl {
 
     @Autowired
     private TwNoticeService twNoticeService;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
+
+
+    @Autowired
+    private TwRechargeService twRechargeService;
+
+    @Autowired
+    private  TwMyzcService twMyzcService;
 
 //    @Autowired
 //    private TwKjorderService twKjorderService;
@@ -866,6 +876,77 @@ public class TimerServiceImpl {
                 }
             }
         }
+    }
+
+
+    public void report(){
+
+
+        // 获取当前时间
+        Date now = new Date();
+        String nowDate = DateUtil.format(now, "yyyy-MM-dd");
+        // 获取今日开始和结束时间
+        String startTime = nowDate + " 00:00:00";
+        String endTime = nowDate + " 23:59:59";
+
+        List<TwCompany> list = twCompanyService.list();
+
+        for(TwCompany twCompany:list){
+            Integer companyId = twCompany.getId();
+            // 获取今天的日期
+            LocalDate today = LocalDate.now();
+
+            // 获取今天的开始时间和结束时间
+            LocalDateTime startOfDay = today.atStartOfDay();
+            LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+            // 将时间转换为时间戳（秒级别）
+            long startTimestamp = startOfDay.toEpochSecond(ZoneOffset.UTC);
+            long endTimestamp = endOfDay.toEpochSecond(ZoneOffset.UTC);
+
+            //今日注册人数
+            int todayUser = 0;
+            todayUser = twUserService.countTodayUsers(startTimestamp,endTimestamp,companyId);
+            // 查询全网总人数 M("user")->count()
+            int allUser = 0;//userDao.countAllUsers();
+            allUser = twUserService.countAllUsers(companyId);
+
+            //用户总余额
+            BigDecimal userCoinSum = new BigDecimal(100);
+            userCoinSum = twUserCoinService.sumUserCoin(companyId);
+
+            // 查询秒合约总下单数 M("hyorder")->where 'status' => 1 ->count();
+            int allHyOrders = 0;//hyOrderDao.countUnClosedOrders();
+            allHyOrders = twHyorderService.countUnClosedOrders(companyId);
+
+            // 查询秒合约今日下单数
+            BigDecimal hyOrders = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
+            hyOrders = twHyorderService.countHyOrdersDay(startTime, endTime,companyId);
+
+            // 查询合约总盈亏
+            BigDecimal winLosshyAllOrders = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
+            winLosshyAllOrders = twHyorderService.winLosshyAllOrders(companyId);
+
+            // 查询合约今日盈亏
+            BigDecimal winLosshyDayOrders = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
+            winLosshyDayOrders = twHyorderService.winLosshyDayOrders(startTime, endTime,companyId);
+
+            BigDecimal dayRecharge = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
+            dayRecharge = twRechargeService.sumDayRecharge(startTime, endTime,companyId);
+            // 查询充值数量   M("recharge")->where(array('status' => 2))->sum("num");
+            BigDecimal allRecharge = new BigDecimal(0);//rechargeDao.sumAllRecharge();
+            allRecharge = twRechargeService.sumAllRecharge(companyId);
+            // 查询提币数量 M("myzc")->where($daywhere)->where(array('status' => 2))->sum("num");
+            BigDecimal dayWithdraw = new BigDecimal(0);//myzcDao.sumDayWithdraw(startTime, endTime);
+            dayWithdraw = twMyzcService.sumDayWithdraw(startTime, endTime,companyId);
+            // 查询提币数量 M("myzc")->where(array('status' => 2))->sum("num");
+            BigDecimal allWithdraw = new BigDecimal(0);//myzcDao.sumAllWithdraw();
+            allWithdraw = twMyzcService.sumAllWithdraw(companyId);
+            // 查询今日该客量  M("user")->where($linewhere)->count();  查询今天的
+            int allLineUsers = 0;//userDao.countLineUsers(nowDate);
+            allLineUsers = twUserService.countLineUsers(startTime, endTime,companyId);
+        }
+
     }
 
 //

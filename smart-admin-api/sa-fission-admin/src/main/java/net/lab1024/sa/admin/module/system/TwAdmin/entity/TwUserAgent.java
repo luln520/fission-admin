@@ -8,6 +8,7 @@ import java.io.Serializable;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -58,9 +59,7 @@ public class TwUserAgent implements Serializable {
     /**
     * 
     */
-    @Size(max= 500,message="编码长度不能超过500")
     @ApiModelProperty("")
-    @Length(max= 500,message="编码长度不能超过500")
     private String path;
     /**
     * 
@@ -72,6 +71,22 @@ public class TwUserAgent implements Serializable {
     */
     @ApiModelProperty("创建时间")
     private Date createTime;
+
+    @TableField(exist = false)
+    @ApiModelProperty("用户code")
+    private String userCode;
+
+    @TableField(exist = false)
+    @ApiModelProperty("一级代理名称")
+    private String oneName;
+
+    @TableField(exist = false)
+    @ApiModelProperty("二级代理名称")
+    private String twoName;
+
+    @TableField(exist = false)
+    @ApiModelProperty("三级代理名称")
+    private String threeName;
 
 
 }

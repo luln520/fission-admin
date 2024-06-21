@@ -29,6 +29,13 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     int countUnClosedOrders(int companyId);
 
+    BigDecimal countHyOrdersDay(String startTime, String endTime,int companyId);
+
+
+    BigDecimal winLosshyAllOrders(int companyId);
+
+    BigDecimal winLosshyDayOrders(String startTime, String endTime,int companyId);
+
     TwHyorder hyorderId(int id);
 
     ResponseDTO<HyorderOneRes> getHyorderOne(int id);

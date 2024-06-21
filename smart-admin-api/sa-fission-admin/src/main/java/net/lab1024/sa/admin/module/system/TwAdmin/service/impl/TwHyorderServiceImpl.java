@@ -83,6 +83,151 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
+    public BigDecimal countHyOrdersDay(String startTime, String endTime, int companyId) {
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(num), 0) as dayOrder")
+                .ge("addtime", startTime)
+                .le("addtime", endTime)
+                .eq("status", 1)
+                .eq("company_id", companyId);
+
+        List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
+        if (result.isEmpty()) {
+            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object totalNumObject = result.get(0).get("dayOrder");
+        if (totalNumObject instanceof BigDecimal) {
+            return ((BigDecimal) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Long) {
+            return BigDecimal.valueOf((Long) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Integer) {
+            return BigDecimal.valueOf((Integer) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+    }
+
+    @Override
+    public BigDecimal winLosshyAllOrders(int companyId) {
+
+        BigDecimal winHyorder = new BigDecimal(0);
+        BigDecimal lossHyorder = new BigDecimal(0);
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(ploss), 0) as winHyorder")
+                .eq("is_win", 1)
+                .eq("status", 2)
+                .eq("company_id", companyId);
+
+        List<Map<String, Object>> winHyorderResult = this.baseMapper.selectMaps(queryWrapper);
+        if (winHyorderResult.isEmpty()) {
+            winHyorder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object winHyorderObject = winHyorderResult.get(0).get("winHyorder");
+        if (winHyorderObject instanceof BigDecimal) {
+            winHyorder =  ((BigDecimal) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Long) {
+            winHyorder =  BigDecimal.valueOf((Long) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Integer) {
+            winHyorder =  BigDecimal.valueOf((Integer) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            winHyorder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwHyorder> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.select("IFNULL(SUM(num), 0) as lossHyorder")
+                .eq("is_win", 2)
+                .eq("company_id", companyId)
+                .eq("status", 2);
+
+        List<Map<String, Object>> lossHyorderResult = this.baseMapper.selectMaps(queryWrapper1);
+        if (lossHyorderResult.isEmpty()) {
+            lossHyorder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object lossHyorderObject = lossHyorderResult.get(0).get("lossHyorder");
+        if (lossHyorderObject instanceof BigDecimal) {
+            lossHyorder =  ((BigDecimal) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossHyorderObject instanceof Long) {
+            lossHyorder =  BigDecimal.valueOf((Long) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossHyorderObject instanceof Integer) {
+            lossHyorder =  BigDecimal.valueOf((Integer) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            lossHyorder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        BigDecimal hyorder = winHyorder.subtract(lossHyorder);
+
+        return hyorder;
+
+    }
+
+    @Override
+    public BigDecimal winLosshyDayOrders(String startTime, String endTime, int companyId) {
+        BigDecimal winHyorder = new BigDecimal(0);
+        BigDecimal lossHyorder = new BigDecimal(0);
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(ploss), 0) as winHyorder")
+                .eq("is_win", 1)
+                .eq("status", 2)
+                .ge("addtime", startTime)
+                .le("addtime", endTime)
+                .eq("company_id", companyId);
+
+        List<Map<String, Object>> winHyorderResult = this.baseMapper.selectMaps(queryWrapper);
+        if (winHyorderResult.isEmpty()) {
+            winHyorder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object winHyorderObject = winHyorderResult.get(0).get("winHyorder");
+        if (winHyorderObject instanceof BigDecimal) {
+            winHyorder =  ((BigDecimal) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Long) {
+            winHyorder =  BigDecimal.valueOf((Long) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Integer) {
+            winHyorder =  BigDecimal.valueOf((Integer) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            winHyorder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+
+        QueryWrapper<TwHyorder> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.select("IFNULL(SUM(num), 0) as lossHyorder")
+                .eq("is_win", 2)
+                .ge("addtime", startTime)
+                .le("addtime", endTime)
+                .eq("company_id", companyId)
+                .eq("status", 2);
+
+        List<Map<String, Object>> lossHyorderResult = this.baseMapper.selectMaps(queryWrapper1);
+        if (lossHyorderResult.isEmpty()) {
+            lossHyorder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object lossHyorderObject = lossHyorderResult.get(0).get("lossHyorder");
+        if (lossHyorderObject instanceof BigDecimal) {
+            lossHyorder =  ((BigDecimal) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossHyorderObject instanceof Long) {
+            lossHyorder =  BigDecimal.valueOf((Long) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (lossHyorderObject instanceof Integer) {
+            lossHyorder =  BigDecimal.valueOf((Integer) lossHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            lossHyorder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        BigDecimal hyorder = winHyorder.subtract(lossHyorder);
+
+        return hyorder;
+    }
+
+    @Override
     public TwHyorder hyorderId(int id) {
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id); // 添加查询条件

@@ -23,15 +23,23 @@ public class TimerController {
     private TimerServiceImpl timerService;
 
 
-//    @Scheduled(cron = "*/5 * * * * ?")
-//    public void hycarryout()  {
-//        timerService.hycarryout();
-//    }
-//
-//    @Scheduled(cron = "*/5 * * * * ?")
-//    public void mockhycarryout()  {
-//        timerService.mockhycarryout();
-//    }
+    @Scheduled(cron = "*/5 * * * * ?")
+    public void hycarryout()  {
+        timerService.hycarryout();
+    }
+
+    @Scheduled(cron = "*/5 * * * * ?")
+    public void mockhycarryout()  {
+        timerService.mockhycarryout();
+    }
+
+
+    @Scheduled(cron = "0 */1 * * * ?")
+    public void report()  {
+        timerService.report();
+    }
+
+
 
 
 
