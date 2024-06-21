@@ -13,6 +13,7 @@ import net.lab1024.sa.admin.module.system.role.domain.entity.RoleEmployeeEntity;
 import net.lab1024.sa.admin.module.system.role.manager.RoleEmployeeManager;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
@@ -41,12 +42,15 @@ public class EmployeeManager extends ServiceImpl<EmployeeDao, EmployeeEntity> {
     private RoleEmployeeManager roleEmployeeManager;
 
     @Autowired
+    @Lazy
     private TwUserInviteService twUserInviteService;
 
     @Autowired
+    @Lazy
     private TwUserAgentService twUserAgentService;
 
     @Autowired
+    @Lazy
     private TwUserTeamService twUserTeamService;
 
     /**
