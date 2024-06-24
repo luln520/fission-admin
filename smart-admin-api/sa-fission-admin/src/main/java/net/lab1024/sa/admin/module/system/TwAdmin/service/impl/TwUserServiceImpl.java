@@ -1669,13 +1669,22 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public ResponseDTO mockUserAmount(int uid) {
+    public ResponseDTO mockUserAmount(int uid,String language) {
 
         QueryWrapper<TwMockUserCoin> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("userid", uid);
         TwMockUserCoin one1 = twMockUserCoinService.getOne(queryWrapper1);
+        if(one1.getStatus() == 2){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("每个月只能领取一次");
+            }else{
+                return ResponseDTO.userErrorParam("It can only be claimed once per month");
+            }
+        }
+
         BigDecimal usdt = one1.getUsdt();
         one1.setUsdt(usdt.add(new BigDecimal(1000)));
+        one1.setStatus(2);
         twMockUserCoinService.updateById(one1);
         return ResponseDTO.ok();
     }

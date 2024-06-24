@@ -103,8 +103,8 @@ public class PcUserController {
     @ResponseBody
     @ApiOperation(value = "模拟账户领取金额")
     @NoNeedLogin
-    public ResponseDTO mockUserAmount(@RequestParam int uid) {
-        return twUserService.mockUserAmount(uid);
+    public ResponseDTO mockUserAmount(@RequestParam int uid,@RequestParam String language) {
+        return twUserService.mockUserAmount(uid,language);
     }
 
 

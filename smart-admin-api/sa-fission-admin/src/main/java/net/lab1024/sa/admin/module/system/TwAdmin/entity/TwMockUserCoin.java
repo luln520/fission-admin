@@ -80,6 +80,9 @@ public class TwMockUserCoin implements Serializable {
     @ApiModelProperty("公司id")
     private Integer companyId;
 
+    @ApiModelProperty("是否已领取 （1.未领取，2已领取）")
+    private Integer status;
+
 
     @TableField(exist = false)
     private  String username;
