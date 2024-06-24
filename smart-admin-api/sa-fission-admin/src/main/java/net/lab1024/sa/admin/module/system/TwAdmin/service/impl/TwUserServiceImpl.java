@@ -1689,6 +1689,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
             return ResponseDTO.ok();
         }
+
+        return ResponseDTO.ok();
     }
 
     @Override
