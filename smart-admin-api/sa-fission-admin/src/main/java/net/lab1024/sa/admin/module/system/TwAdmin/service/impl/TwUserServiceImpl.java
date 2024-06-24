@@ -1655,6 +1655,17 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
+    public ResponseDTO mockUser(int uid) {
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", uid);
+        TwUser one = this.getOne(queryWrapper);
+        one.setUserType(2);
+        this.updateById(one);
+
+        return ResponseDTO.ok();
+    }
+
+    @Override
     public ResponseDTO editPasword(int uid, String oldword, String newword,String language) {
 
 

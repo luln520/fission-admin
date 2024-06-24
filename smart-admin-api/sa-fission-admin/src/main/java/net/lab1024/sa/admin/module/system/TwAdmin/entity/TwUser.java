@@ -213,7 +213,7 @@ public class TwUser implements Serializable {
     /**
     * 1=正常用户 2=测试用户
     */
-    @ApiModelProperty("1=正常用户 2=测试用户")
+    @ApiModelProperty("1=正常用户 2=模拟用户")
     private Integer userType;
 
 //    @ApiModelProperty("矿机购买次数")

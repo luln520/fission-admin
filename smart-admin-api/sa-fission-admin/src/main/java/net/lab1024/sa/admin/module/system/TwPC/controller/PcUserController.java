@@ -83,5 +83,14 @@ public class PcUserController {
         return twUserService.editPasword(uid,oldPwd,newPwd,language);
     }
 
+
+    @GetMapping("/mockUser")
+    @ResponseBody
+    @ApiOperation(value = "切换模拟账户")
+    @NoNeedLogin
+    public ResponseDTO mockUser(@RequestParam int uid) {
+        return twUserService.mockUser(uid);
+    }
+
 }
 

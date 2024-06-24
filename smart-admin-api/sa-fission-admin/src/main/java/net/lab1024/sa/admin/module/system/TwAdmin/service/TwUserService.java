@@ -71,6 +71,7 @@ public interface TwUserService extends IService<TwUser> {
     ResponseDTO usertj(int uid) ;
 
     ResponseDTO userdk(int uid) ;
+    ResponseDTO mockUser(int uid) ;
     ResponseDTO editPasword(int uid,String oldword,String newword,String language) ;
 
 }
