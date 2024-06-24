@@ -99,6 +99,14 @@ public class PcUserController {
         return twUserService.mockUser(uid,type);
     }
 
+    @GetMapping("/mockUserAmount")
+    @ResponseBody
+    @ApiOperation(value = "模拟账户领取金额")
+    @NoNeedLogin
+    public ResponseDTO mockUserAmount(@RequestParam int uid) {
+        return twUserService.mockUserAmount(uid);
+    }
+
 
 
 }

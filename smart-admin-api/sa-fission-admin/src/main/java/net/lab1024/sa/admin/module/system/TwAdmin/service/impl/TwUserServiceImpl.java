@@ -1669,6 +1669,17 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
+    public ResponseDTO mockUserAmount(int uid) {
+
+        QueryWrapper<TwMockUserCoin> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("userid", uid);
+        TwMockUserCoin one1 = twMockUserCoinService.getOne(queryWrapper1);
+        BigDecimal usdt = one1.getUsdt();
+        one1.setUsdt(usdt.add(new BigDecimal(1000)));
+        twMockUserCoinService.updateById(one1);
+        return ResponseDTO.ok();
+    }
+    @Override
     public ResponseDTO mockUser(int uid,int type) {
 
         if(type == 1){
