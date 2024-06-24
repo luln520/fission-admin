@@ -1,8 +1,15 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwReport;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AgentVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.ReportVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 1
@@ -12,6 +19,8 @@ import org.apache.ibatis.annotations.Mapper;
 */
 @Mapper
 public interface TwReportMapper extends BaseMapper<TwReport> {
+
+    List<TwReport> listpage(@Param("objectPage") Page<TwReport> objectPage, @Param("obj") ReportVo reportVo);
 
 }
 
