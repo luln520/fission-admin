@@ -28,6 +28,7 @@ public interface TwUserCoinDao extends BaseMapper<TwUserCoin> {
 
     BigDecimal afternum(@Param("uid") int uid);
 
+    BigDecimal dayUserCoin(@Param("startTime") String startTime,@Param("endTime") String endTime,@Param("companyId") int companyId);
     BigDecimal sumUserCoin(@Param("companyId") int companyId);
 
     List<TwUserCoin> listpage(@Param("objectPage") Page<TwUserCoin> objectPage, @Param("obj") TwUserVo twUserVo);

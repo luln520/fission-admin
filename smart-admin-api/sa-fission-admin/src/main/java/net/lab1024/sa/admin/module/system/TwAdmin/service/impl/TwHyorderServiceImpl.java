@@ -77,36 +77,21 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     @Override
     public int countUnClosedOrders(int companyId) {
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", "1"); // 添加查询条件
+        queryWrapper.eq("status", "2"); // 添加查询条件
         queryWrapper.eq("company_id", companyId); // 添加查询条件
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
     @Override
-    public BigDecimal countHyOrdersDay(String startTime, String endTime, int companyId) {
+    public int countHyOrdersDay(String startTime, String endTime, int companyId) {
+
+
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("IFNULL(SUM(num), 0) as dayOrder")
-                .ge("addtime", startTime)
-                .le("addtime", endTime)
-                .eq("status", 1)
-                .eq("company_id", companyId);
-
-        List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
-        if (result.isEmpty()) {
-            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
-        }
-
-        Object totalNumObject = result.get(0).get("dayOrder");
-        if (totalNumObject instanceof BigDecimal) {
-            return ((BigDecimal) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
-        } else if (totalNumObject instanceof Long) {
-            return BigDecimal.valueOf((Long) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
-        } else if (totalNumObject instanceof Integer) {
-            return BigDecimal.valueOf((Integer) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
-        } else {
-            // 处理其他可能的类型
-            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
-        }
+        queryWrapper.eq("status", "2")// 添加查询条件
+            .ge("buytime", startTime)
+                .le("buytime", endTime)
+           .eq("company_id", companyId); // 添加查询条件
+        return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
     @Override
@@ -175,8 +160,8 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         queryWrapper.select("IFNULL(SUM(ploss), 0) as winHyorder")
                 .eq("is_win", 1)
                 .eq("status", 2)
-                .ge("addtime", startTime)
-                .le("addtime", endTime)
+                .ge("buytime", startTime)
+                .le("buytime", endTime)
                 .eq("company_id", companyId);
 
         List<Map<String, Object>> winHyorderResult = this.baseMapper.selectMaps(queryWrapper);
@@ -200,8 +185,8 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         QueryWrapper<TwHyorder> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.select("IFNULL(SUM(num), 0) as lossHyorder")
                 .eq("is_win", 2)
-                .ge("addtime", startTime)
-                .le("addtime", endTime)
+                .ge("buytime", startTime)
+                .le("buytime", endTime)
                 .eq("company_id", companyId)
                 .eq("status", 2);
 

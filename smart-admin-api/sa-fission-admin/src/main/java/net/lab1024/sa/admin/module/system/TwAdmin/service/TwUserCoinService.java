@@ -37,6 +37,7 @@ public interface TwUserCoinService extends IService<TwUserCoin> {
 
      BigDecimal afternum(Integer uid);
 
+     BigDecimal dayUserCoin(String startTime, String endTime,int companyId);
      BigDecimal sumUserCoin(int companyId);
 
 

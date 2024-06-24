@@ -100,6 +100,22 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
     }
 
     @Override
+    public int usersCount(String startTime, String endTime, int companyId) {
+        QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.ge("addtime", startTime);
+        queryWrapper.le("addtime", endTime);
+        queryWrapper.eq("company_id", companyId);
+        return this.baseMapper.selectCount(queryWrapper).intValue();
+    }
+
+    @Override
+    public int usersCountTotal(int companyId) {
+        QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("company_id", companyId);
+        return this.baseMapper.selectCount(queryWrapper).intValue();
+    }
+
+    @Override
     public BigDecimal sumAllRecharge(int companyId) {
         QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(num), 0) as allRecharge")

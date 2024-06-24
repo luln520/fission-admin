@@ -27,12 +27,15 @@ public class TwReport implements Serializable {
     * 日期
     */
     @ApiModelProperty("日期")
-    private Date dayDate;
+    private String dayDate;
     /**
     * 注册人数
     */
-    @ApiModelProperty("注册人数")
+    @ApiModelProperty("日注册人数")
     private Integer registrant;
+
+    @ApiModelProperty("总注册人数")
+    private Integer registrantTotal;
     /**
     * 活跃人数
     */
@@ -42,7 +45,12 @@ public class TwReport implements Serializable {
     * 下单人数
     */
     @ApiModelProperty("下单人数")
-    private Integer order;
+    private Integer orders;
+    /**
+    * 下单人数
+    */
+    @ApiModelProperty("下单总人数")
+    private Integer orderTotal;
     /**
     * 下单总额
     */
@@ -58,31 +66,43 @@ public class TwReport implements Serializable {
     */
     @ApiModelProperty("充值人数")
     private Integer recharge;
+    @ApiModelProperty("充值总人数")
+    private Integer rechargeTotal;
+    /**
+    * 充值总额
+    */
+    @ApiModelProperty("日充值额")
+    private BigDecimal rechargeNum;
     /**
     * 充值总额
     */
     @ApiModelProperty("充值总额")
-    private BigDecimal rechargeNum;
+    private BigDecimal rechargeSum;
     /**
     * 提现人数
     */
-    @ApiModelProperty("提现人数")
+    @ApiModelProperty("日提现人数")
     private Integer payout;
     /**
     * 
     */
-    @ApiModelProperty("")
+    @ApiModelProperty("总提现人数")
     private Integer payoutTotal;
     /**
     * 实际提现总额
     */
-    @ApiModelProperty("实际提现总额")
+    @ApiModelProperty("日提现总额")
     private BigDecimal payoutNum;
+    @ApiModelProperty("总提现总额")
+    private BigDecimal payoutSum;
     /**
     * 总客损 (充值总额-提现总额)
     */
     @ApiModelProperty("总客损 (充值总额-提现总额)")
     private BigDecimal customerLoss;
+
+    @ApiModelProperty("会员日余额")
+    private BigDecimal dayAmount;
     /**
     * 会员总余额
     */

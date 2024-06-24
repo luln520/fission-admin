@@ -14,7 +14,7 @@
             and addtime >= #{obj.startTime}
         </if>
         <if test="obj.endTime != null and obj.endTime !=''">
-            and  #{obj.endTime} = addtime
+            and  #{obj.endTime} >= addtime
         </if>
         <if test="obj.departmentId != null">
             and department = #{obj.departmentId}

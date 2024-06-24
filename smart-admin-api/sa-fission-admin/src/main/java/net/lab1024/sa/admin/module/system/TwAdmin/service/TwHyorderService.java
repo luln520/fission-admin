@@ -29,7 +29,7 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     int countUnClosedOrders(int companyId);
 
-    BigDecimal countHyOrdersDay(String startTime, String endTime,int companyId);
+    int countHyOrdersDay(String startTime, String endTime,int companyId);
 
 
     BigDecimal winLosshyAllOrders(int companyId);

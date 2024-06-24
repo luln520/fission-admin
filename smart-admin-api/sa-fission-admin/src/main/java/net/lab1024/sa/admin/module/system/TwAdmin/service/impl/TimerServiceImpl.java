@@ -53,6 +53,9 @@ public class TimerServiceImpl {
     @Autowired
     private  TwMyzcService twMyzcService;
 
+    @Autowired
+    private TwReportService twReportService;
+
 //    @Autowired
 //    private TwKjorderService twKjorderService;
 //
@@ -907,20 +910,25 @@ public class TimerServiceImpl {
             //今日注册人数
             int todayUser = 0;
             todayUser = twUserService.countTodayUsers(startTimestamp,endTimestamp,companyId);
-            // 查询全网总人数 M("user")->count()
+            // 总注册人数 M("user")->count()
             int allUser = 0;//userDao.countAllUsers();
             allUser = twUserService.countAllUsers(companyId);
 
+
+            //用户日总余额
+            BigDecimal userCoinDay = new BigDecimal(100);
+            userCoinDay = twUserCoinService.dayUserCoin(startTime, endTime,companyId);
             //用户总余额
             BigDecimal userCoinSum = new BigDecimal(100);
             userCoinSum = twUserCoinService.sumUserCoin(companyId);
+
 
             // 查询秒合约总下单数 M("hyorder")->where 'status' => 1 ->count();
             int allHyOrders = 0;//hyOrderDao.countUnClosedOrders();
             allHyOrders = twHyorderService.countUnClosedOrders(companyId);
 
             // 查询秒合约今日下单数
-            BigDecimal hyOrders = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
+            int hyOrders = 0;//rechargeDao.sumDayRecharge(startTime, endTime);
             hyOrders = twHyorderService.countHyOrdersDay(startTime, endTime,companyId);
 
             // 查询合约总盈亏
@@ -931,20 +939,84 @@ public class TimerServiceImpl {
             BigDecimal winLosshyDayOrders = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
             winLosshyDayOrders = twHyorderService.winLosshyDayOrders(startTime, endTime,companyId);
 
+            // 查询今日充值人数  M("user")->where($linewhere)->count();  查询今天的
+            int usercz = 0;//userDao.countLineUsers(nowDate);
+            usercz = twRechargeService.usersCount(startTime, endTime,companyId);
+
+            // 查询总充值人数  M("user")->where($linewhere)->count();  查询今天的
+            int userczTotal = 0;//userDao.countLineUsers(nowDate);
+            userczTotal = twRechargeService.usersCountTotal(companyId);
+
             BigDecimal dayRecharge = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
             dayRecharge = twRechargeService.sumDayRecharge(startTime, endTime,companyId);
             // 查询充值数量   M("recharge")->where(array('status' => 2))->sum("num");
             BigDecimal allRecharge = new BigDecimal(0);//rechargeDao.sumAllRecharge();
             allRecharge = twRechargeService.sumAllRecharge(companyId);
+
+            // 查询今日提现人数  M("user")->where($linewhere)->count();  查询今天的
+            int usertx = 0;//userDao.countLineUsers(nowDate);
+            usertx = twMyzcService.usersCount(startTime, endTime,companyId);
+
+            // 查询总提现人数  M("user")->where($linewhere)->count();  查询今天的
+            int usertxTotal = 0;//userDao.countLineUsers(nowDate);
+            usertxTotal = twMyzcService.usersCountTotal(companyId);
+
             // 查询提币数量 M("myzc")->where($daywhere)->where(array('status' => 2))->sum("num");
             BigDecimal dayWithdraw = new BigDecimal(0);//myzcDao.sumDayWithdraw(startTime, endTime);
             dayWithdraw = twMyzcService.sumDayWithdraw(startTime, endTime,companyId);
             // 查询提币数量 M("myzc")->where(array('status' => 2))->sum("num");
             BigDecimal allWithdraw = new BigDecimal(0);//myzcDao.sumAllWithdraw();
             allWithdraw = twMyzcService.sumAllWithdraw(companyId);
-            // 查询今日该客量  M("user")->where($linewhere)->count();  查询今天的
-            int allLineUsers = 0;//userDao.countLineUsers(nowDate);
-            allLineUsers = twUserService.countLineUsers(startTime, endTime,companyId);
+//            // 查询今日该客量  M("user")->where($linewhere)->count();  查询今天的
+//            int allLineUsers = 0;//userDao.countLineUsers(nowDate);
+//            allLineUsers = twUserService.countLineUsers(startTime, endTime,companyId);
+
+            //总客损
+            QueryWrapper<TwReport> queryWrapper3 = new QueryWrapper<>();
+            queryWrapper3.eq("day_date", nowDate);
+            TwReport one = twReportService.getOne(queryWrapper3);
+            if(one == null){
+                TwReport twReport = new TwReport();
+                twReport.setCompanyId(companyId);
+                twReport.setRegistrantTotal(allUser);
+                twReport.setDayDate(nowDate);
+                twReport.setDayAmount(userCoinDay);
+                twReport.setTotalAmount(userCoinSum);
+                twReport.setRegistrant(todayUser);
+                twReport.setOrders(hyOrders);
+                twReport.setOrderTotal(allHyOrders);
+                twReport.setOrderNum(winLosshyDayOrders);
+                twReport.setRecharge(usercz);
+                twReport.setRechargeTotal(userczTotal);
+                twReport.setRechargeNum(dayRecharge);
+                twReport.setRechargeSum(allRecharge);
+                twReport.setPayoutTotal(usertxTotal);
+                twReport.setPayoutNum(dayWithdraw);
+                twReport.setPayoutSum(allWithdraw);
+                twReport.setCreateTime(new Date());
+                twReportService.saveOrUpdate(twReport);
+            }else{
+                one.setCompanyId(companyId);
+                one.setDayDate(nowDate);
+                one.setDayAmount(userCoinDay);
+                one.setTotalAmount(userCoinSum);
+                one.setRegistrantTotal(allUser);
+                one.setRegistrant(todayUser);
+                one.setOrders(hyOrders);
+                one.setOrderTotal(allHyOrders);
+                one.setOrderNum(winLosshyDayOrders);
+                one.setRecharge(usercz);
+                one.setRechargeTotal(userczTotal);
+                one.setRechargeNum(dayRecharge);
+                one.setRechargeSum(allRecharge);
+                one.setPayout(usertx);
+                one.setPayoutTotal(usertxTotal);
+                one.setPayoutNum(dayWithdraw);
+                one.setPayoutSum(allWithdraw);
+                one.setUpdateTime(new Date());
+                twReportService.updateById(one);
+            }
+
         }
 
     }

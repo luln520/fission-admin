@@ -26,6 +26,9 @@ public interface TwMyzcService extends IService<TwMyzc> {
 
     BigDecimal sumDayWithdraw(String startTime, String endTime,int companyId);
 
+    int usersCount(String startTime, String endTime,int companyId);
+    int usersCountTotal(int companyId);
+
     BigDecimal sumAllWithdraw(int companyId);
 
     IPage<TwMyzc> listpage(TwMyzcVo twMyzcVo, HttpServletRequest request);

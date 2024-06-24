@@ -46,6 +46,11 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
     }
 
     @Override
+    public BigDecimal dayUserCoin(String startTime, String endTime, int companyId) {
+        return this.baseMapper.dayUserCoin(startTime,endTime,companyId);
+    }
+
+    @Override
     public BigDecimal sumUserCoin(int companyId) {
         return this.baseMapper.sumUserCoin(companyId);
     }

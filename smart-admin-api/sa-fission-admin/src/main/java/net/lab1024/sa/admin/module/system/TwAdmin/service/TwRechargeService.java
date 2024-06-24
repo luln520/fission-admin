@@ -25,6 +25,10 @@ public interface TwRechargeService extends IService<TwRecharge> {
 
     BigDecimal sumDayRecharge(String startTime, String endTime,int companyId);
 
+    int usersCount(String startTime, String endTime,int companyId);
+
+    int usersCountTotal(int companyId);
+
     BigDecimal sumAllRecharge(int companyId);
 
     IPage<TwRecharge> listpage(TwRechargeVo twRechargeVo, HttpServletRequest request);
