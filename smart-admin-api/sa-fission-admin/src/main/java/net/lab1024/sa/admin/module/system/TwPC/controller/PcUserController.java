@@ -39,6 +39,13 @@ public class PcUserController {
         return twUserService.userInfo(userCode,companyId);
     }
 
+    @GetMapping("/mockUserInfo")
+    @ApiOperation("获取模拟用户信息")
+    @NoNeedLogin
+    public ResponseDTO mockUserInfo(@RequestParam String userCode,@RequestParam String companyId) {
+        return twUserService.mockUserInfo(userCode,companyId);
+    }
+
     @PostMapping("/editpassword")
     @ApiOperation("用户更新密码")
     @NoNeedLogin
@@ -88,9 +95,11 @@ public class PcUserController {
     @ResponseBody
     @ApiOperation(value = "切换模拟账户")
     @NoNeedLogin
-    public ResponseDTO mockUser(@RequestParam int uid) {
-        return twUserService.mockUser(uid);
+    public ResponseDTO mockUser(@RequestParam int uid,@RequestParam int type) {
+        return twUserService.mockUser(uid,type);
     }
+
+
 
 }
 

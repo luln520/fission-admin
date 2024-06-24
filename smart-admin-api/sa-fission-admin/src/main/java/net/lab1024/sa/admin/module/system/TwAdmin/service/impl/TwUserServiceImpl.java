@@ -1370,6 +1370,20 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
+    public ResponseDTO<TwUser> mockUserInfo(String userCode, String companyId) {
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_code", userCode);
+        queryWrapper.eq("company_id", companyId);
+        TwUser one = this.getOne(queryWrapper);
+
+        QueryWrapper<TwMockUserCoin> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("userid", one.getId());
+        TwMockUserCoin one1 = twMockUserCoinService.getOne(queryWrapper1);
+        one.setMoney(one1.getUsdt());
+        return ResponseDTO.ok(one);
+    }
+
+    @Override
     public ResponseDTO auth(TwUser twUser) {
         log.info("用户认证提交数据：user{}:",twUser);
             if(twUser.getLanguage().equals("zh")){
@@ -1655,14 +1669,26 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public ResponseDTO mockUser(int uid) {
-        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", uid);
-        TwUser one = this.getOne(queryWrapper);
-        one.setUserType(2);
-        this.updateById(one);
+    public ResponseDTO mockUser(int uid,int type) {
 
-        return ResponseDTO.ok();
+        if(type == 1){
+            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", uid);
+            TwUser one = this.getOne(queryWrapper);
+            one.setUserType(1);
+            this.updateById(one);
+
+            return ResponseDTO.ok();
+        }
+        if(type == 2){
+            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", uid);
+            TwUser one = this.getOne(queryWrapper);
+            one.setUserType(2);
+            this.updateById(one);
+
+            return ResponseDTO.ok();
+        }
     }
 
     @Override

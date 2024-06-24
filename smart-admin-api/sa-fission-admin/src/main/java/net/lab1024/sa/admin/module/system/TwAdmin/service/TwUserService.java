@@ -57,6 +57,7 @@ public interface TwUserService extends IService<TwUser> {
     ResponseDTO editpassword(UserReq userReq);
 
     ResponseDTO<TwUser> userInfo(String userCode,String companyId);
+    ResponseDTO<TwUser> mockUserInfo(String userCode,String companyId);
 
     ResponseDTO auth(TwUser twUser);
 
@@ -71,7 +72,7 @@ public interface TwUserService extends IService<TwUser> {
     ResponseDTO usertj(int uid) ;
 
     ResponseDTO userdk(int uid) ;
-    ResponseDTO mockUser(int uid) ;
+    ResponseDTO mockUser(int uid,int type) ;
     ResponseDTO editPasword(int uid,String oldword,String newword,String language) ;
 
 }
