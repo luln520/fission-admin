@@ -968,10 +968,12 @@ public class TimerServiceImpl {
             BigDecimal allWithdraw = new BigDecimal(0);//myzcDao.sumAllWithdraw();
             allWithdraw = twMyzcService.sumAllWithdraw(companyId);
 //            // 查询今日该客量  M("user")->where($linewhere)->count();  查询今天的
-//            int allLineUsers = 0;//userDao.countLineUsers(nowDate);
-//            allLineUsers = twUserService.countLineUsers(startTime, endTime,companyId);
+            int allLineUsers = 0;//userDao.countLineUsers(nowDate);
+            allLineUsers = twUserService.countLineUsers(startTime, endTime,companyId);
 
             //总客损
+
+
             QueryWrapper<TwReport> queryWrapper3 = new QueryWrapper<>();
             queryWrapper3.eq("day_date", nowDate);
             queryWrapper3.eq("company_id", companyId);
@@ -981,6 +983,7 @@ public class TimerServiceImpl {
                 twReport.setCompanyId(companyId);
                 twReport.setRegistrantTotal(allUser);
                 twReport.setDayDate(nowDate);
+                twReport.setActive(allLineUsers);
                 twReport.setDayAmount(userCoinDay);
                 twReport.setTotalAmount(userCoinSum);
                 twReport.setRegistrant(todayUser);
@@ -994,11 +997,14 @@ public class TimerServiceImpl {
                 twReport.setPayoutTotal(usertxTotal);
                 twReport.setPayoutNum(dayWithdraw);
                 twReport.setPayoutSum(allWithdraw);
+                twReport.setDayCustomerLoss(dayRecharge.subtract(dayWithdraw));
+                twReport.setCustomerLoss(allRecharge.subtract(allWithdraw));
                 twReport.setCreateTime(new Date());
                 twReportService.saveOrUpdate(twReport);
             }else{
                 one.setCompanyId(companyId);
                 one.setDayDate(nowDate);
+                one.setActive(allLineUsers);
                 one.setDayAmount(userCoinDay);
                 one.setTotalAmount(userCoinSum);
                 one.setRegistrantTotal(allUser);
@@ -1014,6 +1020,8 @@ public class TimerServiceImpl {
                 one.setPayoutTotal(usertxTotal);
                 one.setPayoutNum(dayWithdraw);
                 one.setPayoutSum(allWithdraw);
+                one.setDayCustomerLoss(dayRecharge.subtract(dayWithdraw));
+                one.setCustomerLoss(allRecharge.subtract(allWithdraw));
                 one.setUpdateTime(new Date());
                 twReportService.updateById(one);
             }

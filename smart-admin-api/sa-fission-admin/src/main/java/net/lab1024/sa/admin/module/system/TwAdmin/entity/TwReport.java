@@ -98,6 +98,10 @@ public class TwReport implements Serializable {
     /**
     * 总客损 (充值总额-提现总额)
     */
+
+    @ApiModelProperty("今日客损 (今日充值-今日提现)")
+    private BigDecimal dayCustomerLoss;
+
     @ApiModelProperty("总客损 (充值总额-提现总额)")
     private BigDecimal customerLoss;
 
