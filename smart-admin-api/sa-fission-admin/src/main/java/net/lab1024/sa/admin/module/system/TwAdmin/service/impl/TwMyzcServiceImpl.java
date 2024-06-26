@@ -100,6 +100,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
         queryWrapper.ge("addtime", startTime);
         queryWrapper.le("addtime", endTime);
+        queryWrapper.eq("status", 2);
         queryWrapper.eq("company_id", companyId);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
@@ -108,6 +109,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
     public int usersCountTotal(int companyId) {
         QueryWrapper<TwMyzc> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("company_id", companyId);
+        queryWrapper.eq("status", 2);
         return this.baseMapper.selectCount(queryWrapper).intValue();
     }
 
