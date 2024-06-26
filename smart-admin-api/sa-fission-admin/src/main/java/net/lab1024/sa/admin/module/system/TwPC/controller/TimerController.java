@@ -34,7 +34,8 @@ public class TimerController {
     }
 
 
-    @Scheduled(cron = "0 */5 * * * ?")
+//    @Scheduled(cron = "0 */5 * * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void report()  {
         timerService.report();
     }
