@@ -82,6 +82,14 @@ public class PcUserController {
         return twUserService.userdk(uid);
     }
 
+    @GetMapping("/userTeams")
+    @ResponseBody
+    @ApiOperation(value = "查询团队成员")
+    @NoNeedLogin
+    public ResponseDTO userTeams(@RequestParam int uid) {
+        return twUserService.userTeams(uid);
+    }
+
     @GetMapping("/editPwd")
     @ResponseBody
     @ApiOperation(value = "更新密码")

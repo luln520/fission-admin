@@ -1637,6 +1637,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
+    public ResponseDTO userTeams(int uid) {
+        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.like("path", uid);
+        List<TwUser> list = this.list(queryWrapper1);
+        return ResponseDTO.ok(list);
+    }
+
+    @Override
     public ResponseDTO mockUserAmount(int uid,String language) {
 
         QueryWrapper<TwMockUserCoin> queryWrapper1 = new QueryWrapper<>();
