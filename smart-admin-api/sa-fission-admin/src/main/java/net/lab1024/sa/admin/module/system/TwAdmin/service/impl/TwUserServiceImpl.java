@@ -1435,57 +1435,17 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setStatus(1);
             twNoticeService.save(twNotice);
 
-
-        QueryWrapper<TwUserInvite> queryInvite = new QueryWrapper<>();
-        queryInvite.eq("uid", twUser.getInvit());
-        TwUserInvite threeUid = twUserInviteService.getOne(queryInvite);
-
-        QueryWrapper<TwUserInvite> queryInvite2 = new QueryWrapper<>();
-        queryInvite2.eq("uid", threeUid.getInvitUid());
-        TwUserInvite twoUid = twUserInviteService.getOne(queryInvite2);
-
-        QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
-        queryInvite3.eq("uid", twoUid.getInvitUid());
-        TwUserInvite oneUid = twUserInviteService.getOne(queryInvite3);
-
-        TwUserAgent twUserAgent = new TwUserAgent();
-        if(threeUid == null){
-            twUserAgent.setThreeUid(0);
-        }
-        if(twoUid == null){
-            twUserAgent.setTwoUid(0);
-        }
-        if(oneUid == null){
-            twUserAgent.setOneUid(0);
-        }
-        if(threeUid != null){
-            twUserAgent.setThreeUid(threeUid.getId());
+        String path = twUser.getPath();
+        String result = path.replace("#", "");
+        String[] split = result.split(",");
+        for (int i = 0 ; i<split.length;i++){
+            int teamuid = Integer.parseInt(split[i]);
 
             QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
-            queryTeam.eq("uid", threeUid.getInvitUid());
-            TwUserTeam threeTeam = twUserTeamService.getOne(queryTeam);
-            threeTeam.setVoidNum(threeTeam.getVoidNum()-1);
-            threeTeam.setTotal(threeTeam.getNum()+1);
-            twUserTeamService.updateById(threeTeam);
-        }
-        if(twoUid != null){
-            twUserAgent.setTwoUid(twoUid.getId());
-
-            QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
-            queryTeam.eq("uid", twoUid.getInvitUid());
-            TwUserTeam twoTeam = twUserTeamService.getOne(queryTeam);
-            twoTeam.setVoidNum(twoTeam.getVoidNum()-1);
-            twoTeam.setTotal(twoTeam.getNum()+1);
-            twUserTeamService.updateById(twoTeam);
-        }
-        if(oneUid != null){
-            twUserAgent.setOneUid(oneUid.getId());
-
-            QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
-            queryTeam.eq("uid", oneUid.getInvitUid());
+            queryTeam.eq("uid", teamuid);
             TwUserTeam oneTeam = twUserTeamService.getOne(queryTeam);
             oneTeam.setVoidNum(oneTeam.getVoidNum()-1);
-            oneTeam.setTotal(oneTeam.getNum()+1);
+            oneTeam.setNum(oneTeam.getNum()+1);
             twUserTeamService.updateById(oneTeam);
         }
 

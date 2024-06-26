@@ -65,8 +65,13 @@ public class TwUserTeamServiceImpl extends ServiceImpl<TwUserTeamMapper, TwUserT
             for(TwUserTeam twUserTeam:listpage){
                 Integer uid = twUserTeam.getUid();
                 TwUser byId1 = twUserService.getById(uid);
-                String userCode = byId1.getUserCode();
-                twUserTeam.setUserCode(userCode);
+
+                if(byId1 == null){
+                    twUserTeam.setUserCode(uid.toString());
+                }else{
+                    String userCode = byId1.getUserCode();
+                    twUserTeam.setUserCode(userCode);
+                }
                 list1.add(twUserTeam);
 
             }
@@ -83,8 +88,12 @@ public class TwUserTeamServiceImpl extends ServiceImpl<TwUserTeamMapper, TwUserT
                 for(TwUserTeam twUserTeam:listpage){
                     Integer uid = twUserTeam.getUid();
                     TwUser byId1 = twUserService.getById(uid);
-                    String userCode = byId1.getUserCode();
-                    twUserTeam.setUserCode(userCode);
+                    if(byId1 == null){
+                        twUserTeam.setUserCode(uid.toString());
+                    }else{
+                        String userCode = byId1.getUserCode();
+                        twUserTeam.setUserCode(userCode);
+                    }
 
                     list1.add(twUserTeam);
 
@@ -100,8 +109,12 @@ public class TwUserTeamServiceImpl extends ServiceImpl<TwUserTeamMapper, TwUserT
                 for(TwUserTeam twUserTeam:listpage){
                     Integer uid = twUserTeam.getUid();
                     TwUser byId1 = twUserService.getById(uid);
-                    String userCode = byId1.getUserCode();
-                    twUserTeam.setUserCode(userCode);
+                    if(byId1 == null){
+                        twUserTeam.setUserCode(uid.toString());
+                    }else{
+                        String userCode = byId1.getUserCode();
+                        twUserTeam.setUserCode(userCode);
+                    }
                     list1.add(twUserTeam);
                 }
                 objectPage.setRecords(list1);

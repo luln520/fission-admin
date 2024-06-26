@@ -974,6 +974,7 @@ public class TimerServiceImpl {
             //总客损
             QueryWrapper<TwReport> queryWrapper3 = new QueryWrapper<>();
             queryWrapper3.eq("day_date", nowDate);
+            queryWrapper3.eq("company_id", companyId);
             TwReport one = twReportService.getOne(queryWrapper3);
             if(one == null){
                 TwReport twReport = new TwReport();

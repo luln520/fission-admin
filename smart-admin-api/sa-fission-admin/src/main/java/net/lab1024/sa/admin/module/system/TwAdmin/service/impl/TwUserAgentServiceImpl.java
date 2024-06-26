@@ -67,8 +67,13 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
 
 
                 TwUser byId1 = twUserService.getById(uid);
-                String userCode = byId1.getUserCode();
-                twUserAgent.setUserCode(userCode);
+                if(byId1 == null){
+                    twUserAgent.setUserCode(uid.toString());
+                }else{
+                    String userCode = byId1.getUserCode();
+                    twUserAgent.setUserCode(userCode);
+                }
+
 
                 if(oneUid != 0){
                     EmployeeEntity oneId = employeeService.getById(Long.valueOf(oneUid));
@@ -130,9 +135,14 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                     Integer threeUid = twUserAgent.getThreeUid();
 
 
+
                     TwUser byId1 = twUserService.getById(uid);
-                    String userCode = byId1.getUserCode();
-                    twUserAgent.setUserCode(userCode);
+                    if(byId1 == null){
+                        twUserAgent.setUserCode(uid.toString());
+                    }else{
+                        String userCode = byId1.getUserCode();
+                        twUserAgent.setUserCode(userCode);
+                    }
 
                     if(oneUid != 0){
                         EmployeeEntity oneId = employeeService.getById(Long.valueOf(oneUid));
@@ -192,9 +202,14 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                     Integer threeUid = twUserAgent.getThreeUid();
 
 
+
                     TwUser byId1 = twUserService.getById(uid);
-                    String userCode = byId1.getUserCode();
-                    twUserAgent.setUserCode(userCode);
+                    if(byId1 == null){
+                        twUserAgent.setUserCode(uid.toString());
+                    }else{
+                        String userCode = byId1.getUserCode();
+                        twUserAgent.setUserCode(userCode);
+                    }
 
                     if(oneUid != 0){
                         EmployeeEntity oneId = employeeService.getById(Long.valueOf(oneUid));
