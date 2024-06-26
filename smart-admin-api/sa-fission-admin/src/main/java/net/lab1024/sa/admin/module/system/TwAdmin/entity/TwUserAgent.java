@@ -54,6 +54,9 @@ public class TwUserAgent implements Serializable {
     /**
     * 
     */
+    @ApiModelProperty("直推有效人数")
+    private Integer num;
+
     @ApiModelProperty("")
     private Integer companyId;
     /**

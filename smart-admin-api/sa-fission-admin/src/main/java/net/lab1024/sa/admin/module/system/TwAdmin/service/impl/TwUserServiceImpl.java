@@ -1435,20 +1435,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twNotice.setStatus(1);
             twNoticeService.save(twNotice);
 
-        String path = twUser.getPath();
-        String result = path.replace("#", "");
-        String[] split = result.split(",");
-        for (int i = 0 ; i<split.length;i++){
-            int teamuid = Integer.parseInt(split[i]);
-
-            QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
-            queryTeam.eq("uid", teamuid);
-            TwUserTeam oneTeam = twUserTeamService.getOne(queryTeam);
-            oneTeam.setVoidNum(oneTeam.getVoidNum()-1);
-            oneTeam.setNum(oneTeam.getNum()+1);
-            twUserTeamService.updateById(oneTeam);
-        }
-
             if(twUser.getLanguage().equals("zh")){
                 return ResponseDTO.okMsg("认证资料提交成功");
             }else{
@@ -1490,6 +1476,28 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twAdminLog.setPath(one.getPath());
             twAdminLog.setCompanyId(one.getCompanyId());
             twAdminLog.setRemark("用户 "+one.getRealName()+" 认证审核通过");
+
+            String path = one.getPath();
+            String result = path.replace("#", "");
+            String[] split = result.split(",");
+            for (int i = 0 ; i<split.length;i++){
+                int teamuid = Integer.parseInt(split[i]);
+
+                QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
+                queryTeam.eq("uid", teamuid);
+                TwUserTeam oneTeam = twUserTeamService.getOne(queryTeam);
+                oneTeam.setVoidNum(oneTeam.getVoidNum()-1);
+                oneTeam.setNum(oneTeam.getNum()+1);
+                twUserTeamService.updateById(oneTeam);
+
+                QueryWrapper<TwUserAgent> queryAgent = new QueryWrapper<>();
+                queryAgent.eq("uid", teamuid);
+                TwUserAgent agent = twUserAgentService.getOne(queryAgent);
+                Integer num = agent.getNum();
+                agent.setNum(num+1);
+                twUserAgentService.updateById(agent);
+            }
+
 
 //            TwNotice twNotice = new TwNotice();
 //            twNotice.setUid(uid);
