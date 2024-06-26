@@ -388,10 +388,10 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             TwUser twUser = twUserService.getOne(queryWrapper);
             Integer userType = twUser.getUserType();
             if(userType == 1){
-                userOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language) ;
+                return userOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language) ;
             }
             if(userType == 2){
-                mockUserOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language) ;
+               return mockUserOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language) ;
             }
 
             return null;
