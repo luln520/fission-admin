@@ -36,6 +36,9 @@ public class TwUserTeam implements Serializable {
     */
     @ApiModelProperty("用户id")
     private Integer uid;
+
+    @ApiModelProperty("用户名")
+    private String username;
     /**
     * 直推总人数
     */

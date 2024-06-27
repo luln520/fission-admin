@@ -1105,6 +1105,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
                     if(oneUid != null){
                         twUserAgent.setOneUid(oneUid.getUid());
+                        twUserAgent.setUsername(oneUid.getUsername());
 
                         QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
                         queryTeam.eq("uid", oneUid.getUid());
@@ -1242,14 +1243,16 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
                         if(threeUid != null){
                             twUserAgent.setThreeUid(threeUid.getUid());
+                            twUserAgent.setThreeName(threeUid.getUsername());
                         }
 
                         if(twoUid != null){
                             twUserAgent.setTwoUid(twoUid.getUid());
-
+                            twUserAgent.setTwoName(twoUid.getUsername());
                         }
                         if(oneUid != null){
                             twUserAgent.setOneUid(oneUid.getUid());
+                            twUserAgent.setOneName(oneUid.getUsername());
                         }
                         twUserAgent.setDepartment(1);
                         twUserAgent.setUid(uid);
@@ -1264,6 +1267,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUserTeam.setTotal(0);
                         twUserTeam.setVoidNum(0);
                         twUserTeam.setUid(uid);
+                        twUserTeam.setUsername(username);
                         twUserTeam.setAmount(new BigDecimal(0));
                         twUserTeam.setCompanyId(companyId);
                         twUserTeam.setPath(path);

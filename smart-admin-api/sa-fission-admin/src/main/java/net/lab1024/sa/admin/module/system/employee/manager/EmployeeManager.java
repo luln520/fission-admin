@@ -80,6 +80,7 @@ public class EmployeeManager extends ServiceImpl<EmployeeDao, EmployeeEntity> {
         twUserAgent.setThreeUid(0);
         twUserAgent.setTwoUid(0);
         twUserAgent.setOneUid(0);
+        twUserAgent.setUsername(employee.getLoginName());
         twUserAgent.setDepartment(1);
         twUserAgent.setUid(employeeId);
         twUserAgent.setPath(String.valueOf(employeeId));
@@ -92,6 +93,7 @@ public class EmployeeManager extends ServiceImpl<EmployeeDao, EmployeeEntity> {
         twUserTeam.setNum(0);
         twUserTeam.setTotal(0);
         twUserTeam.setVoidNum(0);
+        twUserTeam.setUsername(employee.getLoginName());
         twUserTeam.setUid(employeeId);
         twUserTeam.setAmount(new BigDecimal(0));
         twUserTeam.setCompanyId(employee.getCompanyId());

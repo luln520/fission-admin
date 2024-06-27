@@ -80,19 +80,15 @@ public class TwUserAgent implements Serializable {
     @ApiModelProperty("用户code")
     private String userCode;
 
-    @TableField(exist = false)
     @ApiModelProperty("会员名称")
     private String username;
 
-    @TableField(exist = false)
     @ApiModelProperty("一级代理名称")
     private String oneName;
 
-    @TableField(exist = false)
     @ApiModelProperty("二级代理名称")
     private String twoName;
 
-    @TableField(exist = false)
     @ApiModelProperty("三级代理名称")
     private String threeName;
 

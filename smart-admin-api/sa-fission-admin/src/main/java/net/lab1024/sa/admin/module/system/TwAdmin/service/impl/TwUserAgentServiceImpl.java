@@ -59,70 +59,7 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
         if(roleEmployeeVO.getWordKey().equals("admin") || roleEmployeeVO.getWordKey().equals("backend")){
             Page<TwUserAgent> objectPage = new Page<>(agentVo.getPageNum(), agentVo.getPageSize());
             List<TwUserAgent> listpage = baseMapper.listpage(objectPage, agentVo);
-            for(TwUserAgent twUserAgent:listpage){
-                Integer uid = twUserAgent.getUid();
-                Integer oneUid = twUserAgent.getOneUid();
-                Integer twoUid = twUserAgent.getTwoUid();
-                Integer threeUid = twUserAgent.getThreeUid();
-
-
-                TwUser byId1 = twUserService.getById(uid);
-                if(byId1 == null){
-                    twUserAgent.setUserCode(uid.toString());
-                }else{
-                    String userCode = byId1.getUserCode();
-                    twUserAgent.setUserCode(userCode);
-                    twUserAgent.setUsername(byId1.getUsername());
-                }
-
-
-                if(oneUid != 0){
-                    EmployeeEntity oneId = employeeService.getById(Long.valueOf(oneUid));
-                    if(oneId != null){
-                        twUserAgent.setOneName(oneId.getLoginName());
-                        twUserAgent.setUsername(oneId.getLoginName());
-                    }else{
-                        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                        queryWrapper1.eq("id", oneUid);
-                        TwUser one = twUserService.getOne(queryWrapper1);
-                        if(one != null){
-                            twUserAgent.setOneName(one.getUsername());
-                        }
-                    }
-
-                }
-                if(twoUid != 0){
-                    EmployeeEntity twoId = employeeService.getById(Long.valueOf(twoUid));
-                    if(twoId != null){
-                        twUserAgent.setTwoName(twoId.getLoginName());
-                        twUserAgent.setUsername(twoId.getLoginName());
-                    }else{
-                        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                        queryWrapper1.eq("id", twoUid);
-                        TwUser one = twUserService.getOne(queryWrapper1);
-                        if(one != null){
-                            twUserAgent.setTwoName(one.getUsername());
-                        }
-                    }
-                }
-                if(threeUid != 0){
-                    EmployeeEntity threeId = employeeService.getById(Long.valueOf(threeUid));
-                    if(threeId != null){
-                        twUserAgent.setThreeName(threeId.getLoginName());
-                        twUserAgent.setUsername(threeId.getLoginName());
-                    }else{
-                        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                        queryWrapper1.eq("id", threeUid);
-                        TwUser one = twUserService.getOne(queryWrapper1);
-                        if(one != null){
-                            twUserAgent.setThreeName(one.getUsername());
-                        }
-                    }
-                }
-                list1.add(twUserAgent);
-
-            }
-            objectPage.setRecords(list1);
+            objectPage.setRecords(listpage);
             return objectPage;
         }
 
@@ -132,70 +69,7 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                 Page<TwUserAgent> objectPage = new Page<>(agentVo.getPageNum(), agentVo.getPageSize());
                 agentVo.setDepartmentId(byId.getDepartmentId());
                 List<TwUserAgent> listpage = baseMapper.listpage(objectPage, agentVo);
-                for(TwUserAgent twUserAgent:listpage){
-                    Integer uid = twUserAgent.getUid();
-                    Integer oneUid = twUserAgent.getOneUid();
-                    Integer twoUid = twUserAgent.getTwoUid();
-                    Integer threeUid = twUserAgent.getThreeUid();
-
-
-
-                    TwUser byId1 = twUserService.getById(uid);
-                    if(byId1 == null){
-                        twUserAgent.setUserCode(uid.toString());
-                    }else{
-                        String userCode = byId1.getUserCode();
-                        twUserAgent.setUserCode(userCode);
-                        twUserAgent.setUsername(byId1.getUsername());
-                    }
-
-                    if(oneUid != 0){
-                        EmployeeEntity oneId = employeeService.getById(Long.valueOf(oneUid));
-                        if(oneId != null){
-                            twUserAgent.setOneName(oneId.getLoginName());
-                            twUserAgent.setUsername(oneId.getLoginName());
-                        }else{
-                            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", oneUid);
-                            TwUser one = twUserService.getOne(queryWrapper1);
-                            if(one != null){
-                                twUserAgent.setOneName(one.getUsername());
-                            }
-                        }
-
-                    }
-                    if(twoUid != 0){
-                        EmployeeEntity twoId = employeeService.getById(Long.valueOf(twoUid));
-                        if(twoId != null){
-                            twUserAgent.setTwoName(twoId.getLoginName());
-                            twUserAgent.setUsername(twoId.getLoginName());
-                        }else{
-                            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", twoUid);
-                            TwUser one = twUserService.getOne(queryWrapper1);
-                            if(one != null){
-                                twUserAgent.setTwoName(one.getUsername());
-                            }
-                        }
-                    }
-                    if(threeUid != 0){
-                        EmployeeEntity threeId = employeeService.getById(Long.valueOf(threeUid));
-                        if(threeId != null){
-                            twUserAgent.setThreeName(threeId.getLoginName());
-                            twUserAgent.setUsername(threeId.getLoginName());
-                        }else{
-                            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", threeUid);
-                            TwUser one = twUserService.getOne(queryWrapper1);
-                            if(one != null){
-                                twUserAgent.setThreeName(one.getUsername());
-                            }
-                        }
-                    }
-                    list1.add(twUserAgent);
-
-                }
-                objectPage.setRecords(list1);
+                objectPage.setRecords(listpage);
                 return objectPage;
             }else{
                 Page<TwUserAgent> objectPage = new Page<>(agentVo.getPageNum(), agentVo.getPageSize());
@@ -203,70 +77,7 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                     agentVo.setEmployeeId(byId.getEmployeeId());
                 }
                 List<TwUserAgent> listpage = baseMapper.listpage(objectPage, agentVo);
-                for(TwUserAgent twUserAgent:listpage){
-                    Integer uid = twUserAgent.getUid();
-                    Integer oneUid = twUserAgent.getOneUid();
-                    Integer twoUid = twUserAgent.getTwoUid();
-                    Integer threeUid = twUserAgent.getThreeUid();
-
-
-
-                    TwUser byId1 = twUserService.getById(uid);
-                    if(byId1 == null){
-                        twUserAgent.setUserCode(uid.toString());
-                    }else{
-                        String userCode = byId1.getUserCode();
-                        twUserAgent.setUserCode(userCode);
-                        twUserAgent.setUsername(byId1.getUsername());
-                    }
-
-                    if(oneUid != 0){
-                        EmployeeEntity oneId = employeeService.getById(Long.valueOf(oneUid));
-                        if(oneId != null){
-                            twUserAgent.setOneName(oneId.getLoginName());
-                            twUserAgent.setUsername(oneId.getLoginName());
-                        }else{
-                            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", oneUid);
-                            TwUser one = twUserService.getOne(queryWrapper1);
-                            if(one != null){
-                                twUserAgent.setOneName(one.getUsername());
-                            }
-                        }
-
-                    }
-                    if(twoUid != 0){
-                        EmployeeEntity twoId = employeeService.getById(Long.valueOf(twoUid));
-                        if(twoId != null){
-                            twUserAgent.setTwoName(twoId.getLoginName());
-                            twUserAgent.setUsername(twoId.getLoginName());
-                        }else{
-                            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", twoUid);
-                            TwUser one = twUserService.getOne(queryWrapper1);
-                            if(one != null){
-                                twUserAgent.setTwoName(one.getUsername());
-                            }
-                        }
-                    }
-                    if(threeUid != 0){
-                        EmployeeEntity threeId = employeeService.getById(Long.valueOf(threeUid));
-                        if(threeId != null){
-                            twUserAgent.setThreeName(threeId.getLoginName());
-                            twUserAgent.setUsername(threeId.getLoginName());
-                        }else{
-                            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", threeUid);
-                            TwUser one = twUserService.getOne(queryWrapper1);
-                            if(one != null){
-                                twUserAgent.setThreeName(one.getUsername());
-                            }
-                        }
-                    }
-                    list1.add(twUserAgent);
-
-                }
-                objectPage.setRecords(list1);
+                objectPage.setRecords(listpage);
                 return objectPage;
             }
         }
