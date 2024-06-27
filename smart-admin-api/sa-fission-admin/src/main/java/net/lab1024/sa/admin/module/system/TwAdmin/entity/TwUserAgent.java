@@ -34,8 +34,9 @@ public class TwUserAgent implements Serializable {
     /**
     * 直推有效人数
     */
-    @ApiModelProperty("直推有效人数")
+    @ApiModelProperty("uid")
     private Integer uid;
+
     /**
     * 一级代理
     */
@@ -78,6 +79,10 @@ public class TwUserAgent implements Serializable {
     @TableField(exist = false)
     @ApiModelProperty("用户code")
     private String userCode;
+
+    @TableField(exist = false)
+    @ApiModelProperty("会员名称")
+    private String username;
 
     @TableField(exist = false)
     @ApiModelProperty("一级代理名称")

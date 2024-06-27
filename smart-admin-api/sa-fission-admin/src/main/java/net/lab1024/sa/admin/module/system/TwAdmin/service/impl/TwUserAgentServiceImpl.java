@@ -72,6 +72,7 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                 }else{
                     String userCode = byId1.getUserCode();
                     twUserAgent.setUserCode(userCode);
+                    twUserAgent.setUsername(byId1.getUsername());
                 }
 
 
@@ -79,9 +80,10 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                     EmployeeEntity oneId = employeeService.getById(Long.valueOf(oneUid));
                     if(oneId != null){
                         twUserAgent.setOneName(oneId.getLoginName());
+                        twUserAgent.setUsername(oneId.getLoginName());
                     }else{
                         QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                        queryWrapper1.eq("id", oneId);
+                        queryWrapper1.eq("id", oneUid);
                         TwUser one = twUserService.getOne(queryWrapper1);
                         if(one != null){
                             twUserAgent.setOneName(one.getUsername());
@@ -93,9 +95,10 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                     EmployeeEntity twoId = employeeService.getById(Long.valueOf(twoUid));
                     if(twoId != null){
                         twUserAgent.setTwoName(twoId.getLoginName());
+                        twUserAgent.setUsername(twoId.getLoginName());
                     }else{
                         QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                        queryWrapper1.eq("id", twoId);
+                        queryWrapper1.eq("id", twoUid);
                         TwUser one = twUserService.getOne(queryWrapper1);
                         if(one != null){
                             twUserAgent.setTwoName(one.getUsername());
@@ -106,9 +109,10 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                     EmployeeEntity threeId = employeeService.getById(Long.valueOf(threeUid));
                     if(threeId != null){
                         twUserAgent.setThreeName(threeId.getLoginName());
+                        twUserAgent.setUsername(threeId.getLoginName());
                     }else{
                         QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                        queryWrapper1.eq("id", threeId);
+                        queryWrapper1.eq("id", threeUid);
                         TwUser one = twUserService.getOne(queryWrapper1);
                         if(one != null){
                             twUserAgent.setThreeName(one.getUsername());
@@ -142,15 +146,17 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                     }else{
                         String userCode = byId1.getUserCode();
                         twUserAgent.setUserCode(userCode);
+                        twUserAgent.setUsername(byId1.getUsername());
                     }
 
                     if(oneUid != 0){
                         EmployeeEntity oneId = employeeService.getById(Long.valueOf(oneUid));
                         if(oneId != null){
                             twUserAgent.setOneName(oneId.getLoginName());
+                            twUserAgent.setUsername(oneId.getLoginName());
                         }else{
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", oneId);
+                            queryWrapper1.eq("id", oneUid);
                             TwUser one = twUserService.getOne(queryWrapper1);
                             if(one != null){
                                 twUserAgent.setOneName(one.getUsername());
@@ -162,9 +168,10 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                         EmployeeEntity twoId = employeeService.getById(Long.valueOf(twoUid));
                         if(twoId != null){
                             twUserAgent.setTwoName(twoId.getLoginName());
+                            twUserAgent.setUsername(twoId.getLoginName());
                         }else{
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", twoId);
+                            queryWrapper1.eq("id", twoUid);
                             TwUser one = twUserService.getOne(queryWrapper1);
                             if(one != null){
                                 twUserAgent.setTwoName(one.getUsername());
@@ -175,9 +182,10 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                         EmployeeEntity threeId = employeeService.getById(Long.valueOf(threeUid));
                         if(threeId != null){
                             twUserAgent.setThreeName(threeId.getLoginName());
+                            twUserAgent.setUsername(threeId.getLoginName());
                         }else{
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", threeId);
+                            queryWrapper1.eq("id", threeUid);
                             TwUser one = twUserService.getOne(queryWrapper1);
                             if(one != null){
                                 twUserAgent.setThreeName(one.getUsername());
@@ -209,15 +217,17 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                     }else{
                         String userCode = byId1.getUserCode();
                         twUserAgent.setUserCode(userCode);
+                        twUserAgent.setUsername(byId1.getUsername());
                     }
 
                     if(oneUid != 0){
                         EmployeeEntity oneId = employeeService.getById(Long.valueOf(oneUid));
                         if(oneId != null){
                             twUserAgent.setOneName(oneId.getLoginName());
+                            twUserAgent.setUsername(oneId.getLoginName());
                         }else{
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", oneId);
+                            queryWrapper1.eq("id", oneUid);
                             TwUser one = twUserService.getOne(queryWrapper1);
                             if(one != null){
                                 twUserAgent.setOneName(one.getUsername());
@@ -229,9 +239,10 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                         EmployeeEntity twoId = employeeService.getById(Long.valueOf(twoUid));
                         if(twoId != null){
                             twUserAgent.setTwoName(twoId.getLoginName());
+                            twUserAgent.setUsername(twoId.getLoginName());
                         }else{
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", twoId);
+                            queryWrapper1.eq("id", twoUid);
                             TwUser one = twUserService.getOne(queryWrapper1);
                             if(one != null){
                                 twUserAgent.setTwoName(one.getUsername());
@@ -242,9 +253,10 @@ public class TwUserAgentServiceImpl extends ServiceImpl<TwUserAgentMapper, TwUse
                         EmployeeEntity threeId = employeeService.getById(Long.valueOf(threeUid));
                         if(threeId != null){
                             twUserAgent.setThreeName(threeId.getLoginName());
+                            twUserAgent.setUsername(threeId.getLoginName());
                         }else{
                             QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
-                            queryWrapper1.eq("id", threeId);
+                            queryWrapper1.eq("id", threeUid);
                             TwUser one = twUserService.getOne(queryWrapper1);
                             if(one != null){
                                 twUserAgent.setThreeName(one.getUsername());
