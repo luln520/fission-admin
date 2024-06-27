@@ -311,12 +311,12 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 //                ResponseDTO.userErrorParam("不能小于最低投资额度");
 //            }
 
-        QueryWrapper<TwLeverage> queryWrapper3 = new QueryWrapper<>();
-        queryWrapper3.eq("symbol", ccoinname); // 添加查询条件
-        queryWrapper3.eq("num", fold); // 添加查询条件
-        queryWrapper3.eq("company_id",twUser.getCompanyId());
-        TwLeverage one = twLeverageService.getOne(queryWrapper3);
-        if(num.compareTo(one.getMin()) < 0) {
+//        QueryWrapper<TwLeverage> queryWrapper3 = new QueryWrapper<>();
+//        queryWrapper3.eq("symbol", ccoinname); // 添加查询条件
+//        queryWrapper3.eq("num", fold); // 添加查询条件
+//        queryWrapper3.eq("company_id",twUser.getCompanyId());
+//        TwLeverage one = twLeverageService.getOne(queryWrapper3);
+        if(num.compareTo(new BigDecimal(20)) < 0) {
             if (language.equals("zh")) {
                 return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
             } else {
