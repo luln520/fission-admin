@@ -1105,7 +1105,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
                     if(oneUid != null){
                         twUserAgent.setOneUid(oneUid.getUid());
-                        twUserAgent.setUsername(oneUid.getUsername());
+                        twUserAgent.setOneName(oneUid.getUsername());
 
                         QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
                         queryTeam.eq("uid", oneUid.getUid());
@@ -1116,6 +1116,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     }
                     twUserAgent.setDepartment(1);
                     twUserAgent.setUid(uid);
+                    twUserAgent.setUsername(username);
                     twUserAgent.setPath(path);
                     twUserAgent.setCreateTime(new Date());
                     twUserAgent.setCompanyId(companyId);
@@ -1126,6 +1127,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUserTeam.setTotal(0);
                     twUserTeam.setVoidNum(0);
                     twUserTeam.setUid(uid);
+                    twUserTeam.setUsername(username);
                     twUserTeam.setAmount(new BigDecimal(0));
                     twUserTeam.setCompanyId(companyId);
                     twUserTeam.setPath(path);
@@ -1179,9 +1181,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUserInvite.setUsername(username);
                         twUserInviteService.save(twUserInvite);
 
-                        TwUserInvite oneUid = new TwUserInvite();
-                        TwUserInvite twoUid = new TwUserInvite();
-                        TwUserInvite threeUid = new TwUserInvite();
 
                         String result = path.replace("#", "");
                         String[] split = result.split(",");
@@ -1198,65 +1197,86 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
                         TwUserAgent twUserAgent = new TwUserAgent();
                         if( split.length <= 3){
-                             QueryWrapper<TwUserInvite> queryInvite = new QueryWrapper<>();
-                             queryInvite.eq("uid", split[0]);
-                             oneUid = twUserInviteService.getOne(queryInvite);
+                                QueryWrapper<TwUserInvite> queryInvite = new QueryWrapper<>();
+                                queryInvite.eq("uid", split[0]);
+                                TwUserInvite oneUid = twUserInviteService.getOne(queryInvite);
+                                if(oneUid == null){
+                                    twUserAgent.setOneUid(0);
+                                }else{
+                                    twUserAgent.setOneUid(oneUid.getUid());
+                                    twUserAgent.setOneName(oneUid.getUsername());
+                                }
 
-                             if(twoUid != null){
-                                 QueryWrapper<TwUserInvite> queryInvite2 = new QueryWrapper<>();
-                                 queryInvite2.eq("uid", split[1]);
-                                 twoUid = twUserInviteService.getOne(queryInvite2);
-                             }
+                            if(split.length <= 2){
+                                QueryWrapper<TwUserInvite> queryInvite2 = new QueryWrapper<>();
+                                queryInvite2.eq("uid", split[1]);
+                                TwUserInvite twoUid = twUserInviteService.getOne(queryInvite2);
+                                if(twoUid != null){
+                                    twUserAgent.setTwoUid(twoUid.getUid());
+                                    twUserAgent.setTwoName(twoUid.getUsername());
+                                }else{
+                                    twUserAgent.setTwoUid(0);
+                                }
+                            }
 
-                             if(threeUid != null){
-                                 QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
-                                 queryInvite3.eq("uid", split[2]);
-                                 threeUid = twUserInviteService.getOne(queryInvite3);
-                             }
+                            if(split.length == 3){
+                                QueryWrapper<TwUserInvite> queryInvite2 = new QueryWrapper<>();
+                                queryInvite2.eq("uid", split[1]);
+                                TwUserInvite twoUid = twUserInviteService.getOne(queryInvite2);
+                                if(twoUid != null){
+                                    twUserAgent.setTwoUid(twoUid.getUid());
+                                    twUserAgent.setTwoName(twoUid.getUsername());
+                                }else{
+                                    twUserAgent.setTwoUid(0);
+                                }
+
+                                QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
+                                queryInvite3.eq("uid", split[2]);
+                                TwUserInvite threeUid = twUserInviteService.getOne(queryInvite3);
+                                if(threeUid != null){
+                                    twUserAgent.setThreeUid(threeUid.getUid());
+                                    twUserAgent.setThreeName(threeUid.getUsername());
+                                }else{
+                                    twUserAgent.setThreeUid(0);
+                                }
+                            }
                          }else{
-                            QueryWrapper<TwUserInvite> queryInvite = new QueryWrapper<>();
-                            queryInvite.eq("uid", split[split.length-3] );
-                            oneUid = twUserInviteService.getOne(queryInvite);
+                                QueryWrapper<TwUserInvite> queryInvite = new QueryWrapper<>();
+                                queryInvite.eq("uid", split[split.length-3] );
+                                TwUserInvite oneUid = twUserInviteService.getOne(queryInvite);
+                                if(oneUid == null){
+                                    twUserAgent.setOneUid(0);
+                                }else{
+                                    twUserAgent.setOneUid(oneUid.getUid());
+                                    twUserAgent.setOneName(oneUid.getUsername());
+                                }
 
-                            if(twoUid != null){
+
                                 QueryWrapper<TwUserInvite> queryInvite2 = new QueryWrapper<>();
                                 queryInvite2.eq("uid", split[split.length-2] );
-                                twoUid = twUserInviteService.getOne(queryInvite2);
-                            }
+                                TwUserInvite twoUid = twUserInviteService.getOne(queryInvite2);
+                                if(twoUid != null){
+                                    twUserAgent.setTwoUid(twoUid.getUid());
+                                    twUserAgent.setTwoName(twoUid.getUsername());
+                                }else{
+                                    twUserAgent.setTwoUid(0);
+                                }
 
-                            if(threeUid != null){
                                 QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
                                 queryInvite3.eq("uid", split[split.length-1]);
-                                threeUid = twUserInviteService.getOne(queryInvite3);
-                            }
+                                TwUserInvite threeUid = twUserInviteService.getOne(queryInvite3);
+                                if(threeUid != null){
+                                    twUserAgent.setThreeUid(threeUid.getUid());
+                                    twUserAgent.setThreeName(threeUid.getUsername());
+                                }else{
+                                    twUserAgent.setThreeUid(0);
+                                }
                         }
 
-                        if(threeUid == null){
-                            twUserAgent.setThreeUid(0);
-                        }
-                        if(twoUid == null){
-                            twUserAgent.setTwoUid(0);
-                        }
-                        if(oneUid == null){
-                            twUserAgent.setOneUid(0);
-                        }
-
-                        if(threeUid != null){
-                            twUserAgent.setThreeUid(threeUid.getUid());
-                            twUserAgent.setThreeName(threeUid.getUsername());
-                        }
-
-                        if(twoUid != null){
-                            twUserAgent.setTwoUid(twoUid.getUid());
-                            twUserAgent.setTwoName(twoUid.getUsername());
-                        }
-                        if(oneUid != null){
-                            twUserAgent.setOneUid(oneUid.getUid());
-                            twUserAgent.setOneName(oneUid.getUsername());
-                        }
                         twUserAgent.setDepartment(1);
                         twUserAgent.setUid(uid);
                         twUserAgent.setPath(path);
+                        twUserAgent.setUsername(username);
                         twUserAgent.setCreateTime(new Date());
                         twUserAgent.setCompanyId(companyId);
                         twUserAgentService.save(twUserAgent);
