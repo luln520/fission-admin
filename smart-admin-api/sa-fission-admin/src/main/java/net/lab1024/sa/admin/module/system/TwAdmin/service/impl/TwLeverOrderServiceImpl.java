@@ -542,6 +542,25 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
 
     @Override
     public ResponseDTO closeorder(int uid, int lid,String language) {
+
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", uid); // 添加查询条件
+        TwUser twUser = twUserService.getOne(queryWrapper);
+        Integer userType = twUser.getUserType();
+        if(userType == 1){   //会员订单
+            return  userCloseorder(twUser,language,lid);
+        }
+
+        if(userType == 2){   //模拟订单
+            return  mockUserCloseorder(twUser,language,lid);
+        }
+
+         return ResponseDTO.ok();
+    }
+
+
+    public ResponseDTO userCloseorder(TwUser twUser,String language, int lid){
+        Integer uid = twUser.getId();
         QueryWrapper<TwLeverOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uid",uid);
         queryWrapper.eq("id", lid);
@@ -562,234 +581,487 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
             }
         }
 
-            String coinname = twLeverOrder.getCoinname();
-            String symbol = coinname.toLowerCase().replace("/", "");
-            String url = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
-            BigDecimal newprice = getnewprice(url);
-            // 创建 Random 对象
-            Random random = new Random();
-            // 生成在[0.1, 0.9999]范围内的随机数
-            BigDecimal randnum = new BigDecimal(Double.toString(0.1 + (0.9999 - 0.1) * random.nextDouble()));
+        String coinname = twLeverOrder.getCoinname();
+        String symbol = coinname.toLowerCase().replace("/", "");
+        String url = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
+        BigDecimal newprice = getnewprice(url);
+        // 创建 Random 对象
+        Random random = new Random();
+        // 生成在[0.1, 0.9999]范围内的随机数
+        BigDecimal randnum = new BigDecimal(Double.toString(0.1 + (0.9999 - 0.1) * random.nextDouble()));
 
-            BigDecimal buyprice = twLeverOrder.getBuyprice();   //建仓单价
-            Integer hyzd = twLeverOrder.getHyzd();  //合约方向
-            Integer kongyk = twLeverOrder.getKongyk(); //单控设置
-            String username = twLeverOrder.getUsername();
+        BigDecimal buyprice = twLeverOrder.getBuyprice();   //建仓单价
+        Integer hyzd = twLeverOrder.getHyzd();  //合约方向
+        Integer kongyk = twLeverOrder.getKongyk(); //单控设置
+        String username = twLeverOrder.getUsername();
 //            BigDecimal hybl = twLeverOrder.getHybl();
 //            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
 //            BigDecimal ylnum = num.multiply(hybl.divide(new BigDecimal(100), mathContext));
 //            BigDecimal money = twLeverOrder.getNum().add(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //盈利金额
 //            BigDecimal ploss = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());
-            QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
-            queryWrapper3.eq("userid",uid);
-            TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
-            BigDecimal sellprice = new BigDecimal(0);
-            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
-            //买涨
-              if(hyzd == 1){
-                    if(kongyk == 1){  //盈利
-                        BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
-                        BigDecimal money = ploss.add(twLeverOrder.getNum());
+        QueryWrapper<TwUserCoin> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("userid",uid);
+        TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper3);
+        BigDecimal sellprice = new BigDecimal(0);
+        MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
+        //买涨
+        if(hyzd == 1){
+            if(kongyk == 1){  //盈利
+                BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
+                BigDecimal money = ploss.add(twLeverOrder.getNum());
 
-                        if (buyprice.compareTo(newprice) < 0) {
-                            sellprice = newprice;
-                        } else if (newprice.compareTo(buyprice) == 0) {
-                            sellprice = newprice.add(randnum);
-                        } else if (newprice.compareTo(buyprice) < 0) {
-                            sellprice = buyprice.add(randnum);
-                        }
-                        //增加资产
-                        twUserCoinService.incre(uid,money,twUserCoin.getUsdt());
-
-                        //修改订单状态
-                        twLeverOrder.setStatus(2);
-                        twLeverOrder.setIsWin(1);
-                        twLeverOrder.setSellprice(sellprice);
-                        twLeverOrder.setPloss(ploss);
-                        this.updateById(twLeverOrder);
-
-                        //写财务日志
-                        addlog(uid,username,ploss);
-
-                    }
-
-                    if(kongyk == 2){ //亏损
-                        BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
-                        if (buyprice.compareTo(newprice) < 0) {
-                            sellprice = buyprice.subtract(randnum);
-                        } else if (newprice.compareTo(buyprice) == 0) {
-                            sellprice = buyprice.subtract(randnum);
-                        } else if (newprice.compareTo(buyprice) < 0) {
-                            sellprice = newprice;
-                        }
-                        //修改订单状态
-                        twLeverOrder.setStatus(2);
-                        twLeverOrder.setIsWin(2);
-                        twLeverOrder.setSellprice(sellprice);
-                        twLeverOrder.setPloss(ploss);
-                        this.updateById(twLeverOrder);
-
-                        //减少资产
-                        twUserCoinService.decre(uid,ploss,twUserCoin.getUsdt());
-
-                        //写财务日志
-                        addlog(uid,username,ploss);
-                    }
-
-                  if(kongyk == 0){   //未控
-                        if (buyprice.compareTo(newprice) < 0) {   //盈利
-                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
-                            BigDecimal money = ploss.add(twLeverOrder.getNum());
-                            //增加资产
-                            twUserCoinService.incre(uid, money, twUserCoin.getUsdt());
-
-                            //修改订单状态
-                            twLeverOrder.setStatus(2);
-                            twLeverOrder.setIsWin(1);
-                            twLeverOrder.setSellprice(sellprice);
-                            twLeverOrder.setPloss(ploss);
-                            this.updateById(twLeverOrder);
-
-                            //写财务日志
-                            addlog(uid, username, ploss);
-
-
-                        } else if (newprice.compareTo(buyprice) == 0) {
-                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
-                            //修改订单状态
-                            twLeverOrder.setStatus(2);
-                            twLeverOrder.setIsWin(2);
-                            twLeverOrder.setSellprice(sellprice);
-                            twLeverOrder.setPloss(ploss);
-                            this.updateById(twLeverOrder);
-
-                            //减少资产
-                            twUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
-
-                            //写财务日志
-                            addlog(uid, username, ploss);
-                        } else if (newprice.compareTo(buyprice) < 0) {   //亏损
-                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
-                            //修改订单状态
-                            twLeverOrder.setStatus(2);
-                            twLeverOrder.setIsWin(2);
-                            twLeverOrder.setSellprice(sellprice);
-                            twLeverOrder.setPloss(ploss);
-                            this.updateById(twLeverOrder);
-
-                            //减少资产
-                            twUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
-
-                            //写财务日志
-                            addlog(uid, username, ploss);
-                        }
-                    }
-
+                if (buyprice.compareTo(newprice) < 0) {
+                    sellprice = newprice;
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    sellprice = newprice.add(randnum);
+                } else if (newprice.compareTo(buyprice) < 0) {
+                    sellprice = buyprice.add(randnum);
                 }
-                //买跌
-                if(hyzd == 2){
-                        if(kongyk == 1){ //盈利
+                //增加资产
+                twUserCoinService.incre(uid,money,twUserCoin.getUsdt());
 
-                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
-                            BigDecimal money = ploss.add(twLeverOrder.getNum());
+                //修改订单状态
+                twLeverOrder.setStatus(2);
+                twLeverOrder.setIsWin(1);
+                twLeverOrder.setSellprice(sellprice);
+                twLeverOrder.setPloss(ploss);
+                this.updateById(twLeverOrder);
 
-                            if (buyprice.compareTo(newprice) < 0) {
-                                sellprice = buyprice.subtract(randnum);
-                            } else if (newprice.compareTo(buyprice) == 0) {
-                                sellprice = buyprice.subtract(randnum);
-                            } else if (newprice.compareTo(buyprice) < 0) {
-                                sellprice = newprice;
-                            }
+                //写财务日志
+                addlog(uid,username,ploss);
 
-                            //增加资产
-                            twUserCoinService.incre(uid,money,twUserCoin.getUsdt());
+            }
 
-                            //修改订单状态
-                            twLeverOrder.setStatus(2);
-                            twLeverOrder.setIsWin(1);
-                            twLeverOrder.setSellprice(sellprice);
-                            twLeverOrder.setPloss(ploss);
-                            this.updateById(twLeverOrder);
-
-                            //写财务日志
-                            addlog(uid,username,ploss);
-                        }
-
-                        if(kongyk == 2){ //亏损
-                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
-                            if (buyprice.compareTo(newprice) < 0) {
-                                sellprice = newprice;
-                            } else if (newprice.compareTo(buyprice) == 0) {
-                                sellprice = buyprice.add(randnum);
-                            } else if (newprice.compareTo(buyprice) < 0) {
-                                sellprice = buyprice.add(randnum);
-                            }
-
-                            //修改订单状态
-                            twLeverOrder.setStatus(2);
-                            twLeverOrder.setIsWin(2);
-                            twLeverOrder.setSellprice(sellprice);
-                            twLeverOrder.setPloss(ploss);
-                            this.updateById(twLeverOrder);
-
-                            //减少资产
-                            twUserCoinService.decre(uid,ploss,twUserCoin.getUsdt());
-
-                            //写财务日志
-                            addlog(uid,username,ploss);
-                        }
-
-
-                    if(kongyk == 0) {                              //未控
-                        if (buyprice.compareTo(newprice) < 0) {   //亏损
-                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
-                            //修改订单状态
-                            twLeverOrder.setStatus(2);
-                            twLeverOrder.setIsWin(2);
-                            twLeverOrder.setSellprice(sellprice);
-                            twLeverOrder.setPloss(ploss);
-                            this.updateById(twLeverOrder);
-
-                            //减少资产
-                            twUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
-
-                            //写财务日志
-                            addlog(uid, username, ploss);
-
-                        } else if (newprice.compareTo(buyprice) == 0) {
-                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
-                            //修改订单状态
-                            twLeverOrder.setStatus(2);
-                            twLeverOrder.setIsWin(2);
-                            twLeverOrder.setSellprice(sellprice);
-                            twLeverOrder.setPloss(ploss);
-                            this.updateById(twLeverOrder);
-
-                            //减少资产
-                            twUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
-
-                            //写财务日志
-                            addlog(uid, username, ploss);
-
-                        } else if (newprice.compareTo(buyprice) < 0) {   //盈利
-                            BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
-                            BigDecimal money = ploss.add(twLeverOrder.getNum());
-                            //增加资产
-                            twUserCoinService.incre(uid, money, twUserCoin.getUsdt());
-
-                            //修改订单状态
-                            twLeverOrder.setStatus(2);
-                            twLeverOrder.setIsWin(1);
-                            twLeverOrder.setSellprice(sellprice);
-                            twLeverOrder.setPloss(ploss);
-                            this.updateById(twLeverOrder);
-
-                            //写财务日志
-                            addlog(uid, username, ploss);
-                        }
-                    }
+            if(kongyk == 2){ //亏损
+                BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                if (buyprice.compareTo(newprice) < 0) {
+                    sellprice = buyprice.subtract(randnum);
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    sellprice = buyprice.subtract(randnum);
+                } else if (newprice.compareTo(buyprice) < 0) {
+                    sellprice = newprice;
                 }
-                 return ResponseDTO.ok();
+                //修改订单状态
+                twLeverOrder.setStatus(2);
+                twLeverOrder.setIsWin(2);
+                twLeverOrder.setSellprice(sellprice);
+                twLeverOrder.setPloss(ploss);
+                this.updateById(twLeverOrder);
+
+                //减少资产
+                twUserCoinService.decre(uid,ploss,twUserCoin.getUsdt());
+
+                //写财务日志
+                addlog(uid,username,ploss);
+            }
+
+            if(kongyk == 0){   //未控
+                if (buyprice.compareTo(newprice) < 0) {   //盈利
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
+                    BigDecimal money = ploss.add(twLeverOrder.getNum());
+                    //增加资产
+                    twUserCoinService.incre(uid, money, twUserCoin.getUsdt());
+
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(1);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //写财务日志
+                    addlog(uid, username, ploss);
+
+
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(2);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //减少资产
+                    twUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
+
+                    //写财务日志
+                    addlog(uid, username, ploss);
+                } else if (newprice.compareTo(buyprice) < 0) {   //亏损
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(2);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //减少资产
+                    twUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
+
+                    //写财务日志
+                    addlog(uid, username, ploss);
+                }
+            }
+
+        }
+        //买跌
+        if(hyzd == 2){
+            if(kongyk == 1){ //盈利
+
+                BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
+                BigDecimal money = ploss.add(twLeverOrder.getNum());
+
+                if (buyprice.compareTo(newprice) < 0) {
+                    sellprice = buyprice.subtract(randnum);
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    sellprice = buyprice.subtract(randnum);
+                } else if (newprice.compareTo(buyprice) < 0) {
+                    sellprice = newprice;
+                }
+
+                //增加资产
+                twUserCoinService.incre(uid,money,twUserCoin.getUsdt());
+
+                //修改订单状态
+                twLeverOrder.setStatus(2);
+                twLeverOrder.setIsWin(1);
+                twLeverOrder.setSellprice(sellprice);
+                twLeverOrder.setPloss(ploss);
+                this.updateById(twLeverOrder);
+
+                //写财务日志
+                addlog(uid,username,ploss);
+            }
+
+            if(kongyk == 2){ //亏损
+                BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                if (buyprice.compareTo(newprice) < 0) {
+                    sellprice = newprice;
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    sellprice = buyprice.add(randnum);
+                } else if (newprice.compareTo(buyprice) < 0) {
+                    sellprice = buyprice.add(randnum);
+                }
+
+                //修改订单状态
+                twLeverOrder.setStatus(2);
+                twLeverOrder.setIsWin(2);
+                twLeverOrder.setSellprice(sellprice);
+                twLeverOrder.setPloss(ploss);
+                this.updateById(twLeverOrder);
+
+                //减少资产
+                twUserCoinService.decre(uid,ploss,twUserCoin.getUsdt());
+
+                //写财务日志
+                addlog(uid,username,ploss);
+            }
+
+
+            if(kongyk == 0) {                              //未控
+                if (buyprice.compareTo(newprice) < 0) {   //亏损
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(2);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //减少资产
+                    twUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
+
+                    //写财务日志
+                    addlog(uid, username, ploss);
+
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(2);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //减少资产
+                    twUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
+
+                    //写财务日志
+                    addlog(uid, username, ploss);
+
+                } else if (newprice.compareTo(buyprice) < 0) {   //盈利
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
+                    BigDecimal money = ploss.add(twLeverOrder.getNum());
+                    //增加资产
+                    twUserCoinService.incre(uid, money, twUserCoin.getUsdt());
+
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(1);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //写财务日志
+                    addlog(uid, username, ploss);
+                }
+            }
+        }
+        return ResponseDTO.ok();
+    }
+
+
+    public ResponseDTO mockUserCloseorder(TwUser twUser,String language, int lid){
+        Integer uid = twUser.getId();
+        QueryWrapper<TwLeverOrder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid",uid);
+        queryWrapper.eq("id", lid);
+        TwLeverOrder twLeverOrder = this.getOne(queryWrapper);
+        if(twLeverOrder == null){
+            if(language.equals("zh")){
+                return ResponseDTO.ok("没有此订单！");
+            }else{
+                return ResponseDTO.ok("There is no such order！");
+            }
+        }
+
+        if(twLeverOrder.getStatus()!=1){
+            if(language.equals("zh")){
+                return ResponseDTO.ok("订单已结算！");
+            }else{
+                return ResponseDTO.ok("Order settled！");
+            }
+        }
+
+        String coinname = twLeverOrder.getCoinname();
+        String symbol = coinname.toLowerCase().replace("/", "");
+        String url = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
+        BigDecimal newprice = getnewprice(url);
+        // 创建 Random 对象
+        Random random = new Random();
+        // 生成在[0.1, 0.9999]范围内的随机数
+        BigDecimal randnum = new BigDecimal(Double.toString(0.1 + (0.9999 - 0.1) * random.nextDouble()));
+
+        BigDecimal buyprice = twLeverOrder.getBuyprice();   //建仓单价
+        Integer hyzd = twLeverOrder.getHyzd();  //合约方向
+        Integer kongyk = twLeverOrder.getKongyk(); //单控设置
+        String username = twLeverOrder.getUsername();
+//            BigDecimal hybl = twLeverOrder.getHybl();
+//            MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
+//            BigDecimal ylnum = num.multiply(hybl.divide(new BigDecimal(100), mathContext));
+//            BigDecimal money = twLeverOrder.getNum().add(twLeverOrder.getPloss()).subtract(twLeverOrder.getPremium());  //盈利金额
+//            BigDecimal ploss = twLeverOrder.getPloss().subtract(twLeverOrder.getPremium());
+        QueryWrapper<TwMockUserCoin> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.eq("userid",uid);
+        TwMockUserCoin twUserCoin = twMockUserCoinService.getOne(queryWrapper3);
+        BigDecimal sellprice = new BigDecimal(0);
+        MathContext mathContext = new MathContext(2, RoundingMode.HALF_UP);
+        //买涨
+        if(hyzd == 1){
+            if(kongyk == 1){  //盈利
+                BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
+                BigDecimal money = ploss.add(twLeverOrder.getNum());
+
+                if (buyprice.compareTo(newprice) < 0) {
+                    sellprice = newprice;
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    sellprice = newprice.add(randnum);
+                } else if (newprice.compareTo(buyprice) < 0) {
+                    sellprice = buyprice.add(randnum);
+                }
+                //增加资产
+                twMockUserCoinService.incre(uid,money,twUserCoin.getUsdt());
+
+                //修改订单状态
+                twLeverOrder.setStatus(2);
+                twLeverOrder.setIsWin(1);
+                twLeverOrder.setSellprice(sellprice);
+                twLeverOrder.setPloss(ploss);
+                this.updateById(twLeverOrder);
+
+                //写财务日志
+//                addlog(uid,username,ploss);
+
+            }
+
+            if(kongyk == 2){ //亏损
+                BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                if (buyprice.compareTo(newprice) < 0) {
+                    sellprice = buyprice.subtract(randnum);
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    sellprice = buyprice.subtract(randnum);
+                } else if (newprice.compareTo(buyprice) < 0) {
+                    sellprice = newprice;
+                }
+                //修改订单状态
+                twLeverOrder.setStatus(2);
+                twLeverOrder.setIsWin(2);
+                twLeverOrder.setSellprice(sellprice);
+                twLeverOrder.setPloss(ploss);
+                this.updateById(twLeverOrder);
+
+                //减少资产
+                twMockUserCoinService.decre(uid,ploss,twUserCoin.getUsdt());
+
+                //写财务日志
+//                addlog(uid,username,ploss);
+            }
+
+            if(kongyk == 0){   //未控
+                if (buyprice.compareTo(newprice) < 0) {   //盈利
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
+                    BigDecimal money = ploss.add(twLeverOrder.getNum());
+                    //增加资产
+                    twMockUserCoinService.incre(uid, money, twUserCoin.getUsdt());
+
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(1);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //写财务日志
+//                    addlog(uid, username, ploss);
+
+
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(2);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //减少资产
+                    twMockUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
+
+                    //写财务日志
+//                    addlog(uid, username, ploss);
+                } else if (newprice.compareTo(buyprice) < 0) {   //亏损
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(2);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //减少资产
+                    twMockUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
+
+                    //写财务日志
+//                    addlog(uid, username, ploss);
+                }
+            }
+
+        }
+        //买跌
+        if(hyzd == 2){
+            if(kongyk == 1){ //盈利
+
+                BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
+                BigDecimal money = ploss.add(twLeverOrder.getNum());
+
+                if (buyprice.compareTo(newprice) < 0) {
+                    sellprice = buyprice.subtract(randnum);
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    sellprice = buyprice.subtract(randnum);
+                } else if (newprice.compareTo(buyprice) < 0) {
+                    sellprice = newprice;
+                }
+
+                //增加资产
+                twMockUserCoinService.incre(uid,money,twUserCoin.getUsdt());
+
+                //修改订单状态
+                twLeverOrder.setStatus(2);
+                twLeverOrder.setIsWin(1);
+                twLeverOrder.setSellprice(sellprice);
+                twLeverOrder.setPloss(ploss);
+                this.updateById(twLeverOrder);
+
+                //写财务日志
+//                addlog(uid,username,ploss);
+            }
+
+            if(kongyk == 2){ //亏损
+                BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                if (buyprice.compareTo(newprice) < 0) {
+                    sellprice = newprice;
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    sellprice = buyprice.add(randnum);
+                } else if (newprice.compareTo(buyprice) < 0) {
+                    sellprice = buyprice.add(randnum);
+                }
+
+                //修改订单状态
+                twLeverOrder.setStatus(2);
+                twLeverOrder.setIsWin(2);
+                twLeverOrder.setSellprice(sellprice);
+                twLeverOrder.setPloss(ploss);
+                this.updateById(twLeverOrder);
+
+                //减少资产
+                twMockUserCoinService.decre(uid,ploss,twUserCoin.getUsdt());
+
+                //写财务日志
+//                addlog(uid,username,ploss);
+            }
+
+
+            if(kongyk == 0) {                              //未控
+                if (buyprice.compareTo(newprice) < 0) {   //亏损
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(2);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //减少资产
+                    twMockUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
+
+                    //写财务日志
+//                    addlog(uid, username, ploss);
+
+                } else if (newprice.compareTo(buyprice) == 0) {
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getLoss()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold())); //亏损金额
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(2);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //减少资产
+                    twMockUserCoinService.decre(uid, ploss, twUserCoin.getUsdt());
+
+                    //写财务日志
+//                    addlog(uid, username, ploss);
+
+                } else if (newprice.compareTo(buyprice) < 0) {   //盈利
+                    BigDecimal ploss =  twLeverOrder.getNum().multiply(new BigDecimal(twLeverOrder.getWin()).divide(new BigDecimal(100)),mathContext).multiply(new BigDecimal(twLeverOrder.getFold()));  //盈利金额
+                    BigDecimal money = ploss.add(twLeverOrder.getNum());
+                    //增加资产
+                    twMockUserCoinService.incre(uid, money, twUserCoin.getUsdt());
+
+                    //修改订单状态
+                    twLeverOrder.setStatus(2);
+                    twLeverOrder.setIsWin(1);
+                    twLeverOrder.setSellprice(sellprice);
+                    twLeverOrder.setPloss(ploss);
+                    this.updateById(twLeverOrder);
+
+                    //写财务日志
+//                    addlog(uid, username, ploss);
+                }
+            }
+        }
+        return ResponseDTO.ok();
     }
 
     @Override
