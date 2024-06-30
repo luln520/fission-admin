@@ -8,6 +8,7 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TeanResp;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
@@ -1662,10 +1663,32 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public ResponseDTO userTeams(int uid) {
-        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+        TeanResp  teanResp= new TeanResp();
+        QueryWrapper<TwUserTeam> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid", uid);
+        TwUserTeam team = twUserTeamService.getOne(queryWrapper);
+
+        QueryWrapper<TwUserAgent> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.like("path", uid);
-        List<TwUser> list = this.list(queryWrapper1);
-        return ResponseDTO.ok(list);
+        queryWrapper1.ne("one_uid", 0);
+        queryWrapper1.eq("two_uid", 0);
+        queryWrapper1.eq("three_uid", 0);
+        List<TwUserAgent> oneList = twUserAgentService.list(queryWrapper1);
+        QueryWrapper<TwUserAgent> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.like("path", uid);
+        queryWrapper2.ne("two_uid", 0);
+        queryWrapper1.eq("three_uid", 0);
+        List<TwUserAgent> twoList = twUserAgentService.list(queryWrapper2);
+        QueryWrapper<TwUserAgent> queryWrapper3 = new QueryWrapper<>();
+        queryWrapper3.like("path", uid);
+        queryWrapper3.ne("three_uid", 0);
+        List<TwUserAgent> threeList = twUserAgentService.list(queryWrapper3);
+
+        teanResp.setNumCount(team.getTotal());
+        teanResp.setOneTeam(oneList);
+        teanResp.setTwoTeam(twoList);
+        teanResp.setThreeTeam(threeList);
+        return ResponseDTO.ok(teanResp);
     }
 
     @Override
