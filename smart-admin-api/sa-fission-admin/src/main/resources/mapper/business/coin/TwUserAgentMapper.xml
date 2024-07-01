@@ -6,17 +6,17 @@
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent">
         select * from tw_user_agent where 1=1 and company_id  = #{obj.companyId}
-        <if test="obj.uid != null and obj.uid !=''">
-            and uid = #{obj.uid}
+        <if test="obj.username != null and obj.username !=''">
+            and username = #{obj.username}
         </if>
-        <if test="obj.oneUid != null and obj.oneUid !=''">
-            and one_uid = #{obj.oneUid}
+        <if test="obj.oneName != null and obj.oneName !=''">
+            and one_name = #{obj.oneName}
         </if>
-        <if test="obj.twoUid != null and obj.twoUid !=''">
-            and two_uid = #{obj.twoUid}
+        <if test="obj.twoName != null and obj.twoName !=''">
+            and two_name = #{obj.twoName}
         </if>
-        <if test="obj.threeUid != null and obj.threeUid !=''">
-            and three_uid = #{obj.threeUid}
+        <if test="obj.threeName != null and obj.threeName !=''">
+            and three_name = #{obj.threeName}
         </if>
         <if test="obj.employeeId != null and obj.employeeId !=''">
             and path like concat('%',#{obj.employeeId},'%')

@@ -8,14 +8,14 @@ import net.lab1024.sa.common.common.domain.PageParam;
 public class AgentVo extends PageParam {
 
     @ApiModelProperty("会员ID")
-    private Integer uid;
+    private String username;
 
     @ApiModelProperty("一级代理")
-    private Integer oneUid;
+    private String oneName;
 
     @ApiModelProperty("二级代理")
-    private Integer twoUid;
+    private String twoName;
 
     @ApiModelProperty("三级代理")
-    private Integer threeUid;
+    private String threeName;
 }

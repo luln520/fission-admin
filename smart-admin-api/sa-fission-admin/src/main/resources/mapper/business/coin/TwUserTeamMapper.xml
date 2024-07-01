@@ -5,8 +5,8 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserTeamMapper">
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserTeam">
         select * from tw_user_team where 1=1 and company_id  = #{obj.companyId}
-        <if test="obj.userCode != null and obj.userCode !=''">
-            and uid = #{obj.userCode}
+        <if test="obj.username != null and obj.username !=''">
+            and username = #{obj.username}
         </if>
         <if test="obj.employeeId != null and obj.employeeId !=''">
             and path like concat('%',#{obj.employeeId},'%')

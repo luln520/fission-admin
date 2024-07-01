@@ -7,5 +7,5 @@ import net.lab1024.sa.common.common.domain.PageParam;
 @Data
 public class TeamVo extends PageParam {
 
-   private  Integer userCode;
+   private  String username;
 }
