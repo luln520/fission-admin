@@ -1191,9 +1191,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
                             queryTeam.eq("uid", teamuid);
                             TwUserTeam oneTeam = twUserTeamService.getOne(queryTeam);
-                            oneTeam.setVoidNum(oneTeam.getVoidNum()+1);
-                            oneTeam.setTotal(oneTeam.getTotal()+1);
-                            twUserTeamService.updateById(oneTeam);
+                            if(oneTeam != null){
+                                oneTeam.setVoidNum(oneTeam.getVoidNum()+1);
+                                oneTeam.setTotal(oneTeam.getTotal()+1);
+                                twUserTeamService.updateById(oneTeam);
+                            }
                         }
 
                         TwUserAgent twUserAgent = new TwUserAgent();
