@@ -1686,7 +1686,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             oneList = twUserAgentService.list(queryWrapper2);
 
             QueryWrapper<TwUserAgent> queryWrapper3 = new QueryWrapper<>();
-            queryWrapper3.like("three_name", team.getUsername());
+            queryWrapper3.like("two_name", team.getUsername());
+            queryWrapper3.ne("three_uid", 0);
             twoList = twUserAgentService.list(queryWrapper3);
 
             QueryWrapper<TwUserAgent> queryWrapper4 = new QueryWrapper<>();
