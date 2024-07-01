@@ -1668,21 +1668,40 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         queryWrapper.eq("uid", uid);
         TwUserTeam team = twUserTeamService.getOne(queryWrapper);
 
+        List<TwUserAgent> oneList = new ArrayList<>();
+        List<TwUserAgent> twoList = new ArrayList<>();
+        List<TwUserAgent> threeList = new ArrayList<>();
+
         QueryWrapper<TwUserAgent> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.like("path", uid);
-        queryWrapper1.ne("one_uid", 0);
+        queryWrapper1.like("one_name", team.getUsername());
         queryWrapper1.eq("two_uid", 0);
         queryWrapper1.eq("three_uid", 0);
-        List<TwUserAgent> oneList = twUserAgentService.list(queryWrapper1);
-        QueryWrapper<TwUserAgent> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.like("path", uid);
-        queryWrapper2.ne("two_uid", 0);
-        queryWrapper1.eq("three_uid", 0);
-        List<TwUserAgent> twoList = twUserAgentService.list(queryWrapper2);
-        QueryWrapper<TwUserAgent> queryWrapper3 = new QueryWrapper<>();
-        queryWrapper3.like("path", uid);
-        queryWrapper3.ne("three_uid", 0);
-        List<TwUserAgent> threeList = twUserAgentService.list(queryWrapper3);
+         oneList = twUserAgentService.list(queryWrapper1);
+        if(oneList.size() == 0){
+            QueryWrapper<TwUserAgent> queryWrapper2 = new QueryWrapper<>();
+            queryWrapper2.like("two_name", team.getUsername());
+            queryWrapper2.eq("three_uid", 0);
+            oneList = twUserAgentService.list(queryWrapper2);
+
+            QueryWrapper<TwUserAgent> queryWrapper3 = new QueryWrapper<>();
+            queryWrapper3.like("three_name", team.getUsername());
+            twoList = twUserAgentService.list(queryWrapper3);
+
+            QueryWrapper<TwUserAgent> queryWrapper4 = new QueryWrapper<>();
+            queryWrapper4.like("one_name", team.getUsername());
+            threeList = twUserAgentService.list(queryWrapper4);
+
+        }else {
+            QueryWrapper<TwUserAgent> queryWrapper2 = new QueryWrapper<>();
+            queryWrapper2.like("path", uid);
+            queryWrapper2.ne("two_uid", 0);
+            queryWrapper2.eq("three_uid", 0);
+            twoList = twUserAgentService.list(queryWrapper2);
+            QueryWrapper<TwUserAgent> queryWrapper3 = new QueryWrapper<>();
+            queryWrapper3.like("path", uid);
+            queryWrapper3.ne("three_uid", 0);
+            threeList = twUserAgentService.list(queryWrapper3);
+        }
 
         teanResp.setNumCount(team.getTotal());
         teanResp.setOneTeam(oneList);
