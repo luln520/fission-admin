@@ -1682,8 +1682,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 Integer uid1 = twUserInvite.getUid();
                 QueryWrapper<TwUserAgent> queryWrapper2 = new QueryWrapper<>();
                 queryWrapper2.eq("uid", uid1);
-                oneList = twUserAgentService.list(queryWrapper2);
-
+                TwUserAgent one = twUserAgentService.getOne(queryWrapper2);
+                oneList.add(one);
                 QueryWrapper<TwUserInvite> queryWrapper3 = new QueryWrapper<>();
                 queryWrapper3.eq("invit_uid", uid1);
                 List<TwUserInvite> list2 = twUserInviteService.list(queryWrapper3);
@@ -1692,8 +1692,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         Integer uid2 = twUserInvite1.getUid();
                         QueryWrapper<TwUserAgent> queryWrapper4 = new QueryWrapper<>();
                         queryWrapper4.eq("uid", uid2);
-                        twoList = twUserAgentService.list(queryWrapper4);
-
+                        TwUserAgent one1 = twUserAgentService.getOne(queryWrapper4);
+                        twoList.add(one1);
                         QueryWrapper<TwUserInvite> queryWrapper5 = new QueryWrapper<>();
                         queryWrapper5.eq("invit_uid", uid2);
                         List<TwUserInvite> list3 = twUserInviteService.list(queryWrapper5);
@@ -1702,7 +1702,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                                 Integer uid3 = twUserInvite3.getUid();
                                 QueryWrapper<TwUserAgent> queryWrapper6 = new QueryWrapper<>();
                                 queryWrapper6.eq("uid", uid3);
-                                threeList = twUserAgentService.list(queryWrapper6);
+                                TwUserAgent one2 = twUserAgentService.getOne(queryWrapper6);
+                                threeList.add(one2);
                             }
                         }
                     }
