@@ -17,6 +17,7 @@ import java.util.List;
 * @createDate 2024-07-03 14:47:22
 * @Entity generator.domain.TwInviteSet
 */
+
 @Mapper
 public interface TwInviteSetMapper extends BaseMapper<TwInviteSet> {
 
