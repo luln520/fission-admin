@@ -102,6 +102,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String TW_USERTEAM = "后台-会员团队";
 
+        public static final String TW_USERTEAMSET = "后台-会员团队规则";
+
         public static final String TW_USERLOG = "后台-会员登录日志";
 
         public static final String TW_USERQIANBAO = "后台-用户钱包";
