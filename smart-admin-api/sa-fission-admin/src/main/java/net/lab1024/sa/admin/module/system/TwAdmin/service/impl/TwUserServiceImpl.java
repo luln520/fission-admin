@@ -947,25 +947,25 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             TwCompany company = twCompanyService.getById(companyId);
             int inviteType = company.getInviteType();
 
-//            //验证码
-//            if(storedCaptcha == null) {
-//                if (userReq.getLanguage().equals("zh")) {
-//                    return ResponseDTO.userErrorParam("验证码错误或过期！");
-//                } else {
-//                    return ResponseDTO.userErrorParam("Verification code is wrong or expired");
-//                }
-//            }
-//
-//            if(storedCaptcha != null){
-//                if (!storedCaptcha.equals(regcode)) {
-//                    // 验证码正确，移除验证码以防止重复使用
-//                    if(language.equals("zh")){
-//                        return ResponseDTO.userErrorParam("验证码错误或过期！");
-//                    }else{
-//                        return ResponseDTO.userErrorParam("Verification code is wrong or expired");
-//                    }
-//                }
-//            }
+            //验证码
+            if(storedCaptcha == null) {
+                if (userReq.getLanguage().equals("zh")) {
+                    return ResponseDTO.userErrorParam("验证码错误或过期！");
+                } else {
+                    return ResponseDTO.userErrorParam("Verification code is wrong or expired");
+                }
+            }
+
+            if(storedCaptcha != null){
+                if (!storedCaptcha.equals(regcode)) {
+                    // 验证码正确，移除验证码以防止重复使用
+                    if(language.equals("zh")){
+                        return ResponseDTO.userErrorParam("验证码错误或过期！");
+                    }else{
+                        return ResponseDTO.userErrorParam("Verification code is wrong or expired");
+                    }
+                }
+            }
 
             if(StringUtils.isEmpty(password)){
                 if(language.equals("zh")){
