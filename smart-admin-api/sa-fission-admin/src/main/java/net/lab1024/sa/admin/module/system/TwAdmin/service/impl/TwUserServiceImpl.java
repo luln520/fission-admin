@@ -1683,6 +1683,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 QueryWrapper<TwUserAgent> queryWrapper2 = new QueryWrapper<>();
                 queryWrapper2.eq("uid", uid1);
                 TwUserAgent one = twUserAgentService.getOne(queryWrapper2);
+                int atIndex = one.getOneName().indexOf('@');
+                String modifiedEmail;
+                if (atIndex != -1) {
+                    modifiedEmail =  one.getOneName().substring(0, atIndex);
+                } else {
+                    modifiedEmail =  one.getOneName(); // 如果没有找到@，保留原字符串
+                }
+                one.setOneName(modifiedEmail);
                 oneList.add(one);
                 QueryWrapper<TwUserInvite> queryWrapper3 = new QueryWrapper<>();
                 queryWrapper3.eq("invit_uid", uid1);
@@ -1693,6 +1701,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         QueryWrapper<TwUserAgent> queryWrapper4 = new QueryWrapper<>();
                         queryWrapper4.eq("uid", uid2);
                         TwUserAgent one1 = twUserAgentService.getOne(queryWrapper4);
+                        int atIndex2 = one1.getTwoName().indexOf('@');
+                        String modifiedEmail2;
+                        if (atIndex2 != -1) {
+                            modifiedEmail2 =  one1.getTwoName().substring(0, atIndex2);
+                        } else {
+                            modifiedEmail2 =  one1.getTwoName(); // 如果没有找到@，保留原字符串
+                        }
+                        one1.setTwoName(modifiedEmail2);
                         twoList.add(one1);
                         QueryWrapper<TwUserInvite> queryWrapper5 = new QueryWrapper<>();
                         queryWrapper5.eq("invit_uid", uid2);
@@ -1703,6 +1719,14 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                                 QueryWrapper<TwUserAgent> queryWrapper6 = new QueryWrapper<>();
                                 queryWrapper6.eq("uid", uid3);
                                 TwUserAgent one2 = twUserAgentService.getOne(queryWrapper6);
+                                int atIndex3 = one2.getThreeName().indexOf('@');
+                                String modifiedEmail3;
+                                if (atIndex3 != -1) {
+                                    modifiedEmail3 =  one2.getThreeName().substring(0, atIndex3);
+                                } else {
+                                    modifiedEmail3 =  one2.getThreeName(); // 如果没有找到@，保留原字符串
+                                }
+                                one2.setThreeName(modifiedEmail3);
                                 threeList.add(one2);
                             }
                         }
