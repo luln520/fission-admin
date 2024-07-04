@@ -41,6 +41,10 @@ public class TwInviteSet implements Serializable {
     */
     @ApiModelProperty("最高人数")
     private Integer max;
+
+    @ApiModelProperty("公司id")
+    private Integer companyId;
+
     @ApiModelProperty("排序")
     private Integer sort;
     /**
