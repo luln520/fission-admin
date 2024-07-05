@@ -1,7 +1,7 @@
 spring:
   # 数据库连接信息
   datasource:
-    url: jdbc:mysql://206.238.199.177:3306/fission_admin_v2?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://154.82.113.95:3306/fission_admin_v2?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: fission_admin_v2
     password: yBx7EtPjK2jhCRDX
     initial-size: 10
