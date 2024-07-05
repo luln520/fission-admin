@@ -33,7 +33,9 @@ public class RedissonConfig {
         Config config = new Config();
         config.useSingleServer()
                 .setAddress("redis://206.238.199.169:6379")
+//                .setAddress("redis://154.82.113.95:6379")
                 .setPassword("coin_123456"); // 如果设置了密码
+//                .setPassword("yBx7EtPjK2jhCRDX"); // 如果设置了密码
 
         return Redisson.create(config);
 
