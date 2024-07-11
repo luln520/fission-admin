@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 交易中心
@@ -136,8 +137,8 @@ public class TwTradeController {
     @GetMapping("/editKongyK")
     @ResponseBody
     @ApiOperation(value = "合约单控盈亏 设置")
-    public ResponseDTO editKongyK(@RequestParam Integer kongyk,@RequestParam int id) {
-        return ResponseDTO.ok(twHyorderService.editKongyK(kongyk,id));
+    public ResponseDTO editKongyK(@RequestParam Integer kongyk,@RequestParam List<Integer> ids) {
+        return ResponseDTO.ok(twHyorderService.editKongyK(kongyk,ids));
     }
 
 

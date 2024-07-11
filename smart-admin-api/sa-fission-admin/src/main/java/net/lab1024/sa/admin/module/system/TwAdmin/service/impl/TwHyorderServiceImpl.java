@@ -372,12 +372,15 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
-    public boolean editKongyK(Integer kongyk, int id) {
-        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id); // 添加查询条件
-        TwHyorder one = this.getOne(queryWrapper);
-        one.setKongyk(kongyk);
-        return this.updateById(one);
+    public boolean editKongyK(Integer kongyk, List<Integer> ids) {
+        for(int id:ids){
+            QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", id); // 添加查询条件
+            TwHyorder one = this.getOne(queryWrapper);
+            one.setKongyk(kongyk);
+            return this.updateById(one);
+        }
+        return true;
     }
 
     @Override
