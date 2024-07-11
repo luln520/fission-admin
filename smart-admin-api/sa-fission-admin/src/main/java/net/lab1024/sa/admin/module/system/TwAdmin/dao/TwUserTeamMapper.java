@@ -2,6 +2,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserTeam;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AgentVo;
@@ -21,6 +22,7 @@ import java.util.List;
 public interface TwUserTeamMapper extends BaseMapper<TwUserTeam> {
 
     List<TwUserTeam> listpage(@Param("objectPage") Page<TwUserTeam> objectPage, @Param("obj") TeamVo teamVo);
+    List<TwUser> teamlist(@Param("objectPage") Page<TwUser> objectPage, @Param("obj") TeamVo teamVo);
 }
 
 

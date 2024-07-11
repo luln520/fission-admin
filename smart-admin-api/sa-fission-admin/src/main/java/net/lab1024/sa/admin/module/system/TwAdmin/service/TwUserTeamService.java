@@ -2,6 +2,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserTeam;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AgentVo;
@@ -17,4 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 public interface TwUserTeamService extends IService<TwUserTeam> {
 
     IPage<TwUserTeam> listpage(TeamVo teamVo, HttpServletRequest request);
+
+    IPage<TwUser> teamlist(TeamVo teamVo, HttpServletRequest request);
 }

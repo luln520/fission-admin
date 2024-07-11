@@ -8,4 +8,6 @@ import net.lab1024.sa.common.common.domain.PageParam;
 public class TeamVo extends PageParam {
 
    private  String username;
+
+   private int uid;
 }

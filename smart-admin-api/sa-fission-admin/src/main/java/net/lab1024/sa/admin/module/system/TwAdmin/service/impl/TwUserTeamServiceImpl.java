@@ -123,6 +123,13 @@ public class TwUserTeamServiceImpl extends ServiceImpl<TwUserTeamMapper, TwUserT
         }
         return null;
     }
+
+    @Override
+    public IPage<TwUser> teamlist(TeamVo teamVo, HttpServletRequest request) {
+        Page<TwUser> objectPage = new Page<>(teamVo.getPageNum(), teamVo.getPageSize());
+        objectPage.setRecords(baseMapper.teamlist(objectPage, teamVo));
+        return objectPage;
+    }
 }
 
 
