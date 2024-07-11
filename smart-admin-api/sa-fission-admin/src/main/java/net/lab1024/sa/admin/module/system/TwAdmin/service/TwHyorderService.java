@@ -32,6 +32,9 @@ public interface TwHyorderService extends IService<TwHyorder> {
     int countHyOrdersDay(String startTime, String endTime,int companyId);
 
 
+    BigDecimal orderSum(int companyId);
+
+    BigDecimal orderDay(String startTime, String endTime,int companyId);
     BigDecimal winLosshyAllOrders(int companyId);
 
     BigDecimal winLosshyDayOrders(String startTime, String endTime,int companyId);

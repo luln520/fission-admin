@@ -54,13 +54,19 @@ public class TwReport implements Serializable {
     /**
     * 下单总额
     */
-    @ApiModelProperty("下单总额")
+    @ApiModelProperty("日下单额")
     private BigDecimal orderNum;
+
+    @ApiModelProperty("下单总额")
+    private BigDecimal orderSum;
     /**
     * 盈亏总额
     */
-    @ApiModelProperty("盈亏总额")
+    @ApiModelProperty("日盈亏额")
     private BigDecimal profitNum;
+
+    @ApiModelProperty("盈亏总额")
+    private BigDecimal profitSum;
     /**
     * 充值人数
     */

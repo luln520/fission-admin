@@ -931,6 +931,14 @@ public class TimerServiceImpl {
             int hyOrders = 0;//rechargeDao.sumDayRecharge(startTime, endTime);
             hyOrders = twHyorderService.countHyOrdersDay(startTime, endTime,companyId);
 
+            // 查询合约总下单额
+            BigDecimal orderSum = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
+            orderSum = twHyorderService.orderSum(companyId);
+
+            // 查询合约今日下单额
+            BigDecimal orderDay = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
+            orderDay = twHyorderService.orderDay(startTime, endTime,companyId);
+
             // 查询合约总盈亏
             BigDecimal winLosshyAllOrders = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
             winLosshyAllOrders = twHyorderService.winLosshyAllOrders(companyId);
@@ -989,7 +997,10 @@ public class TimerServiceImpl {
                 twReport.setRegistrant(todayUser);
                 twReport.setOrders(hyOrders);
                 twReport.setOrderTotal(allHyOrders);
-                twReport.setOrderNum(winLosshyDayOrders);
+                twReport.setOrderNum(orderDay);
+                twReport.setOrderSum(orderSum);
+                twReport.setProfitNum(winLosshyDayOrders);
+                twReport.setProfitSum(winLosshyAllOrders);
                 twReport.setRecharge(usercz);
                 twReport.setRechargeTotal(userczTotal);
                 twReport.setRechargeNum(dayRecharge);
@@ -1011,7 +1022,10 @@ public class TimerServiceImpl {
                 one.setRegistrant(todayUser);
                 one.setOrders(hyOrders);
                 one.setOrderTotal(allHyOrders);
-                one.setOrderNum(winLosshyDayOrders);
+                one.setOrderNum(orderDay);
+                one.setOrderSum(orderSum);
+                one.setProfitNum(winLosshyDayOrders);
+                one.setProfitSum(winLosshyAllOrders);
                 one.setRecharge(usercz);
                 one.setRechargeTotal(userczTotal);
                 one.setRechargeNum(dayRecharge);
