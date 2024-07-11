@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/admin/ctmarketConfig")
+@RequestMapping("/api/admin/copytake")
 @Api(tags = {AdminSwaggerTagConst.System.TW_COPYTAKE})
 public class TwCopyTakeController {
 

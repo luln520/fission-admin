@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/admin/ctmarketConfig")
+@RequestMapping("/api/admin/copyorder")
 @Api(tags = {AdminSwaggerTagConst.System.TW_COPYORDER})
 public class TwCopyOrderController {
 
