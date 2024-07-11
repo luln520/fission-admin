@@ -95,6 +95,66 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
+    public BigDecimal orderSum(int companyId) {
+        BigDecimal winHyorder = new BigDecimal(0);
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(num), 0) as winHyorder")
+                .eq("status", 2)
+                .eq("company_id", companyId);
+
+        List<Map<String, Object>> winHyorderResult = this.baseMapper.selectMaps(queryWrapper);
+        if (winHyorderResult.isEmpty()) {
+            winHyorder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object winHyorderObject = winHyorderResult.get(0).get("winHyorder");
+        if (winHyorderObject instanceof BigDecimal) {
+            winHyorder =  ((BigDecimal) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Long) {
+            winHyorder =  BigDecimal.valueOf((Long) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Integer) {
+            winHyorder =  BigDecimal.valueOf((Integer) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            winHyorder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        return winHyorder;
+
+    }
+
+    @Override
+    public BigDecimal orderDay(String startTime, String endTime, int companyId) {
+        BigDecimal winHyorder = new BigDecimal(0);
+        BigDecimal lossHyorder = new BigDecimal(0);
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(ploss), 0) as winHyorder")
+                .eq("status", 2)
+                .ge("buytime", startTime)
+                .le("buytime", endTime)
+                .eq("company_id", companyId);
+
+        List<Map<String, Object>> winHyorderResult = this.baseMapper.selectMaps(queryWrapper);
+        if (winHyorderResult.isEmpty()) {
+            winHyorder = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object winHyorderObject = winHyorderResult.get(0).get("winHyorder");
+        if (winHyorderObject instanceof BigDecimal) {
+            winHyorder =  ((BigDecimal) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Long) {
+            winHyorder =  BigDecimal.valueOf((Long) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (winHyorderObject instanceof Integer) {
+            winHyorder =  BigDecimal.valueOf((Integer) winHyorderObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            winHyorder =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+          return winHyorder;
+    }
+
+    @Override
     public BigDecimal winLosshyAllOrders(int companyId) {
 
         BigDecimal winHyorder = new BigDecimal(0);
@@ -124,7 +184,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
 
         QueryWrapper<TwHyorder> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.select("IFNULL(SUM(num), 0) as lossHyorder")
+        queryWrapper1.select("IFNULL(SUM(ploss), 0) as lossHyorder")
                 .eq("is_win", 2)
                 .eq("company_id", companyId)
                 .eq("status", 2);
@@ -183,7 +243,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
 
         QueryWrapper<TwHyorder> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.select("IFNULL(SUM(num), 0) as lossHyorder")
+        queryWrapper1.select("IFNULL(SUM(ploss), 0) as lossHyorder")
                 .eq("is_win", 2)
                 .ge("buytime", startTime)
                 .le("buytime", endTime)
@@ -372,12 +432,15 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
-    public boolean editKongyK(Integer kongyk, int id) {
-        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id); // 添加查询条件
-        TwHyorder one = this.getOne(queryWrapper);
-        one.setKongyk(kongyk);
-        return this.updateById(one);
+    public boolean editKongyK(Integer kongyk, List<Integer> ids) {
+        for(int id:ids){
+            QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("id", id); // 添加查询条件
+            TwHyorder one = this.getOne(queryWrapper);
+            one.setKongyk(kongyk);
+            return this.updateById(one);
+        }
+        return true;
     }
 
     @Override

@@ -70,6 +70,13 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String TW_CTMARKET = "后台-市场配置";
 
+        public static final String TW_COPYORDER = "后台-跟单员";
+
+        public static final String TW_COPYTAKE = "后台-接单员";
+
+
+        public static final String TW_COPYSET = "后台-接单设置";
+
         public static final String TW_CURRENCY = "后台-货币配置";
 
         public static final String TW_FINANCE = "后台-财务记录";

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserTeam;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AgentVo;
@@ -32,5 +33,11 @@ public class TwUserTeamController {
     @ApiOperation(value = "会员代理列表")
     public ResponseDTO<IPage<TwUserTeam>> listpage(@Valid @RequestBody TeamVo teamVo, HttpServletRequest request) {
         return ResponseDTO.ok(twUserTeamService.listpage(teamVo,request));
+    }
+
+    @PostMapping("/teamlist")
+    @ApiOperation(value = "查看团队成员")
+    public ResponseDTO<IPage<TwUser>> teamlist(@Valid @RequestBody TeamVo teamVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twUserTeamService.teamlist(teamVo,request));
     }
 }
