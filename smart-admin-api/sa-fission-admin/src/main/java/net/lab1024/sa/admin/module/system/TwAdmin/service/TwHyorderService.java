@@ -53,7 +53,7 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     IPage<TwHyorder> listpage(TwHyorderVo twHyorderVo, HttpServletRequest request);
 
-    boolean editKongyK(Integer kongyk, List<Integer> ids);
+    boolean editKongyK(Integer kongyk, String ids);
 
     ResponseDTO creatorder(int uid,String ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl,String language);
 
