@@ -434,7 +434,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     @Override
     public boolean editKongyK(Integer kongyk, String ids) {
         String[] split = ids.split(",");
-        for(int i = 0 ; i<split.length - 1 ; i++){
+        for(int i = 0 ; i<split.length ; i++){
             QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", split[i]); // 添加查询条件
             TwHyorder one = this.getOne(queryWrapper);
