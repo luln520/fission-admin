@@ -439,7 +439,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             queryWrapper.eq("id", split[i]); // 添加查询条件
             TwHyorder one = this.getOne(queryWrapper);
             one.setKongyk(kongyk);
-            return this.updateById(one);
+            this.updateById(one);
         }
         return true;
     }
