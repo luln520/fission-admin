@@ -137,7 +137,7 @@ public class TwTradeController {
     @GetMapping("/editKongyK")
     @ResponseBody
     @ApiOperation(value = "合约单控盈亏 设置")
-    public ResponseDTO editKongyK(@RequestParam Integer kongyk,@RequestParam List<Integer> ids) {
+    public ResponseDTO editKongyK(@RequestParam Integer kongyk,@RequestParam String ids) {
         return ResponseDTO.ok(twHyorderService.editKongyK(kongyk,ids));
     }
 
