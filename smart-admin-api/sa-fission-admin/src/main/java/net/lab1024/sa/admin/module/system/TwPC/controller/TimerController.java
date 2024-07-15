@@ -28,7 +28,7 @@ public class TimerController {
         timerService.hycarryout();
     }
 
-    @Scheduled(cron = "*/5 * * * * ?")
+    @Scheduled(cron = "0 0 1 1 * ?")
     public void mockhycarryout()  {
         timerService.mockhycarryout();
     }
