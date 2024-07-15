@@ -74,6 +74,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     @Autowired
     private TwCompanyService twCompanyService;
 
+    @Autowired
+    private TwMockUserCoinService twMockUserCoinService;
+
     @Override
     public int countUnClosedOrders(int companyId) {
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
@@ -647,9 +650,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         }
 
         //获取会员资产
-        QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
+        QueryWrapper<TwMockUserCoin> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("userid", uid); // 添加查询条件
-        TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
+        TwMockUserCoin twMockUserCoin = twMockUserCoinService.getOne(queryWrapper1);
 
 //        if(twUser.getRzstatus() != 2){
 //            if(language.equals("zh")){
@@ -678,7 +681,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 //            queryWrapper2.eq("id", companyId); // 添加查询条件
         BigDecimal hyFee = company.getHyFee();
         BigDecimal tmoneys= ctzed.add(hyFee);
-        if(twUserCoin.getUsdt().compareTo(tmoneys) < 0){
+        if(twMockUserCoin.getUsdt().compareTo(tmoneys) < 0){
             if(language.equals("zh")){
                 return ResponseDTO.userErrorParam("余额不足！");
             }else{
@@ -751,7 +754,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setCompanyId(twUser.getCompanyId());
         twHyorder.setUserCode(twUser.getUserCode());
         twHyorder.setHyzd(ctzfx);
-        twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
+        twHyorder.setBuyOrblance(twMockUserCoin.getUsdt().subtract(tmoneys));
         twHyorder.setCoinname(ccoinname);
         twHyorder.setStatus(1);
         twHyorder.setIsWin(0);
@@ -769,7 +772,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setInvit(invite);
         this.save(twHyorder);
         //扣除USDT额度
-        twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
+        twMockUserCoinService.decre(uid,tmoneys,twMockUserCoin.getUsdt());
 
 //        //创建财务日志
 //        TwBill twBill = new TwBill();
