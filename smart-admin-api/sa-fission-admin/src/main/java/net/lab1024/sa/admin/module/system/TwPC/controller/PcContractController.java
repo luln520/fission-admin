@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -101,9 +102,11 @@ public class PcContractController {
                                   @RequestParam BigDecimal ctzed,
                                   @RequestParam String ccoinname,
                                   @RequestParam int ctzfx,
+                                  @RequestParam Date plantime,
+                                  @RequestParam int intplantime,
                                   @RequestParam BigDecimal cykbl,
                                   @RequestParam String language){
-        return twHyorderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl,language);
+        return twHyorderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl,language, plantime, intplantime);
     }
 
     @GetMapping("/orderNo")

@@ -448,23 +448,23 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
-    public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language) {
+    public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, Date plantime,int intplantime) {
 
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", uid); // 添加查询条件
             TwUser twUser = twUserService.getOne(queryWrapper);
             Integer userType = twUser.getUserType();
             if(userType == 1){
-                return userOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language) ;
+                return userOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language,  plantime, intplantime) ;
             }
             if(userType == 2){
-               return mockUserOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language) ;
+               return mockUserOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language, plantime, intplantime) ;
             }
 
             return null;
     }
 
-    public ResponseDTO userOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language){
+    public ResponseDTO userOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, Date plantime,int intplantime){
 
         Integer uid = twUser.getId();
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
@@ -590,7 +590,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setHyzd(ctzfx);
         twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
         twHyorder.setCoinname(ccoinname);
-        twHyorder.setStatus(1);
+        twHyorder.setStatus(0);
         twHyorder.setIsWin(0);
         twHyorder.setOrderType(1);
         twHyorder.setPath(twUser.getPath());
@@ -630,7 +630,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             return ResponseDTO.ok(orderNo);
         }
     }
-    public ResponseDTO mockUserOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language){
+    public ResponseDTO mockUserOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, Date plantime,int intplantime){
         Integer uid = twUser.getId();
 
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
