@@ -774,6 +774,33 @@ public class TimerServiceImpl {
         }
     }
 
+    public  void hycarryplanout() {
+        long nowtime = System.currentTimeMillis()/1000;
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status",0);
+        queryWrapper.eq("order_type",1);
+        queryWrapper.le("intplantime", nowtime);
+        List<TwHyorder> list = twHyorderService.list(queryWrapper);
+
+        for (TwHyorder twHyorder:list){
+            twHyorder.setStatus(1);
+            twHyorderService.updateById(twHyorder);
+        }
+    }
+    public  void mockhycarryplanout() {
+        long nowtime = System.currentTimeMillis()/1000;
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status",0);
+        queryWrapper.eq("order_type",2);
+        queryWrapper.le("intplantime", nowtime);
+        List<TwHyorder> list = twHyorderService.list(queryWrapper);
+
+        for (TwHyorder twHyorder:list){
+            twHyorder.setStatus(1);
+            twHyorderService.updateById(twHyorder);
+        }
+    }
+
 
     public  void mockhycarryout() {
         long nowtime = System.currentTimeMillis()/1000;

@@ -535,7 +535,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
 
         int time = 0;
-        Date selltime = new Date();
+        Date selltime = plantime;
         // 使用正则表达式分割字符串，非数字字符作为分隔符
         String[] parts = ctime.split("\\D+");
 
@@ -592,6 +592,8 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setCoinname(ccoinname);
         twHyorder.setStatus(0);
         twHyorder.setIsWin(0);
+        twHyorder.setPlantime(plantime);
+        twHyorder.setIntplantime(intplantime);
         twHyorder.setOrderType(1);
         twHyorder.setPath(twUser.getPath());
         twHyorder.setDepartment(twUser.getDepatmentId());
@@ -701,7 +703,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
 
         int time = 0;
-        Date selltime = new Date();
+        Date selltime = plantime;
         // 使用正则表达式分割字符串，非数字字符作为分隔符
         String[] parts = ctime.split("\\D+");
 
@@ -756,8 +758,10 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setHyzd(ctzfx);
         twHyorder.setBuyOrblance(twMockUserCoin.getUsdt().subtract(tmoneys));
         twHyorder.setCoinname(ccoinname);
-        twHyorder.setStatus(1);
+        twHyorder.setStatus(0);
         twHyorder.setIsWin(0);
+        twHyorder.setPlantime(plantime);
+        twHyorder.setIntplantime(intplantime);
         twHyorder.setOrderType(2);
         twHyorder.setPath(twUser.getPath());
         twHyorder.setDepartment(twUser.getDepatmentId());

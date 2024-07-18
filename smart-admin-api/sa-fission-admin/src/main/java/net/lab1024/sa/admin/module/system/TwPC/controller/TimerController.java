@@ -28,12 +28,21 @@ public class TimerController {
         timerService.hycarryout();
     }
 
+    @Scheduled(cron = "*/5 * * * * ?")
+    public void hycarryplanout()  {
+        timerService.hycarryplanout();
+    }
+
 //    @Scheduled(cron = "0 0 1 1 * ?")
     @Scheduled(cron = "*/5 * * * * ?")
     public void mockhycarryout()  {
         timerService.mockhycarryout();
     }
 
+    @Scheduled(cron = "*/5 * * * * ?")
+    public void mockhycarryplanout()  {
+        timerService.mockhycarryplanout();
+    }
 
 //    @Scheduled(cron = "0 */5 * * * ?")
     @Scheduled(cron = "0 */1 * * * ?")
