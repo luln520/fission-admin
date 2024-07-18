@@ -103,6 +103,12 @@ public class TwHyorder implements Serializable {
     */
     @ApiModelProperty("结算单价")
     private BigDecimal sellprice;
+
+    @ApiModelProperty("计划时间")
+    private Date plantime;
+
+    @ApiModelProperty("计划时间戳")
+    private Integer intplantime;
     /**
     * 盈亏金额
     */
