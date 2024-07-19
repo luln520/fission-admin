@@ -260,6 +260,7 @@ public class DateUtil {
 
         // 创建一个Calendar对象，并将其设置为当前时间
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, -12);
         calendar.setTime(date);
 
         if(type.equals("S")){    //秒

@@ -102,7 +102,7 @@ public class PcContractController {
                                   @RequestParam BigDecimal ctzed,
                                   @RequestParam String ccoinname,
                                   @RequestParam int ctzfx,
-                                  @RequestParam Date plantime,
+                                  @RequestParam String plantime,
                                   @RequestParam int intplantime,
                                   @RequestParam BigDecimal cykbl,
                                   @RequestParam String language){

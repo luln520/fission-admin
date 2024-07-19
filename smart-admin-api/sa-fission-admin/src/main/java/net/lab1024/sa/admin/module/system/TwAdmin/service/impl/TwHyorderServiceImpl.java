@@ -448,7 +448,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
-    public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, Date plantime,int intplantime) {
+    public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime,int intplantime) {
 
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", uid); // 添加查询条件
@@ -464,7 +464,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             return null;
     }
 
-    public ResponseDTO userOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, Date plantime,int intplantime){
+    public ResponseDTO userOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime,int intplantime){
 
         Integer uid = twUser.getId();
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
@@ -535,7 +535,8 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
 
         int time = 0;
-        Date selltime = plantime;
+        Date plandate = DateUtil.str2DateTime(plantime);
+        Date selltime = plandate;
         // 使用正则表达式分割字符串，非数字字符作为分隔符
         String[] parts = ctime.split("\\D+");
 
@@ -555,22 +556,22 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
         String upperCase = nonDigits.toUpperCase();
         if(upperCase.contains("S")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }else if(upperCase.contains("M")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         } else if(upperCase.contains("H")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }else if(upperCase.contains("DAY")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }
         else if(upperCase.contains("WEEK")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }
         else if(upperCase.contains("MON")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }
         else if(upperCase.contains("YEAR")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }else{
             if(language.equals("zh")){
                 return ResponseDTO.userErrorParam("结算周期有误！");
@@ -592,7 +593,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setCoinname(ccoinname);
         twHyorder.setStatus(0);
         twHyorder.setIsWin(0);
-        twHyorder.setPlantime(plantime);
+        twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
         twHyorder.setIntplantime(intplantime);
         twHyorder.setOrderType(1);
         twHyorder.setPath(twUser.getPath());
@@ -632,7 +633,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             return ResponseDTO.ok(orderNo);
         }
     }
-    public ResponseDTO mockUserOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, Date plantime,int intplantime){
+    public ResponseDTO mockUserOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime,int intplantime){
         Integer uid = twUser.getId();
 
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
@@ -703,7 +704,8 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
 
         int time = 0;
-        Date selltime = plantime;
+        Date plandate = DateUtil.str2DateTime(plantime);
+        Date selltime = plandate;
         // 使用正则表达式分割字符串，非数字字符作为分隔符
         String[] parts = ctime.split("\\D+");
 
@@ -723,22 +725,22 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
         String upperCase = nonDigits.toUpperCase();
         if(upperCase.contains("S")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }else if(upperCase.contains("M")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         } else if(upperCase.contains("H")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }else if(upperCase.contains("DAY")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }
         else if(upperCase.contains("WEEK")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }
         else if(upperCase.contains("MON")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }
         else if(upperCase.contains("YEAR")){
-            selltime = DateUtil.dateToDate(new Date(),time,upperCase);
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
         }else{
             if(language.equals("zh")){
                 return ResponseDTO.userErrorParam("结算周期有误！");
@@ -760,7 +762,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setCoinname(ccoinname);
         twHyorder.setStatus(0);
         twHyorder.setIsWin(0);
-        twHyorder.setPlantime(plantime);
+        twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
         twHyorder.setIntplantime(intplantime);
         twHyorder.setOrderType(2);
         twHyorder.setPath(twUser.getPath());

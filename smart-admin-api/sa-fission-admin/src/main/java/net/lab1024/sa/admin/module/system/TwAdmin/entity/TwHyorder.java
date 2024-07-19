@@ -108,7 +108,7 @@ public class TwHyorder implements Serializable {
     private Date plantime;
 
     @ApiModelProperty("计划时间戳")
-    private Integer intplantime;
+    private int intplantime;
     /**
     * 盈亏金额
     */

@@ -772,7 +772,11 @@ public class TimerServiceImpl {
     }
 
     public  void hycarryplanout() {
-        long nowtime = System.currentTimeMillis()/1000;
+        Instant now = Instant.now();
+
+        // 将当前时间戳减去12个小时
+        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",0);
         queryWrapper.eq("order_type",1);
