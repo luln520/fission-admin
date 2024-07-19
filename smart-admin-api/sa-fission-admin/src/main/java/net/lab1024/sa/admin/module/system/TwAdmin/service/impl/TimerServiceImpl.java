@@ -325,7 +325,11 @@ public class TimerServiceImpl {
 //    }
 
     public  void hycarryout() {
-        long nowtime = System.currentTimeMillis()/1000;
+        Instant now = Instant.now();
+
+        // 将当前时间戳减去12个小时
+        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
         queryWrapper.eq("order_type",1);
@@ -789,7 +793,11 @@ public class TimerServiceImpl {
         }
     }
     public  void mockhycarryplanout() {
-        long nowtime = System.currentTimeMillis()/1000;
+        Instant now = Instant.now();
+
+        // 将当前时间戳减去12个小时
+        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",0);
         queryWrapper.eq("order_type",2);
@@ -804,7 +812,11 @@ public class TimerServiceImpl {
 
 
     public  void mockhycarryout() {
-        long nowtime = System.currentTimeMillis()/1000;
+        Instant now = Instant.now();
+
+        // 将当前时间戳减去12个小时
+        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
         queryWrapper.eq("order_type",2);
