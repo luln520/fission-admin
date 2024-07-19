@@ -597,7 +597,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setOrderType(1);
         twHyorder.setPath(twUser.getPath());
         twHyorder.setDepartment(twUser.getDepatmentId());
-        twHyorder.setBuytime(new Date());
+        twHyorder.setBuytime(DateUtil.stract12());
         twHyorder.setSelltime(selltime);
         twHyorder.setIntselltime((int) (selltime.getTime()/1000));
         twHyorder.setBuyprice(close);
@@ -765,7 +765,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setOrderType(2);
         twHyorder.setPath(twUser.getPath());
         twHyorder.setDepartment(twUser.getDepatmentId());
-        twHyorder.setBuytime(new Date());
+        twHyorder.setBuytime(DateUtil.stract12());
         twHyorder.setSelltime(selltime);
         twHyorder.setIntselltime((int) (selltime.getTime()/1000));
         twHyorder.setBuyprice(close);

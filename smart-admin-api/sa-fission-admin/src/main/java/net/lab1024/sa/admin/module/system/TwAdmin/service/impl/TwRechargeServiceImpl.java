@@ -16,6 +16,7 @@ import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.code.ErrorCode;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.common.util.DateUtil;
 import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
 import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
@@ -342,7 +343,7 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
             twRecharge.setCurrenyNum(currenyNum);
             twRecharge.setCurrenyName(currenyName);
             twRecharge.setCompanyId(one.getCompanyId());
-            twRecharge.setAddtime(new Date());
+            twRecharge.setAddtime(DateUtil.stract12());
             twRecharge.setStatus(1);
             twRecharge.setUserCode(one.getUserCode());
             twRecharge.setPath(one.getPath());

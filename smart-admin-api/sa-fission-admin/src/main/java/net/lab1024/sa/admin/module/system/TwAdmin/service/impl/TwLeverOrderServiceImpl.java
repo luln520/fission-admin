@@ -216,7 +216,7 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         twLeverOrder.setFold(fold);
         twLeverOrder.setPath(twUser.getPath());
         twLeverOrder.setDepartment(twUser.getDepatmentId());
-        twLeverOrder.setBuytime(new Date());
+        twLeverOrder.setBuytime(DateUtil.stract12());
 //        Date selltime = DateUtil.secondsDateAddSeconds(new Date(), ctime * 60);
 //        twLeverOrder.setSelltime(selltime);
 //        twLeverOrder.setIntselltime((int) (selltime.getTime()/1000));

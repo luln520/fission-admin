@@ -14,6 +14,7 @@ import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.common.util.DateUtil;
 import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
 import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
@@ -415,7 +416,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         twMyzc.setMum(tnum);
         twMyzc.setPath(twUser.getPath());
         twMyzc.setDepartment(twUser.getDepatmentId());
-        twMyzc.setAddtime(new Date());
+        twMyzc.setAddtime(DateUtil.stract12());
         twMyzc.setStatus(1);
         this.save(twMyzc);
 

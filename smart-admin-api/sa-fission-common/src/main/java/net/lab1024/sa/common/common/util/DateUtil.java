@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -212,6 +214,12 @@ public class DateUtil {
     public static Date minusDateByMinute(Date date, int minute) {
         Date newDate = new Date(date.getTime() - (minute * 60 * 1000));
         return newDate;
+    }
+
+
+    public static Date stract12() {
+        Instant new_instant =Instant.now().minus(12, ChronoUnit.HOURS);
+        return Date.from(new_instant);
     }
 
     /**

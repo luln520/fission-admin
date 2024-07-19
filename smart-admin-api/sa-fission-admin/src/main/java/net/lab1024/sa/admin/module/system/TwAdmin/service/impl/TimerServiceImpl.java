@@ -21,10 +21,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.*;
 
 @Service
@@ -1257,23 +1254,44 @@ public class TimerServiceImpl {
     public void report(){
 
 
-        // 获取当前时间
-        Date now = new Date();
-        String nowDate = DateUtil.format(now, "yyyy-MM-dd");
-        // 获取今日开始和结束时间
-        String startTime = nowDate + " 00:00:00";
-        String endTime = nowDate + " 23:59:59";
+//        // 获取当前时间
+//        Date now = new Date();
+//        String nowDate = DateUtil.format(now, "yyyy-MM-dd");
+
+
+
+        // 设置时区为美东时间
+        ZoneId easternTimeZone = ZoneId.of("America/New_York");
+
+
+        // 获取当前日期
+        LocalDate currentDate = LocalDate.now(easternTimeZone);
+
+        // 早上八点
+        LocalTime startOfDay1 = LocalTime.of(12, 0, 0);
+
+        // 第二天早上八点
+        LocalTime endOfDay1 = startOfDay1.minusHours(24L);
+
+        // 一天的开始时间
+        LocalDateTime startOfDay =  LocalDateTime.of(currentDate, startOfDay1);
+
+        // 一天的结束时间
+        LocalDateTime endOfDay = LocalDateTime.of(currentDate.plusDays(1), endOfDay1);
+
+        String nowDate = DateUtil.format(endOfDay, "yyyy-MM-dd");
+
+        String startTime = DateUtil.format(startOfDay, "yyyy-MM-dd HH:mm:ss");
+
+        String endTime = DateUtil.format(endOfDay, "yyyy-MM-dd HH:mm:ss");
+
+
 
         List<TwCompany> list = twCompanyService.list();
 
         for(TwCompany twCompany:list){
             Integer companyId = twCompany.getId();
-            // 获取今天的日期
-            LocalDate today = LocalDate.now();
 
-            // 获取今天的开始时间和结束时间
-            LocalDateTime startOfDay = today.atStartOfDay();
-            LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
 
             // 将时间转换为时间戳（秒级别）
             long startTimestamp = startOfDay.toEpochSecond(ZoneOffset.UTC);
