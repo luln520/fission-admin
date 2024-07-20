@@ -1295,7 +1295,7 @@ public class TimerServiceImpl {
         // 一天的结束时间
         LocalDateTime endOfDay = LocalDateTime.of(currentDate.plusDays(1), endOfDay1);
 
-        String nowDate = DateUtil.format(endOfDay, "yyyy-MM-dd");
+        String nowDate = DateUtil.format(startOfDay, "yyyy-MM-dd");
 
         String startTime = DateUtil.format(startOfDay, "yyyy-MM-dd HH:mm:ss");
 
