@@ -78,23 +78,13 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     private TwMockUserCoinService twMockUserCoinService;
 
     @Override
-    public int countUnClosedOrders(int companyId) {
-        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", "2"); // 添加查询条件
-        queryWrapper.eq("company_id", companyId); // 添加查询条件
-        return this.baseMapper.selectCount(queryWrapper).intValue();
+    public Integer countUnClosedOrders(int companyId) {
+        return this.baseMapper.countUnClosedOrders(companyId);
     }
 
     @Override
-    public int countHyOrdersDay(String startTime, String endTime, int companyId) {
-
-
-        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", "2")// 添加查询条件
-            .ge("buytime", startTime)
-                .le("buytime", endTime)
-           .eq("company_id", companyId); // 添加查询条件
-        return this.baseMapper.selectCount(queryWrapper).intValue();
+    public Integer countHyOrdersDay(String startTime, String endTime, int companyId) {
+        return this.baseMapper.countHyOrdersDay(startTime, endTime, companyId);
     }
 
     @Override

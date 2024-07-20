@@ -27,9 +27,9 @@ import java.util.List;
  */
 public interface TwHyorderService extends IService<TwHyorder> {
 
-    int countUnClosedOrders(int companyId);
+    Integer countUnClosedOrders(int companyId);
 
-    int countHyOrdersDay(String startTime, String endTime,int companyId);
+    Integer countHyOrdersDay(String startTime, String endTime,int companyId);
 
 
     BigDecimal orderSum(int companyId);

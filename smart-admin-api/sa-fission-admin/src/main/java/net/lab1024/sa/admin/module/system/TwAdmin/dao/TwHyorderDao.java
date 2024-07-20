@@ -23,5 +23,8 @@ public interface TwHyorderDao extends BaseMapper<TwHyorder> {
 
     List<TwHyorder> listpage(@Param("objectPage") Page<TwHyorder> objectPage, @Param("obj") TwHyorderVo twHyorderVo);
 
+    Integer countUnClosedOrders(@Param("companyId") Integer companyId);
+    Integer countHyOrdersDay(@Param("startTime") String startTime, @Param("endTime") String endTime, @Param("companyId") int companyId);
+
 }
 

@@ -1322,20 +1322,31 @@ public class TimerServiceImpl {
 
 
             //用户日总余额
-            BigDecimal userCoinDay = new BigDecimal(100);
+            BigDecimal userCoinDay = new BigDecimal(0);
             userCoinDay = twUserCoinService.dayUserCoin(startTime, endTime,companyId);
             //用户总余额
-            BigDecimal userCoinSum = new BigDecimal(100);
+            BigDecimal userCoinSum = new BigDecimal(0);
             userCoinSum = twUserCoinService.sumUserCoin(companyId);
 
 
             // 查询秒合约总下单数 M("hyorder")->where 'status' => 1 ->count();
             int allHyOrders = 0;//hyOrderDao.countUnClosedOrders();
-            allHyOrders = twHyorderService.countUnClosedOrders(companyId);
+            Integer allHyOrders1 = twHyorderService.countUnClosedOrders(companyId);
 
+            if(allHyOrders1 == null){
+                allHyOrders = 0;
+            }else{
+                allHyOrders = allHyOrders1;
+            }
             // 查询秒合约今日下单数
             int hyOrders = 0;//rechargeDao.sumDayRecharge(startTime, endTime);
-            hyOrders = twHyorderService.countHyOrdersDay(startTime, endTime,companyId);
+            Integer hyOrders1 = twHyorderService.countHyOrdersDay(startTime, endTime,companyId);
+            if(hyOrders1 == null){
+                hyOrders = 0;
+            }else{
+                hyOrders = hyOrders1;
+            }
+
 
             // 查询合约总下单额
             BigDecimal orderSum = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
@@ -1422,8 +1433,9 @@ public class TimerServiceImpl {
                 one.setCompanyId(companyId);
                 one.setDayDate(nowDate);
                 one.setActive(allLineUsers);
-                one.setDayAmount(userCoinDay);
-                one.setTotalAmount(userCoinSum);
+                one.setDayAmount(userCoinDay.setScale(2,RoundingMode.HALF_UP));
+                BigDecimal bigDecimal = userCoinSum.setScale(2, RoundingMode.HALF_UP);
+                one.setTotalAmount(bigDecimal);
                 one.setRegistrantTotal(allUser);
                 one.setRegistrant(todayUser);
                 one.setOrders(hyOrders);
