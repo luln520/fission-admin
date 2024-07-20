@@ -1338,6 +1338,16 @@ public class TimerServiceImpl {
             }else{
                 allHyOrders = allHyOrders1;
             }
+
+            // 查询秒合约总下单数 M("hyorder")->where 'status' => 1 ->count();
+            int allmockHyOrders = 0;//hyOrderDao.countUnClosedOrders();
+            Integer allmockHyOrders1 = twHyorderService.countMockOrders(companyId);
+
+            if(allmockHyOrders1 == null){
+                allmockHyOrders = 0;
+            }else{
+                allmockHyOrders = allmockHyOrders1;
+            }
             // 查询秒合约今日下单数
             int hyOrders = 0;//rechargeDao.sumDayRecharge(startTime, endTime);
             Integer hyOrders1 = twHyorderService.countHyOrdersDay(startTime, endTime,companyId);
@@ -1345,6 +1355,13 @@ public class TimerServiceImpl {
                 hyOrders = 0;
             }else{
                 hyOrders = hyOrders1;
+            }
+            int hymockOrders = 0;//rechargeDao.sumDayRecharge(startTime, endTime);
+            Integer hymockOrders1 = twHyorderService.countHymockOrdersDay(startTime, endTime,companyId);
+            if(hymockOrders1 == null){
+                hymockOrders = 0;
+            }else{
+                hymockOrders = hymockOrders1;
             }
 
 
@@ -1414,6 +1431,8 @@ public class TimerServiceImpl {
                 twReport.setRegistrant(todayUser);
                 twReport.setOrders(hyOrders);
                 twReport.setOrderTotal(allHyOrders);
+                twReport.setMockorder(hymockOrders);
+                twReport.setMockOrderTotal(allmockHyOrders);
                 twReport.setOrderNum(orderDay);
                 twReport.setOrderSum(orderSum);
                 twReport.setProfitNum(winLosshyDayOrders);
@@ -1440,6 +1459,8 @@ public class TimerServiceImpl {
                 one.setRegistrant(todayUser);
                 one.setOrders(hyOrders);
                 one.setOrderTotal(allHyOrders);
+                one.setMockorder(hymockOrders);
+                one.setMockOrderTotal(allmockHyOrders);
                 one.setOrderNum(orderDay);
                 one.setOrderSum(orderSum);
                 one.setProfitNum(winLosshyDayOrders);

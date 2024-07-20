@@ -83,8 +83,18 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
+    public Integer countMockOrders(int companyId) {
+        return this.baseMapper.countMockOrders(companyId);
+    }
+
+    @Override
     public Integer countHyOrdersDay(String startTime, String endTime, int companyId) {
         return this.baseMapper.countHyOrdersDay(startTime, endTime, companyId);
+    }
+
+    @Override
+    public Integer countHymockOrdersDay(String startTime, String endTime, int companyId) {
+        return this.baseMapper.countHymockOrdersDay(startTime, endTime, companyId);
     }
 
     @Override

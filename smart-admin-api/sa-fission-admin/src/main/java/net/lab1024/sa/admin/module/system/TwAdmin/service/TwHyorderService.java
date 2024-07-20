@@ -29,7 +29,10 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     Integer countUnClosedOrders(int companyId);
 
+    Integer countMockOrders(int companyId);
+
     Integer countHyOrdersDay(String startTime, String endTime,int companyId);
+    Integer countHymockOrdersDay(String startTime, String endTime,int companyId);
 
 
     BigDecimal orderSum(int companyId);

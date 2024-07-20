@@ -44,13 +44,19 @@ public class TwReport implements Serializable {
     /**
     * 下单人数
     */
-    @ApiModelProperty("下单人数")
+    @ApiModelProperty("真实每天下单人数")
     private Integer orders;
+
+    @ApiModelProperty("模拟每天下单人数")
+    private Integer mockorder;
     /**
     * 下单人数
     */
-    @ApiModelProperty("下单总人数")
+    @ApiModelProperty("真实下单总人数")
     private Integer orderTotal;
+
+    @ApiModelProperty("模拟下单总人数")
+    private Integer mockOrderTotal;
     /**
     * 下单总额
     */

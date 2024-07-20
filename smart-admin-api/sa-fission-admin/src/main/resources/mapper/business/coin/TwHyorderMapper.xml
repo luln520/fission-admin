@@ -29,6 +29,14 @@
         SELECT COUNT(DISTINCT username) AS user_count
         FROM tw_hyorder
         WHERE status = 2
+        and order_type = 1
+        AND company_id = #{companyId}
+   </select>
+    <select id="countMockOrders"  resultType = "java.lang.Integer">
+        SELECT COUNT(DISTINCT username) AS user_count
+        FROM tw_hyorder
+        WHERE status = 2
+        and order_type = 2
         AND company_id = #{companyId}
    </select>
 
@@ -36,6 +44,16 @@
         SELECT COUNT(DISTINCT username) AS user_count
         FROM tw_hyorder
         WHERE status = 2
+          and order_type = 1
+        and  buytime >= #{startTime}
+        and  #{endTime} >= buytime
+        AND company_id = #{companyId}
+   </select>
+    <select id="countHymockOrdersDay"  resultType = "java.lang.Integer">
+        SELECT COUNT(DISTINCT username) AS user_count
+        FROM tw_hyorder
+        WHERE status = 2
+          and order_type = 2
         and  buytime >= #{startTime}
         and  #{endTime} >= buytime
         AND company_id = #{companyId}
