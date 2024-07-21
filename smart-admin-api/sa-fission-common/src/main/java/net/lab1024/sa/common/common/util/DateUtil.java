@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -214,6 +216,12 @@ public class DateUtil {
         return newDate;
     }
 
+
+    public static Date stract12() {
+        Instant new_instant =Instant.now().minus(12, ChronoUnit.HOURS);
+        return Date.from(new_instant);
+    }
+
     /**
      * 把给定的时间减掉给定的秒数
      *
@@ -252,6 +260,7 @@ public class DateUtil {
 
         // 创建一个Calendar对象，并将其设置为当前时间
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, -12);
         calendar.setTime(date);
 
         if(type.equals("S")){    //秒

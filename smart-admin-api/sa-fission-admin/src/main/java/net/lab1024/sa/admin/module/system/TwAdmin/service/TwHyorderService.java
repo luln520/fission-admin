@@ -27,9 +27,12 @@ import java.util.List;
  */
 public interface TwHyorderService extends IService<TwHyorder> {
 
-    int countUnClosedOrders(int companyId);
+    Integer countUnClosedOrders(int companyId);
 
-    int countHyOrdersDay(String startTime, String endTime,int companyId);
+    Integer countMockOrders(int companyId);
+
+    Integer countHyOrdersDay(String startTime, String endTime,int companyId);
+    Integer countHymockOrdersDay(String startTime, String endTime,int companyId);
 
 
     BigDecimal orderSum(int companyId);
@@ -55,7 +58,7 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     boolean editKongyK(Integer kongyk, String ids);
 
-    ResponseDTO creatorder(int uid,String ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl,String language);
+    ResponseDTO creatorder(int uid,String ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl,String language, String plantime,int intplantime);
 
     ResponseDTO orderNo(String orderNo);
 

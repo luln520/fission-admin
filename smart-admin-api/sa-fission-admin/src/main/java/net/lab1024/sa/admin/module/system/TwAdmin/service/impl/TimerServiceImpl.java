@@ -21,10 +21,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.*;
 
 @Service
@@ -328,7 +325,11 @@ public class TimerServiceImpl {
 //    }
 
     public  void hycarryout() {
-        long nowtime = System.currentTimeMillis()/1000;
+        Instant now = Instant.now();
+
+        // 将当前时间戳减去12个小时
+        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
         queryWrapper.eq("order_type",1);
@@ -774,9 +775,48 @@ public class TimerServiceImpl {
         }
     }
 
+    public  void hycarryplanout() {
+        Instant now = Instant.now();
+
+        // 将当前时间戳减去12个小时
+        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        int nowtime = (int) twelveHoursAgo.getEpochSecond();
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status",0);
+        queryWrapper.eq("order_type",1);
+        queryWrapper.le("intplantime", nowtime);
+        List<TwHyorder> list = twHyorderService.list(queryWrapper);
+
+        for (TwHyorder twHyorder:list){
+            twHyorder.setStatus(1);
+            twHyorderService.updateById(twHyorder);
+        }
+    }
+    public  void mockhycarryplanout() {
+        Instant now = Instant.now();
+
+        // 将当前时间戳减去12个小时
+        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        int nowtime = (int) twelveHoursAgo.getEpochSecond();
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status",0);
+        queryWrapper.eq("order_type",2);
+        queryWrapper.le("intplantime", nowtime);
+        List<TwHyorder> list = twHyorderService.list(queryWrapper);
+
+        for (TwHyorder twHyorder:list){
+            twHyorder.setStatus(1);
+            twHyorderService.updateById(twHyorder);
+        }
+    }
+
 
     public  void mockhycarryout() {
-        long nowtime = System.currentTimeMillis()/1000;
+        Instant now = Instant.now();
+
+        // 将当前时间戳减去12个小时
+        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
         queryWrapper.eq("order_type",2);
@@ -1230,23 +1270,44 @@ public class TimerServiceImpl {
     public void report(){
 
 
-        // 获取当前时间
-        Date now = new Date();
-        String nowDate = DateUtil.format(now, "yyyy-MM-dd");
-        // 获取今日开始和结束时间
-        String startTime = nowDate + " 00:00:00";
-        String endTime = nowDate + " 23:59:59";
+//        // 获取当前时间
+//        Date now = new Date();
+//        String nowDate = DateUtil.format(now, "yyyy-MM-dd");
+
+
+
+        // 设置时区为美东时间
+        ZoneId easternTimeZone = ZoneId.of("America/New_York");
+
+
+        // 获取当前日期
+        LocalDate currentDate = LocalDate.now(easternTimeZone);
+
+        // 早上八点
+        LocalTime startOfDay1 = LocalTime.of(12, 0, 0);
+
+        // 第二天早上八点
+        LocalTime endOfDay1 = startOfDay1.minusHours(24L);
+
+        // 一天的开始时间
+        LocalDateTime startOfDay =  LocalDateTime.of(currentDate, startOfDay1);
+
+        // 一天的结束时间
+        LocalDateTime endOfDay = LocalDateTime.of(currentDate.plusDays(1), endOfDay1);
+
+        String nowDate = DateUtil.format(startOfDay, "yyyy-MM-dd");
+
+        String startTime = DateUtil.format(startOfDay, "yyyy-MM-dd HH:mm:ss");
+
+        String endTime = DateUtil.format(endOfDay, "yyyy-MM-dd HH:mm:ss");
+
+
 
         List<TwCompany> list = twCompanyService.list();
 
         for(TwCompany twCompany:list){
             Integer companyId = twCompany.getId();
-            // 获取今天的日期
-            LocalDate today = LocalDate.now();
 
-            // 获取今天的开始时间和结束时间
-            LocalDateTime startOfDay = today.atStartOfDay();
-            LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
 
             // 将时间转换为时间戳（秒级别）
             long startTimestamp = startOfDay.toEpochSecond(ZoneOffset.UTC);
@@ -1261,20 +1322,48 @@ public class TimerServiceImpl {
 
 
             //用户日总余额
-            BigDecimal userCoinDay = new BigDecimal(100);
+            BigDecimal userCoinDay = new BigDecimal(0);
             userCoinDay = twUserCoinService.dayUserCoin(startTime, endTime,companyId);
             //用户总余额
-            BigDecimal userCoinSum = new BigDecimal(100);
+            BigDecimal userCoinSum = new BigDecimal(0);
             userCoinSum = twUserCoinService.sumUserCoin(companyId);
 
 
             // 查询秒合约总下单数 M("hyorder")->where 'status' => 1 ->count();
             int allHyOrders = 0;//hyOrderDao.countUnClosedOrders();
-            allHyOrders = twHyorderService.countUnClosedOrders(companyId);
+            Integer allHyOrders1 = twHyorderService.countUnClosedOrders(companyId);
 
+            if(allHyOrders1 == null){
+                allHyOrders = 0;
+            }else{
+                allHyOrders = allHyOrders1;
+            }
+
+            // 查询秒合约总下单数 M("hyorder")->where 'status' => 1 ->count();
+            int allmockHyOrders = 0;//hyOrderDao.countUnClosedOrders();
+            Integer allmockHyOrders1 = twHyorderService.countMockOrders(companyId);
+
+            if(allmockHyOrders1 == null){
+                allmockHyOrders = 0;
+            }else{
+                allmockHyOrders = allmockHyOrders1;
+            }
             // 查询秒合约今日下单数
             int hyOrders = 0;//rechargeDao.sumDayRecharge(startTime, endTime);
-            hyOrders = twHyorderService.countHyOrdersDay(startTime, endTime,companyId);
+            Integer hyOrders1 = twHyorderService.countHyOrdersDay(startTime, endTime,companyId);
+            if(hyOrders1 == null){
+                hyOrders = 0;
+            }else{
+                hyOrders = hyOrders1;
+            }
+            int hymockOrders = 0;//rechargeDao.sumDayRecharge(startTime, endTime);
+            Integer hymockOrders1 = twHyorderService.countHymockOrdersDay(startTime, endTime,companyId);
+            if(hymockOrders1 == null){
+                hymockOrders = 0;
+            }else{
+                hymockOrders = hymockOrders1;
+            }
+
 
             // 查询合约总下单额
             BigDecimal orderSum = new BigDecimal(0);//rechargeDao.sumDayRecharge(startTime, endTime);
@@ -1342,6 +1431,8 @@ public class TimerServiceImpl {
                 twReport.setRegistrant(todayUser);
                 twReport.setOrders(hyOrders);
                 twReport.setOrderTotal(allHyOrders);
+                twReport.setMockorder(hymockOrders);
+                twReport.setMockOrderTotal(allmockHyOrders);
                 twReport.setOrderNum(orderDay);
                 twReport.setOrderSum(orderSum);
                 twReport.setProfitNum(winLosshyDayOrders);
@@ -1361,12 +1452,15 @@ public class TimerServiceImpl {
                 one.setCompanyId(companyId);
                 one.setDayDate(nowDate);
                 one.setActive(allLineUsers);
-                one.setDayAmount(userCoinDay);
-                one.setTotalAmount(userCoinSum);
+                one.setDayAmount(userCoinDay.setScale(2,RoundingMode.HALF_UP));
+                BigDecimal bigDecimal = userCoinSum.setScale(2, RoundingMode.HALF_UP);
+                one.setTotalAmount(bigDecimal);
                 one.setRegistrantTotal(allUser);
                 one.setRegistrant(todayUser);
                 one.setOrders(hyOrders);
                 one.setOrderTotal(allHyOrders);
+                one.setMockorder(hymockOrders);
+                one.setMockOrderTotal(allmockHyOrders);
                 one.setOrderNum(orderDay);
                 one.setOrderSum(orderSum);
                 one.setProfitNum(winLosshyDayOrders);
