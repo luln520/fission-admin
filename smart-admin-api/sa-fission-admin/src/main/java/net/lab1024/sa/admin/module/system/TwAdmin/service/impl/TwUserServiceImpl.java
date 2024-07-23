@@ -502,8 +502,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            String phone = twUser.getPhone();
            String password = twUser.getPassword();
            String invit = twUser.getInvit();
+           Integer companyId = twUser.getCompanyId();
            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
            queryWrapper.eq("username", username);
+           queryWrapper.eq("company_id", companyId);
            TwUser one = this.getOne(queryWrapper);
            if(one != null){
                return ResponseDTO.userErrorParam("账号重复");
@@ -511,6 +513,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
            queryWrapper1.eq("phone", phone);
+           queryWrapper.eq("company_id", companyId);
            TwUser one1 = this.getOne(queryWrapper1);
            if(one1 != null){
                return ResponseDTO.userErrorParam("手机号重复");

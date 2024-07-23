@@ -62,4 +62,7 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     ResponseDTO orderNo(String orderNo);
 
+
+    String time();
+
 }
