@@ -117,5 +117,13 @@ public class PcContractController {
         return ResponseDTO.ok(twHyorderService.orderNo(orderNo));
     }
 
+    @GetMapping("/time")
+    @ResponseBody
+    @ApiOperation(value = "获取时间")
+    @NoNeedLogin
+    public ResponseDTO time() {
+        return ResponseDTO.ok(twHyorderService.time());
+    }
+
 }
 

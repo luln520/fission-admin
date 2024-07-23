@@ -810,4 +810,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         return ResponseDTO.ok(this.getOne(queryWrapper));
     }
 
+    @Override
+    public String time() {
+        return DateUtil.date2Str(DateUtil.stract12());
+    }
+
 }
