@@ -65,6 +65,9 @@ public class TwHysetting implements Serializable {
     */
     @ApiModelProperty("盈利ID组")
     private String hyYlid;
+
+    @ApiModelProperty("投资比例")
+    private String hyTzbl;
     /**
     * 风控概率组
     */
