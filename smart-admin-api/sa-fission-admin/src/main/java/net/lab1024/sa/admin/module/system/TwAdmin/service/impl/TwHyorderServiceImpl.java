@@ -37,6 +37,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -448,23 +451,23 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
-    public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime,int intplantime) {
+    public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime) {
 
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", uid); // 添加查询条件
             TwUser twUser = twUserService.getOne(queryWrapper);
             Integer userType = twUser.getUserType();
             if(userType == 1){
-                return userOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language,  plantime, intplantime) ;
+                return userOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language,  plantime) ;
             }
             if(userType == 2){
-               return mockUserOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language, plantime, intplantime) ;
+               return mockUserOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language, plantime) ;
             }
 
             return null;
     }
 
-    public ResponseDTO userOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime,int intplantime){
+    public ResponseDTO userOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime){
 
         Integer uid = twUser.getId();
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
@@ -580,6 +583,15 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             }
         }
 
+        // 定义时间字符串的格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // 将时间字符串解析为 LocalDateTime 对象
+        LocalDateTime localDateTime = LocalDateTime.parse(plantime, formatter);
+
+        // 将 LocalDateTime 转换为时间戳（秒级别）
+        long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
+
         TwHyorder twHyorder = new TwHyorder();
         twHyorder.setUid(uid);
         twHyorder.setOrderNo(orderNo);
@@ -594,7 +606,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setStatus(0);
         twHyorder.setIsWin(0);
         twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
-        twHyorder.setIntplantime(intplantime);
+        twHyorder.setIntplantime((int) timestamp);
         twHyorder.setOrderType(1);
         twHyorder.setPath(twUser.getPath());
         twHyorder.setDepartment(twUser.getDepatmentId());
@@ -633,7 +645,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             return ResponseDTO.ok(orderNo);
         }
     }
-    public ResponseDTO mockUserOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime,int intplantime){
+    public ResponseDTO mockUserOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime){
         Integer uid = twUser.getId();
 
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
@@ -749,6 +761,15 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             }
         }
 
+        // 定义时间字符串的格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // 将时间字符串解析为 LocalDateTime 对象
+        LocalDateTime localDateTime = LocalDateTime.parse(plantime, formatter);
+
+        // 将 LocalDateTime 转换为时间戳（秒级别）
+        long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
+
         TwHyorder twHyorder = new TwHyorder();
         twHyorder.setUid(uid);
         twHyorder.setOrderNo(orderNo);
@@ -763,7 +784,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setStatus(0);
         twHyorder.setIsWin(0);
         twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
-        twHyorder.setIntplantime(intplantime);
+        twHyorder.setIntplantime((int) timestamp);
         twHyorder.setOrderType(2);
         twHyorder.setPath(twUser.getPath());
         twHyorder.setDepartment(twUser.getDepatmentId());

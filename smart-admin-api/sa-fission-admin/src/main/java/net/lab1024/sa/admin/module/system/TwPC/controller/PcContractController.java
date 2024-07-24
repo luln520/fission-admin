@@ -103,10 +103,9 @@ public class PcContractController {
                                   @RequestParam String ccoinname,
                                   @RequestParam int ctzfx,
                                   @RequestParam String plantime,
-                                  @RequestParam int intplantime,
                                   @RequestParam BigDecimal cykbl,
                                   @RequestParam String language){
-        return twHyorderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl,language, plantime, intplantime);
+        return twHyorderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl,language, plantime);
     }
 
     @GetMapping("/orderNo")
