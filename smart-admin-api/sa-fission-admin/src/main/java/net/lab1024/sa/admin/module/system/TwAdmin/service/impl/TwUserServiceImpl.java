@@ -513,7 +513,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
            QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
            queryWrapper1.eq("phone", phone);
-           queryWrapper.eq("company_id", companyId);
+           queryWrapper1.eq("company_id", companyId);
            TwUser one1 = this.getOne(queryWrapper1);
            if(one1 != null){
                return ResponseDTO.userErrorParam("手机号重复");
@@ -547,7 +547,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
            String encryptPwd = getEncryptPwd(password);
            String ip = CommonUtil.getClientIP(request);
-           String locationByIP = CommonUtil.getAddress(ip);
+//           String locationByIP = CommonUtil.getAddress(ip);
 
            twUser.setDepatmentId(1);
            twUser.setUsername(username);
@@ -557,7 +557,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUser.setUserCode(usercode);
            twUser.setAddip(ip);
            twUser.setPhone(phone);
-           twUser.setAddr(locationByIP);
+//           twUser.setAddr(locationByIP);
            twUser.setRealName(username);
            long timestampInSeconds = Instant.now().getEpochSecond();
            twUser.setAddtime((int) (timestampInSeconds));
@@ -571,20 +571,20 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUserCoin.setUserid(uid);
            twUserCoin.setUsdt(new BigDecimal(0));
            twUserCoinService.save(twUserCoin);
-
-           List<TwKuangji> list = twKuangjiService.list();
-           for(TwKuangji twKuangji:list){
-               TwUserKuangji twUserKuangji = new TwUserKuangji();
-               twUserKuangji.setMin(twKuangji.getPricemin());
-               twUserKuangji.setMax(twKuangji.getPricemax());
-               twUserKuangji.setNum(1);
-               twUserKuangji.setCompanyId(twUser.getCompanyId());
-               twUserKuangji.setKjId(twKuangji.getId());
-               twUserKuangji.setKjName(twKuangji.getTitle());
-               twUserKuangji.setUserId(uid);
-               twUserKuangji.setCreateTime(new Date());
-               twUserKuangjiService.save(twUserKuangji);
-           }
+//
+//           List<TwKuangji> list = twKuangjiService.list();
+//           for(TwKuangji twKuangji:list){
+//               TwUserKuangji twUserKuangji = new TwUserKuangji();
+//               twUserKuangji.setMin(twKuangji.getPricemin());
+//               twUserKuangji.setMax(twKuangji.getPricemax());
+//               twUserKuangji.setNum(1);
+//               twUserKuangji.setCompanyId(twUser.getCompanyId());
+//               twUserKuangji.setKjId(twKuangji.getId());
+//               twUserKuangji.setKjName(twKuangji.getTitle());
+//               twUserKuangji.setUserId(uid);
+//               twUserKuangji.setCreateTime(new Date());
+//               twUserKuangjiService.save(twUserKuangji);
+//           }
 
            return ResponseDTO.ok();
        }
