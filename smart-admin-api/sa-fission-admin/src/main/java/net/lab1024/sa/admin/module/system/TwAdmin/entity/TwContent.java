@@ -73,6 +73,8 @@ public class TwContent implements Serializable {
     private String contentPt;
     @ApiModelProperty("意大利语")
     private String contentIt;
+    @ApiModelProperty("罗马尼亚语")
+    private String contentRo;
     /**
     * 添加时间
     */
