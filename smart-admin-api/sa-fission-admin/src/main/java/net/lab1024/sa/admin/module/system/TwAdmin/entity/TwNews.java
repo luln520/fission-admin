@@ -50,6 +50,8 @@ public class TwNews implements Serializable {
 
     @ApiModelProperty("阿拉伯内容")
     private String contentAr;
+    @ApiModelProperty("罗马尼亚内容")
+    private String contentRo;
 
     @ApiModelProperty("德语")
     private String contentDe;
@@ -85,6 +87,8 @@ public class TwNews implements Serializable {
     private String typePt;
     @ApiModelProperty("类型-意大利语")
     private String typeIt;
+    @ApiModelProperty("类型-罗马尼亚语")
+    private String typeRo;
 
     @ApiModelProperty("创建时间")
     private Date createTime;
