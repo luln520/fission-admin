@@ -319,6 +319,7 @@ public class EmployeeService {
     public ResponseDTO<String> updatePassword(EmployeeUpdatePasswordForm updatePasswordForm) {
         Long employeeId = updatePasswordForm.getEmployeeId();
         EmployeeEntity employeeEntity = employeeDao.selectById(employeeId);
+        int companyId = employeeEntity.getCompanyId();
         if (employeeEntity == null) {
             return ResponseDTO.error(UserErrorCode.DATA_NOT_EXIST);
         }
@@ -338,6 +339,7 @@ public class EmployeeService {
         EmployeeEntity updateEntity = new EmployeeEntity();
         updateEntity.setEmployeeId(employeeId);
         updateEntity.setLoginPwd(getEncryptPwd(newPassword));
+        updateEntity.setCompanyId(companyId);
         employeeDao.updateById(updateEntity);
 
         return ResponseDTO.ok();
