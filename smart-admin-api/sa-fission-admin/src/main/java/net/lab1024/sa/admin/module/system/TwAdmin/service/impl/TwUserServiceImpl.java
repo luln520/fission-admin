@@ -1166,6 +1166,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUserAgent.setUid(uid);
                     twUserAgent.setUsername(username);
                     twUserAgent.setPath(path);
+                    String[] split = path.split(",");
+                    twUserAgent.setGrado(split.length);
                     twUserAgent.setCreateTime(new Date());
                     twUserAgent.setCompanyId(companyId);
                     twUserAgentService.save(twUserAgent);
