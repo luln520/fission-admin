@@ -1113,7 +1113,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setStatus(1);
                 twUser.setTxstate(1);
                 twUser.setRzstatus(0);
-                this.save(twUser);
 
                 Integer uid = twUser.getId();
                 TwUserCoin twUserCoin = new TwUserCoin();
@@ -1348,6 +1347,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUserTeamService.save(twUserTeam);
 //                    }
                 }
+                String[] split = path.split(",");
+                twUser.setGrado(split.length);
+                this.save(twUser);
 
                 captchaMap.remove(username);
 
