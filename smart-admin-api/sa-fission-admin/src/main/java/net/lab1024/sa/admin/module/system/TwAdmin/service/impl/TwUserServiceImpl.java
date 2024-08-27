@@ -1338,6 +1338,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUserTeam.setTotal(0);
                         twUserTeam.setVoidNum(0);
                         twUserTeam.setUid(uid);
+                        String[] split = path.split(",");
+                        twUser.setGrado(split.length);
                         twUserTeam.setUsername(username);
                         twUserTeam.setAmount(new BigDecimal(0));
                         twUserTeam.setCompanyId(companyId);
