@@ -92,5 +92,8 @@ public class TwUserAgent implements Serializable {
     @ApiModelProperty("三级代理名称")
     private String threeName;
 
+    @ApiModelProperty("等级")
+    private int grado;
+
 
 }
