@@ -259,6 +259,7 @@ public class TwUser implements Serializable {
     @ApiModelProperty("用户矿机单控")
     private List<TwUserKuangji> twUserKuangji;
 
-
+    @ApiModelProperty("等级")
+    private int grado;
 
 }
