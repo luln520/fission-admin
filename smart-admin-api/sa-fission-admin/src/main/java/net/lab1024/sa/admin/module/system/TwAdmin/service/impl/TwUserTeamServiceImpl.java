@@ -4,11 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMyzcDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwRechargeDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserTeamMapper;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCompany;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserTeam;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TeamVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
@@ -23,8 +22,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author 1
@@ -42,6 +43,12 @@ public class TwUserTeamServiceImpl extends ServiceImpl<TwUserTeamMapper, TwUserT
 
     @Autowired
     private TwCompanyService twCompanyService;
+
+    @Autowired
+    private TwRechargeDao twRechargeDao;
+
+    @Autowired
+    private TwMyzcDao twMyzcDao;
 
     @Autowired
     @Lazy
@@ -126,8 +133,63 @@ public class TwUserTeamServiceImpl extends ServiceImpl<TwUserTeamMapper, TwUserT
 
     @Override
     public IPage<TwUser> teamlist(TeamVo teamVo, HttpServletRequest request) {
+        List<TwUser> list1 = new ArrayList<>();
         Page<TwUser> objectPage = new Page<>(teamVo.getPageNum(), teamVo.getPageSize());
-        objectPage.setRecords(baseMapper.teamlist(objectPage, teamVo));
+        for (TwUser twUser : baseMapper.teamlist(objectPage, teamVo)) {
+            BigDecimal recharge = new BigDecimal(0);
+            BigDecimal myzc = new BigDecimal(0);
+            Integer uid = twUser.getId();
+
+            QueryWrapper<TwRecharge> queryWrapper5 = new QueryWrapper<>();
+            queryWrapper5.select("IFNULL(SUM(num), 0) as recharge")
+                    .eq("uid", uid)
+                    .eq("status", 2);
+
+            List<Map<String, Object>> rechargeResult = this.twRechargeDao.selectMaps(queryWrapper5);
+            if (rechargeResult.isEmpty()) {
+                recharge = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+
+            Object rechargeResultObject = rechargeResult.get(0).get("recharge");
+            if (rechargeResultObject instanceof BigDecimal) {
+                recharge =  ((BigDecimal) rechargeResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+            } else if (rechargeResultObject instanceof Long) {
+                recharge =  BigDecimal.valueOf((Long) rechargeResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+            } else if (rechargeResultObject instanceof Integer) {
+                recharge =  BigDecimal.valueOf((Integer) rechargeResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+            } else {
+                // 处理其他可能的类型
+                recharge =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+
+            QueryWrapper<TwMyzc> queryWrapper6 = new QueryWrapper<>();
+            queryWrapper6.select("IFNULL(SUM(num), 0) as myzc")
+                    .eq("userid", uid)
+                    .eq("status", 2);
+
+            List<Map<String, Object>> myzcResult = this.twMyzcDao.selectMaps(queryWrapper6);
+            if (myzcResult.isEmpty()) {
+                myzc = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+
+            Object myzcResultObject = myzcResult.get(0).get("myzc");
+            if (myzcResultObject instanceof BigDecimal) {
+                myzc =  ((BigDecimal) myzcResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+            } else if (myzcResultObject instanceof Long) {
+                myzc =  BigDecimal.valueOf((Long) myzcResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+            } else if (myzcResultObject instanceof Integer) {
+                myzc =  BigDecimal.valueOf((Integer) myzcResultObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+            } else {
+                // 处理其他可能的类型
+                myzc =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+            }
+            twUser.setRecharge(recharge);
+            twUser.setMyzc(myzc);
+
+            list1.add(twUser);
+        }
+
+        objectPage.setRecords(list1);
         return objectPage;
     }
 }
