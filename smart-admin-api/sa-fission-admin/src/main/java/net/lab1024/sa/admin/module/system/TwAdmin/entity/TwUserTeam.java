@@ -85,5 +85,8 @@ public class TwUserTeam implements Serializable {
     @ApiModelProperty("用户code")
     private String userCode;
 
+    @ApiModelProperty("等级")
+    private int grado;
+
 
 }
