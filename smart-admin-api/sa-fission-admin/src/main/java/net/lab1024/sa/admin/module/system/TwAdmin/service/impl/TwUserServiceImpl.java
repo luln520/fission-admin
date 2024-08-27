@@ -1069,6 +1069,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setStatus(1);
                 twUser.setTxstate(1);
                 twUser.setRzstatus(0);
+                this.save(twUser);
 
                 Integer uid = twUser.getId();
                 TwUserCoin twUserCoin = new TwUserCoin();
@@ -1294,8 +1295,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUserTeam.setTotal(0);
                         twUserTeam.setVoidNum(0);
                         twUserTeam.setUid(uid);
-                        String[] split = path.split(",");
-                        twUser.setGrado(split.length);
+                        String[] split1 = path.split(",");
+                        twUserTeam.setGrado(split1.length);
                         twUserTeam.setUsername(username);
                         twUserTeam.setAmount(new BigDecimal(0));
                         twUserTeam.setCompanyId(companyId);
@@ -1305,9 +1306,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUserTeamService.save(twUserTeam);
 //                    }
                 }
-                String[] split = path.split(",");
-                twUser.setGrado(split.length);
-                this.save(twUser);
 
                 captchaMap.remove(username);
 
