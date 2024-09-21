@@ -256,9 +256,15 @@ public class TwUser implements Serializable {
     private String language;
 
     @TableField(exist = false)
+    @ApiModelProperty("总充值")
+    private BigDecimal recharge;
+
+    @TableField(exist = false)
+    @ApiModelProperty("总提现")
+    private BigDecimal myzc;
+
+    @TableField(exist = false)
     @ApiModelProperty("用户矿机单控")
     private List<TwUserKuangji> twUserKuangji;
-
-
 
 }

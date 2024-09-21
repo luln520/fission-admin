@@ -14,7 +14,7 @@
         order by create_time desc
     </select>
     <select id="teamlist" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser">
-        select u.username,u.user_code,t.create_time from tw_user u left join tw_user_team t on u.id = t.uid  where  t.path like concat('%',#{obj.uid},'%')
+        select u.username,u.user_code,t.create_time , t.grado from tw_user u left join tw_user_team t on u.id = t.uid  where  t.path like concat('%',#{obj.uid},'%')
         <if test="obj.username != null and obj.username !=''">
             and u.username = #{obj.username}
         </if>
