@@ -518,7 +518,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            if(one1 != null){
                return ResponseDTO.userErrorParam("手机号重复");
            }
-
+           String path = "";
            TwCompany twCompany = twCompanyService.getById(twUser.getCompanyId());
            if(twCompany.getInviteType() == 1){
                EmployeeEntity byInvite = employeeService.getByInvite(invit);
@@ -526,7 +526,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                    return ResponseDTO.userErrorParam("没有此推荐人");
                }
                Long employeeId = byInvite.getEmployeeId();
-               String path = "#"+employeeId +"#,";
+               path = "#"+employeeId +"#,";
 
                twUser.setInvit1(employeeId.toString());
                twUser.setPath(path);
@@ -571,20 +571,64 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUserCoin.setUserid(uid);
            twUserCoin.setUsdt(new BigDecimal(0));
            twUserCoinService.save(twUserCoin);
-//
-//           List<TwKuangji> list = twKuangjiService.list();
-//           for(TwKuangji twKuangji:list){
-//               TwUserKuangji twUserKuangji = new TwUserKuangji();
-//               twUserKuangji.setMin(twKuangji.getPricemin());
-//               twUserKuangji.setMax(twKuangji.getPricemax());
-//               twUserKuangji.setNum(1);
-//               twUserKuangji.setCompanyId(twUser.getCompanyId());
-//               twUserKuangji.setKjId(twKuangji.getId());
-//               twUserKuangji.setKjName(twKuangji.getTitle());
-//               twUserKuangji.setUserId(uid);
-//               twUserKuangji.setCreateTime(new Date());
-//               twUserKuangjiService.save(twUserKuangji);
-//           }
+
+           EmployeeEntity byInvite = employeeService.getByInvite(invit);//获取代理人信息
+
+           Integer inviteId = (int) byInvite.getEmployeeId();
+           TwUserInvite twUserInvite = new TwUserInvite();
+           twUserInvite.setUid(uid);
+           twUserInvite.setInvitUid(inviteId);
+           twUserInvite.setCompanyId(companyId);
+           twUserInvite.setCreateTime(new Date());
+           twUserInvite.setUserCode(invit);
+           twUserInvite.setUsername(username);
+           twUserInviteService.save(twUserInvite);
+
+           TwUserInvite oneUid = new TwUserInvite();
+
+
+           QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
+           queryInvite3.eq("uid", inviteId);
+           oneUid = twUserInviteService.getOne(queryInvite3);
+
+           TwUserAgent twUserAgent = new TwUserAgent();
+           twUserAgent.setThreeUid(0);
+           twUserAgent.setTwoUid(0);
+           if(oneUid == null){
+               twUserAgent.setOneUid(0);
+           }
+
+           if(oneUid != null){
+               twUserAgent.setOneUid(oneUid.getUid());
+               twUserAgent.setOneName(oneUid.getUsername());
+
+               QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
+               queryTeam.eq("uid", oneUid.getUid());
+               TwUserTeam oneTeam = twUserTeamService.getOne(queryTeam);
+               oneTeam.setVoidNum(oneTeam.getVoidNum()+1);
+               oneTeam.setTotal(oneTeam.getTotal()+1);
+               twUserTeamService.updateById(oneTeam);
+           }
+           twUserAgent.setDepartment(1);
+           twUserAgent.setUid(uid);
+           twUserAgent.setUsername(username);
+           twUserAgent.setPath(path);
+           twUserAgent.setCreateTime(new Date());
+           twUserAgent.setCompanyId(companyId);
+           twUserAgentService.save(twUserAgent);
+
+           TwUserTeam  twUserTeam = new TwUserTeam();
+           twUserTeam.setNum(0);
+           twUserTeam.setTotal(0);
+           twUserTeam.setVoidNum(0);
+           twUserTeam.setUid(uid);
+           twUserTeam.setUsername(username);
+           twUserTeam.setAmount(new BigDecimal(0));
+           twUserTeam.setCompanyId(companyId);
+           twUserTeam.setPath(path);
+           twUserTeam.setDepartment(1);
+           twUserTeam.setCreateTime(new Date());
+           twUserTeamService.save(twUserTeam);
 
            return ResponseDTO.ok();
        }
