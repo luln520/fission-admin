@@ -1104,6 +1104,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setUserCode(usercode);
                 twUser.setAreaCode("");
                 twUser.setAddip(ip);
+                String[] split1 = path.split(",");
+                twUser.setGrado(split1.length);
                 twUser.setCodeAmount(new BigDecimal(0));
                 twUser.setCompanyId(companyId);
                 twUser.setDepatmentId(1);
@@ -1339,8 +1341,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         twUserTeam.setTotal(0);
                         twUserTeam.setVoidNum(0);
                         twUserTeam.setUid(uid);
-                        String[] split1 = path.split(",");
-                        twUserTeam.setGrado(split1.length);
+                        String[] split2 = path.split(",");
+                        twUserTeam.setGrado(split2.length);
                         twUserTeam.setUsername(username);
                         twUserTeam.setAmount(new BigDecimal(0));
                         twUserTeam.setCompanyId(companyId);

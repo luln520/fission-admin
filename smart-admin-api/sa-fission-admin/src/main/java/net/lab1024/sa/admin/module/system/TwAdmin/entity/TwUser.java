@@ -240,6 +240,9 @@ public class TwUser implements Serializable {
     @ApiModelProperty("用户code")
     private String userCode;
 
+    @ApiModelProperty("代理级数")
+    private int grado;
+
     @TableField(exist = false)
     private  String token;
 
