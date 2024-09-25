@@ -1919,7 +1919,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
 
         QueryWrapper<TwHyorder> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.select("IFNULL(SUM(num), 0) as lossHyorder")
+        queryWrapper1.select("IFNULL(SUM(ploss), 0) as lossHyorder")
                 .eq("is_win", 2)
                 .eq("uid", uid)
                 .eq("status", 2);
@@ -1943,7 +1943,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
 
         QueryWrapper<TwLeverOrder> queryWrapper2 = new QueryWrapper<>();
-        queryWrapper2.select("IFNULL(SUM(num), 0) as winLeverOrder")
+        queryWrapper2.select("IFNULL(SUM(ploss), 0) as winLeverOrder")
                 .eq("is_win", 1)
                 .eq("uid", uid)
                 .eq("status", 2);
@@ -1967,7 +1967,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
 
         QueryWrapper<TwLeverOrder> queryWrapper3 = new QueryWrapper<>();
-        queryWrapper3.select("IFNULL(SUM(num), 0) as lossLeverOrder")
+        queryWrapper3.select("IFNULL(SUM(ploss), 0) as lossLeverOrder")
                 .eq("is_win", 2)
                 .eq("uid", uid)
                 .eq("status", 2);

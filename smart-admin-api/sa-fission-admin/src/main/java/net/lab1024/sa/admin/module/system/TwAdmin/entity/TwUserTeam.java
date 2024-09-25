@@ -85,6 +85,26 @@ public class TwUserTeam implements Serializable {
     @ApiModelProperty("用户code")
     private String userCode;
 
+    @TableField(exist = false)
+    @ApiModelProperty("团队充值")
+    private BigDecimal recharge;
+
+    @TableField(exist = false)
+    @ApiModelProperty("团队提现")
+    private BigDecimal myzc;
+
+    @TableField(exist = false)
+    @ApiModelProperty("团队总盈利")
+    private BigDecimal totalWinOrder;
+
+    @TableField(exist = false)
+    @ApiModelProperty("团队总亏损")
+    private BigDecimal totalLossOrder;
+
+    @TableField(exist = false)
+    @ApiModelProperty("团队总投注")
+    private BigDecimal totalnumOrder;
+
     @ApiModelProperty("等级")
     private int grado;
 
