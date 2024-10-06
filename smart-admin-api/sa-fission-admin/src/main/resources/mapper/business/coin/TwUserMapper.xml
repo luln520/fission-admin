@@ -36,4 +36,23 @@
         order by rzstatus,id desc
     </select>
 
+    <select id="statisticPerUser" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerUserVo">
+        SELECT
+        COUNT(*) as count,
+        DATE(FROM_UNIXTIME(addtime)) AS date
+        FROM tw_user
+        WHERE 1=1 AND company_id = #{companyId}
+        <choose>
+            <when test="startTime != null and endTime != null">
+                AND addtime &gt;= #{startTime}
+                AND addtime &lt;= #{endTime}
+            </when>
+            <otherwise>
+                AND addtime &gt;= UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL #{days} DAY))
+            </otherwise>
+        </choose>
+        GROUP BY DATE(FROM_UNIXTIME(addtime))
+        ORDER BY date ASC
+    </select>
+
 </mapper>

@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwLeverOrderMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.LeverVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
@@ -21,6 +23,8 @@ import net.lab1024.sa.common.common.util.DateUtil;
 import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
 import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
+import org.apache.commons.compress.utils.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
 * @author 1
@@ -1182,6 +1184,62 @@ public class TwLeverOrderServiceImpl extends ServiceImpl<TwLeverOrderMapper, TwL
         }else{
             return ResponseDTO.userErrorParam("The operation was successful！");
         }
+    }
+
+    @Override
+    public StatisticAmountVo statisticProfitLoss(int companyId) {
+        StatisticAmountVo statisticAmountVo = new StatisticAmountVo();
+        List<ProfitLossVo> profitLossVoList = this.baseMapper.statisticProfitLoss(companyId);
+        if(CollectionUtils.isNotEmpty(profitLossVoList)) {
+            for(ProfitLossVo profitLossVo : profitLossVoList) {
+                if(profitLossVo.getStatus() == 1) {
+                    statisticAmountVo.setTotalProfit(profitLossVo.getProfitLoss());
+                }else if(profitLossVo.getStatus() == 2) {
+                    statisticAmountVo.setTotalLoss(profitLossVo.getProfitLoss());
+                }
+            }
+        }
+
+        BigDecimal amountVolume = this.baseMapper.statisticAmountVolume(companyId);
+        statisticAmountVo.setTotalVolume(amountVolume);
+
+        return statisticAmountVo;
+    }
+
+    @Override
+    public StatisticNumVo statisticNum(String startDate, String endDate, int companyId) {
+        StatisticNumVo statisticNumVo = new StatisticNumVo();
+
+        List<String> dateList = Lists.newArrayList();
+        Long startTime = 0L;
+        Long endTime = 0L;
+        if(StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
+            startTime = DateUtil.getSecondTimeStamp(startDate);
+            endTime = DateUtil.getSecondTimeStamp(endDate);
+            dateList = DateUtil.getDatesBetweenTimestamps(startTime, endTime);
+        }else {
+            dateList = DateUtil.getPreviousDates(LocalDate.now(), 7);
+        }
+        statisticNumVo.setDateList(dateList);
+
+        Map<String, Integer> resultMap = Maps.newTreeMap();
+
+        List<PerNumVo> perNumVoList = this.baseMapper.statisticPerNum(7, startTime, endTime, companyId);
+        for(String date : dateList) {
+            for(PerNumVo perNumVo : perNumVoList) {
+                if (perNumVo.getDate().equals(date)){
+                    resultMap.put(date, perNumVo.getCount()); break;
+                }else {
+                    resultMap.put(date, 0);
+                }
+            }
+            resultMap.putIfAbsent(date, 0);
+        }
+        List<Integer> countList = new ArrayList<>(resultMap.values());
+
+        statisticNumVo.setCountList(countList);
+
+        return statisticNumVo;
     }
 
     public BigDecimal getnewprice(String url){

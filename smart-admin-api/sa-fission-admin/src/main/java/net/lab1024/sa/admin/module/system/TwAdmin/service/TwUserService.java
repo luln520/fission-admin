@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerUserVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 用户信息表(TwUser)表服务接口
@@ -34,6 +37,7 @@ public interface TwUserService extends IService<TwUser> {
 
     Integer countLineUsers(String startTime , String endTime,int companyId);
 
+    Integer countYtUsers(int companyId);
 
     IPage<TwUser> listpage(TwUserVo twUserVo);
 
@@ -78,4 +82,5 @@ public interface TwUserService extends IService<TwUser> {
     ResponseDTO mockUser(int uid,int type) ;
     ResponseDTO editPasword(int uid,String oldword,String newword,String language) ;
 
+    StatisticUserVo statisticPerUserByDate(String startDate, String endDate, int companyId);
 }

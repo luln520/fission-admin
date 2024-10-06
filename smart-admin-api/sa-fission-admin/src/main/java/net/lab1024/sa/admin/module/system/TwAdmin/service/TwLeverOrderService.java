@@ -5,11 +5,15 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwLeverOrder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwLeverage;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.LeverVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.ProfitLossVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticAmountVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticNumVo;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
 * @author 1
@@ -36,4 +40,7 @@ public interface TwLeverOrderService extends IService<TwLeverOrder> {
     ResponseDTO strutcnum(int uid,BigDecimal num,String orderNo,String language,BigDecimal boomPrice);
     ResponseDTO editLossWin(int uid,String orderNo,String language,BigDecimal lossPrice,BigDecimal winPrice);
 
+    StatisticAmountVo statisticProfitLoss(int companyId);
+
+    StatisticNumVo statisticNum(String startDate, String endDate, int companyId);
 }

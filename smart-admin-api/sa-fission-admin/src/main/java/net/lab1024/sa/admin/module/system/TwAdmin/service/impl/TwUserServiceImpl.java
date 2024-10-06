@@ -1,13 +1,19 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Maps;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerUserVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TeanResp;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
@@ -19,11 +25,13 @@ import net.lab1024.sa.common.common.SMS.SendSmsLib;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.CommonUtil;
+import net.lab1024.sa.common.common.util.DateUtil;
 import net.lab1024.sa.common.module.support.config.ConfigKeyEnum;
 import net.lab1024.sa.common.module.support.config.ConfigService;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import okhttp3.*;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -43,6 +51,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -160,6 +172,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         queryWrapper.le("lgtime", endTime);
         queryWrapper.eq("company_id", companyId);
         return this.baseMapper.selectCount(queryWrapper).intValue();
+    }
+
+    @Override
+    public Integer countYtUsers(int companyId) {
+        return this.baseMapper.statisticYtUserCount(companyId);
     }
 
     @Override
@@ -1881,6 +1898,41 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         }else{
             return ResponseDTO.ok("Successfully modified");
         }
+    }
+
+    @Override
+    public StatisticUserVo statisticPerUserByDate(String startDate, String endDate, int companyId) {
+        StatisticUserVo statisticUserVo = new StatisticUserVo();
+
+        List<String> dateList = Lists.newArrayList();
+        Long startTime = 0L;
+        Long endTime = 0L;
+        if(StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
+            startTime = DateUtil.getSecondTimeStamp(startDate);
+            endTime = DateUtil.getSecondTimeStamp(endDate);
+            dateList = DateUtil.getDatesBetweenTimestamps(startTime, endTime);
+        }else {
+            dateList = DateUtil.getPreviousDates(LocalDate.now(), 7);
+        }
+        statisticUserVo.setDateList(dateList);
+
+        Map<String, Integer> resultMap = Maps.newTreeMap();
+
+        List<PerUserVo> perUserVoList = this.baseMapper.statisticPerUser(7, startTime, endTime, companyId);
+        for(String date : dateList) {
+            for(PerUserVo perUserVo : perUserVoList) {
+                if (perUserVo.getDate().equals(date)){
+                    resultMap.put(date, perUserVo.getCount()); break;
+                }else {
+                    resultMap.put(date, 0);
+                }
+            }
+            resultMap.putIfAbsent(date, 0);
+        }
+        List<Integer> countList = new ArrayList<>(resultMap.values());
+
+        statisticUserVo.setCountList(countList);
+        return statisticUserVo;
     }
 
     @Override

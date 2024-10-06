@@ -17,4 +17,23 @@
         </if>
         order by buytime desc
     </select>
+    <select id="statisticPerNum" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo">
+
+        SELECT
+        COUNT(*) as count,
+        DATE(buytime) AS date
+        FROM tw_lever_order
+        WHERE 1=1 AND company_id = #{companyId} AND status = 2
+        <choose>
+            <when test="startTime != null and endTime != null">
+                AND buytime &gt;= FROM_UNIXTIME(#{startTime})
+                AND buytime &lt;= FROM_UNIXTIME(#{endTime})
+            </when>
+            <otherwise>
+                AND buytime &gt;= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+            </otherwise>
+        </choose>
+        GROUP BY DATE(buytime)
+        ORDER BY date ASC
+    </select>
 </mapper>

@@ -5,8 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwKjprofit;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwKjprofitVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.*;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Res.HyorderOneRes;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
@@ -64,5 +63,9 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
 
     String time();
+
+    StatisticAmountVo statisticProfitLoss(int companyId);
+
+    StatisticNumVo statisticNum(String startDate, String endDate, int companyId);
 
 }
