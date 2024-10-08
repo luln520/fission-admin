@@ -155,6 +155,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
+    public Integer countAuthAllUsers(int companyId) {
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_type",1);
+        queryWrapper.eq("company_id", companyId);
+        queryWrapper.eq("rzstatus", 2);
+        return this.baseMapper.selectCount(queryWrapper).intValue();
+    }
+
+    @Override
     public Integer countTodayUsers(long startTime, long endTime,int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_type",1);
@@ -177,6 +186,11 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Override
     public Integer countYtUsers(int companyId) {
         return this.baseMapper.statisticYtUserCount(companyId);
+    }
+
+    @Override
+    public Integer countYtAuthUsers(int companyId) {
+        return this.baseMapper.statisticYtAuthUserCount(companyId);
     }
 
     @Override

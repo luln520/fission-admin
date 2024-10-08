@@ -27,5 +27,23 @@
         </if>
         order by id desc
     </select>
+    <select id="statisticPerNum" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo">
+        SELECT
+        COUNT(*) as count,
+        DATE(addtime) AS date
+        FROM tw_recharge
+        WHERE 1=1 AND company_id = #{companyId} AND status = 2
+        <choose>
+            <when test="startTime != null and endTime != null">
+                AND addtime &gt;= FROM_UNIXTIME(#{startTime})
+                AND addtime &lt;= FROM_UNIXTIME(#{endTime})
+            </when>
+            <otherwise>
+                AND addtime &gt;= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+            </otherwise>
+        </choose>
+        GROUP BY DATE(addtime)
+        ORDER BY date ASC
+    </select>
 
 </mapper>

@@ -33,11 +33,15 @@ public interface TwUserService extends IService<TwUser> {
 
     Integer countAllUsers(int companyId);
 
+    Integer countAuthAllUsers(int companyId);
+
     Integer countTodayUsers(long startTime, long endTime,int companyId);
 
     Integer countLineUsers(String startTime , String endTime,int companyId);
 
     Integer countYtUsers(int companyId);
+
+    Integer countYtAuthUsers(int companyId);
 
     IPage<TwUser> listpage(TwUserVo twUserVo);
 

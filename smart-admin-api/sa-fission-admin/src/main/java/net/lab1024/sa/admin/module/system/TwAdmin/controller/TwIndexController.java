@@ -108,6 +108,8 @@ public class TwIndexController {
         int allUser = 0;//userDao.countAllUsers();
         allUser = twUserService.countAllUsers(companyId);
         int ytUser = twUserService.countYtUsers(companyId);
+        int allAuthUser = twUserService.countAuthAllUsers(companyId);
+        int ytAuthUser = twUserService.countYtAuthUsers(companyId);
 
         //用户总余额
         BigDecimal userCoinSum = new BigDecimal(100);
@@ -144,6 +146,9 @@ public class TwIndexController {
         StatisticNumVo hyStatisticNumVo = twHyorderService.statisticNum(startDate, endDate, companyId);
         StatisticNumVo leverStatisticNumVo = twLeverOrderService.statisticNum(startDate, endDate, companyId);
 
+        StatisticNumVo rechargeStatisticNumVo = twRechargeService.statisticNum(startDate, endDate, companyId);
+        StatisticNumVo withdrawStatisticNumVo = twMyzcService.statisticNum(startDate, endDate, companyId);
+
         result.put("userStatistic", statisticUserVo);
 
         result.put("hyStatistic", hyStatisticAmountVo);
@@ -152,13 +157,17 @@ public class TwIndexController {
         result.put("hyStatisticNum", hyStatisticNumVo);
         result.put("leverStatisticNum", leverStatisticNumVo);
 
+        result.put("rechargeStatisticNum", rechargeStatisticNumVo);
+        result.put("withdrawStatisticNum", withdrawStatisticNumVo);
 
 
         // 将结果放入Map返回
         result.put("todayUser",todayUser);
         result.put("allUser", allUser);
+        result.put("allAuthUser", allAuthUser);
         result.put("userCoinSum",userCoinSum);
         result.put("ytUser", ytUser);
+        result.put("ytAuthUser", ytAuthUser);
 
         result.put("allHyOrders", allHyOrders);
         result.put("allKjOrders", allKjOrders);

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwOnline;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -22,5 +23,7 @@ import java.util.List;
 public interface TwRechargeDao  extends BaseMapper<TwRecharge> {
 
     List<TwRecharge> listpage(@Param("objectPage") Page<TwRecharge> objectPage, @Param("obj") TwRechargeVo twRechargeVo);
+
+    List<PerNumVo> statisticPerNum(@Param("days")Integer days, @Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId")int companyId);
 }
 

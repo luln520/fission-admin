@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwBill;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticNumVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -42,5 +43,7 @@ public interface TwRechargeService extends IService<TwRecharge> {
     boolean rechargeNum(Integer id , @RequestParam BigDecimal num);
 
     ResponseDTO paycoin(int uid, String coinname,String czaddress,String  payimg, BigDecimal zznum,BigDecimal currenyNum,String currenyName,String czline,String  language,int companyId);
+
+    StatisticNumVo statisticNum(String startDate, String endDate, int companyId);
 
 }
