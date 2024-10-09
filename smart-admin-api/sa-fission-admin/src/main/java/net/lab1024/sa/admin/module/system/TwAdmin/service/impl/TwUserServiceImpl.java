@@ -1915,7 +1915,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public StatisticUserVo statisticPerUserByDate(String startDate, String endDate, int companyId) {
+    public StatisticUserVo statisticPerUserByDate(String startDate, String endDate, int companyId, boolean isAuth) {
         StatisticUserVo statisticUserVo = new StatisticUserVo();
 
         List<String> dateList = Lists.newArrayList();
@@ -1932,7 +1932,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         Map<String, Integer> resultMap = Maps.newTreeMap();
 
-        List<PerUserVo> perUserVoList = this.baseMapper.statisticPerUser(7, startTime, endTime, companyId);
+        List<PerUserVo> perUserVoList = Lists.newArrayList();
+        if(isAuth) {
+            perUserVoList = this.baseMapper.statisticAuthPerUser(7, startTime, endTime, companyId);
+        }else {
+            perUserVoList = this.baseMapper.statisticPerUser(7, startTime, endTime, companyId);
+        }
         for(String date : dateList) {
             for(PerUserVo perUserVo : perUserVoList) {
                 if (perUserVo.getDate().equals(date)){
@@ -1959,6 +1964,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         BigDecimal kjOrder = new BigDecimal(0);
         BigDecimal recharge = new BigDecimal(0);
         BigDecimal myzc = new BigDecimal(0);
+        BigDecimal amountVolume = new BigDecimal(0);
 
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(ploss), 0) as winHyorder")
@@ -2123,6 +2129,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             myzc =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
         }
 
+        BigDecimal hyAmountVolume = this.twHyorderDao.queryUserAmountVolume(uid);
+        BigDecimal leverAmountVolume = this.twLeverOrderMapper.queryUserAmountVolume(uid);
+        amountVolume = hyAmountVolume.add(leverAmountVolume);
+
         BigDecimal hyorder = winHyorder.subtract(lossHyorder);
         BigDecimal leverOrder = winLeverOrder.subtract(lossLeverOrder);
         BigDecimal totalWinOrder = winHyorder.add(winLeverOrder).add(kjOrder);
@@ -2137,6 +2147,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         results.put("totalLossOrder",totalLossOrder); //用户总亏损
         results.put("recharge",recharge);             //用户总充值
         results.put("myzc",myzc);                     //用户总提现
+
+        results.put("amountVolume", amountVolume);
 
         return ResponseDTO.ok(results);
     }

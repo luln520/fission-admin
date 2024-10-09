@@ -30,6 +30,9 @@ public interface TwLeverOrderMapper extends BaseMapper<TwLeverOrder> {
     @Select("SELECT sum(num) FROM tw_lever_order where company_id = #{companyId}")
     BigDecimal statisticAmountVolume(@Param("companyId") Integer companyId);
 
+    @Select("SELECT IFNULL(SUM(num), 0) FROM tw_lever_order where uid = #{uId}")
+    BigDecimal queryUserAmountVolume(@Param("uId") Integer uId);
+
     List<PerNumVo> statisticPerNum(@Param("days")Integer days, @Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId")int companyId);
 }
 

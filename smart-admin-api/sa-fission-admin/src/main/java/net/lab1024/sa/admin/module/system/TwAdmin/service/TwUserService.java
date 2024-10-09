@@ -86,5 +86,5 @@ public interface TwUserService extends IService<TwUser> {
     ResponseDTO mockUser(int uid,int type) ;
     ResponseDTO editPasword(int uid,String oldword,String newword,String language) ;
 
-    StatisticUserVo statisticPerUserByDate(String startDate, String endDate, int companyId);
+    StatisticUserVo statisticPerUserByDate(String startDate, String endDate, int companyId, boolean isAuth);
 }

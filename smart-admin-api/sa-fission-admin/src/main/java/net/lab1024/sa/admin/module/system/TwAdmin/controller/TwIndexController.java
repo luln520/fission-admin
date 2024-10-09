@@ -138,7 +138,8 @@ public class TwIndexController {
         int allLineUsers = 0;//userDao.countLineUsers(nowDate);
         allLineUsers = twUserService.countLineUsers(startTime, endTime,companyId);
 
-        StatisticUserVo statisticUserVo = twUserService.statisticPerUserByDate(startDate, endDate, companyId);
+        StatisticUserVo statisticUserVo = twUserService.statisticPerUserByDate(startDate, endDate, companyId, false);
+        StatisticUserVo statisticAuthUserVo = twUserService.statisticPerUserByDate(startDate, endDate, companyId, true);
 
         StatisticAmountVo hyStatisticAmountVo = twHyorderService.statisticProfitLoss(companyId);
         StatisticAmountVo leverStatisticAmountVo = twLeverOrderService.statisticProfitLoss(companyId);
@@ -150,6 +151,7 @@ public class TwIndexController {
         StatisticNumVo withdrawStatisticNumVo = twMyzcService.statisticNum(startDate, endDate, companyId);
 
         result.put("userStatistic", statisticUserVo);
+        result.put("userAuthStatistic", statisticAuthUserVo);
 
         result.put("hyStatistic", hyStatisticAmountVo);
         result.put("leverStatistic", leverStatisticAmountVo);
