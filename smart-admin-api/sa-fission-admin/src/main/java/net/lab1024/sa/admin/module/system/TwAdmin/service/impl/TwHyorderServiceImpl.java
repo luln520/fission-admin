@@ -836,6 +836,43 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     }
 
     @Override
+    public ResponseDTO closeOrder(String orderNo) {
+        QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", orderNo);
+        TwHyorder one = this.getOne(queryWrapper);
+        one.setStatus(4);
+        this.updateById(one);
+
+        Integer uid = one.getUid();
+        BigDecimal num = one.getNum();
+
+        Integer orderType = one.getOrderType();
+        if(orderType == 1){
+            //获取会员资产
+            QueryWrapper<TwUserCoin> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("userid", uid); // 添加查询条件
+            TwUserCoin twUserCoin = twUserCoinService.getOne(queryWrapper1);
+
+            twUserCoinService.incre(uid,num,twUserCoin.getUsdt());
+
+            return ResponseDTO.ok();
+        }
+
+        if(orderType == 2){
+            //获取会员资产
+            QueryWrapper<TwMockUserCoin> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("userid", uid); // 添加查询条件
+            TwMockUserCoin twMockUserCoin = twMockUserCoinService.getOne(queryWrapper1);
+
+            twMockUserCoinService.incre(uid,num,twMockUserCoin.getUsdt());
+
+            return ResponseDTO.ok();
+        }
+
+        return ResponseDTO.ok();
+    }
+
+    @Override
     public String time() {
         return DateUtil.date2Str(DateUtil.stract12());
     }
