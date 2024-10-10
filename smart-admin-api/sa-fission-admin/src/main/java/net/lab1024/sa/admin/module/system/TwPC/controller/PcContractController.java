@@ -124,5 +124,13 @@ public class PcContractController {
         return ResponseDTO.ok(twHyorderService.time());
     }
 
+    @GetMapping("/closeOrder")
+    @ResponseBody
+    @ApiOperation(value = "取消订单")
+    @NoNeedLogin
+    public ResponseDTO closeOrder(@RequestParam String orderNo) {
+        return ResponseDTO.ok(twHyorderService.closeOrder(orderNo));
+    }
+
 }
 
