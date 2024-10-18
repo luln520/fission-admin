@@ -108,6 +108,8 @@ public class TwIndexController {
         int allUser = 0;//userDao.countAllUsers();
         allUser = twUserService.countAllUsers(companyId);
         int ytUser = twUserService.countYtUsers(companyId);
+        int allAuthUser = twUserService.countAuthAllUsers(companyId);
+        int ytAuthUser = twUserService.countYtAuthUsers(companyId);
 
         //用户总余额
         BigDecimal userCoinSum = new BigDecimal(100);
@@ -136,7 +138,8 @@ public class TwIndexController {
         int allLineUsers = 0;//userDao.countLineUsers(nowDate);
         allLineUsers = twUserService.countLineUsers(startTime, endTime,companyId);
 
-        StatisticUserVo statisticUserVo = twUserService.statisticPerUserByDate(startDate, endDate, companyId);
+        StatisticUserVo statisticUserVo = twUserService.statisticPerUserByDate(startDate, endDate, companyId, false);
+        StatisticUserVo statisticAuthUserVo = twUserService.statisticPerUserByDate(startDate, endDate, companyId, true);
 
         StatisticAmountVo hyStatisticAmountVo = twHyorderService.statisticProfitLoss(companyId);
         StatisticAmountVo leverStatisticAmountVo = twLeverOrderService.statisticProfitLoss(companyId);
@@ -144,7 +147,11 @@ public class TwIndexController {
         StatisticNumVo hyStatisticNumVo = twHyorderService.statisticNum(startDate, endDate, companyId);
         StatisticNumVo leverStatisticNumVo = twLeverOrderService.statisticNum(startDate, endDate, companyId);
 
+        StatisticNumVo rechargeStatisticNumVo = twRechargeService.statisticNum(startDate, endDate, companyId);
+        StatisticNumVo withdrawStatisticNumVo = twMyzcService.statisticNum(startDate, endDate, companyId);
+
         result.put("userStatistic", statisticUserVo);
+        result.put("userAuthStatistic", statisticAuthUserVo);
 
         result.put("hyStatistic", hyStatisticAmountVo);
         result.put("leverStatistic", leverStatisticAmountVo);
@@ -152,13 +159,17 @@ public class TwIndexController {
         result.put("hyStatisticNum", hyStatisticNumVo);
         result.put("leverStatisticNum", leverStatisticNumVo);
 
+        result.put("rechargeStatisticNum", rechargeStatisticNumVo);
+        result.put("withdrawStatisticNum", withdrawStatisticNumVo);
 
 
         // 将结果放入Map返回
         result.put("todayUser",todayUser);
         result.put("allUser", allUser);
+        result.put("allAuthUser", allAuthUser);
         result.put("userCoinSum",userCoinSum);
         result.put("ytUser", ytUser);
+        result.put("ytAuthUser", ytAuthUser);
 
         result.put("allHyOrders", allHyOrders);
         result.put("allKjOrders", allKjOrders);

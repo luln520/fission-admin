@@ -28,9 +28,16 @@ public interface TwUserDao extends BaseMapper<TwUser> {
 
     List<TwUser> authList(@Param("objectPage") Page<TwUser> objectPage, @Param("obj") TwUserVo twUserVo);
 
-    List<PerUserVo> statisticPerUser(@Param("days")Integer days, @Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId")int companyId);
+    List<PerUserVo> statisticPerUser(@Param("days")Integer days, @Param("startTime")Long startTime, @Param("endTime")Long endTime,
+                                     @Param("companyId")int companyId);
+
+    List<PerUserVo> statisticAuthPerUser(@Param("days")Integer days, @Param("startTime")Long startTime, @Param("endTime")Long endTime,
+                                     @Param("companyId")int companyId);
 
     @Select("SELECT COUNT(*) as total FROM tw_user WHERE addtime >= UNIX_TIMESTAMP(CURDATE() - INTERVAL 1 DAY) AND addtime < UNIX_TIMESTAMP(CURDATE())")
     int statisticYtUserCount(@Param("companyId")int companyId);
+
+    @Select("SELECT COUNT(*) as total FROM tw_user WHERE rzstatus = 2 AND addtime >= UNIX_TIMESTAMP(CURDATE() - INTERVAL 1 DAY) AND addtime < UNIX_TIMESTAMP(CURDATE())")
+    int statisticYtAuthUserCount(@Param("companyId")int companyId);
 }
 

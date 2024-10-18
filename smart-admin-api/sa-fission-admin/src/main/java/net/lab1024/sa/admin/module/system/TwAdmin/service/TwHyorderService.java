@@ -60,6 +60,7 @@ public interface TwHyorderService extends IService<TwHyorder> {
     ResponseDTO creatorder(int uid,String ctime,BigDecimal ctzed, String ccoinname,int ctzfx,BigDecimal cykbl,String language, String plantime);
 
     ResponseDTO orderNo(String orderNo);
+    ResponseDTO closeOrder(String orderNo);
 
 
     String time();
