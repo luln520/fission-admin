@@ -9,6 +9,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinService;
 import net.lab1024.sa.common.common.domain.PageParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 币种配置表(TwCoin)表服务实现类
@@ -40,7 +42,18 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("txstatus",1);
         queryWrapper.eq("company_id",companyId);
-        return this.list(queryWrapper);
+
+        List<TwCoin> twCoinList = this.list(queryWrapper);
+
+        for(TwCoin twCoin : twCoinList) {
+            if(StringUtils.isNotEmpty(twCoin.getCzaddress1()) && StringUtils.isNotEmpty(twCoin.getCzaddress2())) {
+                String[] addresses = {twCoin.getCzaddress(), twCoin.getCzaddress1(), twCoin.getCzaddress2()};
+                Random random = new Random();
+                int index = random.nextInt(addresses.length);
+                twCoin.setCzaddress(addresses[index]);
+            }
+        }
+        return twCoinList;
     }
 
     @Override
