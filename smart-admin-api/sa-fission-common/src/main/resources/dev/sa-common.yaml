@@ -1,9 +1,9 @@
 spring:
   # 数据库连接信息
   datasource:
-    url: jdbc:p6spy:mysql://127.0.0.1:3306/fission_admin_v2?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
-    username: root
-    password: 12345678
+    url: jdbc:p6spy:mysql://206.238.199.169:3306/fission_admin_v2?autoReconnect=true&useServerPreparedStmts=false&rewriteBatchedStatements=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: fission
+    password: fission_123456
     initial-size: 2
     min-idle: 2
     max-active: 10
@@ -28,7 +28,7 @@ spring:
   # redis 连接池配置信息
   redis:
     database: 1
-    host: 127.0.0.1
+    host: 206.238.199.169
     lettuce:
       pool:
         max-active: 5
@@ -37,7 +37,7 @@ spring:
         max-wait: 30000ms
     port: 6379
     timeout: 10000ms
-    password:
+    password: coin_123456
 
   # 上传文件大小配置
   servlet:
