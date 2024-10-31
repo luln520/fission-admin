@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwAddressMapper">
+
+    <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddress">
+        select ta.*, tab.currency, tab.balance from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id
+        where 1=1
+        <if test="obj.uid != null and obj.uid !=''">
+            and ta.uid = #{obj.uid}
+        </if>
+<!--        <if test="obj.oneName != null and obj.oneName !=''">-->
+<!--            and one_name = #{obj.oneName}-->
+<!--        </if>-->
+<!--        <if test="obj.twoName != null and obj.twoName !=''">-->
+<!--            and two_name = #{obj.twoName}-->
+<!--        </if>-->
+<!--        <if test="obj.threeName != null and obj.threeName !=''">-->
+<!--            and three_name = #{obj.threeName}-->
+<!--        </if>-->
+<!--        <if test="obj.employeeId != null and obj.employeeId !=''">-->
+<!--            and path like concat('%',#{obj.employeeId},'%')-->
+<!--        </if>-->
+        order by ta.create_time desc
+    </select>
+</mapper>

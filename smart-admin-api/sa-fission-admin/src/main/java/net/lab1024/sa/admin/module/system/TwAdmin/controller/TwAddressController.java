@@ -1,0 +1,74 @@
+package net.lab1024.sa.admin.module.system.TwAdmin.controller;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddress;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TransferVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
+import net.lab1024.sa.common.common.code.UserErrorCode;
+import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.common.wallet.AddressUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/admin/address")
+@Api(tags = {AdminSwaggerTagConst.System.TW_ADMINLOG})
+@Slf4j
+public class TwAddressController {
+
+    @Autowired
+    private TwAddressService twAddressService;
+
+    @PostMapping("/list")
+    @ApiOperation(value = "获取分配钱包地址列表")
+    public ResponseDTO<IPage<TwAddress>> listpage(@Valid @RequestBody AddressVo addressVo) {
+        return ResponseDTO.ok(twAddressService.listpage(addressVo));
+    }
+
+
+    @PostMapping("/transfer")
+    @ApiOperation(value = "一键归集")
+    public ResponseDTO<String> transfer(@RequestBody TransferVo transferVo) {
+        if(StringUtils.isEmpty(transferVo.getPrivateKey())) {
+            return ResponseDTO.error(UserErrorCode.PARAM_ERROR);
+        }
+        if(!isValidPrivateKey(transferVo.getPrivateKey())) {
+            return ResponseDTO.error(UserErrorCode.PARAM_ERROR, "私钥格式错误");
+        }
+
+        if(StringUtils.isEmpty(transferVo.getAddress())) {
+            return ResponseDTO.error(UserErrorCode.PARAM_ERROR, "地址为空");
+        }
+
+        String ethAddress = AddressUtils.getAddressFromPrivateKey(transferVo.getPrivateKey());
+        String tronAddress = AddressUtils.ethToTron(ethAddress);
+        if(!transferVo.getAddress().toLowerCase().equals(ethAddress.toLowerCase())
+                && !transferVo.getAddress().toLowerCase().equals(tronAddress.toLowerCase())) {
+            return ResponseDTO.error(UserErrorCode.PARAM_ERROR, "私钥与地址校验失败，请检查私钥");
+        }
+
+        List<TwAddress> twAddressList = twAddressService.listBalance();
+        if(CollectionUtils.isEmpty(twAddressList)) {
+            return ResponseDTO.error(UserErrorCode.PARAM_ERROR, "所有子账户没有余额，请稍后尝试");
+        }
+
+        twAddressService.transfer(transferVo.getId(), transferVo.getPrivateKey());
+        return ResponseDTO.ok("已提交归集作业，后续查询余额变化");
+    }
+
+    private boolean isValidPrivateKey(String privateKey) {
+        return privateKey.matches("^[0-9a-fA-F]{64}$");
+    }
+
+
+}

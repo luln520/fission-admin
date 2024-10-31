@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -34,8 +35,8 @@ public class PcCoinController {
     @GetMapping("/list")
     @ApiOperation(value = "账单列表")
     @NoNeedLogin
-    public ResponseDTO<List<TwCoin>> lists(@RequestParam int companyId) {
-        return ResponseDTO.ok(twCoinService.lists(companyId));
+    public ResponseDTO<List<TwCoin>> lists(@RequestParam int companyId, HttpServletRequest request) {
+        return ResponseDTO.ok(twCoinService.lists(companyId, request));
     }
 
     /**
