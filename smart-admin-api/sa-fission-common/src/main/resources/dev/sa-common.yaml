@@ -127,7 +127,7 @@ reload:
 
 eth:
   rpcUrl: https://sepolia.infura.io/v3/89693b1773544c30b1b4b66c2a81813f
-  contractAddress: '0x779877A7B0D9E8603169DdbD7836e478b4624789'
+  contractAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
 tron:
-  isMainNet: false
-  contractAddress: TU2T8vpHZhCNY8fXGVaHyeZrKm8s6HEXWe
+  isMainNet: true
+  contractAddress: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t

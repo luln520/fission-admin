@@ -5,6 +5,7 @@ import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicHierarchy;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDUtils;
+import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.wallet.DeterministicKeyChain;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class WalletClient {
 
-    private static final NetworkParameters NETWORK_PARAMETERS = TestNet3Params.get();
+    private static final NetworkParameters NETWORK_PARAMETERS = MainNetParams.get();
 
     private DeterministicKey rootKey;
     private int chainId;
@@ -60,9 +61,5 @@ public class WalletClient {
 
 
     public static void main(String[] args) {
-        List<String> mnemonic = new ArrayList<>(Arrays.asList("insane","machine", "speed", "hawk", "honey", "border" ,"diet" ,"deny" ,"retire", "lion", "please", "recipe"));
-        WalletClient walletClient = new WalletClient(mnemonic, ChainEnum.TRON);
-        WalletAddress walletAddress = walletClient.generateAddress(0);
-        System.out.println(walletAddress);
     }
 }
