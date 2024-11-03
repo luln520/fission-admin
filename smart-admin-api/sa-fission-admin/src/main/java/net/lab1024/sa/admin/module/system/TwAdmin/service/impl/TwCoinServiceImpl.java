@@ -14,6 +14,7 @@ import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.wallet.NetworkConst;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +64,12 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
 
 
         for(TwCoin twCoin : twCoinList) {
-            if(twCoin.getCzline().equals("ERC20") || twCoin.getName().equals("eth")) {
-                twCoin.setCzaddress(twAddressService.createAddress(uidToken.intValue(), 60));
-            }else if(twCoin.getCzline().equals("TRC20") || twCoin.getName().equals("trx")) {
-                twCoin.setCzaddress(twAddressService.createAddress(uidToken.intValue(), 195));
+            if(twCoin.getCzline().equals(NetworkConst.ETH)) {
+                twCoin.setCzaddress(twAddressService.createAddress(uidToken.intValue(), 60, twCoin.getId()));
+            }else if(twCoin.getCzline().equals(NetworkConst.TRON)) {
+                twCoin.setCzaddress(twAddressService.createAddress(uidToken.intValue(), 195, twCoin.getId()));
             }else {
-                twCoin.setCzaddress(twAddressService.createAddress(uidToken.intValue(), 0));
+                twCoin.setCzaddress(twAddressService.createAddress(uidToken.intValue(), 0, twCoin.getId()));
             }
         }
         /*for(TwCoin twCoin : twCoinList) {

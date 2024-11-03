@@ -4,21 +4,29 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
 import net.lab1024.sa.common.common.wallet.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Service
 public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress> implements TwAddressService {
 
@@ -40,6 +48,9 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     @Autowired
     private TwCoinDao twCoinDao;
 
+    @Autowired
+    ResourceLoader resourceLoader;
+
     @Override
     public IPage<TwAddress> listpage(AddressVo addressVo) {
         /*BigInteger amount = new BigInteger("1000000000000000000");
@@ -55,8 +66,22 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     }
 
     @Override
-    public String createAddress(int uid, int chainId) {
-        TwAddress twAddress = baseMapper.findByChainId(uid, chainId);
+    public String createAddress(int uid, int chainId, int coinId) {
+        Resource resource = resourceLoader.getResource("classpath:public.key");
+        byte[] keyBytes = new byte[0];
+        try (InputStream is = resource.getInputStream()) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, length);
+            }
+            keyBytes = baos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        TwAddress twAddress = baseMapper.findByChainId(uid, chainId, coinId);
         if(twAddress == null) {
             twAddress = new TwAddress();
             //获取助记词
@@ -70,7 +95,13 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             twAddress.setChainId(chainId);
             twAddress.setAddress(walletAddress.getAddress());
             twAddress.setPublicKey(walletAddress.getPublicKey());
-            twAddress.setPrivateKey(walletAddress.getPrivateKey());
+            twAddress.setCoinId(coinId);
+
+            try{
+                twAddress.setPrivateKey(CertificateManager.encrypt(walletAddress.getPrivateKey(), keyBytes));
+            }catch (Exception e){
+                log.error("加密私钥失败, {}", e);
+            }
             baseMapper.insert(twAddress);
 
             TwAddressBalance twAddressBalance = new TwAddressBalance();
@@ -84,30 +115,123 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
     @Async
     @Override
-    public void transfer(int coinId, String primaryKey) {
+    public void oneKeyCollect(int coinId, byte[] keyBytes) {
+
         TwCoin twCoin = twCoinDao.selectById(coinId);
-        List<TwAddress> twAddressList = this.listBalance();
+        List<TwAddress> twAddressList = this.listBalanceAddress(coinId);
         if(!CollectionUtils.isEmpty(twAddressList)) {
             for(TwAddress twAddress : twAddressList) {
-                String amount = twAddress.getBalance().setScale(6, RoundingMode.HALF_UP).toString();
-                if(twCoin.getCzline().equals("ERC20")) {
-                    String txHash = ethClient.transferFrom(primaryKey, twAddress.getAddress(), twCoin.getCzaddress(), TokenUtils.toWei(amount));
 
+                String privateKey = null;
+
+                try {
+                    privateKey = CertificateManager.decrypt(twAddress.getPrivateKey(), keyBytes);
+                }catch(Exception e) {
+                    log.error("当前账户{}解析私钥失败{}", twAddress.getAddress(), e);
+                }
+
+                String amount = twAddress.getBalance().setScale(6, RoundingMode.HALF_UP).toString();
+                if(twCoin.getCzline().equals(NetworkConst.ETH)) {
                     TwReceipt twReceipt = new TwReceipt();
+                    twReceipt.setBizStatus(1);
                     twReceipt.setChainId(60);
                     twReceipt.setFromAddress(twAddress.getAddress());
                     twReceipt.setToAddress(twCoin.getCzaddress());
-                    twReceipt.setTx(txHash);
+                    try {
+                        String txHash = ethClient.transferErc20(privateKey, twCoin.getCzaddress(), TokenUtils.toWei(amount));
+                        twReceipt.setTx(txHash);
+                    }catch (RuntimeException e) {
+                        twReceipt.setCaused(e.getMessage());
+                    }
                     twReceiptMapper.insert(twReceipt);
-                }else if(twCoin.getCzline().equals("TRC20")) {
-                    tronClient.init(primaryKey);
-                    String txHash = tronClient.transferFrom(twAddress.getAddress(), twCoin.getCzaddress(), amount);
+
+                    this.updateAddressBalance(twAddress.getAddress());
+                }else if(twCoin.getCzline().equals(NetworkConst.TRON)) {
+                    tronClient.init(privateKey);
 
                     TwReceipt twReceipt = new TwReceipt();
+                    twReceipt.setBizStatus(1);
                     twReceipt.setChainId(195);
                     twReceipt.setFromAddress(twAddress.getAddress());
                     twReceipt.setToAddress(twCoin.getCzaddress());
-                    twReceipt.setTx(txHash);
+                    try {
+                        String txHash = tronClient.transferTrc20(twAddress.getAddress(), twCoin.getCzaddress(), amount);
+                        twReceipt.setTx(txHash);
+                    }catch (RuntimeException e) {
+                        twReceipt.setCaused(e.getMessage());
+                    }
+                    twReceiptMapper.insert(twReceipt);
+
+                    this.updateAddressBalance(twAddress.getAddress());
+                }
+
+            }
+        }
+    }
+
+    @Override
+    public List<TwAddress> listBalanceAddress(int coinId) {
+        return baseMapper.listBalanceAddress(coinId, 100);
+    }
+
+    @Override
+    public void updateAddressBalance(String address) {
+        TwAddress twAddress = baseMapper.findByAddress(address);
+
+        if(twAddress != null) {
+            if(twAddress.getChainId() == ChainEnum.ETH.getCode()) {
+                BigInteger balance = ethClient.getErc20Balance(twAddress.getAddress());
+                twAddressBalanceMapper.updateBalance(TokenUtils.convertUsdtBalance(balance), twAddress.getId());
+            }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
+                tronClient.init("");
+                BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress());
+                twAddressBalanceMapper.updateBalance(TokenUtils.convertUsdtBalance(balance), twAddress.getId());
+            }
+        }
+    }
+
+    @Async
+    @Override
+    public void transfer(int coinId, String privateKey) {
+        TwCoin twCoin = twCoinDao.selectById(coinId);
+
+        List<TwAddress> twAddressList = this.listBalanceAddress(coinId);
+        if(!CollectionUtils.isEmpty(twAddressList)) {
+            for(TwAddress twAddress : twAddressList) {
+                if(twCoin.getCzline().equals(NetworkConst.ETH)) {
+                    //默认0.002eth
+                    BigDecimal bigDecimal = new BigDecimal("0.002");
+
+                    TwReceipt twReceipt = new TwReceipt();
+                    twReceipt.setBizStatus(0);
+                    twReceipt.setChainId(60);
+                    twReceipt.setFromAddress(twCoin.getFeeaddress());
+                    twReceipt.setToAddress(twAddress.getAddress());
+                    try {
+                        String txHash = ethClient.sendFund(privateKey, twAddress.getAddress(), bigDecimal);
+                        twReceipt.setTx(txHash);
+                        log.info("接收eth账户为{}, 发送eth的交易Hash为:{}", twAddress.getAddress(), txHash);
+                    }catch(RuntimeException e) {
+                        twReceipt.setCaused(e.getMessage());
+                    }
+                    twReceiptMapper.insert(twReceipt);
+                }else if(twCoin.getCzline().equals(NetworkConst.TRON)) {
+                    tronClient.init(privateKey);
+                    //默认50trx
+
+                    TwReceipt twReceipt = new TwReceipt();
+                    twReceipt.setBizStatus(0);
+                    twReceipt.setChainId(195);
+                    twReceipt.setFromAddress(twCoin.getFeeaddress());
+                    twReceipt.setToAddress(twAddress.getAddress());
+
+                    try {
+                        String ret = tronClient.sendFund(twCoin.getCzaddress(), twAddress.getAddress(), "50");
+                        log.info("接收能量账户为{}, 发送trx的交易Hash为:{}", twAddress.getAddress(), ret);
+                        twReceipt.setTx(ret);
+                    }catch(RuntimeException e) {
+                        twReceipt.setCaused(e.getMessage());
+                    }
                     twReceiptMapper.insert(twReceipt);
                 }
             }
@@ -115,8 +239,8 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     }
 
     @Override
-    public List<TwAddress> listBalance() {
-        return baseMapper.listBalance(100);
+    public List<TwAddress> listAddress() {
+        return baseMapper.listAddress();
     }
 
 

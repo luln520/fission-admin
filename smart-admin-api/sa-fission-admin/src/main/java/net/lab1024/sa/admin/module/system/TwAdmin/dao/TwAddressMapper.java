@@ -15,9 +15,15 @@ public interface TwAddressMapper extends BaseMapper<TwAddress> {
 
     List<TwAddress> listpage(@Param("objectPage") Page<TwAddress> objectPage, @Param("obj") AddressVo addressVo);
 
-    @Select("SELECT * FROM tw_address where chain_id = #{chainId} AND uid = #{uid} limit 1")
-    TwAddress findByChainId(@Param("uid") Integer uid, @Param("chainId") Integer chainId);
+    @Select("SELECT * FROM tw_address where chain_id = #{chainId} AND uid = #{uid} AND coin_id = #{coinId} limit 1")
+    TwAddress findByChainId(@Param("uid") Integer uid, @Param("chainId") Integer chainId, @Param("coinId") Integer coinId);
 
-    @Select("select ta.*, tab.currency, tab.balance from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id where tab.balance > 0 limit #{limit}")
-    List<TwAddress> listBalance(@Param("limit") int limit);
+    @Select("select ta.*, tab.currency, tab.balance from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id where tab.balance > 0 AND ta.coin_id = #{coinId} limit #{limit}")
+    List<TwAddress> listBalanceAddress(@Param("coinId") int coinId, @Param("limit") int limit);
+
+    @Select("SELECT * FROM tw_address where address = #{address} limit 1")
+    TwAddress findByAddress(@Param("address") String address);
+
+    @Select("select * from tw_address")
+    List<TwAddress> listAddress();
 }

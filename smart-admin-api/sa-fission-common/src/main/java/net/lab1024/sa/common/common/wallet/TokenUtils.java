@@ -4,8 +4,13 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 public class TokenUtils {
+
+    // USDT的小数位数
+    private static final int USDT_DECIMALS = 6;
+
     /**
      * 将显示金额转换为链上金额（考虑精度）
      */
@@ -32,5 +37,15 @@ public class TokenUtils {
      */
     public static BigDecimal fromWei(BigInteger wei) {
         return Convert.fromWei(new BigDecimal(wei), Convert.Unit.ETHER);
+    }
+
+    /**
+     * 将USDT原始余额转换为实际金额
+     * @param rawBalance 原始余额
+     * @return 实际USDT金额
+     */
+    public static BigDecimal convertUsdtBalance(BigInteger rawBalance) {
+        return new BigDecimal(rawBalance)
+                .divide(BigDecimal.TEN.pow(USDT_DECIMALS), USDT_DECIMALS, RoundingMode.HALF_DOWN);
     }
 }

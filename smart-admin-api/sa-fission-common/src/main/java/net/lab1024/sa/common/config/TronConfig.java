@@ -19,8 +19,11 @@ public class TronConfig {
     @Value("${tron.contractAddress}")
     private String contractAddress;
 
+    @Value("${tron.apiKey}")
+    private String apiKey;
+
     @Bean
     public TronClient initTronClient() {
-        return new TronClient(isMainNet, contractAddress);
+        return new TronClient(isMainNet, contractAddress, apiKey);
     }
 }

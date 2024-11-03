@@ -184,4 +184,6 @@ public class TwCoin implements Serializable {
     @ApiModelProperty("公司id")
     private Integer companyId;
 
+    @ApiModelProperty("手续费地址")
+    private String feeaddress;
 }

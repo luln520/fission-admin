@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import io.swagger.models.auth.In;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +68,9 @@ public class TimerServiceImpl {
 
     @Autowired
     private TwUserService twUserService;
+
+    @Autowired
+    private TwAddressService twAddressService;
 //
 //    @Autowired
 //    private TwKuangjiService twKuangjiService;
@@ -1481,6 +1485,17 @@ public class TimerServiceImpl {
 
         }
 
+    }
+
+    public void updateBalanceCron() {
+        List<TwAddress> twAddressList = twAddressService.listAddress();
+        if(CollectionUtils.isNotEmpty(twAddressList)) {
+            for(TwAddress twAddress : twAddressList) {
+                log.info("开始更新地址 {} 的余额", twAddress.getAddress());
+                twAddressService.updateAddressBalance(twAddress.getAddress());
+                log.info("更新地址 {} 的成功", twAddress.getAddress());
+            }
+        }
     }
 
 //

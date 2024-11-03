@@ -39,4 +39,10 @@ public class TwReceipt {
 
     @ApiModelProperty("更新时间")
     private Date updateTime;
+
+    @ApiModelProperty("caused")
+    private String caused;
+
+    @ApiModelProperty("bizStatus")
+    private Integer bizStatus;
 }

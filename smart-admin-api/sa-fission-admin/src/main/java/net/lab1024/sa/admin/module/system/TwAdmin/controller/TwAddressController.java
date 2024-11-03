@@ -12,10 +12,12 @@ import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
 import net.lab1024.sa.common.common.code.UserErrorCode;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.wallet.AddressUtils;
+import net.lab1024.sa.common.common.wallet.CertificateManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,8 +38,13 @@ public class TwAddressController {
     }
 
 
+    /**
+     *
+     * @param transferVo
+     * @return
+     */
     @PostMapping("/transfer")
-    @ApiOperation(value = "一键归集")
+    @ApiOperation(value = "发送能量")
     public ResponseDTO<String> transfer(@RequestBody TransferVo transferVo) {
         if(StringUtils.isEmpty(transferVo.getPrivateKey())) {
             return ResponseDTO.error(UserErrorCode.PARAM_ERROR);
@@ -56,19 +63,39 @@ public class TwAddressController {
                 && !transferVo.getAddress().toLowerCase().equals(tronAddress.toLowerCase())) {
             return ResponseDTO.error(UserErrorCode.PARAM_ERROR, "私钥与地址校验失败，请检查私钥");
         }
-
-        List<TwAddress> twAddressList = twAddressService.listBalance();
-        if(CollectionUtils.isEmpty(twAddressList)) {
-            return ResponseDTO.error(UserErrorCode.PARAM_ERROR, "所有子账户没有余额，请稍后尝试");
-        }
-
         twAddressService.transfer(transferVo.getId(), transferVo.getPrivateKey());
-        return ResponseDTO.ok("已提交归集作业，后续查询余额变化");
+
+        return ResponseDTO.okMsg("已提交发送能量作业，后续查询余额变化");
     }
 
     private boolean isValidPrivateKey(String privateKey) {
         return privateKey.matches("^[0-9a-fA-F]{64}$");
     }
 
+    /**
+     * 上传证书归集
+     * @param keystoreFile
+     * @return
+     */
+    @PostMapping("/upload-keystore")
+    @ApiOperation(value = "上传证书归集")
+    public ResponseDTO<String> uploadKeystoreAndDecrypt(
+            @RequestPart("keystoreFile") MultipartFile keystoreFile,
+            @RequestParam("coinId") Integer coinId) {
+        try {
+            if(coinId == null || coinId == 0) {
+                return ResponseDTO.error(UserErrorCode.PARAM_ERROR, "缺少参数coinId");
+            }
 
+            List<TwAddress> twAddressList = twAddressService.listBalanceAddress(coinId);
+            if(CollectionUtils.isEmpty(twAddressList)) {
+                return ResponseDTO.error(UserErrorCode.PARAM_ERROR, "所有子账户没有余额，请稍后尝试");
+            }
+
+            twAddressService.oneKeyCollect(coinId, keystoreFile.getBytes());
+            return ResponseDTO.okMsg("已提交归集作业，后续查询余额变化");
+        } catch (Exception e) {
+            return ResponseDTO.error(UserErrorCode.PARAM_ERROR);
+        }
+    }
 }

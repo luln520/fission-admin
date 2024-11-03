@@ -25,6 +25,9 @@ public class TwAddress {
     @ApiModelProperty("链标识")
     private Integer chainId;
 
+    @ApiModelProperty("主地址ID")
+    private Integer coinId;
+
     @ApiModelProperty("地址")
     private String address;
 
