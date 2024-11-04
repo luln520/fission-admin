@@ -242,7 +242,70 @@
             <version>1.4.7</version>
         </dependency>
 
+        <!-- Bitcoin -->
+        <dependency>
+            <groupId>org.bitcoinj</groupId>
+            <artifactId>bitcoinj-core</artifactId>
+            <version>0.15.10</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.tron.tronj</groupId>-->
+<!--            <artifactId>tronj-core</artifactId>-->
+<!--            <version>0.4.0</version>-->
+<!--        </dependency>-->
+
+        <!-- Tron -->
+<!--        <dependency>-->
+<!--            <groupId>com.github.tronprotocol</groupId>-->
+<!--            <artifactId>java-tron</artifactId>-->
+<!--            <version>Odyssey-v3.2.1.1</version>-->
+<!--        </dependency>-->
+
+        <!-- Ethereum client -->
+        <dependency>
+            <groupId>org.web3j</groupId>
+            <artifactId>core</artifactId>
+            <version>4.9.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.tron.trident</groupId>
+            <artifactId>abi</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tron.trident</groupId>
+            <artifactId>utils</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tron.trident</groupId>
+            <artifactId>core</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-all</artifactId>
+            <version>1.68.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>4.28.3</version>
+        </dependency>
+
+        <!-- BouncyCastle Provider包，提供基础加密功能 -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
+
+        <!-- BouncyCastle PKIX包，提供证书处理相关功能 -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.70</version>
+        </dependency>
     </dependencies>
-
-
 </project>

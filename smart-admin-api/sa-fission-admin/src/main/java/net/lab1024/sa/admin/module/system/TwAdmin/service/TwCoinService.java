@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public interface TwCoinService extends IService<TwCoin> {
 
     IPage<TwCoin> listpage(PageParam pageParam);
 
-    List<TwCoin> lists( int companyId);
+    List<TwCoin> lists( int companyId, HttpServletRequest request);
 
     boolean addOrUpdate(TwCoin twCoin);
 

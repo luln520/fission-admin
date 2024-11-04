@@ -124,3 +124,19 @@ heart-beat:
 # 热加载配置
 reload:
   interval-seconds: 300
+
+#eth:
+#  rpcUrl: https://sepolia.infura.io/v3/89693b1773544c30b1b4b66c2a81813f
+#  contractAddress: '0xaA8E23Fb1079EA71e0a56F48a2aA51851D8433D0'
+#tron:
+#  isMainNet: false
+#  apiKey: 94b3b889-19e2-49e0-a847-21858f23ca0f
+#  contractAddress: TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj
+
+eth:
+  rpcUrl: https://mainnet.infura.io/v3/89693b1773544c30b1b4b66c2a81813f
+  contractAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+tron:
+  isMainNet: true
+  apiKey: 94b3b889-19e2-49e0-a847-21858f23ca0f
+  contractAddress: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
