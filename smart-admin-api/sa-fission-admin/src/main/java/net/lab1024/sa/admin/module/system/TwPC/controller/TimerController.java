@@ -33,12 +33,13 @@ public class TimerController {
         timerService.hycarryplanout();
     }
 
+//    @Scheduled(cron = "0 0 1 1 * ?")
     @Scheduled(cron = "*/5 * * * * ?")
     public void mockhycarryout()  {
         timerService.mockhycarryout();
     }
 
-        @Scheduled(cron = "0 0 1 1 * ?")
+    @Scheduled(cron = "*/5 * * * * ?")
     public void mockhycarryplanout()  {
         timerService.mockhycarryplanout();
     }
@@ -55,6 +56,9 @@ public class TimerController {
     }
 
 
-
+    @Scheduled(cron = "0 0 1 1 * ?")
+    public void mockUserStatus()  {
+        timerService.mockUserStatus();
+    }
 }
 
