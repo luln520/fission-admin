@@ -5,7 +5,7 @@
 -->
 <Configuration status="INFO" monitorInterval="30">
     <Properties>
-        <Property name="log-path">$${env:localPath:-/Users/wangzx}/logs/smart_admin_v2/fissiondev</Property>
+        <Property name="log-path">$${env:localPath:-/home}/logs/smart_admin_v2/fissiondev</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
