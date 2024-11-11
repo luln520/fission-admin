@@ -813,6 +813,17 @@ public class TimerServiceImpl {
             twHyorderService.updateById(twHyorder);
         }
     }
+    public  void mockUserStatus() {
+        QueryWrapper<TwMockUserCoin> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("status",2);
+        List<TwMockUserCoin> list = twMockUserCoinService.list(queryWrapper);
+
+        for (TwMockUserCoin twMockUserCoin:list){
+            twMockUserCoin.setStatus(1);
+            twMockUserCoinService.updateById(twMockUserCoin);
+        }
+
+    }
 
 
     public  void mockhycarryout() {

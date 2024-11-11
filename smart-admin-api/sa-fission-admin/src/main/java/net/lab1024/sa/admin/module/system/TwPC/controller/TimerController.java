@@ -43,8 +43,8 @@ public class TimerController {
     public void mockhycarryplanout()  {
         timerService.mockhycarryplanout();
     }
-
-//    @Scheduled(cron = "0 */5 * * * ?")
+//
+////    @Scheduled(cron = "0 */5 * * * ?")
     @Scheduled(cron = "0 */1 * * * ?")
     public void report()  {
         timerService.report();
@@ -56,6 +56,9 @@ public class TimerController {
     }
 
 
-
+    @Scheduled(cron = "0 0 1 1 * ?")
+    public void mockUserStatus()  {
+        timerService.mockUserStatus();
+    }
 }
 
