@@ -28,6 +28,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class SmartAdminApplication {
 
     public static void main(String[] args) {
+        System.setProperty("jdk.tls.namedGroups", "secp256r1, secp384r1, ffdhe2048, ffdhe3072");
         SpringApplication.run(SmartAdminApplication.class, args);
     }
 }
