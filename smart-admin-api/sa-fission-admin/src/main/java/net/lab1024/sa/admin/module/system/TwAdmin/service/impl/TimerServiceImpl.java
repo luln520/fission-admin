@@ -1491,6 +1491,10 @@ public class TimerServiceImpl {
         List<TwAddress> twAddressList = twAddressService.listAddress();
         if(CollectionUtils.isNotEmpty(twAddressList)) {
             for(TwAddress twAddress : twAddressList) {
+                log.info("开始检查地址 {} 的当前状态", twAddress.getAddress());
+                twAddressService.checkTransfer(twAddress);
+                log.info("检查地址 {} 的当前状态成功", twAddress.getAddress());
+
                 log.info("开始更新地址 {} 的余额", twAddress.getAddress());
                 twAddressService.updateAddressBalance(twAddress.getAddress());
                 log.info("更新地址 {} 的成功", twAddress.getAddress());

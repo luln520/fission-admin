@@ -1,5 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,6 +10,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
 import net.lab1024.sa.common.common.wallet.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -46,10 +48,19 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     private TronClient tronClient;
 
     @Autowired
+    private TronRpcClient tronRpcClient;
+
+    @Autowired
     private TwCoinDao twCoinDao;
 
     @Autowired
     ResourceLoader resourceLoader;
+
+    @Autowired
+    private TwAddressDetailMapper twAddressDetailMapper;
+
+    @Autowired
+    private TwUserCoinService twUserCoinService;
 
     @Override
     public IPage<TwAddress> listpage(AddressVo addressVo) {
@@ -63,6 +74,14 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         List<TwAddress> listpage = baseMapper.listpage(objectPage, addressVo);
         objectPage.setRecords(listpage);
         return objectPage;
+    }
+
+    @Override
+    public List<TwAddressDetail> listDetail(AddressVo addressVo) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("address_id",addressVo.getAddressId());
+        List<TwAddressDetail> listpage = this.twAddressDetailMapper.selectList(queryWrapper);
+        return listpage;
     }
 
     @Override
@@ -91,11 +110,20 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             WalletAddress walletAddress = walletClient.generateAddress(step);
             twRootAddressMapper.updateStep(twRootAddress.getId(), step);
 
+            long blockNum = 0;
+            if(chainId == ChainEnum.ETH.getCode()) {
+                blockNum = ethClient.getNowBlock();
+            }else if(chainId == ChainEnum.TRON.getCode()) {
+                blockNum = tronClient.getNowBlock();
+            }
+
             twAddress.setUid(uid);
             twAddress.setChainId(chainId);
             twAddress.setAddress(walletAddress.getAddress());
             twAddress.setPublicKey(walletAddress.getPublicKey());
             twAddress.setCoinId(coinId);
+            if(blockNum != 0)
+                twAddress.setBlockNumber((int) blockNum);
 
             try{
                 twAddress.setPrivateKey(CertificateManager.encrypt(walletAddress.getPrivateKey(), keyBytes));
@@ -241,6 +269,59 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     @Override
     public List<TwAddress> listAddress() {
         return baseMapper.listAddress();
+    }
+
+    @Override
+    public void checkTransfer(TwAddress twAddress) {
+        if(twAddress.getBlockNumber() == null) {
+            if(twAddress.getChainId() == ChainEnum.ETH.getCode()) {
+                twAddress.setBlockNumber((int) ethClient.getNowBlock());
+            }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
+                tronClient.init("");
+                twAddress.setBlockNumber((int) tronClient.getNowBlock());
+            }
+            this.baseMapper.updateById(twAddress);
+            return;
+        }
+        int startBlockNumber = twAddress.getBlockNumber();
+        BigInteger fromBlock = BigInteger.valueOf(startBlockNumber + 1);
+        List<TransferRecord> transferRecordList = Lists.newArrayList();
+
+        if(twAddress.getChainId() == ChainEnum.ETH.getCode()) {
+            try {
+                transferRecordList = ethClient.queryTransfers(twAddress.getAddress(), fromBlock);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
+            transferRecordList =  tronRpcClient.queryTransfers(fromBlock, twAddress.getAddress());
+        }
+
+        if(!CollectionUtils.isEmpty(transferRecordList)) {
+            BigInteger totalAmount = new BigInteger("0");
+            for(TransferRecord transferRecord : transferRecordList) {
+                TwAddressDetail twAddressDetail = new TwAddressDetail();
+                twAddressDetail.setAddressId(twAddress.getId());
+                twAddressDetail.setFromAddress(transferRecord.getFrom());
+                twAddressDetail.setToAddress(transferRecord.getTo());
+                twAddressDetail.setTx(transferRecord.getTransactionHash());
+                twAddressDetail.setBlockNumber(transferRecord.getBlockNumber().intValue());
+                twAddressDetail.setAmount(TokenUtils.convertUsdtBalance(transferRecord.getValue()));
+                twAddressDetailMapper.insert(twAddressDetail);
+
+                totalAmount = totalAmount.add(transferRecord.getValue());
+                BigDecimal amount = TokenUtils.convertUsdtBalance(totalAmount);
+
+                twAddress.setBlockNumber(transferRecord.getBlockNumber().intValue());
+                this.baseMapper.updateById(twAddress);
+                //更新账户
+                QueryWrapper<TwUserCoin> queryCoin = new QueryWrapper<>();
+                queryCoin.eq("userid", twAddress.getUid());
+                TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
+                BigDecimal usdt = twUserCoin.getUsdt();
+                twUserCoinService.incre(twAddress.getUid(), amount, usdt);
+            }
+        }
     }
 
 

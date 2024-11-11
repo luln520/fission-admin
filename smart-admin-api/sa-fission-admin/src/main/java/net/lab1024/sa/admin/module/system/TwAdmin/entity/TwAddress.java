@@ -48,4 +48,8 @@ public class TwAddress {
 
     @ApiModelProperty("更新时间")
     private Date updateTime;
+
+    @ApiModelProperty("区块号")
+    private Integer blockNumber;
+
 }

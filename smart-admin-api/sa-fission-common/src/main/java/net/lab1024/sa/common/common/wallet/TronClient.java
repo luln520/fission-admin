@@ -10,6 +10,7 @@ import org.tron.trident.core.ApiWrapper;
 import org.tron.trident.core.contract.Contract;
 import org.tron.trident.core.contract.Trc20Contract;
 import org.tron.trident.core.exceptions.IllegalException;
+import org.tron.trident.proto.Chain;
 import org.tron.trident.proto.Chain.Transaction;
 import org.tron.trident.proto.Response;
 import org.tron.trident.proto.Response.TransactionExtention;
@@ -22,6 +23,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 public class TronClient {
@@ -127,8 +129,45 @@ public class TronClient {
         return null;
     }
 
+    public void getEvents(String toAddress, long currentNum) {
+        Contract contract = wrapper.getContract(contractAddress);
+        Trc20Contract token = new Trc20Contract(contract, toAddress, wrapper);
+        try {
+            Chain.Block block = wrapper.getNowBlock();
+            long latest = block.getBlockHeader().getRawData().getNumber();
+            long batchSize = 100;
+            for (long currentBlock = currentNum; currentBlock <= latest; currentBlock += batchSize) {
+                long endBlock = Math.min(currentBlock + batchSize - 1, latest);
+                Response.BlockListExtention blockListExtention = wrapper.getBlockByLimitNext(currentBlock, endBlock + 1);
+                List<Response.BlockExtention> blockExtentionList =  blockListExtention.getBlockList();
+                for(Response.BlockExtention blockExtention : blockExtentionList) {
+                    System.out.println(blockExtention);
+                }
+
+            }
+        } catch (IllegalException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public long getNowBlock() {
+        try {
+            Chain.Block block = wrapper.getNowBlock();
+            return block.getBlockHeader().getRawData().getNumber();
+        } catch (IllegalException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     private BigDecimal convertBalance(BigInteger rawBalance, int decimals) {
         return new BigDecimal(rawBalance)
                 .divide(BigDecimal.TEN.pow(decimals), decimals, RoundingMode.HALF_DOWN);
+    }
+
+    public static void main(String[] args) {
+        TronClient tronClient = new TronClient(false, "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj", "");
+        tronClient.init("8aa9a9215ba4f6f7f2db2bcd260d7a7629a51e1b95710b964b96dc7c8d405fb1");
+        tronClient.getEvents("TY44yxJn3BUCuvBCtQcHygdw64kG5VSQ1F", 51601294);
     }
 }
