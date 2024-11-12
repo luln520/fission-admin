@@ -994,25 +994,25 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             TwCompany company = twCompanyService.getById(companyId);
             int inviteType = company.getInviteType();
 
-            //验证码
-            if(storedCaptcha == null) {
-                if (userReq.getLanguage().equals("zh")) {
-                    return ResponseDTO.userErrorParam("验证码错误或过期！");
-                } else {
-                    return ResponseDTO.userErrorParam("Verification code is wrong or expired");
-                }
-            }
-
-            if(storedCaptcha != null){
-                if (!storedCaptcha.equals(regcode)) {
-                    // 验证码正确，移除验证码以防止重复使用
-                    if(language.equals("zh")){
-                        return ResponseDTO.userErrorParam("验证码错误或过期！");
-                    }else{
-                        return ResponseDTO.userErrorParam("Verification code is wrong or expired");
-                    }
-                }
-            }
+//            //验证码
+//            if(storedCaptcha == null) {
+//                if (userReq.getLanguage().equals("zh")) {
+//                    return ResponseDTO.userErrorParam("验证码错误或过期！");
+//                } else {
+//                    return ResponseDTO.userErrorParam("Verification code is wrong or expired");
+//                }
+//            }
+//
+//            if(storedCaptcha != null){
+//                if (!storedCaptcha.equals(regcode)) {
+//                    // 验证码正确，移除验证码以防止重复使用
+//                    if(language.equals("zh")){
+//                        return ResponseDTO.userErrorParam("验证码错误或过期！");
+//                    }else{
+//                        return ResponseDTO.userErrorParam("Verification code is wrong or expired");
+//                    }
+//                }
+//            }
 
             if(StringUtils.isEmpty(password)){
                 if(language.equals("zh")){
@@ -1139,26 +1139,25 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUserInvite.setUsername(username);
                     twUserInviteService.save(twUserInvite);
 
-                    TwUserInvite oneUid = new TwUserInvite();
 
 
                     QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
                     queryInvite3.eq("uid", inviteId);
-                    oneUid = twUserInviteService.getOne(queryInvite3);
+                    List<TwUserInvite> oneUid = twUserInviteService.list(queryInvite3);
 
                     TwUserAgent twUserAgent = new TwUserAgent();
                     twUserAgent.setThreeUid(0);
                     twUserAgent.setTwoUid(0);
-                    if(oneUid == null){
+                    if(oneUid.size() == 0){
                         twUserAgent.setOneUid(0);
                     }
 
-                    if(oneUid != null){
-                        twUserAgent.setOneUid(oneUid.getUid());
-                        twUserAgent.setOneName(oneUid.getUsername());
+                    if(oneUid.size() > 0){
+                        twUserAgent.setOneUid(inviteId);
+                        twUserAgent.setOneName(byInvite.getActualName());
 
                         QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
-                        queryTeam.eq("uid", oneUid.getUid());
+                        queryTeam.eq("path", inviteId);
                         TwUserTeam oneTeam = twUserTeamService.getOne(queryTeam);
                         oneTeam.setVoidNum(oneTeam.getVoidNum()+1);
                         oneTeam.setTotal(oneTeam.getTotal()+1);
