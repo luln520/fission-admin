@@ -52,4 +52,7 @@ public class TwAddress {
     @ApiModelProperty("区块号")
     private Integer blockNumber;
 
+    @ApiModelProperty("用户名")
+    private String userName;
+
 }

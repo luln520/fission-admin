@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddress;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddressDetail;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwReceipt;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
 
 import java.math.BigInteger;
@@ -26,4 +27,6 @@ public interface TwAddressService {
     List<TwAddress> listAddress();
 
     void checkTransfer(TwAddress twAddress);
+
+    IPage<TwReceipt> listReceiptPage(AddressVo addressVo);
 }

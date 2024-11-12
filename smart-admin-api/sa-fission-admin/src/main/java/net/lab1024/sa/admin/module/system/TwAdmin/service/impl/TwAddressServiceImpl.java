@@ -161,6 +161,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 String amount = twAddress.getBalance().setScale(6, RoundingMode.HALF_UP).toString();
                 if(twCoin.getCzline().equals(NetworkConst.ETH)) {
                     TwReceipt twReceipt = new TwReceipt();
+                    twReceipt.setUid(twAddress.getUid());
                     twReceipt.setBizStatus(1);
                     twReceipt.setChainId(60);
                     twReceipt.setFromAddress(twAddress.getAddress());
@@ -171,6 +172,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     }catch (RuntimeException e) {
                         twReceipt.setCaused(e.getMessage());
                     }
+                    twReceipt.setAmount(new BigDecimal(TokenUtils.toWei(amount)));
                     twReceiptMapper.insert(twReceipt);
 
                     this.updateAddressBalance(twAddress.getAddress());
@@ -178,6 +180,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     tronClient.init(privateKey);
 
                     TwReceipt twReceipt = new TwReceipt();
+                    twReceipt.setUid(twAddress.getUid());
                     twReceipt.setBizStatus(1);
                     twReceipt.setChainId(195);
                     twReceipt.setFromAddress(twAddress.getAddress());
@@ -188,6 +191,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     }catch (RuntimeException e) {
                         twReceipt.setCaused(e.getMessage());
                     }
+                    twReceipt.setAmount(new BigDecimal(amount));
                     twReceiptMapper.insert(twReceipt);
 
                     this.updateAddressBalance(twAddress.getAddress());
@@ -322,6 +326,14 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 twUserCoinService.incre(twAddress.getUid(), amount, usdt);
             }
         }
+    }
+
+    @Override
+    public IPage<TwReceipt> listReceiptPage(AddressVo addressVo) {
+        Page<TwReceipt> objectPage = new Page<>(addressVo.getPageNum(), addressVo.getPageSize());
+        List<TwReceipt> listpage = this.twReceiptMapper.listpage(objectPage, addressVo);
+        objectPage.setRecords(listpage);
+        return objectPage;
     }
 
 

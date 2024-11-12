@@ -19,6 +19,9 @@ public class TwReceipt {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    @ApiModelProperty("用户ID")
+    private Integer uid;
+
     @ApiModelProperty("transaction")
     private String tx;
 
@@ -45,4 +48,10 @@ public class TwReceipt {
 
     @ApiModelProperty("bizStatus")
     private Integer bizStatus;
+
+    @ApiModelProperty("金额")
+    private BigDecimal amount;
+
+    @ApiModelProperty("用户名")
+    private String userName;
 }
