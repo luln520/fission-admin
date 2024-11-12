@@ -71,7 +71,7 @@ public class TwHyorder implements Serializable {
     /**
     * 状态：1待结算2已结算3无效结算
     */
-    @ApiModelProperty("状态：1待结算2已结算3无效结算")
+    @ApiModelProperty("状态：1待结算2已结算3无效结算4订单取消")
     private Integer status;
     /**
     * 盈亏状态：1盈利2亏损

@@ -25,9 +25,11 @@
         </template>
 
         <template v-if="column.key === 'status'">
+          <div v-if="record.status == 0" style="color: red;">计划中</div>
           <div v-if="record.status == 1" style="color: red;">待结算</div>
           <div v-if="record.status == 2" style="color: green;">已结算</div>
           <div v-if="record.status == 3" style="">无效结算</div>
+          <div v-if="record.status == 4" style="">撤单</div>
         </template>
         <template v-if="column.key === 'kongyk'">
           <div v-if="record.kongyk == 1" style="color: green;">盈利</div>

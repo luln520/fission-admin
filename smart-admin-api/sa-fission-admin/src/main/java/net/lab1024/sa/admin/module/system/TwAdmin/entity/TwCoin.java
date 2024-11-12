@@ -143,6 +143,18 @@ public class TwCoin implements Serializable {
     */
     @ApiModelProperty("充值地址2")
     private String czaddress2;
+
+    /**
+     * 充值网络2
+     */
+    @ApiModelProperty("充值网络1")
+    private String czline1;
+    /**
+     * 充值地址2
+     */
+    @ApiModelProperty("充值地址1")
+    private String czaddress1;
+
     /**
     * 代理ID
     */

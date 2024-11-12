@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.controller;
 import cn.hutool.core.date.DateUtil;
 import io.swagger.annotations.Api;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
@@ -25,6 +26,7 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,6 +61,9 @@ public class TwIndexController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private TwLeverOrderService twLeverOrderService;
+
 
     /**
      * 系统首页数据
@@ -72,6 +77,9 @@ public class TwIndexController {
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
         EmployeeEntity byId = employeeService.getById(uidToken);
         int companyId = byId.getCompanyId();
+
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
 
         Map<String, Object> result = new HashMap<>();
         // 获取当前时间
@@ -99,6 +107,9 @@ public class TwIndexController {
         // 查询全网总人数 M("user")->count()
         int allUser = 0;//userDao.countAllUsers();
         allUser = twUserService.countAllUsers(companyId);
+        int ytUser = twUserService.countYtUsers(companyId);
+        int allAuthUser = twUserService.countAuthAllUsers(companyId);
+        int ytAuthUser = twUserService.countYtAuthUsers(companyId);
 
         //用户总余额
         BigDecimal userCoinSum = new BigDecimal(100);
@@ -126,10 +137,39 @@ public class TwIndexController {
         // 查询今日该客量  M("user")->where($linewhere)->count();  查询今天的
         int allLineUsers = 0;//userDao.countLineUsers(nowDate);
         allLineUsers = twUserService.countLineUsers(startTime, endTime,companyId);
+
+        StatisticUserVo statisticUserVo = twUserService.statisticPerUserByDate(startDate, endDate, companyId, false);
+        StatisticUserVo statisticAuthUserVo = twUserService.statisticPerUserByDate(startDate, endDate, companyId, true);
+
+        StatisticAmountVo hyStatisticAmountVo = twHyorderService.statisticProfitLoss(companyId);
+        StatisticAmountVo leverStatisticAmountVo = twLeverOrderService.statisticProfitLoss(companyId);
+
+        StatisticNumVo hyStatisticNumVo = twHyorderService.statisticNum(startDate, endDate, companyId);
+        StatisticNumVo leverStatisticNumVo = twLeverOrderService.statisticNum(startDate, endDate, companyId);
+
+        StatisticNumVo rechargeStatisticNumVo = twRechargeService.statisticNum(startDate, endDate, companyId);
+        StatisticNumVo withdrawStatisticNumVo = twMyzcService.statisticNum(startDate, endDate, companyId);
+
+        result.put("userStatistic", statisticUserVo);
+        result.put("userAuthStatistic", statisticAuthUserVo);
+
+        result.put("hyStatistic", hyStatisticAmountVo);
+        result.put("leverStatistic", leverStatisticAmountVo);
+
+        result.put("hyStatisticNum", hyStatisticNumVo);
+        result.put("leverStatisticNum", leverStatisticNumVo);
+
+        result.put("rechargeStatisticNum", rechargeStatisticNumVo);
+        result.put("withdrawStatisticNum", withdrawStatisticNumVo);
+
+
         // 将结果放入Map返回
         result.put("todayUser",todayUser);
         result.put("allUser", allUser);
+        result.put("allAuthUser", allAuthUser);
         result.put("userCoinSum",userCoinSum);
+        result.put("ytUser", ytUser);
+        result.put("ytAuthUser", ytAuthUser);
 
         result.put("allHyOrders", allHyOrders);
         result.put("allKjOrders", allKjOrders);
@@ -141,5 +181,7 @@ public class TwIndexController {
 
         return ResponseDTO.ok(result);
     }
+
+
 }
 

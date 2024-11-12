@@ -18,7 +18,7 @@ import { localClear } from '/@/utils/local-util';
 const TOKEN_HEADER: string = 'x-access-token';
 const hostname = window.location.hostname;
 const apiUrlMap = {
-  "localhost": "https://2024api.pz167.com",//"http://127.0.0.1:1084",
+  "localhost": "http://localhost:1025",//"http://127.0.0.1:1084",
   '206.238.199.169': "http://206.238.199.169:1024",
   "2024.pz167.com":'https://2024api.pz167.com',
   "2024.bic6699.com":'https://api.bic6699.com',

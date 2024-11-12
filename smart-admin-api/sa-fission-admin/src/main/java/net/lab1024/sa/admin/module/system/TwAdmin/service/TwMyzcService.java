@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticNumVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -40,4 +41,6 @@ public interface TwMyzcService extends IService<TwMyzc> {
     ResponseDTO confirmCoin(int id);
 
     ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num, BigDecimal currenyNum,String currenyName,String language);
+
+    StatisticNumVo statisticNum(String startDate, String endDate, int companyId);
 }

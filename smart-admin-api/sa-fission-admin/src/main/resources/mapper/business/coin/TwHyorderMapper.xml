@@ -64,4 +64,22 @@
         and  #{endTime} >= buytime
         AND company_id = #{companyId}
    </select>
+    <select id="statisticPerNum" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo">
+        SELECT
+        COUNT(*) as count,
+        DATE(selltime) AS date
+        FROM tw_hyorder
+        WHERE 1=1 AND company_id = #{companyId} AND status = 2
+        <choose>
+            <when test="startTime != null and endTime != null">
+                AND selltime &gt;= FROM_UNIXTIME(#{startTime})
+                AND selltime &lt;= FROM_UNIXTIME(#{endTime})
+            </when>
+            <otherwise>
+                AND selltime &gt;= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+            </otherwise>
+        </choose>
+        GROUP BY DATE(selltime)
+        ORDER BY date ASC
+    </select>
 </mapper>

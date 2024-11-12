@@ -11,11 +11,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author dingzhiwei jmdhappy@126.com
@@ -32,6 +32,8 @@ public class DateUtil {
     public static final String FORMAT_YYYYMMddhhMMSS = "yyyyMMddHHmmss";
 
     public static final String FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static String getCurrentDate() {
         String formatPattern_Short = "yyyyMMddhhmmss";
@@ -359,5 +361,58 @@ public class DateUtil {
         return date;
     }
 
+    /**
+     * 计算当前时间前几天
+     * @param currentDate
+     * @param days
+     * @return
+     */
+    public static List<String> getPreviousDates(LocalDate currentDate, int days) {
+        List<String> previousDates = new ArrayList<>();
+        for (int i = 0; i < days; i++) {
+            // currentDate.minusDays(i) 用于获取当前日期的前i天
+            previousDates.add(currentDate.minusDays(i).format(formatter));
+        }
+        Collections.sort(previousDates);
+        return previousDates;
+    }
+
+    /**
+     * 根据开始和结束的时间戳，列出这之间的每一天日期
+     * @param startTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public static List<String> getDatesBetweenTimestamps(long startTimestamp, long endTimestamp) {
+        // 将秒级时间戳转换为 LocalDate
+        LocalDate startDate = Instant.ofEpochSecond(startTimestamp).atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDate = Instant.ofEpochSecond(endTimestamp).atZone(ZoneId.systemDefault()).toLocalDate();
+
+        List<String> dates = new ArrayList<>();
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+
+        // 循环生成开始日期和结束日期之间的每一天
+        for (int i = 0; i <= daysBetween; i++) {
+            LocalDate currentDate = startDate.plusDays(i);
+            dates.add(currentDate.format(formatter));
+        }
+        return dates;
+    }
+
+    public static int extractInteger(String str) {
+        // 使用正则表达式匹配所有数字
+        String digits = str.replaceAll("\\D+", "");
+        // 将匹配到的数字字符串转换为整数
+        return Integer.parseInt(digits);
+    }
+
+    public static Long getSecondTimeStamp(String date) {
+        LocalDate localDate = LocalDate.parse(date, formatter);
+        return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().getEpochSecond();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(DateUtil.getPreviousDates(LocalDate.now(), 7));
+    }
 
 }

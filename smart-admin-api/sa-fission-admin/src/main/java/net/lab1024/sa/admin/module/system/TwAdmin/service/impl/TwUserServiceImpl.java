@@ -1,13 +1,19 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Maps;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerUserVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TeanResp;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
@@ -19,11 +25,13 @@ import net.lab1024.sa.common.common.SMS.SendSmsLib;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.util.CommonUtil;
+import net.lab1024.sa.common.common.util.DateUtil;
 import net.lab1024.sa.common.module.support.config.ConfigKeyEnum;
 import net.lab1024.sa.common.module.support.config.ConfigService;
 import net.lab1024.sa.common.module.support.token.TokenService;
 import okhttp3.*;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -43,6 +51,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
@@ -143,6 +155,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
+    public Integer countAuthAllUsers(int companyId) {
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_type",1);
+        queryWrapper.eq("company_id", companyId);
+        queryWrapper.eq("rzstatus", 2);
+        return this.baseMapper.selectCount(queryWrapper).intValue();
+    }
+
+    @Override
     public Integer countTodayUsers(long startTime, long endTime,int companyId) {
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_type",1);
@@ -160,6 +181,16 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         queryWrapper.le("lgtime", endTime);
         queryWrapper.eq("company_id", companyId);
         return this.baseMapper.selectCount(queryWrapper).intValue();
+    }
+
+    @Override
+    public Integer countYtUsers(int companyId) {
+        return this.baseMapper.statisticYtUserCount(companyId);
+    }
+
+    @Override
+    public Integer countYtAuthUsers(int companyId) {
+        return this.baseMapper.statisticYtAuthUserCount(companyId);
     }
 
     @Override
@@ -1883,6 +1914,46 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
+    public StatisticUserVo statisticPerUserByDate(String startDate, String endDate, int companyId, boolean isAuth) {
+        StatisticUserVo statisticUserVo = new StatisticUserVo();
+
+        List<String> dateList = Lists.newArrayList();
+        Long startTime = 0L;
+        Long endTime = 0L;
+        if(StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
+            startTime = DateUtil.getSecondTimeStamp(startDate);
+            endTime = DateUtil.getSecondTimeStamp(endDate);
+            dateList = DateUtil.getDatesBetweenTimestamps(startTime, endTime);
+        }else {
+            dateList = DateUtil.getPreviousDates(LocalDate.now(), 7);
+        }
+        statisticUserVo.setDateList(dateList);
+
+        Map<String, Integer> resultMap = Maps.newTreeMap();
+
+        List<PerUserVo> perUserVoList = Lists.newArrayList();
+        if(isAuth) {
+            perUserVoList = this.baseMapper.statisticAuthPerUser(7, startTime, endTime, companyId);
+        }else {
+            perUserVoList = this.baseMapper.statisticPerUser(7, startTime, endTime, companyId);
+        }
+        for(String date : dateList) {
+            for(PerUserVo perUserVo : perUserVoList) {
+                if (perUserVo.getDate().equals(date)){
+                    resultMap.put(date, perUserVo.getCount()); break;
+                }else {
+                    resultMap.put(date, 0);
+                }
+            }
+            resultMap.putIfAbsent(date, 0);
+        }
+        List<Integer> countList = new ArrayList<>(resultMap.values());
+
+        statisticUserVo.setCountList(countList);
+        return statisticUserVo;
+    }
+
+    @Override
     public ResponseDTO usertj(int uid) {
 
         BigDecimal winHyorder = new BigDecimal(0);
@@ -1892,6 +1963,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         BigDecimal kjOrder = new BigDecimal(0);
         BigDecimal recharge = new BigDecimal(0);
         BigDecimal myzc = new BigDecimal(0);
+        BigDecimal amountVolume = new BigDecimal(0);
 
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(ploss), 0) as winHyorder")
@@ -2056,6 +2128,10 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             myzc =  BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
         }
 
+        BigDecimal hyAmountVolume = this.twHyorderDao.queryUserAmountVolume(uid);
+        BigDecimal leverAmountVolume = this.twLeverOrderMapper.queryUserAmountVolume(uid);
+        amountVolume = hyAmountVolume.add(leverAmountVolume);
+
         BigDecimal hyorder = winHyorder.subtract(lossHyorder);
         BigDecimal leverOrder = winLeverOrder.subtract(lossLeverOrder);
         BigDecimal totalWinOrder = winHyorder.add(winLeverOrder).add(kjOrder);
@@ -2070,6 +2146,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         results.put("totalLossOrder",totalLossOrder); //用户总亏损
         results.put("recharge",recharge);             //用户总充值
         results.put("myzc",myzc);                     //用户总提现
+
+        results.put("amountVolume", amountVolume);
 
         return ResponseDTO.ok(results);
     }

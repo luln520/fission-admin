@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,5 +21,6 @@ public interface TwMyzcDao extends BaseMapper<TwMyzc> {
 
     List<TwMyzc> listpage(@Param("objectPage") Page<TwMyzc> objectPage, @Param("obj") TwMyzcVo twMyzcVo);
 
+    List<PerNumVo> statisticPerNum(@Param("days")Integer days, @Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId")int companyId);
 }
 
