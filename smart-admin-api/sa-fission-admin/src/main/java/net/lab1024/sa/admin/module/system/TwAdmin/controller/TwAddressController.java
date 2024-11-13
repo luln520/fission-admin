@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddress;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddressDetail;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwReceipt;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TransferVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
@@ -37,6 +39,17 @@ public class TwAddressController {
         return ResponseDTO.ok(twAddressService.listpage(addressVo));
     }
 
+    @PostMapping("/detail/list")
+    @ApiOperation(value = "获取分配钱包地址列表")
+    public ResponseDTO<List<TwAddressDetail>> detaillistpage(@RequestBody AddressVo addressVo) {
+        return ResponseDTO.ok(twAddressService.listDetail(addressVo));
+    }
+
+    @PostMapping("/receipt/list")
+    @ApiOperation(value = "票据列表")
+    public ResponseDTO<IPage<TwReceipt>> receiptListpage(@RequestBody AddressVo addressVo) {
+        return ResponseDTO.ok(twAddressService.listReceiptPage(addressVo));
+    }
 
     /**
      *

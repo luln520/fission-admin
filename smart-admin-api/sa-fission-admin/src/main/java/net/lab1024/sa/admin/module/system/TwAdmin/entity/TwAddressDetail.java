@@ -11,31 +11,31 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@TableName("tw_receipt")
-@ApiModel(value="票据", description="")
-public class TwReceipt {
+@TableName("tw_address_detail")
+@ApiModel(value="钱包交易详细", description="")
+public class TwAddressDetail {
 
     @ApiModelProperty("ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @ApiModelProperty("用户ID")
-    private Integer uid;
+    @ApiModelProperty("地址ID")
+    private Integer addressId;
 
-    @ApiModelProperty("transaction")
+    @ApiModelProperty("区块号")
+    private Integer blockNumber;
+
+    @ApiModelProperty("tx")
     private String tx;
 
-    @ApiModelProperty("转出地址")
+    @ApiModelProperty("发送方")
     private String fromAddress;
 
-    @ApiModelProperty("转入地址")
+    @ApiModelProperty("接收方")
     private String toAddress;
 
-    @ApiModelProperty("链")
-    private Integer chainId;
-
-    @ApiModelProperty("gas消耗")
-    private BigDecimal fee;
+    @ApiModelProperty("金额")
+    private BigDecimal amount;
 
     @ApiModelProperty("创建时间")
     private Date createTime;
@@ -43,15 +43,5 @@ public class TwReceipt {
     @ApiModelProperty("更新时间")
     private Date updateTime;
 
-    @ApiModelProperty("caused")
-    private String caused;
 
-    @ApiModelProperty("bizStatus")
-    private Integer bizStatus;
-
-    @ApiModelProperty("金额")
-    private BigDecimal amount;
-
-    @ApiModelProperty("用户名")
-    private String userName;
 }

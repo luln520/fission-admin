@@ -1,11 +1,12 @@
 package net.lab1024.sa.common.common.wallet;
 
 import lombok.extern.slf4j.Slf4j;
-import ognl.Token;
+import org.web3j.abi.EventEncoder;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Event;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.generated.Uint256;
@@ -13,11 +14,11 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthCall;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
 import org.web3j.tx.gas.ContractGasProvider;
@@ -28,12 +29,20 @@ import org.web3j.utils.Numeric;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 public class EthClient {
+
+    private static final Event TRANSFER_EVENT = new Event("Transfer",
+            Arrays.asList(
+                    new TypeReference<Address>() {}, // from
+                    new TypeReference<Address>() {}, // to
+                    new TypeReference<Uint256>() {} // value
+            ));
 
     private String contractAddress;
     private Web3j web3j;
@@ -184,7 +193,57 @@ public class EthClient {
         return ethSendTransaction.getTransactionHash();
     }
 
+    public List<TransferRecord> queryTransfers(
+            String recipientAddress,
+            BigInteger fromBlock) throws Exception {
+        EthFilter filter = new EthFilter(
+                DefaultBlockParameter.valueOf(fromBlock),
+                DefaultBlockParameter.valueOf("latest"),
+                contractAddress
+        );
+
+        String encodedEventSignature = EventEncoder.encode(TRANSFER_EVENT);
+        filter.addSingleTopic(encodedEventSignature);
+        filter.addNullTopic();
+        filter.addOptionalTopics("0x" + "000000000000000000000000" + recipientAddress.substring(2));
+
+        // 获取日志
+        List<EthLog.LogResult> logs = web3j.ethGetLogs(filter).send().getLogs();
+        List<TransferRecord> transfers = new ArrayList<>();
+
+        // 解析日志
+        for (EthLog.LogResult<EthLog.LogObject> log: logs) {
+            TransferRecord record = new TransferRecord();
+            EthLog.LogObject logObject =  log.get();
+            record.blockNumber = logObject.getBlockNumber();
+            record.transactionHash = logObject.getTransactionHash();
+            record.from = logObject.getTopics().get(1).substring(26);
+            record.to = logObject.getTopics().get(2).substring(26);
+            BigInteger value = new BigInteger(logObject.getData().substring(2), 16);
+            record.value = value;
+            transfers.add(record);
+        }
+
+        return transfers;
+    }
+
+    public long getNowBlock() {
+        try {
+            EthBlock.Block block = web3j.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send().getBlock();
+            return block.getNumber().longValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     public void close() {
         web3j.shutdown();
+    }
+
+    public static void main(String[] args) throws Exception {
+        EthClient ethClient = new EthClient("https://sepolia.infura.io/v3/89693b1773544c30b1b4b66c2a81813f", "0x779877A7B0D9E8603169DdbD7836e478b4624789");
+        BigInteger fromBlock = BigInteger.valueOf(6970403);
+        System.out.println(ethClient.queryTransfers("0x59f87D2D4B4A9c4Be86244b7209C4EbAC75B2EDc", fromBlock));
     }
 }

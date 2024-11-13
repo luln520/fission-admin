@@ -108,8 +108,8 @@ public class PcLeverOrderController {
                                   @RequestParam BigDecimal ploss,   //利润
                                   @RequestParam BigDecimal premium, //手续费
                                   @RequestParam String language,
-                                  @RequestParam BigDecimal lossPrice, //止损价格
-                                  @RequestParam BigDecimal winPrice, //止盈价格
+                                  @RequestParam(name = "lossPrice", defaultValue = "0") BigDecimal lossPrice, //止损价格
+                                  @RequestParam(name = "winPrice", defaultValue = "0") BigDecimal winPrice, //止盈价格
                                   @RequestParam BigDecimal boomPrice  ){
         return twLeverOrderService.creatorderNew(uid,ccoinname,win,loss,fold,hyzd,num,ploss,premium,language,lossPrice,winPrice,boomPrice);
     }

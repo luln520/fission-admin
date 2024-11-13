@@ -6,4 +6,5 @@ import net.lab1024.sa.common.common.domain.PageParam;
 @Data
 public class AddressVo extends PageParam {
     private Integer uid;
+    private Integer addressId;
 }

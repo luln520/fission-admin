@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwReceiptMapper">
+
+    <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwReceipt">
+        select tr.*, tu.username from tw_receipt tr
+        left join tw_user tu on tr.uid = tu.id
+        where tr.biz_status = 1 AND 1=1
+        <if test="obj.uid != null and obj.uid !=''">
+            and tr.uid = #{obj.uid}
+        </if>
+        order by tr.create_time desc
+    </select>
+</mapper>

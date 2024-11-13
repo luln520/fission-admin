@@ -5,7 +5,8 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwAddressMapper">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddress">
-        select ta.*, tab.currency, tab.balance from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id
+        select ta.*, tab.currency, tab.balance, tu.username from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id
+        left join tw_user tu on ta.uid = tu.id
         where 1=1
         <if test="obj.uid != null and obj.uid !=''">
             and ta.uid = #{obj.uid}

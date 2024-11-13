@@ -61,4 +61,15 @@ public class AddressUtils {
             throw new RuntimeException("Error converting address", e);
         }
     }
+
+    public static void main(String[] args) {
+        System.out.println(ethToTron("0xf23e2730eb925770df4df12bea03b16f93fa3c8b"));
+        int decimalValue = 51618643;
+
+        // 将十进制数转换为十六进制字符串并加上 `0x` 前缀
+        String hexValue = "0x" + Integer.toHexString(decimalValue);
+
+        System.out.println("十六进制表示为: " + hexValue);
+        System.out.println(Long.parseLong("3135f8e", 16));
+    }
 }

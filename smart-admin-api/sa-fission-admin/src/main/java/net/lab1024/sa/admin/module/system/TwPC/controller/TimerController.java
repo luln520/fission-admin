@@ -50,7 +50,7 @@ public class TimerController {
         timerService.report();
     }
 
-    @Scheduled(cron = "0 */5 * * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void updateBalanceCron()  {
         timerService.updateBalanceCron();
     }

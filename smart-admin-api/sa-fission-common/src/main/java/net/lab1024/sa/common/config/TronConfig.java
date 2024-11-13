@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.common.common.wallet.EthClient;
 import net.lab1024.sa.common.common.wallet.TronClient;
+import net.lab1024.sa.common.common.wallet.TronRpcClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +23,16 @@ public class TronConfig {
     @Value("${tron.apiKey}")
     private String apiKey;
 
+    @Value("${tron.rpcUrl}")
+    private String rpcUrl;
+
     @Bean
     public TronClient initTronClient() {
         return new TronClient(isMainNet, contractAddress, apiKey);
+    }
+
+    @Bean
+    public TronRpcClient initTronRpcClient() {
+        return new TronRpcClient(isMainNet, contractAddress, apiKey, rpcUrl);
     }
 }
