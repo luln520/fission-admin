@@ -1170,26 +1170,24 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUserInvite.setUsername(username);
                     twUserInviteService.save(twUserInvite);
 
-                    TwUserInvite oneUid = new TwUserInvite();
-
 
                     QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
                     queryInvite3.eq("uid", inviteId);
-                    oneUid = twUserInviteService.getOne(queryInvite3);
+                    List<TwUserInvite> oneUid = twUserInviteService.list(queryInvite3);
 
                     TwUserAgent twUserAgent = new TwUserAgent();
                     twUserAgent.setThreeUid(0);
                     twUserAgent.setTwoUid(0);
-                    if(oneUid == null){
+                    if(oneUid.size() == 0){
                         twUserAgent.setOneUid(0);
                     }
 
-                    if(oneUid != null){
-                        twUserAgent.setOneUid(oneUid.getUid());
-                        twUserAgent.setOneName(oneUid.getUsername());
+                    if(oneUid.size() > 0){
+                        twUserAgent.setOneUid(inviteId);
+                        twUserAgent.setOneName(byInvite.getActualName());
 
                         QueryWrapper<TwUserTeam> queryTeam = new QueryWrapper<>();
-                        queryTeam.eq("uid", oneUid.getUid());
+                        queryTeam.eq("path", inviteId);
                         TwUserTeam oneTeam = twUserTeamService.getOne(queryTeam);
                         oneTeam.setVoidNum(oneTeam.getVoidNum()+1);
                         oneTeam.setTotal(oneTeam.getTotal()+1);
