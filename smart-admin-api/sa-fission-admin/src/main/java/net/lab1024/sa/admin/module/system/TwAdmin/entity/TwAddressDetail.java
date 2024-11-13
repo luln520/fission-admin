@@ -43,5 +43,9 @@ public class TwAddressDetail {
     @ApiModelProperty("更新时间")
     private Date updateTime;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
 
+    @ApiModelProperty("团队路径")
+    private String path;
 }

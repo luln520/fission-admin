@@ -55,4 +55,10 @@ public class TwAddress {
     @ApiModelProperty("用户名")
     private String userName;
 
+    @ApiModelProperty("公司id")
+    private Integer companyId;
+
+    @ApiModelProperty("团队路径")
+    private String path;
+
 }

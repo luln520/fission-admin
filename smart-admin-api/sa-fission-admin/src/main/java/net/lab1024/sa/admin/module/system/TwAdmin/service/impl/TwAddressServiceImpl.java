@@ -9,10 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
-import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.wallet.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.annotation.Async;
@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -59,8 +60,19 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     @Autowired
     private TwAddressDetailMapper twAddressDetailMapper;
 
+
     @Autowired
     private TwUserCoinService twUserCoinService;
+
+    @Autowired
+    private TwNoticeService twNoticeService;
+
+    @Autowired
+    private TwBillService twBillService;
+
+    @Autowired
+    @Lazy
+    private TwUserService twUserService;
 
     @Override
     public IPage<TwAddress> listpage(AddressVo addressVo) {
@@ -86,6 +98,11 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
     @Override
     public String createAddress(int uid, int chainId, int coinId) {
+
+        QueryWrapper<TwUser> query = new QueryWrapper<>();
+        query.eq("id", uid);
+        TwUser one = twUserService.getOne(query);
+
         Resource resource = resourceLoader.getResource("classpath:public.key");
         byte[] keyBytes = new byte[0];
         try (InputStream is = resource.getInputStream()) {
@@ -121,6 +138,8 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             twAddress.setChainId(chainId);
             twAddress.setAddress(walletAddress.getAddress());
             twAddress.setPublicKey(walletAddress.getPublicKey());
+            twAddress.setChainId(one.getCompanyId());
+            twAddress.setPath(one.getPath());
             twAddress.setCoinId(coinId);
             if(blockNum != 0)
                 twAddress.setBlockNumber((int) blockNum);
@@ -133,6 +152,8 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             baseMapper.insert(twAddress);
 
             TwAddressBalance twAddressBalance = new TwAddressBalance();
+            twAddressBalance.setCompanyId(one.getCompanyId());
+            twAddressBalance.setPath(one.getPath());
             twAddressBalance.setAddressId(twAddress.getId());
             twAddressBalance.setCurrency("USDT");
             twAddressBalanceMapper.insert(twAddressBalance);
@@ -300,6 +321,9 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
             transferRecordList =  tronRpcClient.queryTransfers(fromBlock, twAddress.getAddress());
         }
+        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id", twAddress.getUid());
+        TwUser twUser = twUserService.getOne(queryWrapper1);
 
         if(!CollectionUtils.isEmpty(transferRecordList)) {
             BigInteger totalAmount = new BigInteger("0");
@@ -309,6 +333,8 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 twAddressDetail.setFromAddress(transferRecord.getFrom());
                 twAddressDetail.setToAddress(transferRecord.getTo());
                 twAddressDetail.setTx(transferRecord.getTransactionHash());
+                twAddressDetail.setCompanyId(twUser.getCompanyId());
+                twAddressDetail.setPath(twUser.getPath());
                 twAddressDetail.setBlockNumber(transferRecord.getBlockNumber().intValue());
                 twAddressDetail.setAmount(TokenUtils.convertUsdtBalance(transferRecord.getValue()));
                 twAddressDetailMapper.insert(twAddressDetail);
@@ -324,6 +350,35 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
                 BigDecimal usdt = twUserCoin.getUsdt();
                 twUserCoinService.incre(twAddress.getUid(), amount, usdt);
+
+                TwBill twBill = new TwBill();
+                twBill.setUid( twAddress.getUid());
+                twBill.setUsername(twUser.getUsername());
+                twBill.setNum(amount);
+                twBill.setCompanyId(twUser.getCompanyId());
+                twBill.setCoinname("USDT");
+                twBill.setAfternum(twUserCoinService.afternum(twAddress.getUid()));
+                twBill.setType(17);
+                twBill.setAddtime(new Date());
+                twBill.setSt(1);
+                twBill.setRemark("充币到账");
+                twBill.setDepartment(twUser.getDepatmentId());
+                twBill.setPath(twUser.getPath());
+                twBillService.save(twBill);
+
+                TwNotice twNotice = new TwNotice();
+                twNotice.setUid(twAddress.getUid());
+                twNotice.setAccount(twUser.getUsername());
+                twNotice.setTitle("充币审核");
+                twNotice.setTitleEn("Deposit review");
+                twNotice.setContent("您的充值金额已到账，请注意查收");
+                twNotice.setContentEn("Your recharge amount has arrived, please check it carefully");
+                twNotice.setAddtime(new Date());
+                twNotice.setStatus(1);
+                twNotice.setCompanyId(twUser.getCompanyId());
+                twNotice.setDepartment(twUser.getDepatmentId());
+                twNotice.setPath(twUser.getPath());
+                twNoticeService.save(twNotice);
             }
         }
     }
@@ -334,6 +389,19 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         List<TwReceipt> listpage = this.twReceiptMapper.listpage(objectPage, addressVo);
         objectPage.setRecords(listpage);
         return objectPage;
+    }
+
+    @Override
+    public List<TwAddressDetail> listRecharge(int uid) {
+        QueryWrapper<TwAddressDetail> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("uid", uid);
+        // 按照 ID 倒序排列
+        queryWrapper.orderByDesc("id");
+        // 设置查询条数限制
+        queryWrapper.last("LIMIT 15");
+
+        // 调用 MyBatis-Plus 提供的方法进行查询
+        return this.twAddressDetailMapper.selectList(queryWrapper);
     }
 
 

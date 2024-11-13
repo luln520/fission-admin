@@ -4,9 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddressDetail;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMyzc;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMyzcService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwRechargeService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
@@ -34,6 +36,8 @@ public class PcFinanceController {
     private TwRechargeService twRechargeService;
     @Autowired
     private TwUserCoinService twUserCoinService;
+    @Autowired
+    private TwAddressService twAddressService;
     /**
      * 提币列表
      * 表：myzc
@@ -57,8 +61,8 @@ public class PcFinanceController {
     @GetMapping("/listRecharge")
     @ApiOperation(value = "充币列表")
     @NoNeedLogin
-    public ResponseDTO<List<TwRecharge>> listRecharge(@RequestParam int uid) {
-        return ResponseDTO.ok(twRechargeService.listRecharge(uid));
+    public ResponseDTO<List<TwAddressDetail>> listRecharge(@RequestParam int uid) {
+        return ResponseDTO.ok(twAddressService.listRecharge(uid));
     }
 
 
