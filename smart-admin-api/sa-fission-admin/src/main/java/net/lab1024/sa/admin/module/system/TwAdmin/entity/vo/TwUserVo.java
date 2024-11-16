@@ -14,5 +14,7 @@ public class TwUserVo extends PageParam {
 
      private Integer userType;
 
+     private String userid;
 
+     private String addip;
 }
