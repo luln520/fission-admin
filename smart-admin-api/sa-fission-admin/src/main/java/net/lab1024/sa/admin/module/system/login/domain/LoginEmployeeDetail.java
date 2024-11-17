@@ -82,6 +82,9 @@ public class LoginEmployeeDetail implements UserDetails, RequestUser {
     @ApiModelProperty("请求user-agent")
     private String userAgent;
 
+    @ApiModelProperty("邮箱")
+    private String email;
+
     /**
      * security 权限串
      */

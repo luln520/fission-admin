@@ -89,5 +89,5 @@ public class EmployeeEntity {
 
     private int companyId;
 
-
+    private String email;
 }

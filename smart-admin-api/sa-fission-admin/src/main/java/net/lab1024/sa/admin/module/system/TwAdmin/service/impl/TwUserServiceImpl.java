@@ -940,7 +940,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         one.setLogins(one.getLogins()+1);
         one.setLogintime(new Date());
-        one.setAddip(ip);
+        one.setLoginip(ip);
 
         this.updateById(one);
 

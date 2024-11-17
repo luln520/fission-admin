@@ -23,6 +23,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,4 +99,16 @@ public class LoginController {
         return loginService.getCaptcha();
     }
 
+    @GetMapping("/code")
+    @ApiOperation(value = "发送谷歌邮箱验证码")
+    @NoNeedLogin
+    public ResponseDTO code(@RequestParam String email,@RequestParam int companyId) throws IOException {
+        return loginService.code(email,companyId);
+    }
+    @GetMapping("/emailVial")
+    @ApiOperation(value = "邮箱校验")
+    @NoNeedLogin
+    public ResponseDTO emailVial(@RequestParam String email,@RequestParam String code ) throws IOException {
+        return loginService.emailVial(email,code);
+    }
 }
