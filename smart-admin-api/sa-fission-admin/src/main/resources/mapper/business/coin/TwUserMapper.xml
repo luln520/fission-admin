@@ -16,6 +16,12 @@
         <if test="obj.userType != null">
             and user_type = #{obj.userType}
         </if>
+        <if test="obj.addip != null and obj.addip !=''">
+            and addip = #{obj.addip}
+        </if>
+        <if test="obj.loginip != null and obj.loginip !=''">
+            and loginip = #{obj.loginip}
+        </if>
         <if test="obj.userCode != null and obj.userCode !=''">
             and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>

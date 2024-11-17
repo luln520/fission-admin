@@ -17,4 +17,6 @@ public class TwUserVo extends PageParam {
      private String userid;
 
      private String addip;
+
+     private String loginip;
 }
