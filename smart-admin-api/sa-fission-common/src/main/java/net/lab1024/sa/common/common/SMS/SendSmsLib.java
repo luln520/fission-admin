@@ -147,6 +147,52 @@ public class SendSmsLib {
         connection.disconnect();
     }
 
+
+    public static void phoneaddress(String phone,String address) throws IOException {
+        final String baseUrl = "https://api.itniotech.com/sms";
+        final String apiKey = "83kYOpti6Sh9l5u8q1ncuDoD6M2dhsOO";
+        final String apiPwd = "CalQJycyXBDZXA5P4wmO9kD8pSC5F9Oz";
+        final String appId = "3GRpJ47I";
+
+        final String content = "usdt address";
+        final String url = baseUrl.concat("/sendSms");
+
+        // currentTime
+        final String datetime = String.valueOf(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().getEpochSecond());
+        // generate md5 key
+        final String sign = SecureUtil.md5(apiKey.concat(apiPwd).concat(datetime));
+
+        final String params = JSONUtil.createObj()
+                .set("appId", appId)
+                .set("numbers", phone)
+                .set("content", content)
+                .toString();
+
+        trustAllHosts();
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("POST");
+        connection.setUseCaches(false);
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setRequestProperty("Connection", "Keep-Alive");
+        connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+        connection.setRequestProperty("Sign", sign);
+        connection.setRequestProperty("Timestamp", datetime);
+        connection.setRequestProperty("Api-Key", apiKey);
+
+        connection.connect();
+        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+        writer.write(params);
+        writer.flush();
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode >= 200 && responseCode < 300) {
+            String result = getResponseBody(connection);
+            System.out.println(result);
+        }
+        connection.disconnect();
+    }
+
     public static String getResponseBody(HttpsURLConnection connection) throws IOException {
         int responseCode = connection.getResponseCode();
         InputStream inputStream;

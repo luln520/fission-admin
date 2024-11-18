@@ -67,6 +67,9 @@ public interface EmployeeDao extends BaseMapper<EmployeeEntity> {
     EmployeeEntity getByInvite(@Param("invite") String invite);
 
 
+
+
+    List<EmployeeEntity> getAlladmin(@Param("companyId") Integer companyId);
     /**
      * 通过姓名查询
      *

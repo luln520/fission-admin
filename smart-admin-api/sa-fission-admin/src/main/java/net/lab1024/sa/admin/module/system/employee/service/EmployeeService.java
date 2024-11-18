@@ -114,6 +114,10 @@ public class EmployeeService {
         return roleEmployeeDao.selectRoleByEmployeeId(employeeId);
     }
 
+    public List<EmployeeEntity> getAlladmin(int companyId) {
+        return employeeDao.getAlladmin(companyId);
+    }
+
     /**
      * 新增员工
      *

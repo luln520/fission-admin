@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -49,8 +50,8 @@ public class TwCoinController {
      */
     @PostMapping("/addOrUpdate")
     @ApiOperation(value = "公告新增或编辑")
-    public ResponseDTO addOrUpdate(@RequestBody TwCoin twCoin) {
-        return ResponseDTO.ok(twCoinService.addOrUpdate(twCoin));
+    public ResponseDTO addOrUpdate(@RequestBody TwCoin twCoin, HttpServletRequest request) {
+        return ResponseDTO.ok(twCoinService.addOrUpdate(twCoin,request));
     }
 
     /**

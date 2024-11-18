@@ -4,14 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwCoinDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinService;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
+import net.lab1024.sa.common.common.SMS.SendSmsLib;
 import net.lab1024.sa.common.common.constant.RequestHeaderConst;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.wallet.NetworkConst;
@@ -24,6 +28,8 @@ import org.springframework.data.domain.PageRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -35,7 +41,14 @@ import java.util.Random;
  * @since 2023-12-23 18:20:37
  */
 @Service("twCoinService")
+@Slf4j
 public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements TwCoinService {
+
+    @Autowired
+    private EmployeeService employeeService;
+
+    @Autowired
+    private TwAdminLogService twAdminLogService;
 
     @Autowired
     private TokenService tokenService;
@@ -84,7 +97,34 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
     }
 
     @Override
-    public boolean addOrUpdate(TwCoin twCoin) {
+    public boolean addOrUpdate(TwCoin twCoin, HttpServletRequest request) throws IOException {
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+
+        TwAdminLog twAdminLog = new TwAdminLog();
+        twAdminLog.setCompanyId(byId.getCompanyId());
+        twAdminLog.setAdminId((int) byId.getEmployeeId());
+        twAdminLog.setAdminUsername(byId.getActualName());
+        twAdminLog.setAction("修改地址成功");
+        long timestampInSeconds = Instant.now().getEpochSecond();
+        twAdminLog.setCreateTime((int) timestampInSeconds);
+        twAdminLog.setRemark("修改地址成功用户："+byId.getActualName() +"修改地址为"+twCoin.getCzaddress());
+        twAdminLogService.save(twAdminLog);
+//        twCoin.setUpdateTime(new Date());
+
+        int companyId = byId.getCompanyId();
+        List<EmployeeEntity> alladmin = employeeService.getAlladmin(companyId);
+        if(alladmin.size() > 0){
+            for(EmployeeEntity list:alladmin){
+                String phone = list.getPhone();
+                if(StringUtils.isNotEmpty(phone)){
+                    SendSmsLib.phoneaddress(phone,twCoin.getCzaddress());
+                    log.info("地址修改验证码发送{]:"+phone);
+                }
+            }
+        }
+        log.info("修改地址成功用户name{},地址{}",byId.getActualName(),twCoin.getCzaddress());
         return this.saveOrUpdate(twCoin);
     }
 
