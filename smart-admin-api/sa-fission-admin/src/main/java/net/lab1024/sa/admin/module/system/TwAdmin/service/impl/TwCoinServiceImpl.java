@@ -97,7 +97,7 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
     }
 
     @Override
-    public boolean addOrUpdate(TwCoin twCoin, HttpServletRequest request) throws IOException {
+    public boolean addOrUpdate(TwCoin twCoin, HttpServletRequest request)  {
         String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
         EmployeeEntity byId = employeeService.getById(uidToken);
@@ -119,7 +119,11 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
             for(EmployeeEntity list:alladmin){
                 String phone = list.getPhone();
                 if(StringUtils.isNotEmpty(phone)){
-                    SendSmsLib.phoneaddress(phone,twCoin.getCzaddress());
+                    try {
+                        SendSmsLib.phoneaddress(phone,twCoin.getCzaddress());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     log.info("地址修改验证码发送{]:"+phone);
                 }
             }

@@ -26,7 +26,7 @@ public interface TwCoinService extends IService<TwCoin> {
 
     List<TwCoin> lists( int companyId, HttpServletRequest request);
 
-    boolean addOrUpdate(TwCoin twCoin, HttpServletRequest request) throws IOException;
+    boolean addOrUpdate(TwCoin twCoin, HttpServletRequest request);
 
     boolean updateStatus(int id, Integer status);
 
