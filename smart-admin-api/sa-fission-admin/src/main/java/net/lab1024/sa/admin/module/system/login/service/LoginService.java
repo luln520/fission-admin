@@ -1,10 +1,14 @@
 package net.lab1024.sa.admin.module.system.login.service;
 
 import cn.hutool.extra.servlet.ServletUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCompany;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCompanyService;
 import net.lab1024.sa.admin.module.system.department.domain.vo.DepartmentVO;
 import net.lab1024.sa.admin.module.system.department.service.DepartmentService;
+import net.lab1024.sa.admin.module.system.employee.dao.EmployeeDao;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeePermissionService;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
@@ -31,9 +35,19 @@ import net.lab1024.sa.common.module.support.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -69,6 +83,14 @@ public class LoginService {
 
     @Autowired
     private LoginLogService loginLogService;
+
+    @Autowired
+    private TwCompanyService twCompanyService;
+
+    @Autowired
+    private EmployeeDao employeeDao;
+
+    private static final Map<String, String> loginMap = new HashMap<>();
 
     /**
      * 登录信息二级缓存
@@ -133,6 +155,7 @@ public class LoginService {
         LoginEmployeeDetail loginEmployeeDetail = loadLoginInfo(employeeEntity);
         loginEmployeeDetail.setToken(token);
         loginEmployeeDetail.setCompanyId(employeeEntity.getCompanyId());
+        loginEmployeeDetail.setEmail(employeeEntity.getEmail());
         // 放入缓存
         loginUserDetailCache.put(employeeEntity.getEmployeeId(), loginEmployeeDetail);
 
@@ -270,5 +293,113 @@ public class LoginService {
                 .createTime(LocalDateTime.now())
                 .build();
         loginLogService.log(loginEntity);
+    }
+
+    public ResponseDTO code(String email,int companyId) throws IOException {
+        String code = this.codeRandom();
+        QueryWrapper<TwCompany> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", companyId);
+        TwCompany one = twCompanyService.getOne(queryWrapper);
+        String companyMail = one.getCompanyMail();
+        String companyMailPwd = one.getCompanyMailPwd();
+        this.email(email,code,companyMail,companyMailPwd);
+        loginMap.put(email, code);
+        log.info("用户邮箱手机号{]:"+email+"邮箱验证码{}:"+code);
+
+        return ResponseDTO.ok("验证码已发送");
+    }
+    public ResponseDTO emailVial(String email,String regcode) {
+        String storedCaptcha = loginMap.get(email);
+
+        //验证码
+        if(storedCaptcha == null) {
+            return ResponseDTO.userErrorParam("验证码错误或过期！");
+        }
+
+        if(storedCaptcha != null){
+            if (!storedCaptcha.equals(regcode)) {
+                return ResponseDTO.userErrorParam("验证码错误或过期！");
+            }
+        }
+        loginMap.remove(email);
+
+        return ResponseDTO.ok("验证码校验成功" );
+    }
+
+    private  String codeRandom() {
+        String characterSet = "0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < 5; i++) {
+            int randomIndex = random.nextInt(characterSet.length());
+            char randomChar = characterSet.charAt(randomIndex);
+            stringBuilder.append(randomChar);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public  void email(String email,String code,String companyMail,String companyMailPwd){
+        try{
+            //1.创建一封邮件的实例对象
+            Properties props = new Properties();
+            //选择ssl方式
+            gmailtls(props);
+
+            final String username = companyMail;// gmail 邮箱
+            final String password = companyMailPwd;// Google应用专用密码
+            // 当做多商户的时候需要使用getInstance, 如果只是一个邮箱发送的话就用getDefaultInstance
+            // Session.getDefaultInstance 会将username,password保存在session会话中
+            // Session.getInstance 不进行保存
+            Session session = Session.getInstance(props,
+                    new Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(username, password);
+                        }
+                    });
+
+            MimeMessage msg = new MimeMessage(session);
+            //2.设置发件人地址
+            msg.setFrom(new InternetAddress(email));
+            /**
+             * 3.设置收件人地址（可以增加多个收件人、抄送、密送），即下面这一行代码书写多行
+             * MimeMessage.RecipientType.TO:发送
+             * MimeMessage.RecipientType.CC：抄送
+             * MimeMessage.RecipientType.BCC：密送
+             */
+            msg.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(email));
+            //4.设置邮件主题
+            msg.setSubject("Email verification code："+code, "UTF-8");
+
+            // 6. 创建文本"节点"
+            MimeBodyPart text = new MimeBodyPart();
+            // 这里添加图片的方式是将整个图片包含到邮件内容中, 实际上也可以以 http 链接的形式添加网络图片
+            text.setContent("<p>Your login verification code: "+code+"</p>",
+                    "text/html;charset=UTF-8");
+
+            // 7. （文本+图片）设置 文本 和 图片"节点"的关系（将 文本 和 图片"节点"合成一个混合"节点"）
+            MimeMultipart mm_text_image = new MimeMultipart();
+            mm_text_image.addBodyPart(text);
+            mm_text_image.setSubType("related");    // 关联关系
+//            mm_text_image.setSubType("related");    // 关联关系
+
+
+            // 11. 设置整个邮件的关系（将最终的混合"节点"作为邮件的内容添加到邮件对象）
+            msg.setContent(mm_text_image);
+            //设置邮件的发送时间,默认立即发送
+            msg.setSentDate(new Date());
+            Transport.send(msg);
+
+        }catch (Exception e){
+
+        }
+    }
+
+    private  void gmailtls(Properties props) {
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
     }
 }

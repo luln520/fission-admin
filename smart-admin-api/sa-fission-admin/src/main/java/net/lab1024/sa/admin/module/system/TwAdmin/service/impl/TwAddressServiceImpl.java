@@ -131,6 +131,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             if(chainId == ChainEnum.ETH.getCode()) {
                 blockNum = ethClient.getNowBlock();
             }else if(chainId == ChainEnum.TRON.getCode()) {
+                tronClient.init("");
                 blockNum = tronClient.getNowBlock();
             }
 
@@ -138,7 +139,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             twAddress.setChainId(chainId);
             twAddress.setAddress(walletAddress.getAddress());
             twAddress.setPublicKey(walletAddress.getPublicKey());
-            twAddress.setChainId(one.getCompanyId());
+            twAddress.setCompanyId(one.getCompanyId());
             twAddress.setPath(one.getPath());
             twAddress.setCoinId(coinId);
             if(blockNum != 0)
@@ -393,15 +394,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
     @Override
     public List<TwAddressDetail> listRecharge(int uid) {
-        QueryWrapper<TwAddressDetail> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("uid", uid);
-        // 按照 ID 倒序排列
-        queryWrapper.orderByDesc("id");
-        // 设置查询条数限制
-        queryWrapper.last("LIMIT 15");
-
-        // 调用 MyBatis-Plus 提供的方法进行查询
-        return this.twAddressDetailMapper.selectList(queryWrapper);
+        return this.twAddressDetailMapper.listAddressDetail(uid);
     }
 
 
