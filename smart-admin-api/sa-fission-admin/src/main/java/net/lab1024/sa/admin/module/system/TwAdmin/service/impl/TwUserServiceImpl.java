@@ -1171,7 +1171,6 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                     twUserInvite.setUsername(username);
                     twUserInviteService.save(twUserInvite);
 
-
                     QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
                     queryInvite3.eq("uid", inviteId);
                     List<TwUserInvite> oneUid = twUserInviteService.list(queryInvite3);
