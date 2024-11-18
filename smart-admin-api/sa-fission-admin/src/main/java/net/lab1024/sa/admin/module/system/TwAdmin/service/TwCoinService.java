@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public interface TwCoinService extends IService<TwCoin> {
 
     List<TwCoin> lists( int companyId, HttpServletRequest request);
 
-    boolean addOrUpdate(TwCoin twCoin);
+    boolean addOrUpdate(TwCoin twCoin, HttpServletRequest request) throws IOException;
 
     boolean updateStatus(int id, Integer status);
 

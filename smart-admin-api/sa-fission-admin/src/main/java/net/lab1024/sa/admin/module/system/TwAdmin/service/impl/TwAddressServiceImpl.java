@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -118,46 +119,53 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         }
 
         TwAddress twAddress = baseMapper.findByChainId(uid, chainId, coinId);
-        if(twAddress == null) {
-            twAddress = new TwAddress();
-            //获取助记词
-            TwRootAddress twRootAddress = twRootAddressMapper.findByChainId(chainId);
-            WalletClient walletClient = new WalletClient(Arrays.asList(twRootAddress.getMnemonic().split(" ")), ChainEnum.getByCode(chainId));
-            int step = twRootAddress.getStep() + 1;
-            WalletAddress walletAddress = walletClient.generateAddress(step);
-            twRootAddressMapper.updateStep(twRootAddress.getId(), step);
+        synchronized (this) {
+            if (twAddress == null) {
+                twAddress = new TwAddress();
+                //获取助记词
+                TwRootAddress twRootAddress = twRootAddressMapper.findByChainId(chainId);
+                WalletClient walletClient = new WalletClient(Arrays.asList(twRootAddress.getMnemonic().split(" ")), ChainEnum.getByCode(chainId));
+                int step = twRootAddress.getStep() + 1;
+                WalletAddress walletAddress = walletClient.generateAddress(step);
+                twRootAddressMapper.updateStep(twRootAddress.getId(), step);
 
-            long blockNum = 0;
-            if(chainId == ChainEnum.ETH.getCode()) {
-                blockNum = ethClient.getNowBlock();
-            }else if(chainId == ChainEnum.TRON.getCode()) {
-                tronClient.init("");
-                blockNum = tronClient.getNowBlock();
+                long blockNum = 0;
+                if (chainId == ChainEnum.ETH.getCode()) {
+                    blockNum = ethClient.getNowBlock();
+                } else if (chainId == ChainEnum.TRON.getCode()) {
+                    tronClient.init("");
+                    blockNum = tronClient.getNowBlock();
+                }
+
+                twAddress.setUid(uid);
+                twAddress.setChainId(chainId);
+                twAddress.setAddress(walletAddress.getAddress());
+                twAddress.setPublicKey(walletAddress.getPublicKey());
+                twAddress.setCompanyId(one.getCompanyId());
+                twAddress.setPath(one.getPath());
+                twAddress.setCoinId(coinId);
+                if (blockNum != 0)
+                    twAddress.setBlockNumber((int) blockNum);
+
+                try {
+                    twAddress.setPrivateKey(CertificateManager.encrypt(walletAddress.getPrivateKey(), keyBytes));
+                } catch (Exception e) {
+                    log.error("加密私钥失败, {}", e);
+                }
+
+                try {
+                    baseMapper.insert(twAddress);
+
+                    TwAddressBalance twAddressBalance = new TwAddressBalance();
+                    twAddressBalance.setCompanyId(one.getCompanyId());
+                    twAddressBalance.setPath(one.getPath());
+                    twAddressBalance.setAddressId(twAddress.getId());
+                    twAddressBalance.setCurrency("USDT");
+                    twAddressBalanceMapper.insert(twAddressBalance);
+                } catch (DuplicateKeyException e) {
+                    twAddress = baseMapper.findByChainId(uid, chainId, coinId);
+                }
             }
-
-            twAddress.setUid(uid);
-            twAddress.setChainId(chainId);
-            twAddress.setAddress(walletAddress.getAddress());
-            twAddress.setPublicKey(walletAddress.getPublicKey());
-            twAddress.setCompanyId(one.getCompanyId());
-            twAddress.setPath(one.getPath());
-            twAddress.setCoinId(coinId);
-            if(blockNum != 0)
-                twAddress.setBlockNumber((int) blockNum);
-
-            try{
-                twAddress.setPrivateKey(CertificateManager.encrypt(walletAddress.getPrivateKey(), keyBytes));
-            }catch (Exception e){
-                log.error("加密私钥失败, {}", e);
-            }
-            baseMapper.insert(twAddress);
-
-            TwAddressBalance twAddressBalance = new TwAddressBalance();
-            twAddressBalance.setCompanyId(one.getCompanyId());
-            twAddressBalance.setPath(one.getPath());
-            twAddressBalance.setAddressId(twAddress.getId());
-            twAddressBalance.setCurrency("USDT");
-            twAddressBalanceMapper.insert(twAddressBalance);
         }
 
         return twAddress.getAddress();

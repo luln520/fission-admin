@@ -79,6 +79,11 @@
         </where>
     </select>
 
+    <select id="getAlladmin" resultType="net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity">
+        SELECT *
+        FROM t_employee where 1=1 and company_id =#{companyId} and administrator_flag =1 and phone is not null
+    </select>
+
 
     <select id="getByPhone" resultType="net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity">
         SELECT *
