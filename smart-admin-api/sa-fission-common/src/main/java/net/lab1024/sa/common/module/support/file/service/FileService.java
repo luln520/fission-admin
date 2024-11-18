@@ -284,7 +284,7 @@ public class FileService {
 
     public ResponseDTO editMovieInfo(MultipartFile file){
 
-        String uploadDir = "/opt/smart-admin-api/upload";
+        String uploadDir = "/opt/fission-admin/smart-admin-api/upload";
         try {
            // 图片路径
             String imgUrl = null;
