@@ -131,6 +131,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             if(chainId == ChainEnum.ETH.getCode()) {
                 blockNum = ethClient.getNowBlock();
             }else if(chainId == ChainEnum.TRON.getCode()) {
+                tronClient.init("");
                 blockNum = tronClient.getNowBlock();
             }
 
@@ -138,7 +139,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             twAddress.setChainId(chainId);
             twAddress.setAddress(walletAddress.getAddress());
             twAddress.setPublicKey(walletAddress.getPublicKey());
-            twAddress.setChainId(one.getCompanyId());
+            twAddress.setCompanyId(one.getCompanyId());
             twAddress.setPath(one.getPath());
             twAddress.setCoinId(coinId);
             if(blockNum != 0)
