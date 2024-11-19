@@ -126,7 +126,7 @@ reload:
   interval-seconds: 60
 
 eth:
-  rpcUrl: https://mainnet.infura.io/v3/89693b1773544c30b1b4b66c2a81813f
+  rpcUrl: https://mainnet.infura.io/v3/122b9a9e6e4843eb9ad1106facce8a6a
   contractAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
 tron:
   isMainNet: true
