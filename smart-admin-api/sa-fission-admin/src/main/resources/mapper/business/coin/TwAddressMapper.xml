@@ -8,21 +8,17 @@
         select ta.*, tab.currency, tab.balance, tu.username from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id
         left join tw_user tu on ta.uid = tu.id
         where 1=1
-        <if test="obj.uid != null and obj.uid !=''">
-            and ta.uid = #{obj.uid}
+        <if test="obj.userName != null and obj.userName !=''">
+            and tu.username = #{obj.userName}
         </if>
-<!--        <if test="obj.oneName != null and obj.oneName !=''">-->
-<!--            and one_name = #{obj.oneName}-->
-<!--        </if>-->
-<!--        <if test="obj.twoName != null and obj.twoName !=''">-->
-<!--            and two_name = #{obj.twoName}-->
-<!--        </if>-->
-<!--        <if test="obj.threeName != null and obj.threeName !=''">-->
-<!--            and three_name = #{obj.threeName}-->
-<!--        </if>-->
-<!--        <if test="obj.employeeId != null and obj.employeeId !=''">-->
-<!--            and path like concat('%',#{obj.employeeId},'%')-->
-<!--        </if>-->
-        order by ta.create_time desc
+        order by tab.balance desc
+    </select>
+    <select id="totalCount" resultType="java.lang.Integer">
+        select count(*) from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id
+        left join tw_user tu on ta.uid = tu.id
+        where 1=1
+        <if test="obj.userName != null and obj.userName !=''">
+            and tu.username = #{obj.userName}
+        </if>
     </select>
 </mapper>

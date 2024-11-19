@@ -15,6 +15,8 @@ public interface TwAddressMapper extends BaseMapper<TwAddress> {
 
     List<TwAddress> listpage(@Param("objectPage") Page<TwAddress> objectPage, @Param("obj") AddressVo addressVo);
 
+    int totalCount(@Param("obj") AddressVo addressVo);
+
     @Select("SELECT * FROM tw_address where chain_id = #{chainId} AND uid = #{uid} AND coin_id = #{coinId} limit 1")
     TwAddress findByChainId(@Param("uid") Integer uid, @Param("chainId") Integer chainId, @Param("coinId") Integer coinId);
 

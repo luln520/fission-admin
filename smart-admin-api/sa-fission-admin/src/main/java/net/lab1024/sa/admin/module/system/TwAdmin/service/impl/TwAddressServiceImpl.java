@@ -84,6 +84,9 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         /*tronClient.init("f73d5995e626d76504ea0f09e86c5cba225d4ddbc5e6c7bccf7be2de5b828c51");
         tronClient.transferFrom("TPEKP6w1RS7zzBWtf5hLdrqcfXmYiC2NKv", "TLgYVgfkxdGN5gHJ9SbjPEv9xg4bHSkfok", "99");*/
         Page<TwAddress> objectPage = new Page<>(addressVo.getPageNum(), addressVo.getPageSize());
+        int total = baseMapper.totalCount(addressVo);
+        objectPage.setTotal(total);
+
         List<TwAddress> listpage = baseMapper.listpage(objectPage, addressVo);
         objectPage.setRecords(listpage);
         return objectPage;
