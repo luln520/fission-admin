@@ -245,8 +245,12 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
         if(twAddress != null) {
             if(twAddress.getChainId() == ChainEnum.ETH.getCode()) {
-                BigInteger balance = ethClient.getErc20Balance(twAddress.getAddress());
-                twAddressBalanceMapper.updateBalance(TokenUtils.convertUsdtBalance(balance), twAddress.getId());
+                try {
+                    BigInteger balance = ethClient.getErc20Balance(twAddress.getAddress());
+                    twAddressBalanceMapper.updateBalance(TokenUtils.convertUsdtBalance(balance), twAddress.getId());
+                }catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
             }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
                 tronClient.init("");
                 BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress());
