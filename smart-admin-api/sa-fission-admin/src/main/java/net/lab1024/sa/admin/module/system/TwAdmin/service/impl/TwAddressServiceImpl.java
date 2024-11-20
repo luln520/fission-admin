@@ -248,7 +248,9 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 try {
                     BigInteger balance = ethClient.getErc20Balance(twAddress.getAddress());
                     twAddressBalanceMapper.updateBalance(TokenUtils.convertUsdtBalance(balance), twAddress.getId());
+                    log.info("更新eth账户余额成功,地址是=>{}", twAddress.getAddress());
                 }catch (Exception e) {
+                    e.printStackTrace();
                     log.error(e.getMessage(), e);
                 }
             }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
