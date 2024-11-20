@@ -93,9 +93,19 @@ public class EthClient {
         Credentials credentials = Credentials.create(privateKey);
 
         try {
-            TransactionReceipt transactionReceipt = Transfer.sendFunds(
+            // 动态获取 baseFee
+            BigInteger baseFee = web3j.ethFeeHistory(
+                    1, DefaultBlockParameterName.LATEST, null
+            ).send().getFeeHistory().getBaseFeePerGas().get(0);
+
+            // Gas 参数
+            BigInteger gasLimit = BigInteger.valueOf(21000); // 简单转账
+            BigInteger maxPriorityFeePerGas = BigInteger.valueOf(2).multiply(BigInteger.TEN.pow(9)); // 2 Gwei
+            BigInteger maxFeePerGas = baseFee.add(maxPriorityFeePerGas);
+
+            TransactionReceipt transactionReceipt = Transfer.sendFundsEIP1559(
                     web3j, credentials, toAddress,
-                    bigDecimal, Convert.Unit.ETHER).send();
+                    bigDecimal, Convert.Unit.ETHER, gasLimit, maxPriorityFeePerGas, maxFeePerGas).send();
 
             return transactionReceipt.getTransactionHash();
         } catch (Exception e) {
@@ -132,7 +142,7 @@ public class EthClient {
                     encodedFunction
             );
 
-            byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+            byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, 1, credentials);
             String hexValue = Numeric.toHexString(signedMessage);
 
             ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send();
@@ -242,8 +252,8 @@ public class EthClient {
     }
 
     public static void main(String[] args) throws Exception {
-        EthClient ethClient = new EthClient("https://sepolia.infura.io/v3/89693b1773544c30b1b4b66c2a81813f", "0x779877A7B0D9E8603169DdbD7836e478b4624789");
-        BigInteger fromBlock = BigInteger.valueOf(6970403);
+        EthClient ethClient = new EthClient("https://sepolia.infura.io/v3/89693b1773544c30b1b4b66c2a81813f", "0x419Fe9f14Ff3aA22e46ff1d03a73EdF3b70A62ED");
+        BigInteger fromBlock = BigInteger.valueOf(7112970);
         System.out.println(ethClient.queryTransfers("0x59f87D2D4B4A9c4Be86244b7209C4EbAC75B2EDc", fromBlock));
     }
 }
