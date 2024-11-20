@@ -200,7 +200,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     twReceipt.setFromAddress(twAddress.getAddress());
                     twReceipt.setToAddress(twCoin.getCzaddress());
                     try {
-                        String txHash = ethClient.transferErc20(privateKey, twCoin.getCzaddress(), TokenUtils.toWei(amount));
+                        String txHash = ethClient.transferErc20(privateKey, twCoin.getCzaddress(), TokenUtils.toUSDTWei(twAddress.getBalance()));
                         twReceipt.setTx(txHash);
                     }catch (RuntimeException e) {
                         twReceipt.setCaused(e.getMessage());
