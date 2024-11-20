@@ -29,6 +29,7 @@ import org.web3j.utils.Numeric;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -252,8 +253,6 @@ public class EthClient {
     }
 
     public static void main(String[] args) throws Exception {
-        EthClient ethClient = new EthClient("https://sepolia.infura.io/v3/89693b1773544c30b1b4b66c2a81813f", "0x419Fe9f14Ff3aA22e46ff1d03a73EdF3b70A62ED");
-        BigInteger fromBlock = BigInteger.valueOf(7112970);
-        System.out.println(ethClient.queryTransfers("0x59f87D2D4B4A9c4Be86244b7209C4EbAC75B2EDc", fromBlock));
+
     }
 }

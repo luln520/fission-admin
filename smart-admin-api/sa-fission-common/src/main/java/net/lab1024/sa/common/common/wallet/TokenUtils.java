@@ -39,6 +39,11 @@ public class TokenUtils {
         return Convert.fromWei(new BigDecimal(wei), Convert.Unit.ETHER);
     }
 
+    public static BigInteger toUSDTWei(BigDecimal amount) {
+        return amount.multiply(BigDecimal.TEN.pow(USDT_DECIMALS)).toBigInteger();
+    }
+
+
     /**
      * 将USDT原始余额转换为实际金额
      * @param rawBalance 原始余额
