@@ -2221,6 +2221,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         try{
             //1.创建一封邮件的实例对象
             Properties props = new Properties();
+            props.put("mail.smtp.ssl.protocols", "TLSv1.2");
             //选择ssl方式
             gmailtls(props);
 
