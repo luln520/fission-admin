@@ -2269,7 +2269,8 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             Transport.send(msg);
 
         }catch (Exception e){
-
+            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
