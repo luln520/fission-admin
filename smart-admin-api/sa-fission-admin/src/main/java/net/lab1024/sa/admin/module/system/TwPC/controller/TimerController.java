@@ -1,5 +1,6 @@
 package net.lab1024.sa.admin.module.system.TwPC.controller;
 
+import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.impl.TimerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,40 +24,44 @@ public class TimerController {
     private TimerServiceImpl timerService;
 
 
-    @Scheduled(cron = "*/5 * * * * ?")
+    @XxlJob("hycarryout")
+    //@Scheduled(cron = "*/5 * * * * ?")
     public void hycarryout()  {
         timerService.hycarryout();
     }
 
-    @Scheduled(cron = "*/5 * * * * ?")
+    @XxlJob("hycarryplanout")
+    //@Scheduled(cron = "*/5 * * * * ?")
     public void hycarryplanout()  {
         timerService.hycarryplanout();
     }
 
-//    @Scheduled(cron = "0 0 1 1 * ?")
-    @Scheduled(cron = "*/5 * * * * ?")
+    @XxlJob("mockhycarryout")
+    //@Scheduled(cron = "*/5 * * * * ?")
     public void mockhycarryout()  {
         timerService.mockhycarryout();
     }
 
-    @Scheduled(cron = "*/5 * * * * ?")
+    @XxlJob("mockhycarryplanout")
+    //@Scheduled(cron = "*/5 * * * * ?")
     public void mockhycarryplanout()  {
         timerService.mockhycarryplanout();
     }
-//
-////    @Scheduled(cron = "0 */5 * * * ?")
-    @Scheduled(cron = "0 */1 * * * ?")
+
+    @XxlJob("report")
+    //@Scheduled(cron = "0 */1 * * * ?")
     public void report()  {
         timerService.report();
     }
 
-    @Scheduled(cron = "0 */2 * * * ?")
+    @XxlJob("updateBalanceCron")
+    //@Scheduled(cron = "0 */2 * * * ?")
     public void updateBalanceCron()  {
         timerService.updateBalanceCron();
     }
 
-
-    @Scheduled(cron = "0 0 1 1 * ?")
+    @XxlJob("mockUserStatus")
+    //@Scheduled(cron = "0 0 1 1 * ?")
     public void mockUserStatus()  {
         timerService.mockUserStatus();
     }
