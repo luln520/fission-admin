@@ -456,7 +456,13 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
     @Override
     public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime) {
-
+            if(ctzed.compareTo(BigDecimal.ZERO) == 0) {
+                if (language.equals("zh")) {
+                    return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
+                } else {
+                    return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
+                }
+            }
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("id", uid); // 添加查询条件
             TwUser twUser = twUserService.getOne(queryWrapper);
