@@ -89,7 +89,8 @@ file:
       url:
         expire: 7200000
         public: https://${file.storage.cloud.bucket-name}.${file.storage.cloud.endpoint}/
-
+  upload:
+    dir: /opt/smart-admin-api/upload
 # swagger 配置
 swagger:
   title: SmartAdmin
