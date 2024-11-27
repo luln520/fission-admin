@@ -11,6 +11,9 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserCoinService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -31,13 +34,29 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
     @Autowired
     @Lazy
     private TwUserService twUserService;
+
+    @Autowired
+    private RedissonClient redisson;
+
     @Override
     public int incre(Integer uid, BigDecimal num, BigDecimal usdt) {
-        return this.baseMapper.incre(uid,num,usdt);
+        RLock lock = redisson.getLock("user_coin_" + uid);
+        try {
+            lock.lock();
+            return this.baseMapper.incre(uid,num,usdt);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public int decre(Integer uid, BigDecimal num,BigDecimal usdt) {
-        return this.baseMapper.decre(uid,num,usdt);
+        RLock lock = redisson.getLock("user_coin_" + uid);
+        try{
+            lock.lock();
+            return this.baseMapper.decre(uid,num,usdt);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
