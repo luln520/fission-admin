@@ -98,6 +98,7 @@ public class PcLeverOrderController {
     @ResponseBody
     @ApiOperation(value = "杠杆建仓")
     @NoNeedLogin
+    @RedissonLockAnnotation(keyParts = "uid")
     public ResponseDTO creatorderNew(@RequestParam int uid,            //用户id
                                   @RequestParam String ccoinname,   //币种
                                   @RequestParam int win,            //止赢
@@ -118,6 +119,7 @@ public class PcLeverOrderController {
     @ResponseBody
     @ApiOperation(value = "加仓")
     @NoNeedLogin
+    @RedissonLockAnnotation(keyParts = "uid")
     public ResponseDTO addnum(       @RequestParam int uid,            //用户id
                                      @RequestParam String orderNo,   //币种
                                      @RequestParam BigDecimal num,     //数量
@@ -130,6 +132,7 @@ public class PcLeverOrderController {
     @ResponseBody
     @ApiOperation(value = "减仓")
     @NoNeedLogin
+    @RedissonLockAnnotation(keyParts = "uid")
     public ResponseDTO strutcnum(       @RequestParam int uid,            //用户id
                                      @RequestParam String orderNo,   //币种
                                      @RequestParam BigDecimal num,     //数量
