@@ -77,9 +77,9 @@
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
                 <SizeBasedTriggeringPolicy size="10 MB"/>
             </Policies>
-            <DefaultRolloverStrategy max="30">
+            <DefaultRolloverStrategy max="30" fileIndex="max" compressionLevel="9">
                 <Delete basePath="${log-path}/error" maxDepth="1">
-                    <IfFileName glob="smart-admin_error_*.log"/>
+                    <IfFileName glob="smart-admin_error_*.log.gz"/>
                     <IfLastModified age="15d"/>
                 </Delete>
             </DefaultRolloverStrategy>

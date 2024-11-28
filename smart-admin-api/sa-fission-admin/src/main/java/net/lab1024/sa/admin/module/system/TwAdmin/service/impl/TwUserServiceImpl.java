@@ -892,7 +892,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         /**
          * 验证账号和账号状态
          */
-        String username = userReq.getUsername();
+        String username = userReq.getUsername().trim();
         String password = userReq.getPassword();
         String language = userReq.getLanguage();
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -985,7 +985,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             /**
              * 验证账号和账号状态
              */
-            String username = userReq.getUsername();
+            String username = userReq.getUsername().trim();
             String password = userReq.getPassword();
             String language = userReq.getLanguage();
             String encryptPwd = getEncryptPwd(password); //MD5密码加密
@@ -1652,6 +1652,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Override
     public ResponseDTO code(String username,String area,int type,String language,int companyId) throws IOException {
+        username = username.trim();
         if(type == 1){   //手机
             String code = this.codeRandom();
             String phone = area + username;
