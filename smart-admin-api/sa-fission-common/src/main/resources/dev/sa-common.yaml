@@ -89,7 +89,8 @@ file:
       url:
         expire: 7200000
         public: https://${file.storage.cloud.bucket-name}.${file.storage.cloud.endpoint}/
-
+  upload:
+    dir: /opt/smart-admin-api/upload
 # swagger 配置
 swagger:
   title: SmartAdmin
@@ -142,3 +143,16 @@ tron:
   apiKey: 94b3b889-19e2-49e0-a847-21858f23ca0f
   contractAddress: TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t
   rpcUrl: https://api.trongrid.io/jsonrpc
+
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:8080/xxl-job-admin
+    accessToken: default_token
+    executor:
+      ip:
+      appname: fission-admin
+      address:
+      port: 0
+      logpath: /home/logs/smart_admin_v2/jobhandler
+      logretentiondays: 30

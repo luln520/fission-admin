@@ -74,6 +74,9 @@ public class FileService {
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
+    @Value("${file.upload.dir}")
+    private String uploadDir;
+
     /**
      * 文件上传服务：通过 url 上传
      *
@@ -283,8 +286,6 @@ public class FileService {
 
 
     public ResponseDTO editMovieInfo(MultipartFile file){
-
-        String uploadDir = "/opt/fission-admin/smart-admin-api/upload";
         try {
            // 图片路径
             String imgUrl = null;

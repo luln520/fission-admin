@@ -92,7 +92,7 @@
 <!--            <AppenderRef ref="debug"/>-->
             <AppenderRef ref="info"/>
 <!--            <AppenderRef ref="warn"/>-->
-<!--            <AppenderRef ref="error"/>-->
+            <AppenderRef ref="error"/>
         </Root>
     </Loggers>
 
