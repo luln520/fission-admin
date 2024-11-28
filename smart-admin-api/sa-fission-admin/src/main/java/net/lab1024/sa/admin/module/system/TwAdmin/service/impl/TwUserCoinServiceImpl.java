@@ -40,23 +40,11 @@ public class TwUserCoinServiceImpl extends ServiceImpl<TwUserCoinDao, TwUserCoin
 
     @Override
     public int incre(Integer uid, BigDecimal num, BigDecimal usdt) {
-        RLock lock = redisson.getLock("user_coin_" + uid);
-        try {
-            lock.lock();
-            return this.baseMapper.incre(uid,num,usdt);
-        } finally {
-            lock.unlock();
-        }
+        return this.baseMapper.incre(uid,num,usdt);
     }
 
     public int decre(Integer uid, BigDecimal num,BigDecimal usdt) {
-        RLock lock = redisson.getLock("user_coin_" + uid);
-        try{
-            lock.lock();
-            return this.baseMapper.decre(uid,num,usdt);
-        } finally {
-            lock.unlock();
-        }
+        return this.baseMapper.decre(uid,num,usdt);
     }
 
     @Override
