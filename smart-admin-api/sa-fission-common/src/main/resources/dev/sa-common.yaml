@@ -153,6 +153,6 @@ xxl:
       ip:
       appname: fission-admin
       address:
-      port: 9999
+      port: 0
       logpath: /home/logs/smart_admin_v2/jobhandler
       logretentiondays: 30
