@@ -20,7 +20,7 @@ public interface TwAddressMapper extends BaseMapper<TwAddress> {
     @Select("SELECT * FROM tw_address where chain_id = #{chainId} AND uid = #{uid} AND coin_id = #{coinId} limit 1")
     TwAddress findByChainId(@Param("uid") Integer uid, @Param("chainId") Integer chainId, @Param("coinId") Integer coinId);
 
-    @Select("select ta.* from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id where tab.balance = 0 AND ta.coin_id = #{coinId} AND ta.chain_id = #{chainId} order by ta.id")
+    @Select("select ta.* from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id where tab.balance = 0 AND ta.coin_id = #{coinId} AND ta.chain_id = #{chainId} order by ta.update_time asc")
     List<TwAddress> listIdleAddress(@Param("chainId") Integer chainId, @Param("coinId") Integer coinId);
 
     @Select("select ta.*, tab.currency, tab.balance from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id where tab.balance > 0 AND ta.coin_id = #{coinId} limit #{limit}")

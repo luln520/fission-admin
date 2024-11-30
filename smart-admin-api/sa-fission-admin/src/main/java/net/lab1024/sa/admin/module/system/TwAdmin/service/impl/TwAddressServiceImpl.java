@@ -125,13 +125,13 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         synchronized (this) {
             if (twAddress == null) {
                 List<TwAddress> twAddressList = baseMapper.listIdleAddress(chainId, coinId);
-                if(!CollectionUtils.isEmpty(twAddressList)) {
+                if(!CollectionUtils.isEmpty(twAddressList) && twAddressList.size() > 5) {
                     twAddress = twAddressList.get(0);
                     int sourceUid = twAddress.getUid();
                     twAddress.setUid(uid);
                     twAddress.setCompanyId(one.getCompanyId());
                     twAddress.setPath(one.getPath());
-
+                    twAddress.setUpdateTime(new Date());
                     baseMapper.updateById(twAddress);
                     log.info(">>>>> 重新分配地址完成，原用户ID:{}, 新用户ID{}", sourceUid, uid);
                 }else {
