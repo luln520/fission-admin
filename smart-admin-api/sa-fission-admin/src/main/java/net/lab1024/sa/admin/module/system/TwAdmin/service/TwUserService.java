@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerUserVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticUserVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.*;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
 import net.lab1024.sa.admin.module.system.login.domain.LoginEmployeeDetail;
 import net.lab1024.sa.admin.module.system.login.domain.LoginForm;
@@ -87,4 +84,6 @@ public interface TwUserService extends IService<TwUser> {
     ResponseDTO editPasword(int uid,String oldword,String newword,String language) ;
 
     StatisticUserVo statisticPerUserByDate(String startDate, String endDate, int companyId, boolean isAuth);
+
+    List<PathVo>  statisticPathData();
 }

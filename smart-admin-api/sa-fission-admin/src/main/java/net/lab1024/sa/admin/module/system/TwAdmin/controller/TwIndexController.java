@@ -182,6 +182,12 @@ public class TwIndexController {
         return ResponseDTO.ok(result);
     }
 
-
+    @GetMapping("/getPathStatistic")
+    @ResponseBody
+    @NoNeedLogin
+    public ResponseDTO getPathStatistic(HttpServletRequest request) {
+        List<PathVo> pathVoList = twUserService.statisticPathData();
+        return ResponseDTO.ok(pathVoList);
+    }
 }
 
