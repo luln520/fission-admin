@@ -24,44 +24,44 @@ public class TimerController {
     private TimerServiceImpl timerService;
 
 
-    @XxlJob("hycarryout")
-    //@Scheduled(cron = "*/5 * * * * ?")
+    //@XxlJob("hycarryout")
+    @Scheduled(cron = "*/5 * * * * ?")
     public void hycarryout()  {
         timerService.hycarryout();
     }
 
-    @XxlJob("hycarryplanout")
-    //@Scheduled(cron = "*/5 * * * * ?")
+    //@XxlJob("hycarryplanout")
+    @Scheduled(cron = "*/5 * * * * ?")
     public void hycarryplanout()  {
         timerService.hycarryplanout();
     }
 
-    @XxlJob("mockhycarryout")
-    //@Scheduled(cron = "*/5 * * * * ?")
+    //@XxlJob("mockhycarryout")
+    @Scheduled(cron = "*/5 * * * * ?")
     public void mockhycarryout()  {
         timerService.mockhycarryout();
     }
 
-    @XxlJob("mockhycarryplanout")
-    //@Scheduled(cron = "*/5 * * * * ?")
+    //@XxlJob("mockhycarryplanout")
+    @Scheduled(cron = "*/5 * * * * ?")
     public void mockhycarryplanout()  {
         timerService.mockhycarryplanout();
     }
 
-    @XxlJob("report")
-    //@Scheduled(cron = "0 */1 * * * ?")
+    //@XxlJob("report")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void report()  {
         timerService.report();
     }
 
-    @XxlJob("updateBalanceCron")
-    //@Scheduled(cron = "0 */2 * * * ?")
+    //@XxlJob("updateBalanceCron")
+    @Scheduled(cron = "0 */2 * * * ?")
     public void updateBalanceCron()  {
         timerService.updateBalanceCron();
     }
 
-    @XxlJob("mockUserStatus")
-    //@Scheduled(cron = "0 0 1 1 * ?")
+    //@XxlJob("mockUserStatus")
+    @Scheduled(cron = "0 0 1 1 * ?")
     public void mockUserStatus()  {
         timerService.mockUserStatus();
     }
