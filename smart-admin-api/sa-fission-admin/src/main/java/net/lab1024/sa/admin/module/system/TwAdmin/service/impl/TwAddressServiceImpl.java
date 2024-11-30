@@ -124,49 +124,61 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         TwAddress twAddress = baseMapper.findByChainId(uid, chainId, coinId);
         synchronized (this) {
             if (twAddress == null) {
-                twAddress = new TwAddress();
-                //获取助记词
-                TwRootAddress twRootAddress = twRootAddressMapper.findByChainId(chainId);
-                WalletClient walletClient = new WalletClient(Arrays.asList(twRootAddress.getMnemonic().split(" ")), ChainEnum.getByCode(chainId));
-                int step = twRootAddress.getStep() + 1;
-                WalletAddress walletAddress = walletClient.generateAddress(step);
-                twRootAddressMapper.updateStep(twRootAddress.getId(), step);
+                List<TwAddress> twAddressList = baseMapper.listIdleAddress(chainId, coinId);
+                if(!CollectionUtils.isEmpty(twAddressList)) {
+                    twAddress = twAddressList.get(0);
+                    int sourceUid = twAddress.getUid();
+                    twAddress.setUid(uid);
+                    twAddress.setCompanyId(one.getCompanyId());
+                    twAddress.setPath(one.getPath());
 
-                long blockNum = 0;
-                if (chainId == ChainEnum.ETH.getCode()) {
-                    blockNum = ethClient.getNowBlock();
-                } else if (chainId == ChainEnum.TRON.getCode()) {
-                    tronClient.init("");
-                    blockNum = tronClient.getNowBlock();
-                }
+                    baseMapper.updateById(twAddress);
+                    log.info(">>>>> 重新分配地址完成，原用户ID:{}, 新用户ID{}", sourceUid, uid);
+                }else {
+                    twAddress = new TwAddress();
+                    //获取助记词
+                    TwRootAddress twRootAddress = twRootAddressMapper.findByChainId(chainId);
+                    WalletClient walletClient = new WalletClient(Arrays.asList(twRootAddress.getMnemonic().split(" ")), ChainEnum.getByCode(chainId));
+                    int step = twRootAddress.getStep() + 1;
+                    WalletAddress walletAddress = walletClient.generateAddress(step);
+                    twRootAddressMapper.updateStep(twRootAddress.getId(), step);
 
-                twAddress.setUid(uid);
-                twAddress.setChainId(chainId);
-                twAddress.setAddress(walletAddress.getAddress());
-                twAddress.setPublicKey(walletAddress.getPublicKey());
-                twAddress.setCompanyId(one.getCompanyId());
-                twAddress.setPath(one.getPath());
-                twAddress.setCoinId(coinId);
-                if (blockNum != 0)
-                    twAddress.setBlockNumber((int) blockNum);
+                    long blockNum = 0;
+                    if (chainId == ChainEnum.ETH.getCode()) {
+                        blockNum = ethClient.getNowBlock();
+                    } else if (chainId == ChainEnum.TRON.getCode()) {
+                        tronClient.init("");
+                        blockNum = tronClient.getNowBlock();
+                    }
 
-                try {
-                    twAddress.setPrivateKey(CertificateManager.encrypt(walletAddress.getPrivateKey(), keyBytes));
-                } catch (Exception e) {
-                    log.error("加密私钥失败, {}", e);
-                }
+                    twAddress.setUid(uid);
+                    twAddress.setChainId(chainId);
+                    twAddress.setAddress(walletAddress.getAddress());
+                    twAddress.setPublicKey(walletAddress.getPublicKey());
+                    twAddress.setCompanyId(one.getCompanyId());
+                    twAddress.setPath(one.getPath());
+                    twAddress.setCoinId(coinId);
+                    if (blockNum != 0)
+                        twAddress.setBlockNumber((int) blockNum);
 
-                try {
-                    baseMapper.insert(twAddress);
+                    try {
+                        twAddress.setPrivateKey(CertificateManager.encrypt(walletAddress.getPrivateKey(), keyBytes));
+                    } catch (Exception e) {
+                        log.error("加密私钥失败, {}", e);
+                    }
 
-                    TwAddressBalance twAddressBalance = new TwAddressBalance();
-                    twAddressBalance.setCompanyId(one.getCompanyId());
-                    twAddressBalance.setPath(one.getPath());
-                    twAddressBalance.setAddressId(twAddress.getId());
-                    twAddressBalance.setCurrency("USDT");
-                    twAddressBalanceMapper.insert(twAddressBalance);
-                } catch (DuplicateKeyException e) {
-                    twAddress = baseMapper.findByChainId(uid, chainId, coinId);
+                    try {
+                        baseMapper.insert(twAddress);
+
+                        TwAddressBalance twAddressBalance = new TwAddressBalance();
+                        twAddressBalance.setCompanyId(one.getCompanyId());
+                        twAddressBalance.setPath(one.getPath());
+                        twAddressBalance.setAddressId(twAddress.getId());
+                        twAddressBalance.setCurrency("USDT");
+                        twAddressBalanceMapper.insert(twAddressBalance);
+                    } catch (DuplicateKeyException e) {
+                        twAddress = baseMapper.findByChainId(uid, chainId, coinId);
+                    }
                 }
             }
         }
@@ -340,6 +352,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
             transferRecordList =  tronRpcClient.queryTransfers(fromBlock, twAddress.getAddress());
         }
+
         QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
         queryWrapper1.eq("id", twAddress.getUid());
         TwUser twUser = twUserService.getOne(queryWrapper1);
@@ -361,6 +374,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 totalAmount = totalAmount.add(transferRecord.getValue());
                 BigDecimal amount = TokenUtils.convertUsdtBalance(totalAmount);
 
+                twAddress = this.baseMapper.selectById(twAddress.getId());
                 twAddress.setBlockNumber(transferRecord.getBlockNumber().intValue());
                 this.baseMapper.updateById(twAddress);
                 //更新账户
