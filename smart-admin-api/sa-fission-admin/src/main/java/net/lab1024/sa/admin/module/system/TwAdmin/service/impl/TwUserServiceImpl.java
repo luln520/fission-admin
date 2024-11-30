@@ -12,13 +12,12 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerUserVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticUserVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TeanResp;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Req.UserReq;
+import net.lab1024.sa.admin.module.system.employee.dao.EmployeeDao;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
+import net.lab1024.sa.admin.module.system.employee.domain.vo.EmployeeVO;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
 import net.lab1024.sa.common.common.SMS.SendSmsLib;
@@ -145,6 +144,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Autowired
     private TwUserTeamService twUserTeamService;
+
+    @Autowired
+    private TwAddressDetailMapper twAddressDetailMapper;
+
+    @Autowired
+    private EmployeeDao employeeDao;
 
     @Override
     public Integer countAllUsers(int companyId) {
@@ -764,6 +769,22 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twUserCoinService.decre(uid,money,twUserCoin.getUsdt());
             remark = "管理员手动减少";
 
+            TwRecharge twRecharge = new TwRecharge();
+            twRecharge.setUid(uid);
+            twRecharge.setUsername(one.getUsername());
+            twRecharge.setCoin("usdt");
+            twRecharge.setNum(money);
+            twRecharge.setCompanyId(one.getCompanyId());
+            twRecharge.setDepartment(one.getDepatmentId());
+            twRecharge.setPath(one.getPath());
+            twRecharge.setAddtime(new Date());
+            twRecharge.setUpdatetime(new Date());
+            twRecharge.setStatus(2);
+            twRecharge.setPayimg("");
+            twRecharge.setMsg("");
+            twRecharge.setAtype(1);
+            twRecharge.setType(2);
+            twRechargeService.save(twRecharge);
 
             TwAdminLog twAdminLog = new TwAdminLog();
             twAdminLog.setAdminId((int) byId.getEmployeeId());
@@ -796,6 +817,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twRecharge.setPayimg("");
             twRecharge.setMsg("");
             twRecharge.setAtype(1);
+            twRecharge.setType(1);
             twRechargeService.save(twRecharge);
             remark = "管理员手动增加";
 
@@ -1951,6 +1973,26 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         statisticUserVo.setCountList(countList);
         return statisticUserVo;
+    }
+
+    @Override
+    public List<PathVo>  statisticPathData() {
+        List<PathVo> pathVoList = Lists.newArrayList();
+        List<EmployeeVO> employeeList = employeeDao.listAll();
+        for(EmployeeVO employeeVO : employeeList) {
+            BigDecimal depositAmount = twAddressDetailMapper.queryAmountVolume(employeeVO.getEmployeeId());
+            BigDecimal withdrawAmount = twMyzcDao.queryAmountVolume(employeeVO.getEmployeeId());
+            int userCount = this.baseMapper.statisticUserCount(employeeVO.getEmployeeId());
+
+            PathVo pathVo = new PathVo();
+            pathVo.setUserCount(userCount);
+            pathVo.setDepositAmount(depositAmount);
+            pathVo.setEmployeeId(employeeVO.getEmployeeId());
+            pathVo.setLoginName(employeeVO.getLoginName());
+            pathVo.setWithdrawAmount(withdrawAmount);
+            pathVoList.add(pathVo);
+        }
+        return pathVoList;
     }
 
     @Override

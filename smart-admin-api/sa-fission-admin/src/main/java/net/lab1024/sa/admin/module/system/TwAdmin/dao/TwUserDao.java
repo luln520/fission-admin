@@ -39,5 +39,8 @@ public interface TwUserDao extends BaseMapper<TwUser> {
 
     @Select("SELECT COUNT(*) as total FROM tw_user WHERE rzstatus = 2 AND addtime >= UNIX_TIMESTAMP(CURDATE() - INTERVAL 1 DAY) AND addtime < UNIX_TIMESTAMP(CURDATE())")
     int statisticYtAuthUserCount(@Param("companyId")int companyId);
+
+    @Select("SELECT COUNT(*) as total FROM tw_user WHERE path like CONCAT('%', #{employeeId}, '%')")
+    int statisticUserCount(@Param("employeeId")Long employeeId);
 }
 

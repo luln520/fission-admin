@@ -7,7 +7,9 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -22,5 +24,8 @@ public interface TwMyzcDao extends BaseMapper<TwMyzc> {
     List<TwMyzc> listpage(@Param("objectPage") Page<TwMyzc> objectPage, @Param("obj") TwMyzcVo twMyzcVo);
 
     List<PerNumVo> statisticPerNum(@Param("days")Integer days, @Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId")int companyId);
+
+    @Select("SELECT IFNULL(SUM(num), 0) FROM tw_myzc where path like CONCAT('%', #{employeeId}, '%') AND status = 2")
+    BigDecimal queryAmountVolume(@Param("employeeId") Long employeeId);
 }
 
