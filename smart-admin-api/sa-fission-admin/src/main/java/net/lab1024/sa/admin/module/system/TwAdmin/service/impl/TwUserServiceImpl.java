@@ -769,6 +769,22 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twUserCoinService.decre(uid,money,twUserCoin.getUsdt());
             remark = "管理员手动减少";
 
+            TwRecharge twRecharge = new TwRecharge();
+            twRecharge.setUid(uid);
+            twRecharge.setUsername(one.getUsername());
+            twRecharge.setCoin("usdt");
+            twRecharge.setNum(money);
+            twRecharge.setCompanyId(one.getCompanyId());
+            twRecharge.setDepartment(one.getDepatmentId());
+            twRecharge.setPath(one.getPath());
+            twRecharge.setAddtime(new Date());
+            twRecharge.setUpdatetime(new Date());
+            twRecharge.setStatus(2);
+            twRecharge.setPayimg("");
+            twRecharge.setMsg("");
+            twRecharge.setAtype(1);
+            twRecharge.setType(2);
+            twRechargeService.save(twRecharge);
 
             TwAdminLog twAdminLog = new TwAdminLog();
             twAdminLog.setAdminId((int) byId.getEmployeeId());
@@ -801,6 +817,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             twRecharge.setPayimg("");
             twRecharge.setMsg("");
             twRecharge.setAtype(1);
+            twRecharge.setType(1);
             twRechargeService.save(twRecharge);
             remark = "管理员手动增加";
 
