@@ -2047,6 +2047,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         BigDecimal recharge = new BigDecimal(0);
         BigDecimal myzc = new BigDecimal(0);
         BigDecimal amountVolume = new BigDecimal(0);
+        BigDecimal codeamount = new BigDecimal(0);
 
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(ploss), 0) as winHyorder")
@@ -2220,6 +2221,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         BigDecimal totalWinOrder = winHyorder.add(winLeverOrder).add(kjOrder);
         BigDecimal totalLossOrder = lossHyorder.add(lossLeverOrder);
 
+        QueryWrapper<TwUser> queryWrapper7 = new QueryWrapper<>();
+        queryWrapper7.eq("id", uid);
+        TwUser one = this.getOne(queryWrapper7);
 
         Map<String, Object> results = new HashMap<>();
         results.put("hyorderWinOrder",hyorder);        //用户合约盈利
@@ -2231,6 +2235,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         results.put("myzc",myzc);                     //用户总提现
 
         results.put("amountVolume", amountVolume);
+        results.put("codeamount",one.getCodeAmount());
 
         return ResponseDTO.ok(results);
     }
