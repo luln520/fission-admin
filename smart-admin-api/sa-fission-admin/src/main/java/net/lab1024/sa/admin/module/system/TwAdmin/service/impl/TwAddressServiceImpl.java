@@ -340,7 +340,13 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         }
         int startBlockNumber = twAddress.getBlockNumber();
         BigInteger fromBlock = BigInteger.valueOf(startBlockNumber + 1);
-        int currentBlockNumber = twAddress.getChainId() == ChainEnum.ETH.getCode()? (int)ethClient.getNowBlock() : (int)tronClient.getNowBlock();
+        int currentBlockNumber = twAddress.getBlockNumber();
+        if(twAddress.getChainId() == ChainEnum.ETH.getCode()) {
+            currentBlockNumber = (int)ethClient.getNowBlock();
+        }else {
+            tronClient.init("");
+            currentBlockNumber =  (int)tronClient.getNowBlock();
+        }
         List<TransferRecord> transferRecordList = Lists.newArrayList();
 
         if(twAddress.getChainId() == ChainEnum.ETH.getCode()) {
