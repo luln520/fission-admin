@@ -374,9 +374,9 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 totalAmount = totalAmount.add(transferRecord.getValue());
                 BigDecimal amount = TokenUtils.convertUsdtBalance(totalAmount);
 
-                twAddress = this.baseMapper.selectById(twAddress.getId());
-                twAddress.setBlockNumber(transferRecord.getBlockNumber().intValue());
-                this.baseMapper.updateById(twAddress);
+                TwAddress dbTwAddress = this.baseMapper.selectById(twAddress.getId());
+                dbTwAddress.setBlockNumber(transferRecord.getBlockNumber().intValue());
+                this.baseMapper.updateById(dbTwAddress);
                 //更新账户
                 QueryWrapper<TwUserCoin> queryCoin = new QueryWrapper<>();
                 queryCoin.eq("userid", twAddress.getUid());
