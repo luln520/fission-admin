@@ -340,7 +340,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         }
         int startBlockNumber = twAddress.getBlockNumber();
         BigInteger fromBlock = BigInteger.valueOf(startBlockNumber + 1);
-        int currentEthBlockNumber = twAddress.getChainId() == ChainEnum.ETH.getCode()? (int)ethClient.getNowBlock() : 0;
+        int currentBlockNumber = twAddress.getChainId() == ChainEnum.ETH.getCode()? (int)ethClient.getNowBlock() : (int)tronClient.getNowBlock();
         List<TransferRecord> transferRecordList = Lists.newArrayList();
 
         if(twAddress.getChainId() == ChainEnum.ETH.getCode()) {
@@ -422,10 +422,10 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             }
         }
 
-        if(currentEthBlockNumber != 0) {
-            twAddress.setBlockNumber(currentEthBlockNumber);
+        //if(currentEthBlockNumber != 0) {
+            twAddress.setBlockNumber(currentBlockNumber);
             this.baseMapper.updateById(twAddress);
-        }
+        //}
     }
 
     @Override
