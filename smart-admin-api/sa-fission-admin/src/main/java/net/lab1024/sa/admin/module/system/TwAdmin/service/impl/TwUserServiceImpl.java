@@ -2018,6 +2018,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             BigDecimal depositAmount = twAddressDetailMapper.queryAmountVolume(employeeVO.getEmployeeId());
             BigDecimal withdrawAmount = twMyzcDao.queryAmountVolume(employeeVO.getEmployeeId());
             int userCount = this.baseMapper.statisticUserCount(employeeVO.getEmployeeId());
+            BigDecimal manualDeposit = twRechargeDao.queryAmountVolume(employeeVO.getEmployeeId(), 1);
+            BigDecimal manualReduce = twRechargeDao.queryAmountVolume(employeeVO.getEmployeeId(), 2);;
+            BigDecimal donateAmount = twRechargeDao.queryAmountVolume(employeeVO.getEmployeeId(), 3);;
 
             PathVo pathVo = new PathVo();
             pathVo.setUserCount(userCount);
@@ -2025,6 +2028,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             pathVo.setEmployeeId(employeeVO.getEmployeeId());
             pathVo.setLoginName(employeeVO.getLoginName());
             pathVo.setWithdrawAmount(withdrawAmount);
+            pathVo.setManualDeposit(manualDeposit);
+            pathVo.setManualReduce(manualReduce);
+            pathVo.setDonateAmount(donateAmount);
             pathVoList.add(pathVo);
         }
         return pathVoList;

@@ -412,6 +412,13 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 twNotice.setDepartment(twUser.getDepatmentId());
                 twNotice.setPath(twUser.getPath());
                 twNoticeService.save(twNotice);
+
+                try {
+                    twUser.setCodeAmount(amount.add(twUser.getCodeAmount()));
+                    twUserService.updateById(twUser);
+                }catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
             }
         }
 

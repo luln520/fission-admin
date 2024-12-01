@@ -10,5 +10,8 @@ public class PathVo {
     private String loginName;
     private BigDecimal depositAmount;
     private BigDecimal withdrawAmount;
+    private BigDecimal manualDeposit;
+    private BigDecimal manualReduce;
+    private BigDecimal donateAmount;
     private int userCount;
 }

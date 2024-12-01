@@ -10,7 +10,10 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.data.domain.Pageable;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -25,5 +28,8 @@ public interface TwRechargeDao  extends BaseMapper<TwRecharge> {
     List<TwRecharge> listpage(@Param("objectPage") Page<TwRecharge> objectPage, @Param("obj") TwRechargeVo twRechargeVo);
 
     List<PerNumVo> statisticPerNum(@Param("days")Integer days, @Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId")int companyId);
+
+    @Select("SELECT IFNULL(SUM(num), 0) FROM tw_recharge where path like CONCAT('%', #{employeeId}, '%') AND `type`= #{type} AND atype = 1")
+    BigDecimal queryAmountVolume(@Param("employeeId") Long employeeId, @Param("type") int type);
 }
 
