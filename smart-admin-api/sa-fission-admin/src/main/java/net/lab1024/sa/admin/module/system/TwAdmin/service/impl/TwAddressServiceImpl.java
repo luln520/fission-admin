@@ -373,10 +373,6 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
                 totalAmount = totalAmount.add(transferRecord.getValue());
                 BigDecimal amount = TokenUtils.convertUsdtBalance(totalAmount);
-
-                TwAddress dbTwAddress = this.baseMapper.findById(twAddress.getId());
-                dbTwAddress.setBlockNumber(transferRecord.getBlockNumber().intValue());
-                this.baseMapper.updateById(dbTwAddress);
                 //更新账户
                 QueryWrapper<TwUserCoin> queryCoin = new QueryWrapper<>();
                 queryCoin.eq("userid", twAddress.getUid());
@@ -422,10 +418,10 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             }
         }
 
-        //if(currentEthBlockNumber != 0) {
-            twAddress.setBlockNumber(currentBlockNumber);
-            this.baseMapper.updateById(twAddress);
-        //}
+        TwAddress dbTwAddress = this.baseMapper.findById(twAddress.getId());
+        dbTwAddress.setBlockNumber(currentBlockNumber);
+        this.baseMapper.updateById(dbTwAddress);
+
     }
 
     @Override
