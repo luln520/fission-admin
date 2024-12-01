@@ -384,7 +384,7 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         BigDecimal leverAmountVolume = this.twLeverOrderMapper.queryUserAmountVolume(uid);
         amountVolume = hyAmountVolume.add(leverAmountVolume);
 
-        if(num.compareTo(amountVolume) < 0){
+        if(amountVolume.compareTo(twUser.getCodeAmount()) < 0){
             if(language.equals("zh")){
                 return ResponseDTO.userErrorParam("交易量不足，不可提现!");
             }else{
