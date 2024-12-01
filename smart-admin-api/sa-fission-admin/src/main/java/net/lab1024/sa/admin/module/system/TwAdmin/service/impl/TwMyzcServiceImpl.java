@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwHyorderDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwLeverOrderMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMyzcDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo;
@@ -75,6 +77,13 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
 
     @Autowired
     private TwCompanyService twCompanyService;
+
+    @Autowired
+    private TwLeverOrderMapper twLeverOrderMapper;
+
+
+    @Autowired
+    private TwHyorderDao twHyorderDao;
 
     @Override
     public BigDecimal sumDayWithdraw(String startTime, String endTime,int companyId) {
@@ -367,6 +376,19 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
                 return ResponseDTO.userErrorParam("不能高于最大提币值!");
             }else{
                 return ResponseDTO.userErrorParam("Cannot be higher than the maximum withdrawal value！");
+            }
+        }
+        BigDecimal amountVolume = new BigDecimal(0);
+
+        BigDecimal hyAmountVolume = this.twHyorderDao.queryUserAmountVolume(uid);
+        BigDecimal leverAmountVolume = this.twLeverOrderMapper.queryUserAmountVolume(uid);
+        amountVolume = hyAmountVolume.add(leverAmountVolume);
+
+        if(num.compareTo(amountVolume) < 0){
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("交易量不足，不可提现!");
+            }else{
+                return ResponseDTO.userErrorParam("If the trading volume is insufficient, it cannot be withdrawn！");
             }
         }
 

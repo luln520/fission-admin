@@ -86,7 +86,7 @@ public class TwRecharge implements Serializable {
     @ApiModelProperty("0用户充值1管理员充值")
     private Integer atype;
 
-    @ApiModelProperty("1增加 2 减少")
+    @ApiModelProperty("1增加 2 减少 3.赠送")
     private Integer type;
     /**
     * 充值地址
