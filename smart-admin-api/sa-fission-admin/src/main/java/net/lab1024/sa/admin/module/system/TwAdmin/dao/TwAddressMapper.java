@@ -29,6 +29,9 @@ public interface TwAddressMapper extends BaseMapper<TwAddress> {
     @Select("SELECT * FROM tw_address where address = #{address} limit 1")
     TwAddress findByAddress(@Param("address") String address);
 
+    @Select("SELECT * FROM tw_address where id = #{id}")
+    TwAddress findById(@Param("id") int id);
+
     @Select("select * from tw_address")
     List<TwAddress> listAddress();
 }
