@@ -831,6 +831,41 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
         }
 
+        if(type == 3){   //赠送
+            twUserCoinService.incre(uid,money,twUserCoin.getUsdt());
+            TwRecharge twRecharge = new TwRecharge();
+            twRecharge.setUid(uid);
+            twRecharge.setUsername(one.getUsername());
+            twRecharge.setCoin("usdt");
+            twRecharge.setNum(money);
+            twRecharge.setCompanyId(one.getCompanyId());
+            twRecharge.setDepartment(one.getDepatmentId());
+            twRecharge.setPath(one.getPath());
+            twRecharge.setAddtime(new Date());
+            twRecharge.setUpdatetime(new Date());
+            twRecharge.setStatus(2);
+            twRecharge.setPayimg("");
+            twRecharge.setMsg("");
+            twRecharge.setAtype(1);
+            twRecharge.setType(3);
+            twRechargeService.save(twRecharge);
+            remark = "管理员手动赠送";
+
+            TwAdminLog twAdminLog = new TwAdminLog();
+            twAdminLog.setAdminId((int) byId.getEmployeeId());
+            twAdminLog.setAdminUsername(byId.getActualName());
+            twAdminLog.setAction("管理员手动赠送");
+            twAdminLog.setCompanyId(one.getCompanyId());
+            Instant instant = Instant.now();
+            long epochMilli = instant.toEpochMilli();
+            twAdminLog.setCreateTime((int) (epochMilli/1000));
+            twAdminLog.setDepartment(one.getDepatmentId());
+            twAdminLog.setPath(one.getPath());
+            twAdminLog.setRemark("指定用户 "+one.getUsername()+" 手动赠送");
+            twAdminLogService.save(twAdminLog);
+
+        }
+
         TwBill twBill = new TwBill();
         twBill.setUid(uid);
         twBill.setUsername(one.getUsername());
