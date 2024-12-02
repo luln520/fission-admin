@@ -34,6 +34,7 @@ import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -1204,7 +1205,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setStatus(1);
                 twUser.setTxstate(1);
                 twUser.setRzstatus(0);
-                this.save(twUser);
+
+                try {
+                    this.save(twUser);
+                } catch (DuplicateKeyException e) {
+                    QueryWrapper<TwUser> userWrapper = new QueryWrapper<>();
+                    userWrapper.eq("username", username);
+                    userWrapper.eq("company_id", companyId);
+                    twUser = this.getOne(userWrapper);
+                }
 
                 Integer uid = twUser.getId();
                 TwUserCoin twUserCoin = new TwUserCoin();
@@ -2047,6 +2056,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         BigDecimal recharge = new BigDecimal(0);
         BigDecimal myzc = new BigDecimal(0);
         BigDecimal amountVolume = new BigDecimal(0);
+        BigDecimal codeamount = new BigDecimal(0);
 
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("IFNULL(SUM(ploss), 0) as winHyorder")
@@ -2220,6 +2230,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         BigDecimal totalWinOrder = winHyorder.add(winLeverOrder).add(kjOrder);
         BigDecimal totalLossOrder = lossHyorder.add(lossLeverOrder);
 
+        QueryWrapper<TwUser> queryWrapper7 = new QueryWrapper<>();
+        queryWrapper7.eq("id", uid);
+        TwUser one = this.getOne(queryWrapper7);
 
         Map<String, Object> results = new HashMap<>();
         results.put("hyorderWinOrder",hyorder);        //用户合约盈利
@@ -2231,6 +2244,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         results.put("myzc",myzc);                     //用户总提现
 
         results.put("amountVolume", amountVolume);
+        results.put("codeamount",one.getCodeAmount());
 
         return ResponseDTO.ok(results);
     }
