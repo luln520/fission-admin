@@ -456,6 +456,16 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
     @Override
     public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime) {
+
+        Date planDate = DateUtil.str2DateTime(plantime);
+        Date currentDate = DateUtil.stract12();
+        if(planDate.getTime() < currentDate.getTime()) {
+            if (language.equals("zh")) {
+                return ResponseDTO.userErrorParam("下单失败，请重新加载页面！");
+            } else {
+                return ResponseDTO.userErrorParam("Order failed, please reload the page！");
+            }
+        }
             if(ctzed.compareTo(BigDecimal.ZERO) == 0) {
                 if (language.equals("zh")) {
                     return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");

@@ -34,6 +34,7 @@ import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -1204,7 +1205,15 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUser.setStatus(1);
                 twUser.setTxstate(1);
                 twUser.setRzstatus(0);
-                this.save(twUser);
+
+                try {
+                    this.save(twUser);
+                } catch (DuplicateKeyException e) {
+                    QueryWrapper<TwUser> userWrapper = new QueryWrapper<>();
+                    userWrapper.eq("username", username);
+                    userWrapper.eq("company_id", companyId);
+                    twUser = this.getOne(userWrapper);
+                }
 
                 Integer uid = twUser.getId();
                 TwUserCoin twUserCoin = new TwUserCoin();
