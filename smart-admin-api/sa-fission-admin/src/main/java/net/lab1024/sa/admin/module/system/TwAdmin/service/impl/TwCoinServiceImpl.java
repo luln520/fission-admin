@@ -71,8 +71,8 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
     @Override
     public List<TwCoin> lists( String userCode, int companyId, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
-        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
-        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+//        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+//        Long uidToken = tokenService.getUIDToken(xHeaderToken);
 
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("txstatus",1);
