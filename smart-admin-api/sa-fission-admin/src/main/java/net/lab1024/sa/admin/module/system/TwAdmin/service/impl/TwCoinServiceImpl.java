@@ -9,9 +9,11 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwCoinDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAdminLog;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwContent;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAdminLogService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
 import net.lab1024.sa.admin.module.system.role.domain.vo.RoleEmployeeVO;
@@ -56,6 +58,9 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
     @Autowired
     private TwAddressService twAddressService;
 
+    @Autowired
+    private TwUserService twUserService;
+
     @Override
     public IPage<TwCoin> listpage(PageParam pageParam) {
         Page<TwCoin> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
@@ -64,7 +69,7 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
     }
 
     @Override
-    public List<TwCoin> lists( int uid, int companyId, HttpServletRequest request) {
+    public List<TwCoin> lists( String userCode, int companyId, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
         String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
@@ -75,14 +80,17 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
 
         List<TwCoin> twCoinList = this.list(queryWrapper);
 
+        QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("user_code", userCode);
+        TwUser twUser = twUserService.getOne(queryWrapper2);
 
         for(TwCoin twCoin : twCoinList) {
             if(twCoin.getCzline().equals(NetworkConst.ETH)) {
-                twCoin.setCzaddress(twAddressService.createAddress(uid, 60, twCoin.getId()));
+                twCoin.setCzaddress(twAddressService.createAddress(twUser.getId(), 60, twCoin.getId()));
             }else if(twCoin.getCzline().equals(NetworkConst.TRON)) {
-                twCoin.setCzaddress(twAddressService.createAddress(uid, 195, twCoin.getId()));
+                twCoin.setCzaddress(twAddressService.createAddress(twUser.getId(), 195, twCoin.getId()));
             }else {
-                twCoin.setCzaddress(twAddressService.createAddress(uid, 0, twCoin.getId()));
+                twCoin.setCzaddress(twAddressService.createAddress(twUser.getId(), 0, twCoin.getId()));
             }
         }
         /*for(TwCoin twCoin : twCoinList) {

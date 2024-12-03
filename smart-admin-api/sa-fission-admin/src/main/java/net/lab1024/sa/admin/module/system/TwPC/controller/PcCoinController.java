@@ -40,10 +40,10 @@ public class PcCoinController {
     @ApiOperation(value = "账单列表")
     @NoNeedLogin
     public ResponseDTO<List<TwCoin>> lists(@RequestParam int companyId,
-                                           @RequestParam int uid,
+                                           @RequestParam("userCode") String userCode,
                                            HttpServletRequest request) {
         try{
-            return ResponseDTO.ok(twCoinService.lists(uid, companyId, request));
+            return ResponseDTO.ok(twCoinService.lists(userCode, companyId, request));
         }catch(Exception e) {
             log.error(e.getMessage(), e);
             return ResponseDTO.error(PARAM_ERROR);
