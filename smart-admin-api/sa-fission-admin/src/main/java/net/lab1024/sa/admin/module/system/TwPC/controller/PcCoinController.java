@@ -2,6 +2,7 @@ package net.lab1024.sa.admin.module.system.TwPC.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwCoin;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwCoinService;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static net.lab1024.sa.common.common.code.UserErrorCode.PARAM_ERROR;
+
 /**
  * 币种
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/pc/coin")
 @Api(tags = {AdminSwaggerTagConst.PC.PC_COIN})
@@ -35,8 +39,16 @@ public class PcCoinController {
     @GetMapping("/list")
     @ApiOperation(value = "账单列表")
     @NoNeedLogin
-    public ResponseDTO<List<TwCoin>> lists(@RequestParam int companyId, HttpServletRequest request) {
-        return ResponseDTO.ok(twCoinService.lists(companyId, request));
+    public ResponseDTO<List<TwCoin>> lists(@RequestParam int companyId,
+                                           @RequestParam int uid,
+                                           HttpServletRequest request) {
+        try{
+            return ResponseDTO.ok(twCoinService.lists(uid, companyId, request));
+        }catch(Exception e) {
+            log.error(e.getMessage(), e);
+            return ResponseDTO.error(PARAM_ERROR);
+        }
+
     }
 
     /**

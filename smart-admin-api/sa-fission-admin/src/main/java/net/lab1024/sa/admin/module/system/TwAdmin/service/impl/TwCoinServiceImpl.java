@@ -64,7 +64,7 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
     }
 
     @Override
-    public List<TwCoin> lists( int companyId, HttpServletRequest request) {
+    public List<TwCoin> lists( int uid, int companyId, HttpServletRequest request) {
         //需要做token校验, 消息头的token优先于请求query参数的token
         String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
         Long uidToken = tokenService.getUIDToken(xHeaderToken);
@@ -78,11 +78,11 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
 
         for(TwCoin twCoin : twCoinList) {
             if(twCoin.getCzline().equals(NetworkConst.ETH)) {
-                twCoin.setCzaddress(twAddressService.createAddress(uidToken.intValue(), 60, twCoin.getId()));
+                twCoin.setCzaddress(twAddressService.createAddress(uid, 60, twCoin.getId()));
             }else if(twCoin.getCzline().equals(NetworkConst.TRON)) {
-                twCoin.setCzaddress(twAddressService.createAddress(uidToken.intValue(), 195, twCoin.getId()));
+                twCoin.setCzaddress(twAddressService.createAddress(uid, 195, twCoin.getId()));
             }else {
-                twCoin.setCzaddress(twAddressService.createAddress(uidToken.intValue(), 0, twCoin.getId()));
+                twCoin.setCzaddress(twAddressService.createAddress(uid, 0, twCoin.getId()));
             }
         }
         /*for(TwCoin twCoin : twCoinList) {
