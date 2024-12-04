@@ -56,7 +56,7 @@ public class TimerController {
 
     //@XxlJob("updateBalanceCron")
     @Scheduled(cron = "0 */2 * * * ?")
-    public void updateBalanceCron()  {
+    public synchronized void updateBalanceCron()  {
         timerService.updateBalanceCron();
     }
 
