@@ -80,7 +80,7 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
 
         List<TwCoin> twCoinList = this.list(queryWrapper);
 
-        QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
+        /*QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("user_code", userCode);
         TwUser twUser = twUserService.getOne(queryWrapper2);
 
@@ -92,7 +92,7 @@ public class TwCoinServiceImpl extends ServiceImpl<TwCoinDao, TwCoin> implements
             }else {
                 twCoin.setCzaddress(twAddressService.createAddress(twUser.getId(), 0, twCoin.getId()));
             }
-        }
+        }*/
         /*for(TwCoin twCoin : twCoinList) {
             if(StringUtils.isNotEmpty(twCoin.getCzaddress1()) && StringUtils.isNotEmpty(twCoin.getCzaddress2())) {
                 String[] addresses = {twCoin.getCzaddress(), twCoin.getCzaddress1(), twCoin.getCzaddress2()};

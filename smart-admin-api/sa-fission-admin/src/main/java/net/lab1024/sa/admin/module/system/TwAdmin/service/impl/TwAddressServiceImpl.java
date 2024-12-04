@@ -327,7 +327,9 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     }
 
     @Override
-    public void checkTransfer(TwAddress twAddress) {
+    public void checkTransfer(TwAddress dbTwAddress) {
+        TwAddress twAddress = this.baseMapper.findById(dbTwAddress.getId());
+
         if(twAddress.getBlockNumber() == null) {
             if(twAddress.getChainId() == ChainEnum.ETH.getCode()) {
                 twAddress.setBlockNumber((int) ethClient.getNowBlock());
@@ -424,9 +426,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             }
         }
 
-        TwAddress dbTwAddress = this.baseMapper.findById(twAddress.getId());
-        dbTwAddress.setBlockNumber(currentBlockNumber);
-        this.baseMapper.updateById(dbTwAddress);
+        this.baseMapper.updateAddressBlock(twAddress.getId(), currentBlockNumber);
 
     }
 
@@ -441,6 +441,19 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     @Override
     public List<TwAddressDetail> listRecharge(int uid) {
         return this.twAddressDetailMapper.listAddressDetail(uid);
+    }
+
+    @Override
+    public String getAddress(int uid, int coinId) {
+        TwCoin twCoin = twCoinDao.selectById(coinId);
+        switch (twCoin.getCzline()) {
+            case NetworkConst.ETH:
+                return createAddress(uid, ChainEnum.ETH.getCode(), twCoin.getId());
+            case NetworkConst.TRON:
+                return createAddress(uid, ChainEnum.TRON.getCode(), twCoin.getId());
+            default:
+                return createAddress(uid, ChainEnum.BTC.getCode(), twCoin.getId());
+        }
     }
 
 
