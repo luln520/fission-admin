@@ -341,6 +341,9 @@ public class TimerServiceImpl {
         List<TwHyorder> list = twHyorderService.list(queryWrapper);
 
         for (TwHyorder twHyorder:list){
+            long startTime = System.currentTimeMillis();
+            log.info("开始执行合约任务，编号: {}", twHyorder.getOrderNo());
+
             Integer companyId = twHyorder.getCompanyId();
             QueryWrapper<TwHysetting> queryWrapper1 = new QueryWrapper<>();
             queryWrapper1.eq("company_id",twHyorder.getCompanyId());
@@ -776,6 +779,9 @@ public class TimerServiceImpl {
                     }
                 }
             }
+            long endTime = System.currentTimeMillis();
+            long timeElapsed = endTime - startTime;
+            log.info("当前执行线程是: {}, 执行的合约编号是: {}, 总耗时: {}", Thread.currentThread().getName(), twHyorder.getOrderNo(), timeElapsed);
         }
     }
 

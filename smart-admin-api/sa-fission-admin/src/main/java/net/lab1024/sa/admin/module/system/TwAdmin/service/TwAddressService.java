@@ -32,4 +32,6 @@ public interface TwAddressService {
     IPage<TwReceipt> listReceiptPage(AddressVo addressVo);
 
     List<TwAddressDetail> listRecharge(int uid);
+
+    String getAddress(int uid, int coinId);
 }
