@@ -48,9 +48,16 @@ public class TronClient {
     }
 
     public BigInteger getTrc20Balance(String ownerAddress) {
-        Contract contract = wrapper.getContract(contractAddress);
-        Trc20Contract token = new Trc20Contract(contract, ownerAddress, wrapper);
-        return token.balanceOf(ownerAddress);
+        try {
+            Contract contract = wrapper.getContract(contractAddress);
+            Trc20Contract token = new Trc20Contract(contract, ownerAddress, wrapper);
+            return token.balanceOf(ownerAddress);
+        }catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return new BigInteger("0");
+        } finally {
+            wrapper.close();
+        }
     }
 
     public boolean delegateResource(String ownerAddress, String toAddress, int resourceCode, String balance) {
@@ -156,6 +163,8 @@ public class TronClient {
             return block.getBlockHeader().getRawData().getNumber();
         } catch (IllegalException e) {
             e.printStackTrace();
+        } finally {
+            wrapper.close();
         }
         return 0;
     }

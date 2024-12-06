@@ -24,7 +24,7 @@ public interface TwCoinService extends IService<TwCoin> {
 
     IPage<TwCoin> listpage(PageParam pageParam);
 
-    List<TwCoin> lists( int companyId, HttpServletRequest request);
+    List<TwCoin> lists(String userCode, int companyId, HttpServletRequest request);
 
     boolean addOrUpdate(TwCoin twCoin, HttpServletRequest request);
 
