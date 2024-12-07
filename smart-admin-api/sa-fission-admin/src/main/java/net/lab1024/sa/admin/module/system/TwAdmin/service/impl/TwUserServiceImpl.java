@@ -1348,21 +1348,21 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         if( split.length <= 3){
                                 QueryWrapper<TwUserInvite> queryInvite = new QueryWrapper<>();
                                 queryInvite.eq("uid", split[0]);
-                                TwUserInvite oneUid = twUserInviteService.getOne(queryInvite);
-                                if(oneUid == null){
+                            List<TwUserInvite> oneUid = twUserInviteService.list(queryInvite);
+                            if(oneUid.size() == 0){
                                     twUserAgent.setOneUid(0);
                                 }else{
-                                    twUserAgent.setOneUid(oneUid.getUid());
-                                    twUserAgent.setOneName(oneUid.getUsername());
+                                    twUserAgent.setOneUid(oneUid.get(0).getUid());
+                                    twUserAgent.setOneName(oneUid.get(0).getUsername());
                                 }
 
                             if(split.length <= 2){
                                 QueryWrapper<TwUserInvite> queryInvite2 = new QueryWrapper<>();
                                 queryInvite2.eq("uid", split[1]);
-                                TwUserInvite twoUid = twUserInviteService.getOne(queryInvite2);
-                                if(twoUid != null){
-                                    twUserAgent.setTwoUid(twoUid.getUid());
-                                    twUserAgent.setTwoName(twoUid.getUsername());
+                                List<TwUserInvite> twoUid = twUserInviteService.list(queryInvite2);
+                                if(twoUid.size() == 0){
+                                    twUserAgent.setTwoUid(twoUid.get(0).getUid());
+                                    twUserAgent.setTwoName(twoUid.get(0).getUsername());
                                 }else{
                                     twUserAgent.setTwoUid(0);
                                 }
@@ -1371,20 +1371,20 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                             if(split.length == 3){
                                 QueryWrapper<TwUserInvite> queryInvite2 = new QueryWrapper<>();
                                 queryInvite2.eq("uid", split[1]);
-                                TwUserInvite twoUid = twUserInviteService.getOne(queryInvite2);
-                                if(twoUid != null){
-                                    twUserAgent.setTwoUid(twoUid.getUid());
-                                    twUserAgent.setTwoName(twoUid.getUsername());
+                                List<TwUserInvite> twoUid = twUserInviteService.list(queryInvite2);
+                                if(twoUid.size() == 0){
+                                    twUserAgent.setTwoUid(twoUid.get(0).getUid());
+                                    twUserAgent.setTwoName(twoUid.get(0).getUsername());
                                 }else{
                                     twUserAgent.setTwoUid(0);
                                 }
 
                                 QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
                                 queryInvite3.eq("uid", split[2]);
-                                TwUserInvite threeUid = twUserInviteService.getOne(queryInvite3);
-                                if(threeUid != null){
-                                    twUserAgent.setThreeUid(threeUid.getUid());
-                                    twUserAgent.setThreeName(threeUid.getUsername());
+                                List<TwUserInvite> threeUid = twUserInviteService.list(queryInvite3);
+                                if(threeUid.size() == 0l){
+                                    twUserAgent.setThreeUid(threeUid.get(0).getUid());
+                                    twUserAgent.setThreeName(threeUid.get(0).getUsername());
                                 }else{
                                     twUserAgent.setThreeUid(0);
                                 }
@@ -1392,35 +1392,35 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                          }else{
                                 QueryWrapper<TwUserInvite> queryInvite = new QueryWrapper<>();
                                 queryInvite.eq("uid", split[split.length-3] );
-                                TwUserInvite oneUid = twUserInviteService.getOne(queryInvite);
-                                if(oneUid == null){
+                                List<TwUserInvite> oneUid = twUserInviteService.list(queryInvite);
+                                if(oneUid.size() == 0){
                                     twUserAgent.setOneUid(0);
                                 }else{
-                                    twUserAgent.setOneUid(oneUid.getUid());
-                                    twUserAgent.setOneName(oneUid.getUsername());
+                                    twUserAgent.setOneUid(oneUid.get(0).getUid());
+                                    twUserAgent.setOneName(oneUid.get(0).getUsername());
                                 }
 
 
                                 QueryWrapper<TwUserInvite> queryInvite2 = new QueryWrapper<>();
                                 queryInvite2.eq("uid", split[split.length-2] );
-                                TwUserInvite twoUid = twUserInviteService.getOne(queryInvite2);
-                                if(twoUid != null){
-                                    twUserAgent.setTwoUid(twoUid.getUid());
-                                    twUserAgent.setTwoName(twoUid.getUsername());
+                                List<TwUserInvite> twoUid = twUserInviteService.list(queryInvite2);
+                                if(twoUid.size() == 0){
+                                    twUserAgent.setTwoUid(twoUid.get(0).getUid());
+                                    twUserAgent.setTwoName(twoUid.get(0).getUsername());
                                 }else{
                                     twUserAgent.setTwoUid(0);
                                 }
 
                                 QueryWrapper<TwUserInvite> queryInvite3 = new QueryWrapper<>();
                                 queryInvite3.eq("uid", split[split.length-1]);
-                                TwUserInvite threeUid = twUserInviteService.getOne(queryInvite3);
-                                if(threeUid != null){
-                                    twUserAgent.setThreeUid(threeUid.getUid());
-                                    twUserAgent.setThreeName(threeUid.getUsername());
+                                List<TwUserInvite> threeUid = twUserInviteService.list(queryInvite3);
+                                if(threeUid.size() == 0l){
+                                    twUserAgent.setThreeUid(threeUid.get(0).getUid());
+                                    twUserAgent.setThreeName(threeUid.get(0).getUsername());
                                 }else{
                                     twUserAgent.setThreeUid(0);
                                 }
-                        }
+                            }
 
                         twUserAgent.setDepartment(1);
                         twUserAgent.setUid(uid);
