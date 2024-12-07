@@ -15,4 +15,6 @@ public class TwMyzcVo extends PageParam {
 
         private Integer status;
 
+        private String address;
+
 }
