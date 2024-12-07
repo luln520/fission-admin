@@ -21,17 +21,19 @@ public interface TwAddressService {
 
     List<TwAddress> listBalanceAddress(int coinId);
 
-    void updateAddressBalance(String address);
+    void updateAddressBalance(String address, String contractAddress);
 
     void transfer(int coinId, String privateKey);
 
     List<TwAddress> listAddress();
-
-    void checkTransfer(TwAddress twAddress);
 
     IPage<TwReceipt> listReceiptPage(AddressVo addressVo);
 
     List<TwAddressDetail> listRecharge(int uid);
 
     String getAddress(int uid, int coinId);
+
+    int monitorEthTransfer();
+
+    int monitorTronTransfer();
 }

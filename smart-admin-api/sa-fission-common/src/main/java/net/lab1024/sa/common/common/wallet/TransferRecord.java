@@ -7,11 +7,13 @@ import java.math.BigInteger;
 @Data
 public class TransferRecord {
 
-    public BigInteger blockNumber;
-    public String transactionHash;
-    public String from;
-    public String to;
-    public BigInteger value;
+    private Integer blockNumber;
+    private String transactionHash;
+    private String from;
+    private String to;
+    private BigInteger value;
+    private String contract;
+    private String input;
 
     @Override
     public String toString() {

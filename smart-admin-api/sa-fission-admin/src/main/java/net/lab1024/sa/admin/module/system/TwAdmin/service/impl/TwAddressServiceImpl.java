@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.api.client.util.Maps;
 import com.google.common.collect.Lists;
+import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
@@ -19,6 +21,16 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.tron.trident.core.utils.ByteArray;
+import org.tron.trident.proto.Chain;
+import org.tron.trident.proto.Contract;
+import org.tron.trident.proto.Response;
+import org.tron.trident.utils.Base58Check;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Uint;
+import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.core.methods.response.Transaction;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,6 +41,8 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -44,13 +58,10 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     private TwReceiptMapper twReceiptMapper;
 
     @Autowired
-    private EthClient ethClient;
+    private EthereumClient ethereumClient;
 
     @Autowired
-    private TronClient tronClient;
-
-    @Autowired
-    private TronRpcClient tronRpcClient;
+    private TronXClient tronXClient;
 
     @Autowired
     private TwCoinDao twCoinDao;
@@ -74,6 +85,12 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     @Autowired
     @Lazy
     private TwUserService twUserService;
+
+    @Autowired
+    private TwBlockMapper twBlockMapper;
+
+    @Autowired
+    private TwTokenMapper twTokenMapper;
 
     @Override
     public IPage<TwAddress> listpage(AddressVo addressVo) {
@@ -143,14 +160,6 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     WalletAddress walletAddress = walletClient.generateAddress(step);
                     twRootAddressMapper.updateStep(twRootAddress.getId(), step);
 
-                    long blockNum = 0;
-                    if (chainId == ChainEnum.ETH.getCode()) {
-                        blockNum = ethClient.getNowBlock();
-                    } else if (chainId == ChainEnum.TRON.getCode()) {
-                        tronClient.init("");
-                        blockNum = tronClient.getNowBlock();
-                    }
-
                     twAddress.setUid(uid);
                     twAddress.setChainId(chainId);
                     twAddress.setAddress(walletAddress.getAddress());
@@ -158,8 +167,6 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     twAddress.setCompanyId(one.getCompanyId());
                     twAddress.setPath(one.getPath());
                     twAddress.setCoinId(coinId);
-                    if (blockNum != 0)
-                        twAddress.setBlockNumber((int) blockNum);
 
                     try {
                         twAddress.setPrivateKey(CertificateManager.encrypt(walletAddress.getPrivateKey(), keyBytes));
@@ -205,6 +212,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
                 String amount = twAddress.getBalance().setScale(6, RoundingMode.HALF_UP).toString();
                 if(twCoin.getCzline().equals(NetworkConst.ETH)) {
+                    TwToken twToken = twTokenMapper.findByChainId(ChainEnum.ETH.getCode());
                     TwReceipt twReceipt = new TwReceipt();
                     twReceipt.setUid(twAddress.getUid());
                     twReceipt.setBizStatus(1);
@@ -212,7 +220,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     twReceipt.setFromAddress(twAddress.getAddress());
                     twReceipt.setToAddress(twCoin.getCzaddress());
                     try {
-                        String txHash = ethClient.transferErc20(privateKey, twCoin.getCzaddress(), TokenUtils.toUSDTWei(twAddress.getBalance()));
+                        String txHash = ethereumClient.transferErc20(privateKey, twCoin.getCzaddress(), twToken.getAddress(), TokenUtils.toUSDTWei(twAddress.getBalance()));
                         twReceipt.setTx(txHash);
                     }catch (RuntimeException e) {
                         twReceipt.setCaused(e.getMessage());
@@ -220,9 +228,10 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     twReceipt.setAmount(new BigDecimal(TokenUtils.toWei(amount)));
                     twReceiptMapper.insert(twReceipt);
 
-                    this.updateAddressBalance(twAddress.getAddress());
+                    this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress());
                 }else if(twCoin.getCzline().equals(NetworkConst.TRON)) {
-                    tronClient.init(privateKey);
+                    TwToken twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
+                    tronXClient.init(privateKey);
 
                     TwReceipt twReceipt = new TwReceipt();
                     twReceipt.setUid(twAddress.getUid());
@@ -231,7 +240,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     twReceipt.setFromAddress(twAddress.getAddress());
                     twReceipt.setToAddress(twCoin.getCzaddress());
                     try {
-                        String txHash = tronClient.transferTrc20(twAddress.getAddress(), twCoin.getCzaddress(), amount);
+                        String txHash = tronXClient.transferTrc20(twAddress.getAddress(), twCoin.getCzaddress(), twToken.getAddress(), amount);
                         twReceipt.setTx(txHash);
                     }catch (RuntimeException e) {
                         twReceipt.setCaused(e.getMessage());
@@ -239,7 +248,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     twReceipt.setAmount(new BigDecimal(amount));
                     twReceiptMapper.insert(twReceipt);
 
-                    this.updateAddressBalance(twAddress.getAddress());
+                    this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress());
                 }
 
             }
@@ -252,13 +261,13 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     }
 
     @Override
-    public void updateAddressBalance(String address) {
+    public void updateAddressBalance(String address, String contractAddress) {
         TwAddress twAddress = baseMapper.findByAddress(address);
 
         if(twAddress != null) {
             if(twAddress.getChainId() == ChainEnum.ETH.getCode()) {
                 try {
-                    BigInteger balance = ethClient.getErc20Balance(twAddress.getAddress());
+                    BigInteger balance = ethereumClient.getErc20Balance(twAddress.getAddress(), contractAddress);
                     twAddressBalanceMapper.updateBalance(TokenUtils.convertUsdtBalance(balance), twAddress.getId());
                     log.info("更新eth账户余额成功,地址是=>{}", twAddress.getAddress());
                 }catch (Exception e) {
@@ -266,8 +275,8 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     log.error(e.getMessage(), e);
                 }
             }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
-                tronClient.init("");
-                BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress());
+                TwToken twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
+                BigInteger balance = tronXClient.getTrc20Balance(twAddress.getAddress(), twToken.getAddress());
                 twAddressBalanceMapper.updateBalance(TokenUtils.convertUsdtBalance(balance), twAddress.getId());
             }
         }
@@ -291,7 +300,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     twReceipt.setFromAddress(twCoin.getFeeaddress());
                     twReceipt.setToAddress(twAddress.getAddress());
                     try {
-                        String txHash = ethClient.sendFund(privateKey, twAddress.getAddress(), bigDecimal);
+                        String txHash = ethereumClient.sendFund(privateKey, twAddress.getAddress(), bigDecimal);
                         twReceipt.setTx(txHash);
                         log.info("接收eth账户为{}, 发送eth的交易Hash为:{}", twAddress.getAddress(), txHash);
                     }catch(RuntimeException e) {
@@ -299,7 +308,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     }
                     twReceiptMapper.insert(twReceipt);
                 }else if(twCoin.getCzline().equals(NetworkConst.TRON)) {
-                    tronClient.init(privateKey);
+                    tronXClient.init(privateKey);
                     //默认50trx
 
                     TwReceipt twReceipt = new TwReceipt();
@@ -309,7 +318,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     twReceipt.setToAddress(twAddress.getAddress());
 
                     try {
-                        String ret = tronClient.sendFund(twCoin.getCzaddress(), twAddress.getAddress(), "50");
+                        String ret = tronXClient.sendFund(twCoin.getCzaddress(), twAddress.getAddress(), "50");
                         log.info("接收能量账户为{}, 发送trx的交易Hash为:{}", twAddress.getAddress(), ret);
                         twReceipt.setTx(ret);
                     }catch(RuntimeException e) {
@@ -326,7 +335,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         return baseMapper.listAddress();
     }
 
-    @Override
+   /* @Override
     public void checkTransfer(TwAddress dbTwAddress) {
         TwAddress twAddress = this.baseMapper.findById(dbTwAddress.getId());
 
@@ -428,7 +437,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
         this.baseMapper.updateAddressBlock(twAddress.getId(), currentBlockNumber);
 
-    }
+    }*/
 
     @Override
     public IPage<TwReceipt> listReceiptPage(AddressVo addressVo) {
@@ -456,5 +465,254 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         }
     }
 
+    @Override
+    public int monitorEthTransfer() {
+        TwBlock twBlock = twBlockMapper.findByChainId(ChainEnum.ETH.getCode());
+        TwToken twToken = twTokenMapper.findByChainId(ChainEnum.ETH.getCode());
+        if(twToken == null || twBlock == null)  return 0;
 
+        int blockNumber = twBlock.getNumber();
+        EthBlock.Block block = ethereumClient.getBlock(blockNumber + 1);
+        if(block == null) return 0;
+
+        List<TransferRecord> transferEthList = Lists.newArrayList();
+        List<TransferRecord> transferErcList = Lists.newArrayList();
+
+        List<EthBlock.TransactionResult> transactionResultList = block.getTransactions();
+        for(EthBlock.TransactionResult transactionResult : transactionResultList) {
+            EthBlock.TransactionObject transactionObject = (EthBlock.TransactionObject) transactionResult.get();
+            if(transactionObject.getTo() == null) continue;
+
+            if(twToken.getAddress().equals(transactionObject.getTo().toLowerCase())) {
+                TransferRecord transferRecord = new TransferRecord();
+                transferRecord.setBlockNumber(transactionObject.getBlockNumber().intValue());
+                transferRecord.setTransactionHash(transactionObject.getHash());
+                transferRecord.setFrom(transactionObject.getFrom());
+                transferRecord.setTo(transactionObject.getTo());
+                transferRecord.setInput(transactionObject.getInput());
+                transferRecord.setContract(twToken.getAddress());
+                transferErcList.add(transferRecord);
+            }else {
+                //这里有两种：直接转币 + 其它ERC20转币
+                TransferRecord transferRecord = new TransferRecord();
+                transferRecord.setBlockNumber(transactionObject.getBlockNumber().intValue());
+                transferRecord.setTransactionHash(transactionObject.getHash());
+                transferRecord.setFrom(transactionObject.getFrom());
+                transferRecord.setTo(transactionObject.getTo());
+                transferRecord.setValue(transactionObject.getValue());
+                transferRecord.setContract(twToken.getAddress());
+                transferEthList.add(transferRecord);
+            }
+        }
+        handleEthTransfer(transferEthList);
+        handleERCTransfer(transferErcList);
+
+        twBlock.setNumber(twBlock.getNumber() + 1);
+        twBlockMapper.updateById(twBlock);
+        return 0;
+    }
+
+    private int handleEthTransfer(List<TransferRecord> transferEthList) {
+        if(CollectionUtils.isEmpty(transferEthList)) return 0;
+
+        List<String> addressList = transferEthList.stream().map(TransferRecord::getTo).collect(Collectors.toList());
+        List<TwAddress> twAddressList = this.baseMapper.selectByAddresses(addressList);
+
+        if(CollectionUtils.isEmpty(twAddressList)) return 0;
+        List<String> inAddressList = twAddressList.stream().map(TwAddress::getAddress).collect(Collectors.toList());
+
+        int total = 0;
+        for(TransferRecord transferRecord : transferEthList) {
+            //Transaction transaction = ethereumClient.getTransaction(tx);
+            if(inAddressList.contains(transferRecord.getTo())) {
+                TwAddress twAddress = this.baseMapper.findByAddress(transferRecord.getTo());
+
+                TwAddressDetail twAddressDetail = new TwAddressDetail();
+                twAddressDetail.setAddressId(twAddress.getId());
+                twAddressDetail.setFromAddress(transferRecord.getFrom());
+                twAddressDetail.setToAddress(transferRecord.getTo());
+                twAddressDetail.setTx(transferRecord.getTransactionHash());
+                //            twAddressDetail.setCompanyId(twUser.getCompanyId());
+                //            twAddressDetail.setPath(twUser.getPath());
+                twAddressDetail.setBlockNumber(transferRecord.getBlockNumber());
+                twAddressDetail.setAmount(TokenUtils.convertUsdtBalance(transferRecord.getValue()));
+                twAddressDetailMapper.insert(twAddressDetail);
+
+                //todo 更新账户余额
+                BigInteger balance = ethereumClient.getErc20Balance(twAddress.getAddress(), "");
+                twAddressBalanceMapper.updateBalance(TokenUtils.convertUsdtBalance(balance), twAddress.getId());
+                total++;
+            }
+        }
+        return total;
+    }
+
+    private int handleERCTransfer(List<TransferRecord> transferErcList) {
+        if(CollectionUtils.isEmpty(transferErcList)) return 0;
+
+//        transferErcList.stream().
+//        List<String> addressList = transferErcList.stream().map(TransferRecord::getTo).collect(Collectors.toList());
+        List<TwAddress> twAddressList =null;
+
+        if(CollectionUtils.isEmpty(twAddressList)) return 0;
+        List<String> inAddressList = twAddressList.stream().map(TwAddress::getAddress).collect(Collectors.toList());
+
+        int total = 0;
+
+        for(TransferRecord transferRecord : transferErcList) {
+            Transaction transaction = ethereumClient.getTransaction(transferRecord.getTransactionHash());
+            List<Type> params = ethereumClient.decodeInput(transaction.getInput());
+            Address toAddress = (Address) params.get(0);
+            Uint amount = (Uint) params.get(1);
+
+            TwAddress twAddress = this.baseMapper.findByAddress(toAddress.getValue());
+
+            TwAddressDetail twAddressDetail = new TwAddressDetail();
+            twAddressDetail.setAddressId(twAddress.getId());
+            twAddressDetail.setFromAddress(transaction.getFrom());
+            twAddressDetail.setToAddress(toAddress.getValue());
+            twAddressDetail.setTx(transferRecord.getTransactionHash());
+//            twAddressDetail.setCompanyId(twUser.getCompanyId());
+//            twAddressDetail.setPath(twUser.getPath());
+            twAddressDetail.setBlockNumber(transaction.getBlockNumber().intValue());
+            twAddressDetail.setAmount(TokenUtils.convertUsdtBalance(amount.getValue()));
+            twAddressDetailMapper.insert(twAddressDetail);
+
+            BigInteger balance = ethereumClient.getErc20Balance(twAddress.getAddress(), "contractAddress");
+            twAddressBalanceMapper.updateBalance(TokenUtils.convertUsdtBalance(balance), twAddress.getId());
+        }
+        return total;
+    }
+
+    @Override
+    public int monitorTronTransfer() {
+        TwBlock twBlock = twBlockMapper.findByChainId(ChainEnum.TRON.getCode());
+        TwToken twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
+        if(twToken == null || twBlock == null)  return 0;
+
+        int blockNumber = twBlock.getNumber();
+        Response.BlockExtention blockExtention = tronXClient.getBlock(blockNumber + 1);
+        if(blockExtention == null) return 0;
+
+        List<TransferRecord> transferRecordList = Lists.newArrayList();
+        List<Response.TransactionExtention> transactionExtentionList = blockExtention.getTransactionsList();
+        for(Response.TransactionExtention transactionExtention : transactionExtentionList) {
+            Chain.Transaction transaction = transactionExtention.getTransaction();
+            List<Chain.Transaction.Contract> contractList = transaction.getRawData().getContractList();
+
+            for(Chain.Transaction.Contract contract : contractList) {
+                if(contract.getType().equals(Chain.Transaction.Contract.ContractType.TriggerSmartContract)) {
+
+                    try {
+                        Contract.TriggerSmartContract triggerSmartContract = Contract.TriggerSmartContract.parseFrom(contract.getParameter().getValue());
+
+                        String contractAddress = Base58Check.bytesToBase58(triggerSmartContract.getContractAddress().toByteArray());
+                        if(twToken.getAddress().equals(contractAddress)) {
+                            String ownerAddress = Base58Check.bytesToBase58(triggerSmartContract.getOwnerAddress().toByteArray());
+
+                            List<org.tron.trident.abi.datatypes.Type> typeList = tronXClient.decodeInput(ByteArray.toHexString(triggerSmartContract.getData().toByteArray()));
+                            TransferRecord transferRecord = new TransferRecord();
+                            transferRecord.setBlockNumber(blockNumber + 1);
+                            transferRecord.setTransactionHash(ByteArray.toHexString(transactionExtention.getTxid().toByteArray()));
+                            transferRecord.setFrom(ownerAddress);
+                            transferRecord.setTo(typeList.get(0).toString());
+                            transferRecord.setValue(new BigInteger(typeList.get(1).getValue().toString()));
+                            transferRecord.setContract(twToken.getAddress());
+                            transferRecordList.add(transferRecord);
+                        }
+                    } catch (InvalidProtocolBufferException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
+            }
+        }
+
+        return handleTRCTransfer(transferRecordList);
+    }
+
+    private int handleTRCTransfer(List<TransferRecord> transferRecordList) {
+        if(CollectionUtils.isEmpty(transferRecordList)) return 0;
+
+        List<String> addressList = transferRecordList.stream().map(TransferRecord::getTo).collect(Collectors.toList());
+        List<TwAddress> twAddressList = this.baseMapper.selectByAddresses(addressList);
+
+        if(CollectionUtils.isEmpty(twAddressList)) return 0;
+        List<String> inAddressList = twAddressList.stream().map(TwAddress::getAddress).collect(Collectors.toList());
+        Map<String, Integer> map = twAddressList.stream()
+                .collect(Collectors.toMap(TwAddress::getAddress, TwAddress::getUid));
+
+        int total = 0;
+        for(TransferRecord transferRecord : transferRecordList) {
+            if(inAddressList.contains(transferRecord.getTo())) {
+
+                TwAddressDetail twAddressDetail = new TwAddressDetail();
+                TwAddress twAddress = this.baseMapper.findByAddress(transferRecord.getTo());
+                twAddressDetail.setAddressId(twAddress.getId());
+                twAddressDetail.setFromAddress(transferRecord.getFrom());
+                twAddressDetail.setToAddress(transferRecord.getTo());
+                twAddressDetail.setTx(transferRecord.getTransactionHash());
+//            twAddressDetail.setCompanyId(twUser.getCompanyId());
+//            twAddressDetail.setPath(twUser.getPath());
+                twAddressDetail.setBlockNumber(transferRecord.getBlockNumber());
+                twAddressDetail.setAmount(TokenUtils.convertUsdtBalance(transferRecord.getValue()));
+                twAddressDetailMapper.insert(twAddressDetail);
+
+                BigInteger balance = tronXClient.getTrc20Balance(twAddress.getAddress(), transferRecord.getContract());
+                twAddressBalanceMapper.updateBalance(TokenUtils.convertUsdtBalance(balance), twAddress.getId());
+                //todo 放开 updateUserBalance(map.get(transferRecord.getTo()), TokenUtils.convertUsdtBalance(transferRecord.getValue()));
+                total++;
+            }
+
+        }
+        return total;
+    }
+
+    private void updateUserBalance(int uid, BigDecimal amount) {
+        QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+        queryWrapper1.eq("id", uid);
+        TwUser twUser = twUserService.getOne(queryWrapper1);
+
+        //更新账户
+        QueryWrapper<TwUserCoin> queryCoin = new QueryWrapper<>();
+        queryCoin.eq("userid", uid);
+        TwUserCoin twUserCoin = twUserCoinService.getOne(queryCoin);
+        BigDecimal usdt = twUserCoin.getUsdt();
+        twUserCoinService.incre(uid, amount, usdt);
+
+        TwBill twBill = new TwBill();
+        twBill.setUid( uid);
+        twBill.setUsername(twUser.getUsername());
+        twBill.setNum(amount);
+        twBill.setCompanyId(twUser.getCompanyId());
+        twBill.setCoinname("USDT");
+        twBill.setAfternum(twUserCoinService.afternum(uid));
+        twBill.setType(17);
+        twBill.setAddtime(new Date());
+        twBill.setSt(1);
+        twBill.setRemark("充币到账");
+        twBill.setDepartment(twUser.getDepatmentId());
+        twBill.setPath(twUser.getPath());
+        twBillService.save(twBill);
+
+        TwNotice twNotice = new TwNotice();
+        twNotice.setUid(uid);
+        twNotice.setAccount(twUser.getUsername());
+        twNotice.setTitle("充币审核");
+        twNotice.setTitleEn("Deposit review");
+        twNotice.setContent("您的充值金额已到账，请注意查收");
+        twNotice.setContentEn("Your recharge amount has arrived, please check it carefully");
+        twNotice.setAddtime(new Date());
+        twNotice.setStatus(1);
+        twNotice.setCompanyId(twUser.getCompanyId());
+        twNotice.setDepartment(twUser.getDepatmentId());
+        twNotice.setPath(twUser.getPath());
+        twNoticeService.save(twNotice);
+
+        try {
+            twUser.setCodeAmount(amount.add(twUser.getCodeAmount()));
+            twUserService.updateById(twUser);
+        }catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }

@@ -63,7 +63,7 @@ public class AddressUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(ethToTron("0xf23e2730eb925770df4df12bea03b16f93fa3c8b"));
+        System.out.println(ethToTron("0x758295ac9c56da8def5cd3509edb61cef5814f55"));
         int decimalValue = 51618643;
 
         // 将十进制数转换为十六进制字符串并加上 `0x` 前缀
