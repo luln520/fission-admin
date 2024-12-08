@@ -492,12 +492,12 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             }
             return -1;
         }
-        log.info(">>>>>> 当前正在处理的TRON区块是{}", twBlock.getNumber());
         TwToken twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
         if(twToken == null)  return 0;
 
-        int blockNumber = twBlock.getNumber();
-        Response.BlockExtention blockExtention = tronClient.getBlock(blockNumber + 1);
+        int blockNumber = twBlock.getNumber() + 1;
+        log.info(">>>>>> 当前正在处理的TRON区块是{}", blockNumber);
+        Response.BlockExtention blockExtention = tronClient.getBlock(blockNumber);
         if(blockExtention == null) return 0;
 
         List<TransferRecord> transferRecordList = Lists.newArrayList();
@@ -520,7 +520,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                             if (input.length() < 10) continue;
                             List<org.tron.trident.abi.datatypes.Type> typeList = tronClient.decodeInput(input);
                             TransferRecord transferRecord = new TransferRecord();
-                            transferRecord.setBlockNumber(blockNumber + 1);
+                            transferRecord.setBlockNumber(blockNumber);
                             transferRecord.setTransactionHash(ByteArray.toHexString(transactionExtention.getTxid().toByteArray()));
                             transferRecord.setFrom(ownerAddress);
                             transferRecord.setTo(typeList.get(0).toString());
@@ -535,7 +535,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             }
         }
         int tronTx = handleTRCTransfer(transferRecordList);
-        twBlock.setNumber(twBlock.getNumber() + 1);
+        twBlock.setNumber(blockNumber);
         twBlockMapper.updateById(twBlock);
 
         return tronTx;
