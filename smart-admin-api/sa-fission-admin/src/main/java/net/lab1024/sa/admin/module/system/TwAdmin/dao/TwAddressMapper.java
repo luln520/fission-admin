@@ -39,9 +39,6 @@ public interface TwAddressMapper extends BaseMapper<TwAddress> {
     @Update("update tw_address set block_number = #{blockNumber}, update_time = update_time where id = #{id}")
     int updateAddressBlock(@Param("id") int id, @Param("blockNumber") int blockNumber);
 
-    @Select("SELECT * FROM tw_address WHERE address IN" +
-            "<foreach item='address' collection='list' open='(' separator=',' close=')'>" +
-            "#{address}" +
-            "</foreach>")
+    @Select("<script>SELECT * FROM tw_address WHERE address IN <foreach item='address' collection='list' open='(' separator=',' close=')'> #{address}</foreach></script>")
     List<TwAddress> selectByAddresses(@Param("list") List<String> addressList);
 }

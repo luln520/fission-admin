@@ -13,7 +13,6 @@ public class TransferRecord {
     private String to;
     private BigInteger value;
     private String contract;
-    private String input;
 
     @Override
     public String toString() {

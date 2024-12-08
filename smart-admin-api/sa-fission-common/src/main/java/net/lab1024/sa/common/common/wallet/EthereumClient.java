@@ -186,47 +186,62 @@ public class EthereumClient {
         }
     }
 
-    public static void main(String[] args) {
-        EthereumClient ethereumClient = new EthereumClient("https://dimensional-solemn-uranium.ethereum-sepolia.quiknode.pro/d711bd4865a6f0b9a31b5115d3abf40ce280070a");
-        Block block = ethereumClient.getBlock(7202266);
-        List<EthBlock.TransactionResult> transactionResultList = block.getTransactions();
-        for(EthBlock.TransactionResult transactionResult : transactionResultList) {
-            EthBlock.TransactionObject transactionObject = (EthBlock.TransactionObject) transactionResult.get();
+    public BigInteger getEthBalance(String address) {
+        try {
+            EthGetBalance balanceResponse = web3j.ethGetBalance(address,
+                    DefaultBlockParameterName.LATEST).send();
+            return balanceResponse.getBalance();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            return BigInteger.ZERO;
+        }
+    }
 
-            //todo to地址为null 创建合约
-            if(transactionObject.getTo() == null) continue;
+    public long getNowBlock() {
+        try {
+            EthBlock.Block block = web3j.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, false).send().getBlock();
+            return block.getNumber().longValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
-            //todo 直接转币
-            if(transactionObject.getTo().equals("0xa17DE1B2c506aeEbdE3dF92deDcc4C15aAbf1c7B".toLowerCase())) {
-                System.out.println(transactionObject.getFrom() + "-> " + transactionObject.getTo() + "->" + transactionObject.getValue());
-                Transaction transaction = ethereumClient.getTransaction(transactionObject.getHash());
-                System.out.println(transaction.getValue());
+    public String transferEth(String privateKey, String address, BigDecimal amount) {
+        Credentials credentials = Credentials.create(privateKey);
+
+        try {
+            EthGetTransactionCount transactionCountResponse = web3j.ethGetTransactionCount(
+                    credentials.getAddress(),
+                    org.web3j.protocol.core.DefaultBlockParameterName.LATEST
+            ).send();
+
+            BigInteger nonce = transactionCountResponse.getTransactionCount();
+            BigInteger amountInWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger();
+            BigInteger gasLimit = BigInteger.valueOf(21000);
+            BigInteger gasPrice = web3j.ethGasPrice().send().getGasPrice();
+
+
+            RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
+                    nonce, gasPrice, gasLimit, address, amountInWei
+            );
+
+            byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, 11155111, credentials);
+            String signedTransactionData = Numeric.toHexString(signedMessage);
+
+
+            EthSendTransaction sendTransactionResponse = web3j.ethSendRawTransaction(signedTransactionData).send();
+
+
+            if (sendTransactionResponse.hasError()) {
+                return ("交易失败: " + sendTransactionResponse.getError().getMessage());
+            } else {
+                return sendTransactionResponse.getTransactionHash();
             }
 
-            //ERC20转币
-            /*if(transactionObject.getTo().equals("0x779877a7b0d9e8603169ddbd7836e478b4624789")) {
-                Transaction transaction = ethereumClient.getTransaction(transactionObject.getHash());
-                System.out.println(transaction.getInput());
-
-                List<Type> params = ethereumClient.decodeInput(transaction.getInput());
-                // 获取接收地址
-                Address toAddress = (Address) params.get(0);
-
-                // 获取转账金额
-                Uint amount = (Uint) params.get(1);
-            }*/
-            if(transactionObject.getTo().equals("0x779877a7b0d9e8603169ddbd7836e478b4624789")) {
-
-                System.out.println(transactionObject.getInput());
-
-                List<Type> params = ethereumClient.decodeInput(transactionObject.getInput());
-                // 获取接收地址
-                Address toAddress = (Address) params.get(0);
-
-                // 获取转账金额
-                Uint amount = (Uint) params.get(1);
-                System.out.println(toAddress + "=>" + amount.getValue());
-            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return ("交易失败: " + e.getMessage());
         }
     }
 }

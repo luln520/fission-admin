@@ -36,4 +36,6 @@ public interface TwAddressService {
     int monitorEthTransfer();
 
     int monitorTronTransfer();
+
+    void resetBlock();
 }
