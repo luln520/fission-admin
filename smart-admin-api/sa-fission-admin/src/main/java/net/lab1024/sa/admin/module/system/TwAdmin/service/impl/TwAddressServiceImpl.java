@@ -516,7 +516,9 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                         if(twToken.getAddress().equalsIgnoreCase(contractAddress)) {
                             String ownerAddress = Base58Check.bytesToBase58(triggerSmartContract.getOwnerAddress().toByteArray());
 
-                            List<org.tron.trident.abi.datatypes.Type> typeList = tronClient.decodeInput(ByteArray.toHexString(triggerSmartContract.getData().toByteArray()));
+                            String input = ByteArray.toHexString(triggerSmartContract.getData().toByteArray());
+                            if (input.length() < 10) continue;
+                            List<org.tron.trident.abi.datatypes.Type> typeList = tronClient.decodeInput(input);
                             TransferRecord transferRecord = new TransferRecord();
                             transferRecord.setBlockNumber(blockNumber + 1);
                             transferRecord.setTransactionHash(ByteArray.toHexString(transactionExtention.getTxid().toByteArray()));
