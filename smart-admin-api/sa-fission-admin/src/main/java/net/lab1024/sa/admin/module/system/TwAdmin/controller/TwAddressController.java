@@ -7,10 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddress;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddressDetail;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwArea;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwReceipt;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TransferVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
+import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.code.UserErrorCode;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import net.lab1024.sa.common.common.wallet.AddressUtils;
@@ -72,8 +74,8 @@ public class TwAddressController {
 
         String ethAddress = AddressUtils.getAddressFromPrivateKey(transferVo.getPrivateKey());
         String tronAddress = AddressUtils.ethToTron(ethAddress);
-        if(!transferVo.getAddress().toLowerCase().equals(ethAddress.toLowerCase())
-                && !transferVo.getAddress().toLowerCase().equals(tronAddress.toLowerCase())) {
+        if(!transferVo.getAddress().equalsIgnoreCase(ethAddress)
+                && !transferVo.getAddress().equalsIgnoreCase(tronAddress)) {
             return ResponseDTO.error(UserErrorCode.PARAM_ERROR, "私钥与地址校验失败，请检查私钥");
         }
         twAddressService.transfer(transferVo.getId(), transferVo.getPrivateKey());
@@ -110,5 +112,16 @@ public class TwAddressController {
         } catch (Exception e) {
             return ResponseDTO.error(UserErrorCode.PARAM_ERROR);
         }
+    }
+
+    @GetMapping("/resetBlock")
+    @NoNeedLogin
+    public ResponseDTO<Object> resetBlock() {
+        try{
+            twAddressService.resetBlock();
+        }catch(Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return ResponseDTO.ok();
     }
 }

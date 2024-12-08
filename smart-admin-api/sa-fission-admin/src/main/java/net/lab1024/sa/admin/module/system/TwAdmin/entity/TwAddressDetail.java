@@ -48,4 +48,7 @@ public class TwAddressDetail {
 
     @ApiModelProperty("团队路径")
     private String path;
+
+    @ApiModelProperty("类型")
+    private Integer txType;
 }

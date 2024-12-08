@@ -55,9 +55,14 @@ public class TimerController {
     }
 
     //@XxlJob("updateBalanceCron")
-    @Scheduled(cron = "0 */2 * * * ?")
-    public synchronized void updateBalanceCron()  {
-        timerService.updateBalanceCron();
+    @Scheduled(cron = "*/7 * * * * ?")
+    public void checkEthTransfer()  {
+        timerService.checkEthTransfer();
+    }
+
+    //@Scheduled(cron = "*/1 * * * * ?")
+    public void checkTronTransfer()  {
+        timerService.checkTronTransfer();
     }
 
     //@XxlJob("mockUserStatus")
