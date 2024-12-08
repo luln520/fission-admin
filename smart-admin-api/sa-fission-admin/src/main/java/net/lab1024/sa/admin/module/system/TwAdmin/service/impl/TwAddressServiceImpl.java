@@ -231,7 +231,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     twReceipt.setAmount(new BigDecimal(TokenUtils.toWei(amount)));
                     twReceiptMapper.insert(twReceipt);
 
-                    this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress());
+                    this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
                 }else if(twCoin.getCzline().equals(NetworkConst.TRON)) {
                     TwToken twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
                     tronClient.init(privateKey);
@@ -251,7 +251,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     twReceipt.setAmount(new BigDecimal(amount));
                     twReceiptMapper.insert(twReceipt);
 
-                    this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress());
+                    this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
                 }
 
             }
@@ -264,14 +264,19 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     }
 
     @Override
-    public void updateAddressBalance(String address, String contractAddress) {
+    public void updateAddressBalance(String address, String contractAddress, String currency) {
         TwAddress twAddress = baseMapper.findByAddress(address);
 
         if(twAddress != null) {
             if(twAddress.getChainId() == ChainEnum.ETH.getCode()) {
                 try {
-                    BigInteger balance = ethereumClient.getErc20Balance(twAddress.getAddress(), contractAddress);
-                    this.updateTwAddressBalance(twAddress.getId(), "USDT", TokenUtils.convertUsdtBalance(balance));
+                    if(currency.equals(CurrencyEnum.ETH.getValue())) {
+                        BigInteger balance = ethereumClient.getEthBalance(twAddress.getAddress());
+                        this.updateTwAddressBalance(twAddress.getId(), currency, TokenUtils.fromWei(balance));
+                    }else {
+                        BigInteger balance = ethereumClient.getErc20Balance(twAddress.getAddress(), contractAddress);
+                        this.updateTwAddressBalance(twAddress.getId(), currency, TokenUtils.convertUsdtBalance(balance));
+                    }
                     log.info("更新eth账户余额成功,地址是=>{}", twAddress.getAddress());
                 }catch (Exception e) {
                     e.printStackTrace();
@@ -280,7 +285,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
                 TwToken twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
                 BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress(), twToken.getAddress());
-                this.updateTwAddressBalance(twAddress.getId(), "USDT", TokenUtils.convertUsdtBalance(balance));
+                this.updateTwAddressBalance(twAddress.getId(), currency, TokenUtils.convertUsdtBalance(balance));
             }
         }
     }
@@ -462,12 +467,12 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     this.updateUserBalance(twAddress.getUid(), totalAmount);
 
                     BigInteger balance = ethereumClient.getEthBalance(twAddress.getAddress());
-                    this.updateTwAddressBalance(twAddress.getId(), "ETH", TokenUtils.fromWei(balance));
+                    this.updateTwAddressBalance(twAddress.getId(), CurrencyEnum.ETH.getValue(), TokenUtils.fromWei(balance));
                 }else {
                     this.updateUserBalance(twAddress.getUid(), amount);
 
                     BigInteger balance = ethereumClient.getErc20Balance(twAddress.getAddress(), transferRecord.getContract());
-                    this.updateTwAddressBalance(twAddress.getId(), "USDT", TokenUtils.convertUsdtBalance(balance));
+                    this.updateTwAddressBalance(twAddress.getId(), CurrencyEnum.USDT.getValue(), TokenUtils.convertUsdtBalance(balance));
                 }
                 total++;
             }

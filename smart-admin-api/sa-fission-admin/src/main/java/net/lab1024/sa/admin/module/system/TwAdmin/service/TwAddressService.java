@@ -21,7 +21,7 @@ public interface TwAddressService {
 
     List<TwAddress> listBalanceAddress(int coinId);
 
-    void updateAddressBalance(String address, String contractAddress);
+    void updateAddressBalance(String address, String contractAddress, String currency);
 
     void transfer(int coinId, String privateKey);
 
