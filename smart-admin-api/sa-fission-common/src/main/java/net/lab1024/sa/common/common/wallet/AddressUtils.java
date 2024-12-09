@@ -6,6 +6,7 @@ import org.bouncycastle.util.encoders.Hex;
 import org.web3j.crypto.Credentials;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class AddressUtils {
 
@@ -60,6 +61,25 @@ public class AddressUtils {
         } catch (Exception e) {
             throw new RuntimeException("Error converting address", e);
         }
+    }
+
+    public static boolean isA9059CBBFormat(String data) {
+        if (data.startsWith("0x")) {
+            data = data.substring(2);
+        }
+
+        if ((data.length() - 8) % 64 != 0) {
+            return false;
+        }
+
+        String pattern = "^[a-fA-F0-9]{8}([a-fA-F0-9]{64})+$";
+        if (!Pattern.matches(pattern, data)) {
+            return false;
+        }
+
+        // 检查是否以 "a9059cbb" 作为函数选择器开头
+        String selector = data.substring(0, 8);
+        return "a9059cbb".equals(selector);
     }
 
     public static void main(String[] args) {
