@@ -395,7 +395,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         List<EthBlock.TransactionResult> transactionResultList = block.getTransactions();
         for(EthBlock.TransactionResult transactionResult : transactionResultList) {
             EthBlock.TransactionObject transactionObject = (EthBlock.TransactionObject) transactionResult.get();
-            if(transactionObject.getTo() == null) continue;
+            if(transactionObject.getTo() == null || transactionObject.getInput().length() < 12) continue;
 
             if(twToken.getAddress().equalsIgnoreCase(transactionObject.getTo())) {
                 TransferRecord transferRecord = new TransferRecord();
@@ -517,7 +517,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                             String ownerAddress = Base58Check.bytesToBase58(triggerSmartContract.getOwnerAddress().toByteArray());
 
                             String input = ByteArray.toHexString(triggerSmartContract.getData().toByteArray());
-                            if (input.length() < 10) continue;
+                            if (input.length() < 12) continue;
                             List<org.tron.trident.abi.datatypes.Type> typeList = tronClient.decodeInput(input);
                             TransferRecord transferRecord = new TransferRecord();
                             transferRecord.setBlockNumber(blockNumber);
