@@ -604,15 +604,8 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
                 this.updateUserBalance(twAddress.getUid(), twAddressDetail.getAmount());
 
-                CompletableFuture.runAsync(() -> {
-                    try {
-                        Thread.sleep(60000);
-                        BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress(), transferRecord.getContract());
-                        this.updateTwAddressBalance(twAddress.getId(), "USDT", TokenUtils.convertUsdtBalance(balance));
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
-                });
+                BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress(), transferRecord.getContract());
+                this.updateTwAddressBalance(twAddress.getId(), "USDT", TokenUtils.convertUsdtBalance(balance));
                 total++;
             }
 
