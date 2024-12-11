@@ -1469,7 +1469,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     @Override
     public ResponseDTO editpassword(UserReq userReq) {
 
-            String username = userReq.getUsername();
+            String username = userReq.getUsername().trim();
             String password = userReq.getPassword();
             String encryptPwd = getEncryptPwd(password); //MD5密码加密
             QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
