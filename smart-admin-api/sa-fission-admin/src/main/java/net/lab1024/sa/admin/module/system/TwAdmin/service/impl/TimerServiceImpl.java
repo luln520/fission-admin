@@ -1504,7 +1504,7 @@ public class TimerServiceImpl {
 
     }
 
-    public void updateBalanceCron() {
+    /*public void updateBalanceCron() {
         List<TwAddress> twAddressList = twAddressService.listAddress();
         if(CollectionUtils.isNotEmpty(twAddressList)) {
             for(TwAddress twAddress : twAddressList) {
@@ -1516,6 +1516,16 @@ public class TimerServiceImpl {
             }
             log.info(">>>>>> 总计完成 {} 的地址任务检查", twAddressList.size());
         }
+    }*/
+
+    public void checkEthTransfer() {
+        int result = twAddressService.monitorEthTransfer();
+        log.info(">>>>>> 已处理完eth transfer，总计: {}", result);
+    }
+
+    public void checkTronTransfer() {
+        int result = twAddressService.monitorTronTransfer();
+        log.info(">>>>>> 已处理完tron transfer，总计: {}", result);
     }
 
 //
