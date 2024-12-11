@@ -40,6 +40,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -466,13 +467,27 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     BigDecimal totalAmount = this.convertUSDTAmount(amount);
                     this.updateUserBalance(twAddress.getUid(), totalAmount);
 
-                    BigInteger balance = ethereumClient.getEthBalance(twAddress.getAddress());
-                    this.updateTwAddressBalance(twAddress.getId(), CurrencyEnum.ETH.getValue(), TokenUtils.fromWei(balance));
+                    CompletableFuture.runAsync(() -> {
+                        try {
+                            Thread.sleep(30000);
+                            BigInteger balance = ethereumClient.getEthBalance(twAddress.getAddress());
+                            this.updateTwAddressBalance(twAddress.getId(), CurrencyEnum.ETH.getValue(), TokenUtils.fromWei(balance));
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    });
                 }else {
                     this.updateUserBalance(twAddress.getUid(), amount);
 
-                    BigInteger balance = ethereumClient.getErc20Balance(twAddress.getAddress(), transferRecord.getContract());
-                    this.updateTwAddressBalance(twAddress.getId(), CurrencyEnum.USDT.getValue(), TokenUtils.convertUsdtBalance(balance));
+                    CompletableFuture.runAsync(() -> {
+                        try {
+                            Thread.sleep(30000);
+                            BigInteger balance = ethereumClient.getErc20Balance(twAddress.getAddress(), transferRecord.getContract());
+                            this.updateTwAddressBalance(twAddress.getId(), CurrencyEnum.USDT.getValue(), TokenUtils.convertUsdtBalance(balance));
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    });
                 }
                 total++;
             }
@@ -587,10 +602,17 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 twAddressDetail.setAmount(TokenUtils.convertUsdtBalance(transferRecord.getValue()));
                 twAddressDetailMapper.insert(twAddressDetail);
 
-                BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress(), transferRecord.getContract());
-                this.updateTwAddressBalance(twAddress.getId(), "USDT", TokenUtils.convertUsdtBalance(balance));
-
                 this.updateUserBalance(twAddress.getUid(), twAddressDetail.getAmount());
+
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        Thread.sleep(30000);
+                        BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress(), transferRecord.getContract());
+                        this.updateTwAddressBalance(twAddress.getId(), "USDT", TokenUtils.convertUsdtBalance(balance));
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                });
                 total++;
             }
 
