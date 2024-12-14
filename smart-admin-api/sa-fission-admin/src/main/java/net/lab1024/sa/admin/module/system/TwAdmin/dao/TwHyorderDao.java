@@ -37,7 +37,7 @@ public interface TwHyorderDao extends BaseMapper<TwHyorder> {
     @Select("SELECT is_win as status, sum(ploss) as profitLoss FROM tw_hyorder where status = 2 AND company_id = #{companyId} group by is_win")
     List<ProfitLossVo> statisticProfitLoss(@Param("companyId") Integer companyId);
 
-    @Select("SELECT IFNULL(SUM(num), 0) FROM tw_hyorder where uid = #{uId}")
+    @Select("SELECT IFNULL(SUM(num), 0) FROM tw_hyorder where uid = #{uId} and order_type = 1")
     BigDecimal queryUserAmountVolume(@Param("uId") Integer uId);
 
     @Select("SELECT sum(num) FROM tw_hyorder where company_id = #{companyId}")

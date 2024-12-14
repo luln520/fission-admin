@@ -91,6 +91,12 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     @Autowired
     private TwTokenMapper twTokenMapper;
 
+    @Autowired
+    private TwHyorderDao twHyorderDao;
+
+    @Autowired
+    private TwLeverOrderMapper twLeverOrderMapper;
+
     @Override
     public IPage<TwAddress> listpage(AddressVo addressVo) {
         /*BigInteger amount = new BigInteger("1000000000000000000");
@@ -668,7 +674,16 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         twNoticeService.save(twNotice);
 
         try {
-            twUser.setCodeAmount(amount.add(twUser.getCodeAmount()));
+            BigDecimal hyAmount = twHyorderDao.queryUserAmountVolume(twUser.getId());
+            BigDecimal levelAmount = twLeverOrderMapper.queryUserAmountVolume(twUser.getId());
+            BigDecimal userAmount = amount.add(twUser.getCodeAmount()).subtract(hyAmount).subtract(levelAmount);
+            log.info("当前用户:{}, Amount:{}, hyAmount: {}, levelAmount: {}, userAmount: {}",
+                    twUser.getUserCode(),
+                    twUser.getCodeAmount(),
+                    hyAmount,
+                    levelAmount,
+                    userAmount);
+            twUser.setCodeAmount(userAmount.max(BigDecimal.ZERO));
             twUserService.updateById(twUser);
         }catch (Exception e) {
             log.error(e.getMessage(), e);
