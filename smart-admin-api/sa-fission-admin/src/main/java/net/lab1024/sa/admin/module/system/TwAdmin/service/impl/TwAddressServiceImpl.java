@@ -205,62 +205,64 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         List<TwAddress> twAddressList = this.listBalanceAddress(coinId);
         if(!CollectionUtils.isEmpty(twAddressList)) {
             for(TwAddress twAddress : twAddressList) {
-
-                String privateKey = null;
-
                 try {
-                    privateKey = CertificateManager.decrypt(twAddress.getPrivateKey(), keyBytes);
-                }catch(Exception e) {
-                    log.error("当前账户{}解析私钥失败{}", twAddress.getAddress(), e);
-                }
+                    String privateKey = null;
 
-                String amount = twAddress.getBalance().setScale(6, RoundingMode.HALF_UP).toString();
-                if(twCoin.getCzline().equals(NetworkConst.ETH)) {
-                    TwToken twToken = twTokenMapper.findByChainId(ChainEnum.ETH.getCode());
-                    TwReceipt twReceipt = new TwReceipt();
-                    twReceipt.setUid(twAddress.getUid());
-                    twReceipt.setBizStatus(1);
-                    twReceipt.setChainId(60);
-                    twReceipt.setFromAddress(twAddress.getAddress());
-                    twReceipt.setToAddress(twCoin.getCzaddress());
                     try {
-                        if(twAddress.getCurrency().equals(CurrencyEnum.USDT.getValue())) {
-                            String txHash = ethereumClient.transferErc20(privateKey, twCoin.getCzaddress(), twToken.getAddress(), TokenUtils.toUSDTWei(twAddress.getBalance()));
-                            twReceipt.setTx(txHash);
-                        }else {
-                            BigDecimal balance = twAddress.getBalance().subtract(new BigDecimal("0.001"));
-                            String txHash = ethereumClient.transferEth(privateKey, twCoin.getCzaddress(), balance);
-                            twReceipt.setTx(txHash);
+                        privateKey = CertificateManager.decrypt(twAddress.getPrivateKey(), keyBytes);
+                    } catch (Exception e) {
+                        log.error("当前账户{}解析私钥失败{}", twAddress.getAddress(), e);
+                    }
+
+                    String amount = twAddress.getBalance().setScale(6, RoundingMode.HALF_UP).toString();
+                    if (twCoin.getCzline().equals(NetworkConst.ETH)) {
+                        TwToken twToken = twTokenMapper.findByChainId(ChainEnum.ETH.getCode());
+                        TwReceipt twReceipt = new TwReceipt();
+                        twReceipt.setUid(twAddress.getUid());
+                        twReceipt.setBizStatus(1);
+                        twReceipt.setChainId(60);
+                        twReceipt.setFromAddress(twAddress.getAddress());
+                        twReceipt.setToAddress(twCoin.getCzaddress());
+                        try {
+                            if (twAddress.getCurrency().equals(CurrencyEnum.USDT.getValue())) {
+                                String txHash = ethereumClient.transferErc20(privateKey, twCoin.getCzaddress(), twToken.getAddress(), TokenUtils.toUSDTWei(twAddress.getBalance()));
+                                twReceipt.setTx(txHash);
+                            } else {
+                                BigDecimal balance = twAddress.getBalance().subtract(new BigDecimal("0.001"));
+                                String txHash = ethereumClient.transferEth(privateKey, twCoin.getCzaddress(), balance);
+                                twReceipt.setTx(txHash);
+                            }
+                        } catch (RuntimeException e) {
+                            twReceipt.setCaused(e.getMessage());
                         }
-                    }catch (RuntimeException e) {
-                        twReceipt.setCaused(e.getMessage());
+                        twReceipt.setAmount(new BigDecimal(TokenUtils.toWei(amount)));
+                        twReceiptMapper.insert(twReceipt);
+
+                        this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
+                    } else if (twCoin.getCzline().equals(NetworkConst.TRON)) {
+                        TwToken twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
+                        tronClient.init(privateKey);
+
+                        TwReceipt twReceipt = new TwReceipt();
+                        twReceipt.setUid(twAddress.getUid());
+                        twReceipt.setBizStatus(1);
+                        twReceipt.setChainId(195);
+                        twReceipt.setFromAddress(twAddress.getAddress());
+                        twReceipt.setToAddress(twCoin.getCzaddress());
+                        try {
+                            String txHash = tronClient.transferTrc20(twAddress.getAddress(), twCoin.getCzaddress(), twToken.getAddress(), amount);
+                            twReceipt.setTx(txHash);
+                        } catch (RuntimeException e) {
+                            twReceipt.setCaused(e.getMessage());
+                        }
+                        twReceipt.setAmount(new BigDecimal(amount));
+                        twReceiptMapper.insert(twReceipt);
+
+                        this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
                     }
-                    twReceipt.setAmount(new BigDecimal(TokenUtils.toWei(amount)));
-                    twReceiptMapper.insert(twReceipt);
-
-                    this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
-                }else if(twCoin.getCzline().equals(NetworkConst.TRON)) {
-                    TwToken twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
-                    tronClient.init(privateKey);
-
-                    TwReceipt twReceipt = new TwReceipt();
-                    twReceipt.setUid(twAddress.getUid());
-                    twReceipt.setBizStatus(1);
-                    twReceipt.setChainId(195);
-                    twReceipt.setFromAddress(twAddress.getAddress());
-                    twReceipt.setToAddress(twCoin.getCzaddress());
-                    try {
-                        String txHash = tronClient.transferTrc20(twAddress.getAddress(), twCoin.getCzaddress(), twToken.getAddress(), amount);
-                        twReceipt.setTx(txHash);
-                    }catch (RuntimeException e) {
-                        twReceipt.setCaused(e.getMessage());
-                    }
-                    twReceipt.setAmount(new BigDecimal(amount));
-                    twReceiptMapper.insert(twReceipt);
-
-                    this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
+                }catch (Exception e) {
+                    log.error("一键归集报错:", e);
                 }
-
             }
         }
     }
@@ -290,8 +292,8 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     log.error(e.getMessage(), e);
                 }
             }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
-                TwToken twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
-                BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress(), twToken.getAddress());
+                BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress(), contractAddress);
+                log.info("=====> 当前地址 {} 的余额是:{}", twAddress.getAddress(), balance);
                 this.updateTwAddressBalance(twAddress.getId(), currency, TokenUtils.convertUsdtBalance(balance));
             }
         }
