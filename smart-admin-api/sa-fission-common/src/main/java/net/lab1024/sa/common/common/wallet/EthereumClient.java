@@ -188,9 +188,14 @@ public class EthereumClient {
 
     public BigInteger getEthBalance(String address) {
         try {
-            EthGetBalance balanceResponse = web3j.ethGetBalance(address,
+            EthGetBalance latestBalance = web3j.ethGetBalance(address,
                     DefaultBlockParameterName.LATEST).send();
-            return balanceResponse.getBalance();
+            log.info("地址{}最新区块余额是: {}", address, latestBalance.getBalance());
+            EthGetBalance pendingBalance = web3j.ethGetBalance(address,
+                    DefaultBlockParameterName.PENDING).send();
+            log.info("地址{}交易池中余额是: {}", address, pendingBalance.getBalance());
+
+            return latestBalance.getBalance().max(pendingBalance.getBalance());
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             return BigInteger.ZERO;
