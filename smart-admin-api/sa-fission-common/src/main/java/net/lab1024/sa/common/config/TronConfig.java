@@ -20,6 +20,6 @@ public class TronConfig {
 
     @Bean
     public TronClient initTronXClient() {
-        return new TronClient(isMainNet, apiKey);
+        return new TronClient(isMainNet, "", apiKey);
     }
 }
