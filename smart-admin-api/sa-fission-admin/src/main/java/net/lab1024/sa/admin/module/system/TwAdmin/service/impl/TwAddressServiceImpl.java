@@ -151,17 +151,6 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         TwAddress twAddress = baseMapper.findByChainId(uid, chainId, coinId);
         synchronized (this) {
             if (twAddress == null) {
-                List<TwAddress> twAddressList = baseMapper.listIdleAddress(chainId, coinId);
-                if(!CollectionUtils.isEmpty(twAddressList) && twAddressList.size() > 5) {
-                    twAddress = twAddressList.get(0);
-                    int sourceUid = twAddress.getUid();
-                    twAddress.setUid(uid);
-                    twAddress.setCompanyId(one.getCompanyId());
-                    twAddress.setPath(one.getPath());
-                    twAddress.setUpdateTime(new Date());
-                    baseMapper.updateById(twAddress);
-                    log.info(">>>>> 重新分配地址完成，原用户ID:{}, 新用户ID{}", sourceUid, uid);
-                }else {
                     twAddress = new TwAddress();
                     TwRootAddress twRootAddress = twRootAddressMapper.findByChainId(chainId);
                     WalletClient walletClient = new WalletClient(Arrays.asList(twRootAddress.getMnemonic().split(" ")), ChainEnum.getByCode(chainId));
@@ -197,7 +186,6 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     }
                 }
             }
-        }
 
         return twAddress.getAddress();
     }
