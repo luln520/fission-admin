@@ -36,6 +36,9 @@ public interface TwAddressMapper extends BaseMapper<TwAddress> {
     @Select("select * from tw_address")
     List<TwAddress> listAddress();
 
+    @Select("SELECT * FROM tw_address where coin_id = #{coinId}")
+    List<TwAddress> listCoinAddress(@Param("coinId") int coinId);
+
     @Update("update tw_address set block_number = #{blockNumber}, update_time = update_time where id = #{id}")
     int updateAddressBlock(@Param("id") int id, @Param("blockNumber") int blockNumber);
 

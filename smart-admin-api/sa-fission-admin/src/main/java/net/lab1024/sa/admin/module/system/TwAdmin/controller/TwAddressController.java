@@ -124,4 +124,15 @@ public class TwAddressController {
         }
         return ResponseDTO.ok();
     }
+
+    @GetMapping("/refreshAddress")
+    @NoNeedLogin
+    public ResponseDTO<Object> refreshAddress(@RequestParam Integer coinId) {
+        try{
+            twAddressService.refreshAddress(coinId);
+        }catch(Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return ResponseDTO.ok();
+    }
 }

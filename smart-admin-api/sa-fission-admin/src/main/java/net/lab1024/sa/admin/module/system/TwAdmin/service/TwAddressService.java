@@ -38,4 +38,6 @@ public interface TwAddressService {
     int monitorTronTransfer();
 
     void resetBlock();
+
+    void refreshAddress(int coinId);
 }

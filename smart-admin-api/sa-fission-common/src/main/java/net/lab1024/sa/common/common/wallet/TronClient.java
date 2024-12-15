@@ -22,16 +22,9 @@ import java.util.List;
 @Slf4j
 public class TronClient {
 
-    private boolean isMainNet;
-    private ApiWrapper wrapper;
-    private String apiKey;
+    private final ApiWrapper wrapper;
 
-    public TronClient(boolean isMainNet, String apiKey) {
-        this.isMainNet = isMainNet;
-        this.apiKey = apiKey;
-    }
-
-    public void init(String privateKey) {
+    public TronClient(boolean isMainNet, String privateKey, String apiKey) {
         if(isMainNet) {
             wrapper = ApiWrapper.ofMainnet(privateKey, apiKey);
         }else {
@@ -41,13 +34,10 @@ public class TronClient {
 
     public Response.BlockExtention getBlock(int blockNumer) {
         try {
-            this.init("");
             return wrapper.getBlockByNum(blockNumer);
         } catch (IllegalException e) {
             log.error(e.getMessage(), e);
             return null;
-        } finally {
-            wrapper.close();
         }
     }
 
@@ -57,8 +47,6 @@ public class TronClient {
         } catch (IllegalException e) {
             log.error(e.getMessage(), e);
             return null;
-        } finally {
-            wrapper.close();
         }
     }
 
@@ -87,22 +75,17 @@ public class TronClient {
             return token.transfer(toAddress, sunAmountValue.longValue(), 0, "", maxTrx);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
-        } finally {
-            wrapper.close();
         }
     }
 
     public BigInteger getTrc20Balance(String ownerAddress, String contractAddress) {
         try {
-            this.init("");
             org.tron.trident.core.contract.Contract contract = wrapper.getContract(contractAddress);
             Trc20Contract token = new Trc20Contract(contract, ownerAddress, wrapper);
             return token.balanceOf(ownerAddress);
         }catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("获取trc20余额发生错误: ", e);
             return new BigInteger("0");
-        } finally {
-            wrapper.close();
         }
     }
 
@@ -116,8 +99,6 @@ public class TronClient {
             return ret;
         } catch (Exception e) {
             throw new RuntimeException("send fund failed, reason is " + e.getMessage());
-        } finally {
-            wrapper.close();
         }
     }
 
@@ -127,9 +108,11 @@ public class TronClient {
             return block.getBlockHeader().getRawData().getNumber();
         } catch (IllegalException e) {
             e.printStackTrace();
-        } finally {
-            wrapper.close();
         }
         return 0;
+    }
+
+    public void close() {
+        this.wrapper.close();
     }
 }

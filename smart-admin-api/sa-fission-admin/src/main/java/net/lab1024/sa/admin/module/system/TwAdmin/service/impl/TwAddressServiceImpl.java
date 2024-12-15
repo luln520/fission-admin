@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.protobuf.InvalidProtocolBufferException;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
@@ -15,6 +16,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.util.CommonUtil;
 import net.lab1024.sa.common.common.wallet.*;
+import net.lab1024.sa.common.config.TronConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.Resource;
@@ -60,9 +62,6 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     private EthereumClient ethereumClient;
 
     @Autowired
-    private TronClient tronClient;
-
-    @Autowired
     private TwCoinDao twCoinDao;
 
     @Autowired
@@ -96,6 +95,12 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
     @Autowired
     private TwLeverOrderMapper twLeverOrderMapper;
+
+    @Autowired
+    private TronConfig tronConfig;
+
+    @Autowired
+    private TronClient tronClient;
 
     @Override
     public IPage<TwAddress> listpage(AddressVo addressVo) {
@@ -241,7 +246,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                         this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
                     } else if (twCoin.getCzline().equals(NetworkConst.TRON)) {
                         TwToken twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
-                        tronClient.init(privateKey);
+                        TronClient tronClient = new TronClient(tronConfig.isMainNet(), privateKey, tronConfig.getApiKey());
 
                         TwReceipt twReceipt = new TwReceipt();
                         twReceipt.setUid(twAddress.getUid());
@@ -254,6 +259,8 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                             twReceipt.setTx(txHash);
                         } catch (RuntimeException e) {
                             twReceipt.setCaused(e.getMessage());
+                        } finally {
+                            tronClient.close();
                         }
                         twReceipt.setAmount(new BigDecimal(amount));
                         twReceiptMapper.insert(twReceipt);
@@ -292,9 +299,13 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     log.error(e.getMessage(), e);
                 }
             }else if(twAddress.getChainId() == ChainEnum.TRON.getCode()) {
-                BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress(), contractAddress);
-                log.info("=====> 当前地址 {} 的余额是:{}", twAddress.getAddress(), balance);
-                this.updateTwAddressBalance(twAddress.getId(), currency, TokenUtils.convertUsdtBalance(balance));
+                try {
+                    BigInteger balance = tronClient.getTrc20Balance(twAddress.getAddress(), contractAddress);
+                    log.info("=====> 当前地址 {} 的余额是:{}", twAddress.getAddress(), balance);
+                    this.updateTwAddressBalance(twAddress.getId(), currency, TokenUtils.convertUsdtBalance(balance));
+                }catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
             }
         }
     }
@@ -325,7 +336,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                     }
                     twReceiptMapper.insert(twReceipt);
                 }else if(twCoin.getCzline().equals(NetworkConst.TRON)) {
-                    tronClient.init(privateKey);
+                    TronClient tronClient = new TronClient(tronConfig.isMainNet(), privateKey, tronConfig.getApiKey());
                     //默认50trx
 
                     TwReceipt twReceipt = new TwReceipt();
@@ -340,6 +351,8 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                         twReceipt.setTx(ret);
                     }catch(RuntimeException e) {
                         twReceipt.setCaused(e.getMessage());
+                    }finally {
+                        tronClient.close();
                     }
                     twReceiptMapper.insert(twReceipt);
                 }
@@ -520,6 +533,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
         int blockNumber = twBlock.getNumber() + 1;
         log.info(">>>>>> 当前正在处理的TRON区块是{}", blockNumber);
+
         Response.BlockExtention blockExtention = tronClient.getBlock(blockNumber);
         if(blockExtention == null) return 0;
 
@@ -577,6 +591,23 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         int tronBlockNumber = (int)tronClient.getNowBlock();
         twTronBlock.setNumber(tronBlockNumber);
         twBlockMapper.updateById(twTronBlock);
+    }
+
+    @Override
+    public void refreshAddress(int coinId) {
+        TwCoin twCoin = twCoinDao.selectById(coinId);
+        List<TwAddress> twAddressList = baseMapper.listCoinAddress(coinId);
+        if(!CollectionUtils.isEmpty(twAddressList)) {
+            TwToken twToken = null;
+            if (twCoin.getCzline().equals(NetworkConst.ETH)) {
+                twToken = twTokenMapper.findByChainId(ChainEnum.ETH.getCode());
+            } else if (twCoin.getCzline().equals(NetworkConst.TRON)) {
+                twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
+            }
+            for(TwAddress twAddress : twAddressList) {
+                this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), "USDT");
+            }
+        }
     }
 
     private int handleTRCTransfer(List<TransferRecord> transferRecordList) {
