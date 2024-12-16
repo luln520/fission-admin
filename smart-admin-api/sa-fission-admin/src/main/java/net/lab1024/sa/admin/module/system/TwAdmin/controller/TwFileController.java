@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 公用文件上传接口
@@ -30,6 +32,9 @@ import javax.validation.Valid;
 @RequestMapping("/api/admin/file")
 @Api(tags = {AdminSwaggerTagConst.System.TW_FILE})
 public class TwFileController extends SupportBaseController {
+
+    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("gif", "png", "jpg");
+
     /**
      * 文件上传接口   file（文件流） baseFileName（文件夹名称） 需要开放静态文件访问路径
      * 1.限制file类型为 图片 和 10M以内('jpg', 'gif', 'png', 'jpeg')
@@ -80,8 +85,17 @@ public class TwFileController extends SupportBaseController {
     @ResponseBody
     @NoNeedLogin
     public ResponseDTO editMovieInfo(@RequestParam("file")MultipartFile file) {
-          return  fileService.editMovieInfo(file);
+        try {
+            String filename = file.getOriginalFilename();
+            String fileExtension = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
 
+            if (!ALLOWED_EXTENSIONS.contains(fileExtension)) {
+                return ResponseDTO.userErrorParam("上传失败,只支持gif，png，jpg文件格式");
+            }
+            return  fileService.editMovieInfo(file);
+        }catch (Exception e) {
+            return ResponseDTO.userErrorParam("上传文件格式有误");
+        }
     }
 }
 
