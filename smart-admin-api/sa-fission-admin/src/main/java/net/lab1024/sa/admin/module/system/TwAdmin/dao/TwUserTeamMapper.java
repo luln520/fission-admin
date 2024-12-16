@@ -9,6 +9,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AgentVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TeamVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -23,6 +24,9 @@ public interface TwUserTeamMapper extends BaseMapper<TwUserTeam> {
 
     List<TwUserTeam> listpage(@Param("objectPage") Page<TwUserTeam> objectPage, @Param("obj") TeamVo teamVo);
     List<TwUser> teamlist(@Param("objectPage") Page<TwUser> objectPage, @Param("obj") TeamVo teamVo);
+
+    @Update("update tw_user_team set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
+    int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
 }
 
 

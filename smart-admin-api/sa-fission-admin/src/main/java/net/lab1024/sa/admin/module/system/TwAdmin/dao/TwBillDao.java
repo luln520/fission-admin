@@ -8,6 +8,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwBillVo;
 import net.lab1024.sa.common.common.domain.PageParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
@@ -21,5 +22,7 @@ import java.util.List;
 public interface TwBillDao extends BaseMapper<TwBill> {
     List<TwBill> listpage(@Param("objectPage") Page<TwBill> objectPage, @Param("obj") TwBillVo twBillVo);
 
+    @Update("update tw_bill set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
+    int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
 }
 

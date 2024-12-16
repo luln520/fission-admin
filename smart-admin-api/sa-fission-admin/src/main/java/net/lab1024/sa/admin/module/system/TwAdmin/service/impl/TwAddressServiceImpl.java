@@ -151,41 +151,41 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         TwAddress twAddress = baseMapper.findByChainId(uid, chainId, coinId);
         synchronized (this) {
             if (twAddress == null) {
-                    twAddress = new TwAddress();
-                    TwRootAddress twRootAddress = twRootAddressMapper.findByChainId(chainId);
-                    WalletClient walletClient = new WalletClient(Arrays.asList(twRootAddress.getMnemonic().split(" ")), ChainEnum.getByCode(chainId));
-                    int step = twRootAddress.getStep() + 1;
-                    WalletAddress walletAddress = walletClient.generateAddress(step);
-                    twRootAddressMapper.updateStep(twRootAddress.getId(), step);
+                twAddress = new TwAddress();
+                TwRootAddress twRootAddress = twRootAddressMapper.findByChainId(chainId);
+                WalletClient walletClient = new WalletClient(Arrays.asList(twRootAddress.getMnemonic().split(" ")), ChainEnum.getByCode(chainId));
+                int step = twRootAddress.getStep() + 1;
+                WalletAddress walletAddress = walletClient.generateAddress(step);
+                twRootAddressMapper.updateStep(twRootAddress.getId(), step);
 
-                    twAddress.setUid(uid);
-                    twAddress.setChainId(chainId);
-                    twAddress.setAddress(walletAddress.getAddress());
-                    twAddress.setPublicKey(walletAddress.getPublicKey());
-                    twAddress.setCompanyId(one.getCompanyId());
-                    twAddress.setPath(one.getPath());
-                    twAddress.setCoinId(coinId);
+                twAddress.setUid(uid);
+                twAddress.setChainId(chainId);
+                twAddress.setAddress(walletAddress.getAddress());
+                twAddress.setPublicKey(walletAddress.getPublicKey());
+                twAddress.setCompanyId(one.getCompanyId());
+                twAddress.setPath(one.getPath());
+                twAddress.setCoinId(coinId);
 
-                    try {
-                        twAddress.setPrivateKey(CertificateManager.encrypt(walletAddress.getPrivateKey(), keyBytes));
-                    } catch (Exception e) {
-                        log.error("加密私钥失败, {}", e);
-                    }
+                try {
+                    twAddress.setPrivateKey(CertificateManager.encrypt(walletAddress.getPrivateKey(), keyBytes));
+                } catch (Exception e) {
+                    log.error("加密私钥失败, {}", e);
+                }
 
-                    try {
-                        baseMapper.insert(twAddress);
+                try {
+                    baseMapper.insert(twAddress);
 
-                        TwAddressBalance twAddressBalance = new TwAddressBalance();
-                        twAddressBalance.setCompanyId(one.getCompanyId());
-                        twAddressBalance.setPath(one.getPath());
-                        twAddressBalance.setAddressId(twAddress.getId());
-                        twAddressBalance.setCurrency(CurrencyEnum.USDT.getValue());
-                        twAddressBalanceMapper.insert(twAddressBalance);
-                    } catch (DuplicateKeyException e) {
-                        twAddress = baseMapper.findByChainId(uid, chainId, coinId);
-                    }
+                    TwAddressBalance twAddressBalance = new TwAddressBalance();
+                    twAddressBalance.setCompanyId(one.getCompanyId());
+                    twAddressBalance.setPath(one.getPath());
+                    twAddressBalance.setAddressId(twAddress.getId());
+                    twAddressBalance.setCurrency(CurrencyEnum.USDT.getValue());
+                    twAddressBalanceMapper.insert(twAddressBalance);
+                } catch (DuplicateKeyException e) {
+                    twAddress = baseMapper.findByChainId(uid, chainId, coinId);
                 }
             }
+        }
 
         return twAddress.getAddress();
     }

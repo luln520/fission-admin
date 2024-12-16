@@ -8,6 +8,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,5 +28,8 @@ public interface TwMyzcDao extends BaseMapper<TwMyzc> {
 
     @Select("SELECT IFNULL(SUM(num), 0) FROM tw_myzc where path like CONCAT('%', #{employeeId}, '%') AND status = 2")
     BigDecimal queryAmountVolume(@Param("employeeId") Long employeeId);
+
+    @Update("update tw_myzc set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
+    int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
 }
 

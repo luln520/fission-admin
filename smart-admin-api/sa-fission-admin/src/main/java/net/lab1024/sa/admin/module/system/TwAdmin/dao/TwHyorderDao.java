@@ -13,6 +13,7 @@ import net.lab1024.sa.common.common.domain.PageParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
@@ -44,5 +45,8 @@ public interface TwHyorderDao extends BaseMapper<TwHyorder> {
     BigDecimal statisticAmountVolume(@Param("companyId") Integer companyId);
 
     List<PerNumVo> statisticPerNum(@Param("days")Integer days, @Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId")int companyId);
+
+    @Update("update tw_hyorder set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
+    int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
 }
 
