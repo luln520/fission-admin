@@ -21,4 +21,10 @@ public interface TwAddressDetailMapper extends BaseMapper<TwAddressDetail> {
 
     @Update("update tw_address_detail set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
     int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
+
+    @Select("select count(*) from tw_address_detail where company_id = #{companyId} AND create_time BETWEEN FROM_UNIXTIME(#{startTime}) AND FROM_UNIXTIME(#{endTime})")
+    int countInTime(@Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId") int companyId);
+
+    @Select("select IFNULL(SUM(amount), 0) from tw_address_detail where company_id = #{companyId} AND create_time BETWEEN FROM_UNIXTIME(#{startTime}) AND FROM_UNIXTIME(#{endTime})")
+    BigDecimal amountInTime(@Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId") int companyId);
 }
