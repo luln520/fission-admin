@@ -5,6 +5,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddressDetail;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,4 +18,13 @@ public interface TwAddressDetailMapper extends BaseMapper<TwAddressDetail> {
 
     @Select("SELECT IFNULL(SUM(amount), 0) FROM tw_address_detail where path like CONCAT('%', #{employeeId}, '%')")
     BigDecimal queryAmountVolume(@Param("employeeId") Long employeeId);
+
+    @Update("update tw_address_detail set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
+    int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
+
+    @Select("select count(*) from tw_address_detail where company_id = #{companyId} AND create_time BETWEEN FROM_UNIXTIME(#{startTime}) AND FROM_UNIXTIME(#{endTime})")
+    int countInTime(@Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId") int companyId);
+
+    @Select("select IFNULL(SUM(amount), 0) from tw_address_detail where company_id = #{companyId} AND create_time BETWEEN FROM_UNIXTIME(#{startTime}) AND FROM_UNIXTIME(#{endTime})")
+    BigDecimal amountInTime(@Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId") int companyId);
 }

@@ -10,6 +10,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.ProfitLossVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,6 +35,9 @@ public interface TwLeverOrderMapper extends BaseMapper<TwLeverOrder> {
     BigDecimal queryUserAmountVolume(@Param("uId") Integer uId);
 
     List<PerNumVo> statisticPerNum(@Param("days")Integer days, @Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId")int companyId);
+
+    @Update("update tw_lever_order set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
+    int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
 }
 
 

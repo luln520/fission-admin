@@ -12,6 +12,7 @@ import net.lab1024.sa.common.common.domain.PageParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
@@ -42,5 +43,8 @@ public interface TwUserDao extends BaseMapper<TwUser> {
 
     @Select("SELECT COUNT(*) as total FROM tw_user WHERE path like CONCAT('%', #{employeeId}, '%')")
     int statisticUserCount(@Param("employeeId")Long employeeId);
+
+    @Update("update tw_user set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
+    int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
 }
 

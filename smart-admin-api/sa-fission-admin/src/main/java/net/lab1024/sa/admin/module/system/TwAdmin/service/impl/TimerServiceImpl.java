@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import io.swagger.models.auth.In;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwAddressBalanceMapper;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwAddressDetailMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjorderDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjprofitDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
@@ -71,6 +73,12 @@ public class TimerServiceImpl {
 
     @Autowired
     private TwAddressService twAddressService;
+
+    @Autowired
+    private TwAddressDetailMapper twAddressDetailMapper;
+
+    @Autowired
+    private TwAddressBalanceMapper twAddressBalanceMapper;
 //
 //    @Autowired
 //    private TwKuangjiService twKuangjiService;
@@ -1435,7 +1443,9 @@ public class TimerServiceImpl {
             allLineUsers = twUserService.countLineUsers(startTime, endTime,companyId);
 
             //总客损
-
+            int countDeposit = twAddressDetailMapper.countInTime(startTimestamp, endTimestamp, companyId);
+            BigDecimal amountDeposit = twAddressDetailMapper.amountInTime(startTimestamp, endTimestamp, companyId);
+            BigDecimal amountRemain = twAddressBalanceMapper.amountInTime(startTimestamp, endTimestamp, companyId);
 
             QueryWrapper<TwReport> queryWrapper3 = new QueryWrapper<>();
             queryWrapper3.eq("day_date", nowDate);
@@ -1447,7 +1457,6 @@ public class TimerServiceImpl {
                 twReport.setRegistrantTotal(allUser);
                 twReport.setDayDate(nowDate);
                 twReport.setActive(allLineUsers);
-                twReport.setDayAmount(userCoinDay);
                 twReport.setTotalAmount(userCoinSum);
                 twReport.setRegistrant(todayUser);
                 twReport.setOrders(hyOrders);
@@ -1458,9 +1467,7 @@ public class TimerServiceImpl {
                 twReport.setOrderSum(orderSum);
                 twReport.setProfitNum(winLosshyDayOrders);
                 twReport.setProfitSum(winLosshyAllOrders);
-                twReport.setRecharge(usercz);
                 twReport.setRechargeTotal(userczTotal);
-                twReport.setRechargeNum(dayRecharge);
                 twReport.setRechargeSum(allRecharge);
                 twReport.setPayoutTotal(usertxTotal);
                 twReport.setPayoutNum(dayWithdraw);
@@ -1468,12 +1475,20 @@ public class TimerServiceImpl {
                 twReport.setDayCustomerLoss(dayRecharge.subtract(dayWithdraw));
                 twReport.setCustomerLoss(allRecharge.subtract(allWithdraw));
                 twReport.setCreateTime(new Date());
+
+//                twReport.setRecharge(usercz);
+//                twReport.setRechargeNum(dayRecharge);
+//                twReport.setDayAmount(userCoinDay);
+                twReport.setRecharge(countDeposit);
+                twReport.setRechargeNum(amountDeposit);
+                twReport.setDayAmount(amountRemain);
+
                 twReportService.saveOrUpdate(twReport);
             }else{
                 one.setCompanyId(companyId);
                 one.setDayDate(nowDate);
                 one.setActive(allLineUsers);
-                one.setDayAmount(userCoinDay.setScale(2,RoundingMode.HALF_UP));
+
                 BigDecimal bigDecimal = userCoinSum.setScale(2, RoundingMode.HALF_UP);
                 one.setTotalAmount(bigDecimal);
                 one.setRegistrantTotal(allUser);
@@ -1486,9 +1501,7 @@ public class TimerServiceImpl {
                 one.setOrderSum(orderSum);
                 one.setProfitNum(winLosshyDayOrders);
                 one.setProfitSum(winLosshyAllOrders);
-                one.setRecharge(usercz);
                 one.setRechargeTotal(userczTotal);
-                one.setRechargeNum(dayRecharge);
                 one.setRechargeSum(allRecharge);
                 one.setPayout(usertx);
                 one.setPayoutTotal(usertxTotal);
@@ -1497,6 +1510,13 @@ public class TimerServiceImpl {
                 one.setDayCustomerLoss(dayRecharge.subtract(dayWithdraw));
                 one.setCustomerLoss(allRecharge.subtract(allWithdraw));
                 one.setUpdateTime(new Date());
+
+//                one.setRecharge(usercz);
+//                one.setRechargeNum(dayRecharge);
+//                one.setDayAmount(userCoinDay.setScale(2,RoundingMode.HALF_UP));
+                one.setRecharge(countDeposit);
+                one.setRechargeNum(amountDeposit);
+                one.setDayAmount(amountRemain);
                 twReportService.updateById(one);
             }
 

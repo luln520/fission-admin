@@ -44,4 +44,7 @@ public interface TwAddressMapper extends BaseMapper<TwAddress> {
 
     @Select("<script>SELECT * FROM tw_address WHERE address IN <foreach item='address' collection='list' open='(' separator=',' close=')'> #{address}</foreach></script>")
     List<TwAddress> selectByAddresses(@Param("list") List<String> addressList);
+
+    @Update("update tw_address set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
+    int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
 }

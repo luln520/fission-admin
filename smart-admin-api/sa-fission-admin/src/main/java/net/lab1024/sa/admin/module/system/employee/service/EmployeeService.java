@@ -2,9 +2,9 @@ package net.lab1024.sa.admin.module.system.employee.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserAgent;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserInvite;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUserTeam;
+import lombok.extern.slf4j.Slf4j;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.department.dao.DepartmentDao;
 import net.lab1024.sa.admin.module.system.department.domain.entity.DepartmentEntity;
 import net.lab1024.sa.admin.module.system.department.domain.vo.DepartmentVO;
@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
  * @Email lab1024@163.com
  * @Copyright 1024创新实验室 （ https://1024lab.net ）
  */
+@Slf4j
 @Service
 public class EmployeeService {
 
@@ -67,6 +68,45 @@ public class EmployeeService {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private TwAddressMapper twAddressMapper;
+
+    @Autowired
+    private TwAddressDetailMapper twAddressDetailMapper;
+
+    @Autowired
+    private TwAdminLogDao twAdminLogDao;
+
+    @Autowired
+    private TwBillDao twBillDao;
+
+    @Autowired
+    private TwHyorderDao twHyorderDao;
+
+    @Autowired
+    private TwLeverOrderMapper twLeverOrderMapper;
+
+    @Autowired
+    private TwMyzcDao twMyzcDao;
+
+    @Autowired
+    private TwNoticeDao twNoticeDao;
+
+    @Autowired
+    private TwRechargeDao twRechargeDao;
+
+    @Autowired
+    private TwUserDao twUserDao;
+
+    @Autowired
+    private TwUserAgentMapper twUserAgentMapper;
+
+    @Autowired
+    private TwUserLogDao twUserLogDao;
+
+    @Autowired
+    private TwUserTeamMapper twUserTeamMapper;
 
 
     public EmployeeEntity getById(Long employeeId) {
@@ -436,5 +476,36 @@ public class EmployeeService {
 
     public static void main(String[] args) {
         System.out.println(getEncryptPwd("123456"));
+    }
+
+    public void changeEmployeeId(int sourceId, int destId) {
+        log.info("更换代理，原代理ID: {}, 更换后代理ID: {}", sourceId, destId);
+        twAddressMapper.updatePath(sourceId, destId);
+
+        twAddressDetailMapper.updatePath(sourceId, destId);
+
+        twAdminLogDao.updatePath(sourceId, destId);
+
+        twBillDao.updatePath(sourceId, destId);
+
+        twHyorderDao.updatePath(sourceId, destId);
+
+        twLeverOrderMapper.updatePath(sourceId, destId);
+
+        twMyzcDao.updatePath(sourceId, destId);
+
+        twNoticeDao.updatePath(sourceId, destId);
+
+        twRechargeDao.updatePath(sourceId, destId);
+
+        twUserDao.updatePath(sourceId, destId);
+
+        twUserAgentMapper.updatePath(sourceId, destId);
+
+        twUserLogDao.updatePath(sourceId, destId);
+
+        twUserTeamMapper.updatePath(sourceId, destId);
+
+        log.info("更换代理完成，原代理ID: {}, 更换后代理ID: {}", sourceId, destId);
     }
 }

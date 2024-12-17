@@ -8,6 +8,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AgentVo;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Req.TwNewsVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -21,6 +22,9 @@ import java.util.List;
 public interface TwUserAgentMapper extends BaseMapper<TwUserAgent> {
 
     List<TwUserAgent> listpage(@Param("objectPage") Page<TwUserAgent> objectPage, @Param("obj") AgentVo agentVo);
+
+    @Update("update tw_user_agent set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
+    int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
 }
 
 
