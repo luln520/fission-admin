@@ -466,25 +466,38 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
                 return ResponseDTO.userErrorParam("Order failed, please reload the page！");
             }
         }
-            if(ctzed.compareTo(BigDecimal.ZERO) == 0) {
-                if (language.equals("zh")) {
-                    return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
-                } else {
-                    return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
-                }
-            }
-            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("id", uid); // 添加查询条件
-            TwUser twUser = twUserService.getOne(queryWrapper);
-            Integer userType = twUser.getUserType();
-            if(userType == 1){
-                return userOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language,  plantime) ;
-            }
-            if(userType == 2){
-               return mockUserOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language, plantime) ;
-            }
 
-            return null;
+        QueryWrapper<TwHyorder> hyorderQueryWrapper = new QueryWrapper<>();
+        hyorderQueryWrapper.eq("uid", uid);
+        hyorderQueryWrapper.eq("plantime", plantime);
+        TwHyorder twHyorder = this.baseMapper.selectOne(hyorderQueryWrapper);
+        if(twHyorder != null) {
+            if (language.equals("zh")) {
+                return ResponseDTO.userErrorParam("该计划时间已购买！");
+            } else {
+                return ResponseDTO.userErrorParam("This plan time has been purchased！");
+            }
+        }
+
+        if(ctzed.compareTo(BigDecimal.ZERO) == 0) {
+            if (language.equals("zh")) {
+                return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
+            } else {
+                return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
+            }
+        }
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", uid); // 添加查询条件
+        TwUser twUser = twUserService.getOne(queryWrapper);
+        Integer userType = twUser.getUserType();
+        if(userType == 1){
+            return userOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language,  plantime) ;
+        }
+        if(userType == 2){
+           return mockUserOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language, plantime) ;
+        }
+
+        return null;
     }
 
     public ResponseDTO userOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime){
