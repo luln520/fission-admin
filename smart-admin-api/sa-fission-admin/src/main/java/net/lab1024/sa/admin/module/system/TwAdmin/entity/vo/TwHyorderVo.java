@@ -16,6 +16,7 @@ public class TwHyorderVo extends PageParam {
 
     private String orderNo;   //订单号
 
-    private String plantime;   //计划时间
+    private String plantimeStart;   //计划时间
 
+    private String plantimeEnd;   //计划时间
 }

@@ -19,8 +19,10 @@
         <if test="obj.orderNo != null and obj.orderNo !=''">
             and order_no = #{obj.orderNo}
         </if>
-        <if test="obj.plantime != null and obj.plantime !=''">
-            and plantime = #{obj.plantime}
+        <if test="obj.plantimeStart != null and obj.plantimeStart !='' and obj.plantimeEnd != null and obj.plantimeEnd !=''">
+
+            and plantime BETWEEN #{obj.plantimeStart} AND #{obj.plantimeEnd}
+
         </if>
         <if test="obj.departmentId != null and obj.departmentId !=''">
             and department = #{obj.departmentId}
