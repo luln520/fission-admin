@@ -473,6 +473,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
         QueryWrapper<TwHyorder> hyorderQueryWrapper = new QueryWrapper<>();
         hyorderQueryWrapper.eq("uid", uid);
+        hyorderQueryWrapper.eq("status", 1);
         hyorderQueryWrapper.eq("plantime", plantime);
         hyorderQueryWrapper.in("status", 0, 1, 2);
         TwHyorder twHyorder = this.baseMapper.selectOne(hyorderQueryWrapper);
