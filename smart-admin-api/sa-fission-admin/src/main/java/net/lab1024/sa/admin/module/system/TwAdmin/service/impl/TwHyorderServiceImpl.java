@@ -976,7 +976,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
-        queryWrapper.eq("order_type",1);
+        //queryWrapper.eq("order_type",1);
         //queryWrapper.le("intselltime", nowtime);
         queryWrapper.eq("order_no", orderNo);
         TwHyorder twHyorder = this.baseMapper.selectOne(queryWrapper);
