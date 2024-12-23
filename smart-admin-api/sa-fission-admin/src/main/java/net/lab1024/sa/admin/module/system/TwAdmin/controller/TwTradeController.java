@@ -141,7 +141,13 @@ public class TwTradeController {
         return ResponseDTO.ok(twHyorderService.editKongyK(kongyk,ids));
     }
 
-
+    @GetMapping("/settlement")
+    @ResponseBody
+    @ApiOperation(value = "结算")
+    public ResponseDTO settlement(@RequestParam String orderNo) {
+        twHyorderService.settlement(orderNo);
+        return ResponseDTO.ok();
+    }
 
 }
 

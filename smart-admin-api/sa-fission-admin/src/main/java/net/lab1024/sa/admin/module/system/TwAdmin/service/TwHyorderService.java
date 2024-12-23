@@ -69,4 +69,5 @@ public interface TwHyorderService extends IService<TwHyorder> {
 
     StatisticNumVo statisticNum(String startDate, String endDate, int companyId);
 
+    void settlement(String orderNo);
 }
