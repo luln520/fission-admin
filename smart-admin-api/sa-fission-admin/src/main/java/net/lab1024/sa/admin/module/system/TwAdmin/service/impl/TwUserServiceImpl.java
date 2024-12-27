@@ -685,6 +685,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            one.setPhone(twUser.getPhone());
            one.setCardzm(twUser.getCardzm());
            one.setUsername(twUser.getUsername());
+           one.setMerchandiser(twUser.getMerchandiser());
            if(StringUtils.isNotEmpty(twUser.getPassword())){
                String encryptPwd = getEncryptPwd(twUser.getPassword());
                one.setPassword(encryptPwd);

@@ -6,9 +6,11 @@ import io.swagger.annotations.ApiOperation;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdHyOrder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMcdHyOrderService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class TwTradeController {
 
     @Autowired
     private TwHysettingService twHysettingService;
+
+    @Autowired
+    private TwMcdHyOrderService twMcdHyOrderService;
 
     /**
      * 合约,平仓订单 查询列表 并返回   表hyorder where status=1  order by id desc
@@ -147,6 +152,21 @@ public class TwTradeController {
     public ResponseDTO settlement(@RequestParam String orderNo) {
         twHyorderService.settlement(orderNo);
         return ResponseDTO.ok();
+    }
+
+    @GetMapping("/mcd/settlement")
+    @ResponseBody
+    @ApiOperation(value = "结算")
+    public ResponseDTO mcdSettlement(@RequestParam Integer orderId) {
+        twMcdHyOrderService.settlement(orderId);
+        return ResponseDTO.ok();
+    }
+
+    @PostMapping("/mcd/hyorderlist")
+    @ApiOperation(value = "合约,平仓订单 查询列表")
+    @ResponseBody
+    public ResponseDTO<IPage<TwMcdHyOrder>> mcdHyorderlist(@Valid @RequestBody TwHyorderVo twHyorderVo, HttpServletRequest request) {
+        return ResponseDTO.ok(twMcdHyOrderService.listpage(twHyorderVo,request));
     }
 
 }

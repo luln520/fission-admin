@@ -114,8 +114,5 @@ public class PcUserController {
     public ResponseDTO mockUserAmount(@RequestParam int uid,@RequestParam String language) {
         return twUserService.mockUserAmount(uid,language);
     }
-
-
-
 }
 

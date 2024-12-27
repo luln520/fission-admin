@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdHyorderMapper">
+
+    <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdHyOrder">
+        select * from tw_mcd_hyorder where 1=1  and company_id = #{obj.companyId}
+        <if test="obj.username != null and obj.username !=''">
+            and username like concat('%',#{obj.username},'%')
+        </if>
+        <if test="obj.userCode != null and obj.userCode !=''">
+            and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
+        </if>
+        <if test="obj.hyzd != null">
+            and hyzd = #{obj.hyzd}
+        </if>
+        <if test="obj.status != null">
+            and status = #{obj.status}
+        </if>
+        <if test="obj.orderNo != null and obj.orderNo !=''">
+            and order_no = #{obj.orderNo}
+        </if>
+        <if test="obj.plantimeStart != null and obj.plantimeStart !='' and obj.plantimeEnd != null and obj.plantimeEnd !=''">
+
+            and plantime BETWEEN #{obj.plantimeStart} AND #{obj.plantimeEnd}
+
+        </if>
+        <if test="obj.departmentId != null and obj.departmentId !=''">
+            and department = #{obj.departmentId}
+        </if>
+        <if test="obj.employeeId != null and obj.employeeId !=''">
+            and path like concat('%',#{obj.employeeId},'%')
+        </if>
+        order by id desc
+    </select>
+
+
+</mapper>
