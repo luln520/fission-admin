@@ -58,4 +58,12 @@ public class PcMcdController {
         twMcdInfoService.delFollow(followUid, uid);
         return ResponseDTO.ok();
     }
+
+    @GetMapping("/apply")
+    @ApiOperation("申请跟单员")
+    @NoNeedLogin
+    public ResponseDTO apply(@RequestParam int uid) {
+        twMcdInfoService.applyMcd(uid);
+        return ResponseDTO.ok();
+    }
 }

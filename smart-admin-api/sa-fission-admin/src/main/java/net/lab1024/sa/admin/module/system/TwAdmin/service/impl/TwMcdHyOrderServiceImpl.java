@@ -685,7 +685,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
             e.printStackTrace();
         }
         twHyorder.setId(null);
-        twHyorder.setMainOrderId(twMcdHyOrder.getId());
+        twHyorder.setMainOrderNo(twMcdHyOrder.getOrderNo());
         twHyorder.setNum(ctzed);
         twHyorder.setBuytime(DateUtil.stract12());
         this.save(twHyorder);
@@ -802,7 +802,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
             e.printStackTrace();
         }
         twHyorder.setId(null);
-        twHyorder.setMainOrderId(twMcdHyOrder.getId());
+        twHyorder.setMainOrderNo(twMcdHyOrder.getOrderNo());
         twHyorder.setNum(ctzed);
         twHyorder.setBuytime(DateUtil.stract12());
         this.save(twHyorder);

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwFooterDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwHyorderDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdHyorderMapper;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdInfoMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
@@ -91,6 +92,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
     @Autowired
     private TwMcdHyorderMapper twMcdHyorderMapper;
+
+    @Autowired
+    private TwMcdInfoMapper twMcdInfoMapper;
 
     @Override
     public Integer countUnClosedOrders(int companyId) {
@@ -635,6 +639,74 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
 
         if(twUser.getMerchandiser() == 1) {
+            List<TwMcdInfo> mcdInfoList = twMcdInfoMapper.findList(uid);
+            if(CollectionUtils.isNotEmpty(mcdInfoList)) {
+                for(TwMcdInfo twMcdInfo : mcdInfoList) {
+                    QueryWrapper<TwUserCoin> userCoinQueryWrapper = new QueryWrapper<>();
+                    userCoinQueryWrapper.eq("userid", uid);
+                    TwUserCoin subTwUserCoin = twUserCoinService.getOne(userCoinQueryWrapper);
+                    if(subTwUserCoin.getUsdt().compareTo(tmoneys) < 0){
+                        if(language.equals("zh")){
+                            return ResponseDTO.userErrorParam("余额不足！");
+                        }else{
+                            return ResponseDTO.userErrorParam("Insufficient balance！");
+                        }
+                    }
+
+                    TwMcdHyOrder twHyorder = new TwMcdHyOrder();
+                    TwUser followUser = twUserService.getById(twMcdInfo.getUid());
+                    String subOrderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+                    twHyorder.setUid(twMcdInfo.getUid());
+                    twHyorder.setOrderNo(subOrderNo);
+                    twHyorder.setUsername(followUser.getUsername());
+                    twHyorder.setNum(ctzed);
+                    twHyorder.setHybl(cykbl);
+                    twHyorder.setCompanyId(followUser.getCompanyId());
+                    twHyorder.setUserCode(followUser.getUserCode());
+                    twHyorder.setHyzd(ctzfx);
+                    twHyorder.setBuyOrblance(subTwUserCoin.getUsdt().subtract(tmoneys));
+                    twHyorder.setCoinname(ccoinname);
+                    twHyorder.setStatus(0);
+                    twHyorder.setIsWin(0);
+                    twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
+                    twHyorder.setIntplantime((int) timestamp);
+                    twHyorder.setOrderType(1);
+                    twHyorder.setPath(followUser.getPath());
+                    twHyorder.setDepartment(followUser.getDepatmentId());
+                    twHyorder.setBuytime(DateUtil.stract12());
+                    twHyorder.setSelltime(selltime);
+                    twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
+                    twHyorder.setBuyprice(close);
+                    twHyorder.setSellprice(new BigDecimal(0));
+                    twHyorder.setPloss(new BigDecimal(0));
+                    twHyorder.setTime(ctime);
+                    twHyorder.setKongyk(0);
+                    twHyorder.setInvit(invite);
+                    twHyorder.setMainOrderNo(orderNo);
+                    twMcdHyorderMapper.insert(twHyorder);
+
+                    //扣除USDT额度
+                    twUserCoinService.decre(twMcdInfo.getUid(),tmoneys,subTwUserCoin.getUsdt());
+
+                    //创建财务日志
+                    TwBill twBill = new TwBill();
+                    twBill.setUserCode(followUser.getUserCode());
+                    twBill.setUid(twMcdInfo.getUid());
+                    twBill.setUsername(followUser.getUsername());
+                    twBill.setNum(ctzed);
+                    twBill.setCompanyId(followUser.getCompanyId());
+                    twBill.setCoinname("usdt");
+                    twBill.setAfternum(twUserCoinService.afternum(twMcdInfo.getUid()));
+                    twBill.setType(3);
+                    twBill.setPath(followUser.getPath());
+                    twBill.setDepartment(followUser.getDepatmentId());
+                    twBill.setAddtime(new Date());
+                    twBill.setSt(2);
+                    twBill.setRemark("购买"+ ccoinname + "秒合约");
+                    twBillService.save(twBill);
+                }
+            }
+
             TwMcdHyOrder twHyorder = new TwMcdHyOrder();
             twHyorder.setUid(uid);
             twHyorder.setOrderNo(orderNo);
@@ -662,8 +734,28 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twHyorder.setTime(ctime);
             twHyorder.setKongyk(0);
             twHyorder.setInvit(invite);
-            twHyorder.setMainOrderId(0);
+            twHyorder.setMainOrderNo(null);
             twMcdHyorderMapper.insert(twHyorder);
+
+            //扣除USDT额度
+            twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
+
+            //创建财务日志
+            TwBill twBill = new TwBill();
+            twBill.setUserCode(twUser.getUserCode());
+            twBill.setUid(uid);
+            twBill.setUsername(twUser.getUsername());
+            twBill.setNum(ctzed);
+            twBill.setCompanyId(twUser.getCompanyId());
+            twBill.setCoinname("usdt");
+            twBill.setAfternum(twUserCoinService.afternum(uid));
+            twBill.setType(3);
+            twBill.setPath(twUser.getPath());
+            twBill.setDepartment(twUser.getDepatmentId());
+            twBill.setAddtime(new Date());
+            twBill.setSt(2);
+            twBill.setRemark("购买"+ ccoinname + "秒合约");
+            twBillService.save(twBill);
         }else {
             TwHyorder twHyorder = new TwHyorder();
             twHyorder.setUid(uid);
@@ -693,26 +785,28 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             twHyorder.setKongyk(0);
             twHyorder.setInvit(invite);
             this.save(twHyorder);
-        }
-        //扣除USDT额度
-        twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
 
-        //创建财务日志
-        TwBill twBill = new TwBill();
-        twBill.setUserCode(twUser.getUserCode());
-        twBill.setUid(uid);
-        twBill.setUsername(twUser.getUsername());
-        twBill.setNum(ctzed);
-        twBill.setCompanyId(twUser.getCompanyId());
-        twBill.setCoinname("usdt");
-        twBill.setAfternum(twUserCoinService.afternum(uid));
-        twBill.setType(3);
-        twBill.setPath(twUser.getPath());
-        twBill.setDepartment(twUser.getDepatmentId());
-        twBill.setAddtime(new Date());
-        twBill.setSt(2);
-        twBill.setRemark("购买"+ ccoinname + "秒合约");
-        twBillService.save(twBill);
+            //扣除USDT额度
+            twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
+
+            //创建财务日志
+            TwBill twBill = new TwBill();
+            twBill.setUserCode(twUser.getUserCode());
+            twBill.setUid(uid);
+            twBill.setUsername(twUser.getUsername());
+            twBill.setNum(ctzed);
+            twBill.setCompanyId(twUser.getCompanyId());
+            twBill.setCoinname("usdt");
+            twBill.setAfternum(twUserCoinService.afternum(uid));
+            twBill.setType(3);
+            twBill.setPath(twUser.getPath());
+            twBill.setDepartment(twUser.getDepatmentId());
+            twBill.setAddtime(new Date());
+            twBill.setSt(2);
+            twBill.setRemark("购买"+ ccoinname + "秒合约");
+            twBillService.save(twBill);
+        }
+
         if(language.equals("zh")){
             return ResponseDTO.ok(orderNo);
         }else{

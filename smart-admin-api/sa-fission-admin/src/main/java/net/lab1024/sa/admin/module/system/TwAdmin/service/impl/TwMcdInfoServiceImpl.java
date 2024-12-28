@@ -1,24 +1,28 @@
 package net.lab1024.sa.admin.module.system.TwAdmin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.api.client.util.Lists;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdInfoMapper;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdUserMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdInfo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.FollowVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.McdInfoVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMcdInfoService;
-import org.apache.catalina.User;
+import net.lab1024.sa.common.common.domain.PageParam;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +33,9 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
 
     @Autowired
     private TwUserDao twUserDao;
+
+    @Autowired
+    private TwMcdUserMapper twMcdUserMapper;
 
     @Override
     public List<McdInfoVo> listMcdUser(String companyId) {
@@ -42,17 +49,20 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
         if(!CollectionUtils.isEmpty(userList)) {
             for(TwUser twUser : userList) {
                 int followCount = this.baseMapper.followCount(twUser.getId());
-                BigDecimal totalAmount = this.baseMapper.totalAmount(twUser.getId());
-                BigDecimal totalProfit = this.baseMapper.totalProfit(twUser.getId());
+                QueryWrapper<TwMcdUser> mcdUserQueryWrapper = new QueryWrapper<>();
+                mcdUserQueryWrapper.eq("uid",twUser.getId());
+                TwMcdUser twMcdUser = twMcdUserMapper.selectOne(mcdUserQueryWrapper);
 
                 McdInfoVo mcdInfoVo = new McdInfoVo();
                 mcdInfoVo.setUid(twUser.getId());
                 mcdInfoVo.setName(twUser.getUsername());
                 mcdInfoVo.setFollowCount(followCount);
-                mcdInfoVo.setProfit(totalProfit);
-                mcdInfoVo.setProfitRate(totalProfit.divide(totalAmount, 2, RoundingMode.HALF_UP));
-                mcdInfoVo.setTotalAmount(totalAmount);
 
+                if(twMcdUser != null) {
+                    mcdInfoVo.setProfit(twMcdUser.getProfit());
+                    mcdInfoVo.setProfitRate(twMcdUser.getMonthProfitRate());
+                    mcdInfoVo.setTotalAmount(twMcdUser.getAmount());
+                }
                 mcdInfoVoList.add(mcdInfoVo);
             }
         }
@@ -88,8 +98,8 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
     @Override
     public void addFollow(int followUid, int uid, BigDecimal investProp) {
         QueryWrapper<TwMcdInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("follow_uid",1);
-        queryWrapper.eq("uid",1);
+        queryWrapper.eq("follow_uid", followUid);
+        queryWrapper.eq("uid",  uid);
         TwMcdInfo twMcdInfo = this.baseMapper.selectOne(queryWrapper);
         if(twMcdInfo != null) {
             twMcdInfo.setStatus(1);
@@ -109,13 +119,57 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
     @Override
     public void delFollow(int followUid, int uid) {
         QueryWrapper<TwMcdInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("follow_uid",1);
-        queryWrapper.eq("uid",1);
+        queryWrapper.eq("follow_uid", followUid);
+        queryWrapper.eq("uid", uid);
         TwMcdInfo twMcdInfo = this.baseMapper.selectOne(queryWrapper);
         if(twMcdInfo != null) {
             twMcdInfo.setStatus(0);
             twMcdInfo.setUpdateTime(new Date());
             this.baseMapper.updateById(twMcdInfo);
+        }
+    }
+
+    @Override
+    public void applyMcd(int uid) {
+        QueryWrapper<TwMcdUser> mcdUserQueryWrapper = new QueryWrapper<>();
+        mcdUserQueryWrapper.eq("uid", uid);
+        TwMcdUser twMcdUser = twMcdUserMapper.selectOne(mcdUserQueryWrapper);
+        if(twMcdUser == null) {
+            twMcdUser = new TwMcdUser();
+            twMcdUser.setUid(uid);
+            twMcdUserMapper.insert(twMcdUser);
+        }else {
+            twMcdUser.setStatus(0);
+            twMcdUserMapper.updateById(twMcdUser);
+        }
+    }
+
+    @Override
+    public IPage<TwMcdUser> listpage(PageParam pageParam) {
+        Page<TwMcdUser> objectPage = new Page<>(pageParam.getPageNum(), pageParam.getPageSize());
+        objectPage.setRecords(this.twMcdUserMapper.listpage(objectPage, pageParam));
+        return objectPage;
+    }
+
+    @Override
+    public void approveMcd(int id) {
+        TwMcdUser twMcdUser = twMcdUserMapper.selectById(id);
+        if(twMcdUser != null) {
+            twMcdUser.setStatus(1);
+            twMcdUserMapper.updateById(twMcdUser);
+
+            TwUser twUser = twUserDao.selectById(twMcdUser.getUid());
+            twUser.setMerchandiser(1);
+            twUserDao.updateById(twUser);
+        }
+    }
+
+    @Override
+    public void rejectMcd(int id) {
+        TwMcdUser twMcdUser = twMcdUserMapper.selectById(id);
+        if(twMcdUser != null) {
+            twMcdUser.setStatus(2);
+            twMcdUserMapper.updateById(twMcdUser);
         }
     }
 }

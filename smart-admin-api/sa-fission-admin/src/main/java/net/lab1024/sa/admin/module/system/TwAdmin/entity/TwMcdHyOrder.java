@@ -152,5 +152,5 @@ public class TwMcdHyOrder implements Serializable {
     private Integer orderType;
 
     @ApiModelProperty("主订单ID")
-    private Integer mainOrderId;
+    private String mainOrderNo;
 }
