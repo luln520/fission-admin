@@ -6,4 +6,5 @@ import lombok.Data;
 public class EmployeeIdUpdateVO {
     private Integer sourceId;
     private Integer destId;
+    private Integer uid;
 }

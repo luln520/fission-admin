@@ -57,6 +57,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 用户信息表(TwUser)表服务实现类
@@ -151,6 +153,30 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
     @Autowired
     private EmployeeDao employeeDao;
+
+    @Autowired
+    private TwAddressMapper twAddressMapper;
+
+    @Autowired
+    private TwAdminLogDao twAdminLogDao;
+
+    @Autowired
+    private TwBillDao twBillDao;
+
+    @Autowired
+    private TwNoticeDao twNoticeDao;
+
+    @Autowired
+    private TwUserDao twUserDao;
+
+    @Autowired
+    private TwUserAgentMapper twUserAgentMapper;
+
+    @Autowired
+    private TwUserLogDao twUserLogDao;
+
+    @Autowired
+    private TwUserTeamMapper twUserTeamMapper;
 
     @Override
     public Integer countAllUsers(int companyId) {
@@ -2044,6 +2070,46 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             pathVoList.add(pathVo);
         }
         return pathVoList;
+    }
+
+    @Override
+    public void changeEmployeeId(int destId, int userId) {
+        TwUser twUser = this.baseMapper.selectById(userId);
+        if(twUser != null) {
+            Pattern pattern = Pattern.compile("#(\\d+)#");
+            Matcher matcher = pattern.matcher(twUser.getPath());
+            if (matcher.find()) {
+                String number = matcher.group(1);
+                int sourceId = Integer.parseInt(number);
+                log.info("更换代理，原代理ID: {}, 更换后代理ID: {}, 用户ID:{}", sourceId, destId, userId);
+
+                twAddressMapper.updatePathPer(sourceId, destId, userId);
+
+                twAdminLogDao.updatePathPer(sourceId, destId, userId);
+
+                twBillDao.updatePathPer(sourceId, destId, userId);
+
+                twHyorderDao.updatePathPer(sourceId, destId, userId);
+
+                twLeverOrderMapper.updatePathPer(sourceId, destId, userId);
+
+                twMyzcDao.updatePathPer(sourceId, destId, userId);
+
+                twNoticeDao.updatePathPer(sourceId, destId, userId);
+
+                twRechargeDao.updatePathPer(sourceId, destId, userId);
+
+                twUserDao.updatePathPer(sourceId, destId, userId);
+
+                twUserAgentMapper.updatePathPer(sourceId, destId, userId);
+
+                twUserLogDao.updatePathPer(sourceId, destId, userId);
+
+                twUserTeamMapper.updatePathPer(sourceId, destId, userId);
+
+                log.info("更换代理完成，原代理ID: {}, 更换后代理ID: {}, 用户ID:{}", sourceId, destId, userId);
+            }
+        }
     }
 
     @Override

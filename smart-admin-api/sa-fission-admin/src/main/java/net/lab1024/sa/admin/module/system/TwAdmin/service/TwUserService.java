@@ -86,4 +86,6 @@ public interface TwUserService extends IService<TwUser> {
     StatisticUserVo statisticPerUserByDate(String startDate, String endDate, int companyId, boolean isAuth);
 
     List<PathVo>  statisticPathData();
+
+    void changeEmployeeId(int destId, int userId);
 }

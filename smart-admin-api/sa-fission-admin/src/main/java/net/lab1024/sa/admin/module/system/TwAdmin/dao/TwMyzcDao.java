@@ -31,5 +31,8 @@ public interface TwMyzcDao extends BaseMapper<TwMyzc> {
 
     @Update("update tw_myzc set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
     int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
+
+    @Update("update tw_myzc set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%') AND userid = #{uid}")
+    int updatePathPer(@Param("sourceId") int sourceId, @Param("destId") int destId, @Param("uid") int uid);
 }
 
