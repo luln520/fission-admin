@@ -16,12 +16,14 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.FollowVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.McdInfoVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMcdInfoService;
 import net.lab1024.sa.common.common.domain.PageParam;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -170,6 +172,21 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
         if(twMcdUser != null) {
             twMcdUser.setStatus(2);
             twMcdUserMapper.updateById(twMcdUser);
+        }
+    }
+
+    @Override
+    public void updateMcdUser(TwMcdUser twMcdUser) {
+        TwMcdUser destTwMcdUser = twMcdUserMapper.selectById(twMcdUser.getId());
+        if(destTwMcdUser != null) {
+            try {
+                BeanUtils.copyProperties(destTwMcdUser, twMcdUser);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            twMcdUserMapper.updateById(destTwMcdUser);
         }
     }
 }

@@ -31,6 +31,8 @@ public interface TwMcdInfoService {
     void approveMcd(int id);
 
     void rejectMcd(int id);
+
+    void updateMcdUser(TwMcdUser twMcdUser);
 }
 
 

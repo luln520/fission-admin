@@ -5,10 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddress;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddressDetail;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdUser;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwReceipt;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TransferVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
@@ -24,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -56,15 +54,12 @@ public class TwMcdUserController {
         return ResponseDTO.ok();
     }
 
-
-    @GetMapping("/refreshAddress")
-    @NoNeedLogin
-    public ResponseDTO<Object> refreshAddress(@RequestParam Integer coinId) {
-        try{
-            //twAddressService.refreshAddress(coinId);
-        }catch(Exception e) {
-            log.error(e.getMessage(), e);
-        }
+    @PostMapping("/update")
+    @ApiOperation(value = "用户属性更新")
+    public ResponseDTO addOrUpdate(@RequestBody TwMcdUser twMcdUser) {
+        twMcdInfoService.updateMcdUser(twMcdUser);
         return ResponseDTO.ok();
     }
+
+
 }
