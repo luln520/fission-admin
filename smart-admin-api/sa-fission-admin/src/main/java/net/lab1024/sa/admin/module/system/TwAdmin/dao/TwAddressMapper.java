@@ -47,4 +47,7 @@ public interface TwAddressMapper extends BaseMapper<TwAddress> {
 
     @Update("update tw_address set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
     int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
+
+    @Update("update tw_address set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%') AND uid = #{uid}")
+    int updatePathPer(@Param("sourceId") int sourceId, @Param("destId") int destId, @Param("uid") int uid);
 }

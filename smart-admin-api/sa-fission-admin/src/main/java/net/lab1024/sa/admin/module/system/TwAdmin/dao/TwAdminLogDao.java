@@ -25,5 +25,8 @@ public interface TwAdminLogDao extends BaseMapper<TwAdminLog> {
 
     @Update("update tw_admin_log set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
     int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
+
+    @Update("update tw_admin_log set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%') AND admin_id = #{uid}")
+    int updatePathPer(@Param("sourceId") int sourceId, @Param("destId") int destId, @Param("uid") int uid);
 }
 

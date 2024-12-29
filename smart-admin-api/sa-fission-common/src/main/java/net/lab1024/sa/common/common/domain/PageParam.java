@@ -29,7 +29,7 @@ public class PageParam {
 
     @ApiModelProperty(value = "每页数量(不能为空)", required = true, example = "10")
     @NotNull(message = "每页数量不能为空")
-    @Max(value = 200, message = "每页最大为200")
+    //@Max(value = 200, message = "每页最大为200")
     private Integer pageSize;
 
     @ApiModelProperty("是否查询总条数")
