@@ -62,8 +62,11 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
 
                 if(twMcdUser != null) {
                     mcdInfoVo.setProfit(twMcdUser.getProfit());
-                    mcdInfoVo.setProfitRate(twMcdUser.getMonthProfitRate());
+                    mcdInfoVo.setMonthProfit(twMcdUser.getMonthProfit());
+                    mcdInfoVo.setMonthProfitRate(twMcdUser.getMonthProfitRate());
                     mcdInfoVo.setTotalAmount(twMcdUser.getAmount());
+                    mcdInfoVo.setDays(twMcdUser.getDays());
+                    mcdInfoVo.setMinInvest(twMcdUser.getMinInvest());
                 }
                 mcdInfoVoList.add(mcdInfoVo);
             }

@@ -10,7 +10,10 @@ public class McdInfoVo {
     private int uid;
     private String name;
     private int followCount;
-    private BigDecimal profitRate;
-    private BigDecimal profit;
+    private BigDecimal monthProfitRate;
+    private BigDecimal monthProfit;
     private BigDecimal totalAmount;
+    private BigDecimal profit;
+    private BigDecimal minInvest;
+    private int days;
 }
