@@ -128,7 +128,7 @@ reload:
   interval-seconds: 60
 
 eth:
-  rpcUrl: https://cosmopolitan-shy-dust.quiknode.pro/3ee8f0aa0cf6d501cad3548c04da07e3b73a057c
+  rpcUrl: https://mainnet.infura.io/v3/89693b1773544c30b1b4b66c2a81813f
   contractAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
 tron:
   isMainNet: true
