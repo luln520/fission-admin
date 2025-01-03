@@ -33,5 +33,14 @@
         order by id desc
     </select>
 
-
+    <select id="statisticProfit" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.ProfitVo">
+        SELECT
+        sum(ploss) as profit,
+        DATE(selltime) AS date
+        FROM tw_mcd_hyorder
+        WHERE uid=#{uid} AND company_id = #{companyId} AND status = 2
+        AND selltime BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE() + INTERVAL 1 DAY
+        GROUP BY DATE(selltime)
+        ORDER BY date ASC
+    </select>
 </mapper>

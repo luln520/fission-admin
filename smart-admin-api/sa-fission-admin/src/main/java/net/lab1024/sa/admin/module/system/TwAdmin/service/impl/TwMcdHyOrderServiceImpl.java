@@ -128,9 +128,14 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
     @Override
     public ResponseDTO<List<TwMcdHyOrder>> followHyorder(int uid) {
         List<TwMcdHyOrder> list1 = new ArrayList<>();
+        TwUser twUser = twUserService.getById(uid);
         QueryWrapper<TwMcdHyOrder> queryWrapper = new QueryWrapper<>();
-        queryWrapper.ne("main_order_no", 0);
-        queryWrapper.in("status", 0, 1, 2);
+        if(twUser.getMerchandiser() == 1) {
+            queryWrapper.isNull("main_order_no");
+        }else {
+            queryWrapper.isNotNull("main_order_no");
+        }
+        //queryWrapper.in("status", 0, 1, 2);
         queryWrapper.eq("uid", uid);
         queryWrapper.orderByDesc("id");
         List<TwMcdHyOrder> list = this.list(queryWrapper);

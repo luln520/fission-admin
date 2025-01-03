@@ -35,6 +35,13 @@ public class PcMcdController {
         return ResponseDTO.ok(twMcdInfoService.listMcdUser(companyId));
     }
 
+    @GetMapping("/info")
+    @ApiOperation("获取跟单员详情")
+    @NoNeedLogin
+    public ResponseDTO<McdInfoVo> mcdInfo(@RequestParam int uid) {
+        return ResponseDTO.ok(twMcdInfoService.queryMcdUser(uid));
+    }
+
     @GetMapping("/my/follow")
     @ApiOperation("获取我的跟单员列表")
     @NoNeedLogin

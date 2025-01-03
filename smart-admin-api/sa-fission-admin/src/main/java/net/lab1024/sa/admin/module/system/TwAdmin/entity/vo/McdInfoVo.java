@@ -3,6 +3,7 @@ package net.lab1024.sa.admin.module.system.TwAdmin.entity.vo;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class McdInfoVo {
@@ -16,4 +17,6 @@ public class McdInfoVo {
     private BigDecimal profit;
     private BigDecimal minInvest;
     private int days;
+
+    private List<ProfitVo> profitHistory;
 }

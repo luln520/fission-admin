@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.api.client.util.Lists;
 import lombok.extern.slf4j.Slf4j;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdHyorderMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdInfoMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdUserMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserDao;
@@ -14,8 +15,11 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.FollowVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.McdInfoVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.ProfitVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMcdInfoService;
 import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.util.DateUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +29,12 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,6 +43,9 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
 
     @Autowired
     private TwUserDao twUserDao;
+
+    @Autowired
+    private TwMcdHyorderMapper twMcdHyorderMapper;
 
     @Autowired
     private TwMcdUserMapper twMcdUserMapper;
@@ -72,6 +83,49 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
             }
         }
         return mcdInfoVoList;
+    }
+
+    @Override
+    public McdInfoVo queryMcdUser(int uid) {
+        McdInfoVo mcdInfoVo = new McdInfoVo();
+        TwUser twUser = twUserDao.selectById(uid);
+        if(twUser != null) {
+            int followCount = this.baseMapper.followCount(uid);
+            QueryWrapper<TwMcdUser> mcdUserQueryWrapper = new QueryWrapper<>();
+            mcdUserQueryWrapper.eq("uid", uid);
+            TwMcdUser twMcdUser = twMcdUserMapper.selectOne(mcdUserQueryWrapper);
+
+            mcdInfoVo.setUid(uid);
+            mcdInfoVo.setName(twUser.getUsername());
+            mcdInfoVo.setFollowCount(followCount);
+
+            if (twMcdUser != null) {
+                List<ProfitVo> profitVoList = new ArrayList<>();
+                profitVoList = twMcdHyorderMapper.statisticProfit(twUser.getCompanyId(), uid);
+                List<String> dateList = DateUtil.getPreviousDates(LocalDate.now(), 14);
+                Map<String, BigDecimal> profitMap = profitVoList.stream()
+                        .collect(Collectors.toMap(ProfitVo::getDate, ProfitVo::getProfit));
+
+                List<ProfitVo> result = new ArrayList<>();
+                for (String date : dateList) {
+                    ProfitVo vo = new ProfitVo();
+                    vo.setDate(date);
+                    vo.setProfit(profitMap.getOrDefault(date, BigDecimal.ZERO));
+                    result.add(vo);
+                }
+
+
+                mcdInfoVo.setProfit(twMcdUser.getProfit());
+                mcdInfoVo.setMonthProfit(twMcdUser.getMonthProfit());
+                mcdInfoVo.setMonthProfitRate(twMcdUser.getMonthProfitRate());
+                mcdInfoVo.setTotalAmount(twMcdUser.getAmount());
+                mcdInfoVo.setDays(twMcdUser.getDays());
+                mcdInfoVo.setMinInvest(twMcdUser.getMinInvest());
+                mcdInfoVo.setProfitHistory(result);
+            }
+        }
+
+        return mcdInfoVo;
     }
 
     private int betweenDays(Date before) {

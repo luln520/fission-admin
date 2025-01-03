@@ -18,6 +18,8 @@ public interface TwMcdInfoService {
 
     List<McdInfoVo> listMcdUser(String companyId);
 
+    McdInfoVo queryMcdUser(int uid);
+
     List<FollowVo> listMyFollow(int uid);
 
     void addFollow(int followUid, int uid, @RequestParam BigDecimal investProp);
