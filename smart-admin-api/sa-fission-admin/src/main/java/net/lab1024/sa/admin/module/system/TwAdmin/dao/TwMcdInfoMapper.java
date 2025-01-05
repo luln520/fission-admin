@@ -26,4 +26,7 @@ public interface TwMcdInfoMapper extends BaseMapper<TwMcdInfo> {
 
     @Select("select IFNULL(SUM(profit), 0) from tw_mcd_info where  follow_uid = #{uid}")
     BigDecimal totalProfit(@Param("uid")int uid);
+
+    @Select("select * from tw_mcd_info where uid = #{uid} AND status = 1")
+    List<TwMcdInfo> findFollowList(@Param("uid")int uid);
 }

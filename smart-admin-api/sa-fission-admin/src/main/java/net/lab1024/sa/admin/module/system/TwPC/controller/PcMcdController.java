@@ -7,6 +7,7 @@ import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.FollowVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.McdInfoVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.McdUserInfoVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMcdInfoService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -31,8 +32,8 @@ public class PcMcdController {
     @GetMapping("/list")
     @ApiOperation("获取跟单员列表")
     @NoNeedLogin
-    public ResponseDTO<List<McdInfoVo>> mcdList(@RequestParam String companyId) {
-        return ResponseDTO.ok(twMcdInfoService.listMcdUser(companyId));
+    public ResponseDTO<List<McdInfoVo>> mcdList(@RequestParam int uid, @RequestParam String companyId) {
+        return ResponseDTO.ok(twMcdInfoService.listMcdUser(uid, companyId));
     }
 
     @GetMapping("/info")
@@ -40,6 +41,13 @@ public class PcMcdController {
     @NoNeedLogin
     public ResponseDTO<McdInfoVo> mcdInfo(@RequestParam int uid) {
         return ResponseDTO.ok(twMcdInfoService.queryMcdUser(uid));
+    }
+
+    @GetMapping("/userinfo")
+    @ApiOperation("获取普通用户详情")
+    @NoNeedLogin
+    public ResponseDTO<McdUserInfoVo> userinfo(@RequestParam int uid) {
+        return ResponseDTO.ok(twMcdInfoService.queryUserInfo(uid));
     }
 
     @GetMapping("/my/follow")

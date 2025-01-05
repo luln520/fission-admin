@@ -13,10 +13,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwUserDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdInfo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.FollowVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.McdInfoVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo;
-import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.ProfitVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMcdInfoService;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.util.DateUtil;
@@ -29,11 +26,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,7 +46,7 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
     private TwMcdUserMapper twMcdUserMapper;
 
     @Override
-    public List<McdInfoVo> listMcdUser(String companyId) {
+    public List<McdInfoVo> listMcdUser(int uid, String companyId) {
         List<McdInfoVo> mcdInfoVoList = Lists.newArrayList();
 
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -59,6 +54,7 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
         queryWrapper.eq("user_type",1);
         queryWrapper.eq("company_id", companyId);
         List<TwUser> userList = twUserDao.selectList(queryWrapper);
+        List<TwMcdInfo> followList = this.baseMapper.findFollowList(uid);
         if(!CollectionUtils.isEmpty(userList)) {
             for(TwUser twUser : userList) {
                 int followCount = this.baseMapper.followCount(twUser.getId());
@@ -80,6 +76,12 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
                     mcdInfoVo.setMinInvest(twMcdUser.getMinInvest());
                 }
                 mcdInfoVoList.add(mcdInfoVo);
+
+                if(!CollectionUtils.isEmpty(followList)) {
+                    for(TwMcdInfo twMcdInfo : followList) {
+                        if(Objects.equals(twMcdInfo.getFollowUid(), twUser.getId())) mcdInfoVo.setFollow(true);
+                    }
+                }
             }
         }
         return mcdInfoVoList;
@@ -126,6 +128,19 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
         }
 
         return mcdInfoVo;
+    }
+
+    @Override
+    public McdUserInfoVo queryUserInfo(int uid) {
+        McdUserInfoVo mcdUserInfoVo = new McdUserInfoVo();
+        List<TwMcdInfo> twMcdInfoList = this.baseMapper.findFollowList(uid);
+        mcdUserInfoVo.setStarCount(CollectionUtils.isEmpty(twMcdInfoList)? 0 : twMcdInfoList.size());
+        BigDecimal totalAmount = twMcdHyorderMapper.totalAmount(uid);
+        mcdUserInfoVo.setAmount(totalAmount);
+        BigDecimal totalPloss = twMcdHyorderMapper.totalPloss(uid);
+        mcdUserInfoVo.setPloss(totalPloss);
+        mcdUserInfoVo.setProfitRate(totalPloss.divide(totalAmount).setScale(2, RoundingMode.HALF_UP));
+        return mcdUserInfoVo;
     }
 
     private int betweenDays(Date before) {

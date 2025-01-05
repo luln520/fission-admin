@@ -96,6 +96,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
     @Autowired
     private TwMcdInfoMapper twMcdInfoMapper;
 
+    @Autowired
+    private TwMcdInfoService twMcdInfoService;
+
     @Override
     public Integer countUnClosedOrders(int companyId) {
         return this.baseMapper.countUnClosedOrders(companyId);
@@ -642,16 +645,11 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             List<TwMcdInfo> mcdInfoList = twMcdInfoMapper.findList(uid);
             if(CollectionUtils.isNotEmpty(mcdInfoList)) {
                 for(TwMcdInfo twMcdInfo : mcdInfoList) {
+                    BigDecimal subtmoneys = twMcdInfo.getInvestProp().add(hyFee);
+
                     QueryWrapper<TwUserCoin> userCoinQueryWrapper = new QueryWrapper<>();
                     userCoinQueryWrapper.eq("userid", uid);
                     TwUserCoin subTwUserCoin = twUserCoinService.getOne(userCoinQueryWrapper);
-                    if(subTwUserCoin.getUsdt().compareTo(tmoneys) < 0){
-                        if(language.equals("zh")){
-                            return ResponseDTO.userErrorParam("余额不足！");
-                        }else{
-                            return ResponseDTO.userErrorParam("Insufficient balance！");
-                        }
-                    }
 
                     TwMcdHyOrder twHyorder = new TwMcdHyOrder();
                     TwUser followUser = twUserService.getById(twMcdInfo.getUid());
@@ -659,12 +657,13 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
                     twHyorder.setUid(twMcdInfo.getUid());
                     twHyorder.setOrderNo(subOrderNo);
                     twHyorder.setUsername(followUser.getUsername());
-                    twHyorder.setNum(ctzed);
+                    //twHyorder.setNum(ctzed);
+                    twHyorder.setNum(twMcdInfo.getInvestProp());
                     twHyorder.setHybl(cykbl);
                     twHyorder.setCompanyId(followUser.getCompanyId());
                     twHyorder.setUserCode(followUser.getUserCode());
                     twHyorder.setHyzd(ctzfx);
-                    twHyorder.setBuyOrblance(subTwUserCoin.getUsdt().subtract(tmoneys));
+                    twHyorder.setBuyOrblance(subTwUserCoin.getUsdt().subtract(subtmoneys));
                     twHyorder.setCoinname(ccoinname);
                     twHyorder.setStatus(0);
                     twHyorder.setIsWin(0);
@@ -686,14 +685,15 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
                     twMcdHyorderMapper.insert(twHyorder);
 
                     //扣除USDT额度
-                    twUserCoinService.decre(twMcdInfo.getUid(),tmoneys,subTwUserCoin.getUsdt());
+                    twUserCoinService.decre(twMcdInfo.getUid(),subtmoneys,subTwUserCoin.getUsdt());
 
                     //创建财务日志
                     TwBill twBill = new TwBill();
                     twBill.setUserCode(followUser.getUserCode());
                     twBill.setUid(twMcdInfo.getUid());
                     twBill.setUsername(followUser.getUsername());
-                    twBill.setNum(ctzed);
+                    //twBill.setNum(ctzed);
+                    twBill.setNum(twMcdInfo.getInvestProp());
                     twBill.setCompanyId(followUser.getCompanyId());
                     twBill.setCoinname("usdt");
                     twBill.setAfternum(twUserCoinService.afternum(twMcdInfo.getUid()));
@@ -704,6 +704,9 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
                     twBill.setSt(2);
                     twBill.setRemark("购买"+ ccoinname + "秒合约");
                     twBillService.save(twBill);
+
+                    //结束跟单
+                    twMcdInfoService.delFollow(twMcdInfo.getFollowUid(), twMcdInfo.getUid());
                 }
             }
 

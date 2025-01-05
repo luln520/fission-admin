@@ -19,4 +19,5 @@ public class McdInfoVo {
     private int days;
 
     private List<ProfitVo> profitHistory;
+    private boolean isFollow;
 }
