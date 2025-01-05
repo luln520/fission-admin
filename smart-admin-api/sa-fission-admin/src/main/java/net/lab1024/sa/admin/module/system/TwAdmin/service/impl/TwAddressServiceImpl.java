@@ -264,7 +264,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
     @Override
     public List<TwAddress> listBalanceAddress(int coinId) {
-        return baseMapper.listBalanceAddress(coinId, 100);
+        return baseMapper.listBalanceAddress(coinId);
     }
 
     @Override
