@@ -203,6 +203,9 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
                     try {
                         privateKey = CertificateManager.decrypt(twAddress.getPrivateKey(), keyBytes);
+                        if (privateKey.length() < 64) {
+                            privateKey = String.format("%64s", privateKey).replace(' ', '0');
+                        }
                     } catch (Exception e) {
                         log.error("当前账户{}解析私钥失败{}", twAddress.getAddress(), e);
                     }
@@ -264,7 +267,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
 
     @Override
     public List<TwAddress> listBalanceAddress(int coinId) {
-        return baseMapper.listBalanceAddress(coinId, 100);
+        return baseMapper.listBalanceAddress(coinId);
     }
 
     @Override
