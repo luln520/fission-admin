@@ -199,7 +199,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         if(!CollectionUtils.isEmpty(twAddressList)) {
             for(TwAddress twAddress : twAddressList) {
                 try {
-                    log.info("当前归集地址是:{}", twAddress.getAddress());
+                    log.info("current transfer account address is:{}", twAddress.getAddress());
                     String privateKey = null;
 
                     try {
@@ -230,9 +230,10 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                                 twReceipt.setTx(txHash);
                             }
                         } catch (RuntimeException e) {
+                            log.error("tx error is:", e);
                             twReceipt.setCaused(e.getMessage());
                         }
-                        twReceipt.setAmount(new BigDecimal(TokenUtils.toWei(amount)));
+                        twReceipt.setAmount(new BigDecimal(amount));
                         twReceiptMapper.insert(twReceipt);
 
                         this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
@@ -260,7 +261,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                         this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
                     }
                 }catch (Exception e) {
-                    log.error("一键归集报错:", e);
+                    log.error("onekey transfer error:", e);
                 }
             }
         }
