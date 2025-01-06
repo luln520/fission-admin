@@ -721,6 +721,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             twAddressBalance = new TwAddressBalance();
             twAddressBalance.setAddressId(addressId);
             twAddressBalance.setCurrency(currency);
+            twAddressBalance.setBalance(amount);
             twAddressBalanceMapper.insert(twAddressBalance);
         }else {
             twAddressBalanceMapper.updateBalance(amount, addressId, currency);
