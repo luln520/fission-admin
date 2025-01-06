@@ -116,6 +116,7 @@ public class EthereumClient {
     }
 
     public String transferErc20(String privateKey, String toAddress, String contractAddress, BigInteger amount) {
+        log.info("current address send to address:{} = {} => {}", toAddress, contractAddress, amount);
         Credentials credentials = Credentials.create(privateKey);
 
         Function function = new Function(
@@ -130,17 +131,17 @@ public class EthereumClient {
         String encodedFunction = FunctionEncoder.encode(function);
         EthSendTransaction ethSendTransaction = null;
 
-
         try {
             BigInteger nonce = web3j.ethGetTransactionCount(
                     credentials.getAddress(), DefaultBlockParameterName.LATEST
             ).send().getTransactionCount();
 
-            ContractGasProvider gasProvider = new DefaultGasProvider();
+            BigInteger gasPrice = web3j.ethGasPrice().send().getGasPrice();
+            BigInteger gasLimit = BigInteger.valueOf(100000);
             RawTransaction rawTransaction = RawTransaction.createTransaction(
                     nonce,
-                    gasProvider.getGasPrice(),
-                    gasProvider.getGasLimit(),
+                    gasPrice,
+                    gasLimit,
                     contractAddress,
                     encodedFunction
             );
@@ -155,7 +156,7 @@ public class EthereumClient {
         }
 
         if (ethSendTransaction.hasError()) {
-            throw new RuntimeException("Error sending transaction: " +
+            throw new RuntimeException("Error sending USDT transaction: " +
                     ethSendTransaction.getError().getMessage());
         }
         return ethSendTransaction.getTransactionHash();
@@ -214,7 +215,7 @@ public class EthereumClient {
 
     public String transferEth(String privateKey, String address, BigDecimal amount) {
         Credentials credentials = Credentials.create(privateKey);
-
+        EthSendTransaction sendTransactionResponse = null;
         try {
             EthGetTransactionCount transactionCountResponse = web3j.ethGetTransactionCount(
                     credentials.getAddress(),
@@ -231,22 +232,20 @@ public class EthereumClient {
                     nonce, gasPrice, gasLimit, address, amountInWei
             );
 
-            byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, 11155111, credentials);
+            byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, 1, credentials);
             String signedTransactionData = Numeric.toHexString(signedMessage);
 
 
-            EthSendTransaction sendTransactionResponse = web3j.ethSendRawTransaction(signedTransactionData).send();
-
-
-            if (sendTransactionResponse.hasError()) {
-                return ("交易失败: " + sendTransactionResponse.getError().getMessage());
-            } else {
-                return sendTransactionResponse.getTransactionHash();
-            }
+            sendTransactionResponse = web3j.ethSendRawTransaction(signedTransactionData).send();
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return ("交易失败: " + e.getMessage());
         }
+        if (sendTransactionResponse.hasError()) {
+            throw new RuntimeException("Error sending ETH transaction: " +
+                    sendTransactionResponse.getError().getMessage());
+        }
+        return sendTransactionResponse.getTransactionHash();
     }
 }
