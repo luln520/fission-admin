@@ -598,7 +598,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
             }
             for(TwAddress twAddress : twAddressList) {
-                this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), "USDT");
+                this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
             }
         }
     }

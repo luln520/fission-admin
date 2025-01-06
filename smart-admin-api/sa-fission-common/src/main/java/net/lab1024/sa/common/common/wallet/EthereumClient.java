@@ -226,10 +226,10 @@ public class EthereumClient {
             BigInteger amountInWei = Convert.toWei(amount, Convert.Unit.ETHER).toBigInteger();
             BigInteger gasLimit = BigInteger.valueOf(21000);
             BigInteger gasPrice = web3j.ethGasPrice().send().getGasPrice();
-
+            BigInteger adjustedGasPrice = gasPrice.add(BigInteger.valueOf(1000000000));
 
             RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
-                    nonce, gasPrice, gasLimit, address, amountInWei
+                    nonce, adjustedGasPrice, gasLimit, address, amountInWei
             );
 
             byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, 1, credentials);
