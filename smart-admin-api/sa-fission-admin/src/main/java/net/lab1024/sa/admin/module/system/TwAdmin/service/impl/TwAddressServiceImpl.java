@@ -199,6 +199,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         if(!CollectionUtils.isEmpty(twAddressList)) {
             for(TwAddress twAddress : twAddressList) {
                 try {
+                    log.info("当前归集地址是:{}", twAddress.getAddress());
                     String privateKey = null;
 
                     try {
@@ -224,7 +225,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                                 String txHash = ethereumClient.transferErc20(privateKey, twCoin.getCzaddress(), twToken.getAddress(), TokenUtils.toUSDTWei(twAddress.getBalance()));
                                 twReceipt.setTx(txHash);
                             } else {
-                                BigDecimal balance = twAddress.getBalance().subtract(new BigDecimal("0.001"));
+                                BigDecimal balance = twAddress.getBalance().subtract(new BigDecimal("0.003"));
                                 String txHash = ethereumClient.transferEth(privateKey, twCoin.getCzaddress(), balance);
                                 twReceipt.setTx(txHash);
                             }
