@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.BalanceVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.util.CommonUtil;
 import net.lab1024.sa.common.common.wallet.*;
@@ -199,6 +200,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         if(!CollectionUtils.isEmpty(twAddressList)) {
             for(TwAddress twAddress : twAddressList) {
                 try {
+                    log.info("current transfer account address is:{}", twAddress.getAddress());
                     String privateKey = null;
 
                     try {
@@ -224,14 +226,15 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                                 String txHash = ethereumClient.transferErc20(privateKey, twCoin.getCzaddress(), twToken.getAddress(), TokenUtils.toUSDTWei(twAddress.getBalance()));
                                 twReceipt.setTx(txHash);
                             } else {
-                                BigDecimal balance = twAddress.getBalance().subtract(new BigDecimal("0.001"));
+                                BigDecimal balance = twAddress.getBalance().subtract(new BigDecimal("0.003"));
                                 String txHash = ethereumClient.transferEth(privateKey, twCoin.getCzaddress(), balance);
                                 twReceipt.setTx(txHash);
                             }
                         } catch (RuntimeException e) {
+                            log.error("tx error is:", e);
                             twReceipt.setCaused(e.getMessage());
                         }
-                        twReceipt.setAmount(new BigDecimal(TokenUtils.toWei(amount)));
+                        twReceipt.setAmount(new BigDecimal(amount));
                         twReceiptMapper.insert(twReceipt);
 
                         this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
@@ -259,7 +262,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                         this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
                     }
                 }catch (Exception e) {
-                    log.error("一键归集报错:", e);
+                    log.error("onekey transfer error:", e);
                 }
             }
         }
@@ -587,7 +590,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     @Override
     public void refreshAddress(int coinId) {
         TwCoin twCoin = twCoinDao.selectById(coinId);
-        List<TwAddress> twAddressList = baseMapper.listCoinAddress(coinId);
+        List<TwAddress> twAddressList = baseMapper.listBalanceAddress(coinId);
         if(!CollectionUtils.isEmpty(twAddressList)) {
             TwToken twToken = null;
             if (twCoin.getCzline().equals(NetworkConst.ETH)) {
@@ -596,9 +599,19 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 twToken = twTokenMapper.findByChainId(ChainEnum.TRON.getCode());
             }
             for(TwAddress twAddress : twAddressList) {
-                this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), "USDT");
+                this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
             }
         }
+    }
+
+    @Override
+    public BalanceVo getTotalBalance() {
+        BigDecimal usdtAmount = twAddressBalanceMapper.amountBalance(CurrencyEnum.USDT.getValue());
+        BigDecimal ethAmount = twAddressBalanceMapper.amountBalance(CurrencyEnum.ETH.getValue());
+        BalanceVo balanceVo = new BalanceVo();
+        balanceVo.setEthAmount(ethAmount);
+        balanceVo.setUsdtAmount(usdtAmount);
+        return balanceVo;
     }
 
     private int handleTRCTransfer(List<TransferRecord> transferRecordList) {
@@ -720,6 +733,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
             twAddressBalance = new TwAddressBalance();
             twAddressBalance.setAddressId(addressId);
             twAddressBalance.setCurrency(currency);
+            twAddressBalance.setBalance(amount);
             twAddressBalanceMapper.insert(twAddressBalance);
         }else {
             twAddressBalanceMapper.updateBalance(amount, addressId, currency);

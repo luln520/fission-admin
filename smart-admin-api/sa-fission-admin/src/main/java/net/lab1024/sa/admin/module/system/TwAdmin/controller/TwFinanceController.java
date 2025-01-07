@@ -274,5 +274,11 @@ public class TwFinanceController {
         return ResponseDTO.ok(twRechargeService.rechargeNum(id,num));
     }
 
+    @GetMapping("/statistic")
+    @ApiOperation(value = "统计成功、拒绝")
+    public ResponseDTO statistic() {
+        return ResponseDTO.ok(twMyzcService.staticWithDraw());
+    }
+
 }
 

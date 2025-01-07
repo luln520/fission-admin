@@ -21,4 +21,7 @@ public interface TwAddressBalanceMapper extends BaseMapper<TwAddressBalance> {
 
     @Select("select IFNULL(SUM(tab.balance), 0) from tw_address ta left join tw_address_balance tab on ta.id = tab.address_id where ta.company_id = #{companyId} AND tab.update_time BETWEEN FROM_UNIXTIME(#{startTime}) AND FROM_UNIXTIME(#{endTime})")
     BigDecimal amountInTime(@Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId") int companyId);
+
+    @Select("SELECT IFNULL(SUM(balance), 0) FROM tw_address_balance where currency = #{currency} ")
+    BigDecimal amountBalance(@Param("currency") String currency);
 }

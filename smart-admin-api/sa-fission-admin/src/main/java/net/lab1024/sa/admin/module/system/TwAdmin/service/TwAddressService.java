@@ -6,7 +6,9 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddressDetail;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwReceipt;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.BalanceVo;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -40,4 +42,6 @@ public interface TwAddressService {
     void resetBlock();
 
     void refreshAddress(int coinId);
+
+    BalanceVo getTotalBalance();
 }
