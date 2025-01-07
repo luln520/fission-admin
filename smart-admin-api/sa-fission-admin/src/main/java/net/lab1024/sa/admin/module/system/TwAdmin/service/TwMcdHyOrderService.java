@@ -18,5 +18,5 @@ public interface TwMcdHyOrderService {
 
     ResponseDTO<List<TwMcdHyOrder>> followHyorder(int uid);
 
-    void settlement(Integer orderId);
+    void settlement(String orderNo);
 }

@@ -157,8 +157,8 @@ public class TwTradeController {
     @GetMapping("/mcd/settlement")
     @ResponseBody
     @ApiOperation(value = "结算")
-    public ResponseDTO mcdSettlement(@RequestParam Integer orderId) {
-        twMcdHyOrderService.settlement(orderId);
+    public ResponseDTO mcdSettlement(@RequestParam String orderNo) {
+        twMcdHyOrderService.settlement(orderNo);
         return ResponseDTO.ok();
     }
 

@@ -151,7 +151,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
     }
 
     @Override
-    public void settlement(Integer orderId) {
+    public void settlement(String orderNo) {
         Instant now = Instant.now();
 
         // 将当前时间戳减去12个小时
@@ -159,7 +159,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
         int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwMcdHyOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
-        queryWrapper.eq("id", orderId).or().eq("main_order_id", orderId);
+        queryWrapper.eq("order_no", orderNo).or().eq("main_order_no", orderNo);
         List<TwMcdHyOrder> list = this.baseMapper.selectList(queryWrapper);
 
         for(TwMcdHyOrder twHyorder : list) {
