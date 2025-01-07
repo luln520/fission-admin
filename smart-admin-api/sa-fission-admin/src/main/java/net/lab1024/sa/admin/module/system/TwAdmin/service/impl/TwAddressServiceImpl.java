@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.BalanceVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.util.CommonUtil;
 import net.lab1024.sa.common.common.wallet.*;
@@ -589,7 +590,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     @Override
     public void refreshAddress(int coinId) {
         TwCoin twCoin = twCoinDao.selectById(coinId);
-        List<TwAddress> twAddressList = baseMapper.listCoinAddress(coinId);
+        List<TwAddress> twAddressList = baseMapper.listBalanceAddress(coinId);
         if(!CollectionUtils.isEmpty(twAddressList)) {
             TwToken twToken = null;
             if (twCoin.getCzline().equals(NetworkConst.ETH)) {
@@ -601,6 +602,16 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
                 this.updateAddressBalance(twAddress.getAddress(), twToken.getAddress(), twAddress.getCurrency());
             }
         }
+    }
+
+    @Override
+    public BalanceVo getTotalBalance() {
+        BigDecimal usdtAmount = twAddressBalanceMapper.amountBalance(CurrencyEnum.USDT.getValue());
+        BigDecimal ethAmount = twAddressBalanceMapper.amountBalance(CurrencyEnum.ETH.getValue());
+        BalanceVo balanceVo = new BalanceVo();
+        balanceVo.setEthAmount(ethAmount);
+        balanceVo.setUsdtAmount(usdtAmount);
+        return balanceVo;
     }
 
     private int handleTRCTransfer(List<TransferRecord> transferRecordList) {

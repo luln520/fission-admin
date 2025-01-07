@@ -10,6 +10,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwAddressDetail;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwArea;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwReceipt;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.BalanceVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TransferVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
@@ -134,5 +135,12 @@ public class TwAddressController {
             log.error(e.getMessage(), e);
         }
         return ResponseDTO.ok();
+    }
+
+    @GetMapping("/balance")
+    @NoNeedLogin
+    public ResponseDTO<BalanceVo> getTotalBalance() {
+        BalanceVo balanceVo = twAddressService.getTotalBalance();
+        return ResponseDTO.ok(balanceVo);
     }
 }

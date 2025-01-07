@@ -13,6 +13,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticNumVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.WithDrawVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.admin.module.system.employee.domain.entity.EmployeeEntity;
 import net.lab1024.sa.admin.module.system.employee.service.EmployeeService;
@@ -501,6 +502,16 @@ public class TwMyzcServiceImpl extends ServiceImpl<TwMyzcDao, TwMyzc> implements
         statisticNumVo.setCountList(countList);
 
         return statisticNumVo;
+    }
+
+    @Override
+    public WithDrawVo staticWithDraw() {
+        WithDrawVo withDrawVo = new WithDrawVo();
+        BigDecimal successAmount = this.baseMapper.statisticAmount(2);
+        BigDecimal refuseAmount = this.baseMapper.statisticAmount(3);
+        withDrawVo.setSuccessAmount(successAmount);
+        withDrawVo.setRefuseAmount(refuseAmount);
+        return withDrawVo;
     }
 
 

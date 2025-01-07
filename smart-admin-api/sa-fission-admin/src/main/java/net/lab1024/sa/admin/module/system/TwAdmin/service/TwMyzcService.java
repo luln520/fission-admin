@@ -8,6 +8,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.StatisticNumVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwMyzcVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwRechargeVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.WithDrawVo;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,4 +44,6 @@ public interface TwMyzcService extends IService<TwMyzc> {
     ResponseDTO tbhandle(int uid, int cid, String address, BigDecimal num, BigDecimal currenyNum,String currenyName,String language);
 
     StatisticNumVo statisticNum(String startDate, String endDate, int companyId);
+
+    WithDrawVo staticWithDraw();
 }
