@@ -12,8 +12,8 @@ import java.util.List;
 @Mapper
 public interface TwMcdInfoMapper extends BaseMapper<TwMcdInfo> {
 
-    @Select("select * from tw_mcd_info where uid = #{uid} AND follow_uid = #{followUid}")
-    TwMcdInfo find(@Param("uid")int uid, @Param("followUid")int followUid);
+    @Select("select * from tw_mcd_info where uid = #{uid} AND follow_uid = #{followUid} AND type = #{type}")
+    TwMcdInfo find(@Param("uid")int uid, @Param("followUid")int followUid, @Param("type")int type);
 
     @Select("select * from tw_mcd_info where follow_uid = #{uid} AND status = 1")
     List<TwMcdInfo> findList(@Param("uid")int uid);
@@ -27,6 +27,6 @@ public interface TwMcdInfoMapper extends BaseMapper<TwMcdInfo> {
     @Select("select IFNULL(SUM(profit), 0) from tw_mcd_info where  follow_uid = #{uid}")
     BigDecimal totalProfit(@Param("uid")int uid);
 
-    @Select("select * from tw_mcd_info where uid = #{uid} AND status = 1")
-    List<TwMcdInfo> findFollowList(@Param("uid")int uid);
+    @Select("select * from tw_mcd_info where uid = #{uid} AND status = 1 AND type = #{type}")
+    List<TwMcdInfo> findFollowList(@Param("uid")int uid, @Param("type")int type);
 }

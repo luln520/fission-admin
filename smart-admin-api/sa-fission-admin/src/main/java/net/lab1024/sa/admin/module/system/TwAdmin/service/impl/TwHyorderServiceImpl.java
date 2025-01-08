@@ -641,174 +641,56 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         // 将 LocalDateTime 转换为时间戳（秒级别）
         long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
 
-        if(twUser.getMerchandiser() == 1) {
-            List<TwMcdInfo> mcdInfoList = twMcdInfoMapper.findList(uid);
-            if(CollectionUtils.isNotEmpty(mcdInfoList)) {
-                for(TwMcdInfo twMcdInfo : mcdInfoList) {
-                    BigDecimal subtmoneys = twMcdInfo.getInvestProp().add(hyFee);
 
-                    QueryWrapper<TwUserCoin> userCoinQueryWrapper = new QueryWrapper<>();
-                    userCoinQueryWrapper.eq("userid", uid);
-                    TwUserCoin subTwUserCoin = twUserCoinService.getOne(userCoinQueryWrapper);
+        TwHyorder twHyorder = new TwHyorder();
+        twHyorder.setUid(uid);
+        twHyorder.setOrderNo(orderNo);
+        twHyorder.setUsername(twUser.getUsername());
+        twHyorder.setNum(ctzed);
+        twHyorder.setHybl(cykbl);
+        twHyorder.setCompanyId(twUser.getCompanyId());
+        twHyorder.setUserCode(twUser.getUserCode());
+        twHyorder.setHyzd(ctzfx);
+        twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
+        twHyorder.setCoinname(ccoinname);
+        twHyorder.setStatus(0);
+        twHyorder.setIsWin(0);
+        twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
+        twHyorder.setIntplantime((int) timestamp);
+        twHyorder.setOrderType(1);
+        twHyorder.setPath(twUser.getPath());
+        twHyorder.setDepartment(twUser.getDepatmentId());
+        twHyorder.setBuytime(DateUtil.stract12());
+        twHyorder.setSelltime(selltime);
+        twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
+        twHyorder.setBuyprice(close);
+        twHyorder.setSellprice(new BigDecimal(0));
+        twHyorder.setPloss(new BigDecimal(0));
+        twHyorder.setTime(ctime);
+        twHyorder.setKongyk(0);
+        twHyorder.setInvit(invite);
+        this.save(twHyorder);
 
-                    TwMcdHyOrder twHyorder = new TwMcdHyOrder();
-                    TwUser followUser = twUserService.getById(twMcdInfo.getUid());
-                    String subOrderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
-                    twHyorder.setUid(twMcdInfo.getUid());
-                    twHyorder.setOrderNo(subOrderNo);
-                    twHyorder.setUsername(followUser.getUsername());
-                    //twHyorder.setNum(ctzed);
-                    twHyorder.setNum(twMcdInfo.getInvestProp());
-                    twHyorder.setHybl(cykbl);
-                    twHyorder.setCompanyId(followUser.getCompanyId());
-                    twHyorder.setUserCode(followUser.getUserCode());
-                    twHyorder.setHyzd(ctzfx);
-                    twHyorder.setBuyOrblance(subTwUserCoin.getUsdt().subtract(subtmoneys));
-                    twHyorder.setCoinname(ccoinname);
-                    twHyorder.setStatus(0);
-                    twHyorder.setIsWin(0);
-                    twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
-                    twHyorder.setIntplantime((int) timestamp);
-                    twHyorder.setOrderType(1);
-                    twHyorder.setPath(followUser.getPath());
-                    twHyorder.setDepartment(followUser.getDepatmentId());
-                    twHyorder.setBuytime(DateUtil.stract12());
-                    twHyorder.setSelltime(selltime);
-                    twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
-                    twHyorder.setBuyprice(close);
-                    twHyorder.setSellprice(new BigDecimal(0));
-                    twHyorder.setPloss(new BigDecimal(0));
-                    twHyorder.setTime(ctime);
-                    twHyorder.setKongyk(0);
-                    twHyorder.setInvit(invite);
-                    twHyorder.setMainOrderNo(orderNo);
-                    twMcdHyorderMapper.insert(twHyorder);
+        //扣除USDT额度
+        twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
 
-                    //扣除USDT额度
-                    twUserCoinService.decre(twMcdInfo.getUid(),subtmoneys,subTwUserCoin.getUsdt());
+        //创建财务日志
+        TwBill twBill = new TwBill();
+        twBill.setUserCode(twUser.getUserCode());
+        twBill.setUid(uid);
+        twBill.setUsername(twUser.getUsername());
+        twBill.setNum(ctzed);
+        twBill.setCompanyId(twUser.getCompanyId());
+        twBill.setCoinname("usdt");
+        twBill.setAfternum(twUserCoinService.afternum(uid));
+        twBill.setType(3);
+        twBill.setPath(twUser.getPath());
+        twBill.setDepartment(twUser.getDepatmentId());
+        twBill.setAddtime(new Date());
+        twBill.setSt(2);
+        twBill.setRemark("购买"+ ccoinname + "秒合约");
+        twBillService.save(twBill);
 
-                    //创建财务日志
-                    TwBill twBill = new TwBill();
-                    twBill.setUserCode(followUser.getUserCode());
-                    twBill.setUid(twMcdInfo.getUid());
-                    twBill.setUsername(followUser.getUsername());
-                    //twBill.setNum(ctzed);
-                    twBill.setNum(twMcdInfo.getInvestProp());
-                    twBill.setCompanyId(followUser.getCompanyId());
-                    twBill.setCoinname("usdt");
-                    twBill.setAfternum(twUserCoinService.afternum(twMcdInfo.getUid()));
-                    twBill.setType(3);
-                    twBill.setPath(followUser.getPath());
-                    twBill.setDepartment(followUser.getDepatmentId());
-                    twBill.setAddtime(new Date());
-                    twBill.setSt(2);
-                    twBill.setRemark("购买"+ ccoinname + "秒合约");
-                    twBillService.save(twBill);
-
-                    //结束跟单
-                    twMcdInfoService.delFollow(twMcdInfo.getFollowUid(), twMcdInfo.getUid());
-                }
-            }
-
-            TwMcdHyOrder twHyorder = new TwMcdHyOrder();
-            twHyorder.setUid(uid);
-            twHyorder.setOrderNo(orderNo);
-            twHyorder.setUsername(twUser.getUsername());
-            twHyorder.setNum(ctzed);
-            twHyorder.setHybl(cykbl);
-            twHyorder.setCompanyId(twUser.getCompanyId());
-            twHyorder.setUserCode(twUser.getUserCode());
-            twHyorder.setHyzd(ctzfx);
-            twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
-            twHyorder.setCoinname(ccoinname);
-            twHyorder.setStatus(0);
-            twHyorder.setIsWin(0);
-            twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
-            twHyorder.setIntplantime((int) timestamp);
-            twHyorder.setOrderType(1);
-            twHyorder.setPath(twUser.getPath());
-            twHyorder.setDepartment(twUser.getDepatmentId());
-            twHyorder.setBuytime(DateUtil.stract12());
-            twHyorder.setSelltime(selltime);
-            twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
-            twHyorder.setBuyprice(close);
-            twHyorder.setSellprice(new BigDecimal(0));
-            twHyorder.setPloss(new BigDecimal(0));
-            twHyorder.setTime(ctime);
-            twHyorder.setKongyk(0);
-            twHyorder.setInvit(invite);
-            twHyorder.setMainOrderNo(null);
-            twMcdHyorderMapper.insert(twHyorder);
-
-            //扣除USDT额度
-            twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
-
-            //创建财务日志
-            TwBill twBill = new TwBill();
-            twBill.setUserCode(twUser.getUserCode());
-            twBill.setUid(uid);
-            twBill.setUsername(twUser.getUsername());
-            twBill.setNum(ctzed);
-            twBill.setCompanyId(twUser.getCompanyId());
-            twBill.setCoinname("usdt");
-            twBill.setAfternum(twUserCoinService.afternum(uid));
-            twBill.setType(3);
-            twBill.setPath(twUser.getPath());
-            twBill.setDepartment(twUser.getDepatmentId());
-            twBill.setAddtime(new Date());
-            twBill.setSt(2);
-            twBill.setRemark("购买"+ ccoinname + "秒合约");
-            twBillService.save(twBill);
-        }else {
-            TwHyorder twHyorder = new TwHyorder();
-            twHyorder.setUid(uid);
-            twHyorder.setOrderNo(orderNo);
-            twHyorder.setUsername(twUser.getUsername());
-            twHyorder.setNum(ctzed);
-            twHyorder.setHybl(cykbl);
-            twHyorder.setCompanyId(twUser.getCompanyId());
-            twHyorder.setUserCode(twUser.getUserCode());
-            twHyorder.setHyzd(ctzfx);
-            twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
-            twHyorder.setCoinname(ccoinname);
-            twHyorder.setStatus(0);
-            twHyorder.setIsWin(0);
-            twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
-            twHyorder.setIntplantime((int) timestamp);
-            twHyorder.setOrderType(1);
-            twHyorder.setPath(twUser.getPath());
-            twHyorder.setDepartment(twUser.getDepatmentId());
-            twHyorder.setBuytime(DateUtil.stract12());
-            twHyorder.setSelltime(selltime);
-            twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
-            twHyorder.setBuyprice(close);
-            twHyorder.setSellprice(new BigDecimal(0));
-            twHyorder.setPloss(new BigDecimal(0));
-            twHyorder.setTime(ctime);
-            twHyorder.setKongyk(0);
-            twHyorder.setInvit(invite);
-            this.save(twHyorder);
-
-            //扣除USDT额度
-            twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
-
-            //创建财务日志
-            TwBill twBill = new TwBill();
-            twBill.setUserCode(twUser.getUserCode());
-            twBill.setUid(uid);
-            twBill.setUsername(twUser.getUsername());
-            twBill.setNum(ctzed);
-            twBill.setCompanyId(twUser.getCompanyId());
-            twBill.setCoinname("usdt");
-            twBill.setAfternum(twUserCoinService.afternum(uid));
-            twBill.setType(3);
-            twBill.setPath(twUser.getPath());
-            twBill.setDepartment(twUser.getDepatmentId());
-            twBill.setAddtime(new Date());
-            twBill.setSt(2);
-            twBill.setRemark("购买"+ ccoinname + "秒合约");
-            twBillService.save(twBill);
-        }
 
         if(language.equals("zh")){
             return ResponseDTO.ok(orderNo);
@@ -941,121 +823,38 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         // 将 LocalDateTime 转换为时间戳（秒级别）
         long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
 
-        if(twUser.getMerchandiser() == 1) {
-            List<TwMcdInfo> mcdInfoList = twMcdInfoMapper.findList(uid);
-            if(CollectionUtils.isNotEmpty(mcdInfoList)) {
-                for(TwMcdInfo twMcdInfo : mcdInfoList) {
-                    BigDecimal subtmoneys = twMcdInfo.getInvestProp().add(hyFee);
 
-                    QueryWrapper<TwUserCoin> userCoinQueryWrapper = new QueryWrapper<>();
-                    userCoinQueryWrapper.eq("userid", uid);
-                    TwUserCoin subTwUserCoin = twUserCoinService.getOne(userCoinQueryWrapper);
+        TwHyorder twHyorder = new TwHyorder();
+        twHyorder.setUid(uid);
+        twHyorder.setOrderNo(orderNo);
+        twHyorder.setUsername(twUser.getUsername());
+        twHyorder.setNum(ctzed);
+        twHyorder.setHybl(cykbl);
+        twHyorder.setCompanyId(twUser.getCompanyId());
+        twHyorder.setUserCode(twUser.getUserCode());
+        twHyorder.setHyzd(ctzfx);
+        twHyorder.setBuyOrblance(twMockUserCoin.getUsdt().subtract(tmoneys));
+        twHyorder.setCoinname(ccoinname);
+        twHyorder.setStatus(0);
+        twHyorder.setIsWin(0);
+        twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
+        twHyorder.setIntplantime((int) timestamp);
+        twHyorder.setOrderType(2);
+        twHyorder.setPath(twUser.getPath());
+        twHyorder.setDepartment(twUser.getDepatmentId());
+        twHyorder.setBuytime(DateUtil.stract12());
+        twHyorder.setSelltime(selltime);
+        twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
+        twHyorder.setBuyprice(close);
+        twHyorder.setSellprice(new BigDecimal(0));
+        twHyorder.setPloss(new BigDecimal(0));
+        twHyorder.setTime(ctime);
+        twHyorder.setKongyk(0);
+        twHyorder.setInvit(invite);
+        this.save(twHyorder);
+        //扣除USDT额度
+        twMockUserCoinService.decre(uid, tmoneys, twMockUserCoin.getUsdt());
 
-                    TwMcdHyOrder twHyorder = new TwMcdHyOrder();
-                    TwUser followUser = twUserService.getById(twMcdInfo.getUid());
-                    String subOrderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
-                    twHyorder.setUid(twMcdInfo.getUid());
-                    twHyorder.setOrderNo(subOrderNo);
-                    twHyorder.setUsername(followUser.getUsername());
-                    //twHyorder.setNum(ctzed);
-                    twHyorder.setNum(twMcdInfo.getInvestProp());
-                    twHyorder.setHybl(cykbl);
-                    twHyorder.setCompanyId(followUser.getCompanyId());
-                    twHyorder.setUserCode(followUser.getUserCode());
-                    twHyorder.setHyzd(ctzfx);
-                    twHyorder.setBuyOrblance(subTwUserCoin.getUsdt().subtract(subtmoneys));
-                    twHyorder.setCoinname(ccoinname);
-                    twHyorder.setStatus(0);
-                    twHyorder.setIsWin(0);
-                    twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
-                    twHyorder.setIntplantime((int) timestamp);
-                    twHyorder.setOrderType(2);
-                    twHyorder.setPath(followUser.getPath());
-                    twHyorder.setDepartment(followUser.getDepatmentId());
-                    twHyorder.setBuytime(DateUtil.stract12());
-                    twHyorder.setSelltime(selltime);
-                    twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
-                    twHyorder.setBuyprice(close);
-                    twHyorder.setSellprice(new BigDecimal(0));
-                    twHyorder.setPloss(new BigDecimal(0));
-                    twHyorder.setTime(ctime);
-                    twHyorder.setKongyk(0);
-                    twHyorder.setInvit(invite);
-                    twHyorder.setMainOrderNo(orderNo);
-                    twMcdHyorderMapper.insert(twHyorder);
-
-                    //扣除USDT额度
-                    twMockUserCoinService.decre(twMcdInfo.getUid(),subtmoneys,subTwUserCoin.getUsdt());
-
-                    //结束跟单
-                    twMcdInfoService.delFollow(twMcdInfo.getFollowUid(), twMcdInfo.getUid());
-                }
-            }
-
-            TwMcdHyOrder twHyorder = new TwMcdHyOrder();
-            twHyorder.setUid(uid);
-            twHyorder.setOrderNo(orderNo);
-            twHyorder.setUsername(twUser.getUsername());
-            twHyorder.setNum(ctzed);
-            twHyorder.setHybl(cykbl);
-            twHyorder.setCompanyId(twUser.getCompanyId());
-            twHyorder.setUserCode(twUser.getUserCode());
-            twHyorder.setHyzd(ctzfx);
-            twHyorder.setBuyOrblance(twMockUserCoin.getUsdt().subtract(tmoneys));
-            twHyorder.setCoinname(ccoinname);
-            twHyorder.setStatus(0);
-            twHyorder.setIsWin(0);
-            twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
-            twHyorder.setIntplantime((int) timestamp);
-            twHyorder.setOrderType(2);
-            twHyorder.setPath(twUser.getPath());
-            twHyorder.setDepartment(twUser.getDepatmentId());
-            twHyorder.setBuytime(DateUtil.stract12());
-            twHyorder.setSelltime(selltime);
-            twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
-            twHyorder.setBuyprice(close);
-            twHyorder.setSellprice(new BigDecimal(0));
-            twHyorder.setPloss(new BigDecimal(0));
-            twHyorder.setTime(ctime);
-            twHyorder.setKongyk(0);
-            twHyorder.setInvit(invite);
-            twHyorder.setMainOrderNo(null);
-            twMcdHyorderMapper.insert(twHyorder);
-
-            //扣除USDT额度
-            twMockUserCoinService.decre(uid, tmoneys, twMockUserCoin.getUsdt());
-        }else {
-            TwHyorder twHyorder = new TwHyorder();
-            twHyorder.setUid(uid);
-            twHyorder.setOrderNo(orderNo);
-            twHyorder.setUsername(twUser.getUsername());
-            twHyorder.setNum(ctzed);
-            twHyorder.setHybl(cykbl);
-            twHyorder.setCompanyId(twUser.getCompanyId());
-            twHyorder.setUserCode(twUser.getUserCode());
-            twHyorder.setHyzd(ctzfx);
-            twHyorder.setBuyOrblance(twMockUserCoin.getUsdt().subtract(tmoneys));
-            twHyorder.setCoinname(ccoinname);
-            twHyorder.setStatus(0);
-            twHyorder.setIsWin(0);
-            twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
-            twHyorder.setIntplantime((int) timestamp);
-            twHyorder.setOrderType(2);
-            twHyorder.setPath(twUser.getPath());
-            twHyorder.setDepartment(twUser.getDepatmentId());
-            twHyorder.setBuytime(DateUtil.stract12());
-            twHyorder.setSelltime(selltime);
-            twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
-            twHyorder.setBuyprice(close);
-            twHyorder.setSellprice(new BigDecimal(0));
-            twHyorder.setPloss(new BigDecimal(0));
-            twHyorder.setTime(ctime);
-            twHyorder.setKongyk(0);
-            twHyorder.setInvit(invite);
-            this.save(twHyorder);
-            //扣除USDT额度
-            twMockUserCoinService.decre(uid, tmoneys, twMockUserCoin.getUsdt());
-        }
 
 //        //创建财务日志
 //        TwBill twBill = new TwBill();

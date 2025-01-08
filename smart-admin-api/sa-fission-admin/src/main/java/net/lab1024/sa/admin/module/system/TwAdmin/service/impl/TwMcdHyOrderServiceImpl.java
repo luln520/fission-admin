@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.api.client.util.Lists;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdHyorderMapper;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdInfoMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
@@ -76,6 +77,12 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
     @Autowired
     private TwNoticeService twNoticeService;
 
+    @Autowired
+    private TwMcdInfoMapper twMcdInfoMapper;
+
+    @Autowired
+    private TwMcdInfoService twMcdInfoService;
+
     @Override
     public IPage<TwMcdHyOrder> listpage(TwHyorderVo twHyorderVo, HttpServletRequest request) {
         String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
@@ -113,16 +120,46 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
     }
 
     @Override
-    public ResponseDTO creatorder(int orderId, int uid, BigDecimal ctzed, String language) {
+    public ResponseDTO creatorder(int uid, String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime) {
+        Date planDate = DateUtil.str2DateTime(plantime);
+        Date currentDate = DateUtil.stract12();
+        if(planDate.getTime() < currentDate.getTime()) {
+            if (language.equals("zh")) {
+                return ResponseDTO.userErrorParam("下单失败，请重新加载页面！");
+            } else {
+                return ResponseDTO.userErrorParam("Order failed, please reload the page！");
+            }
+        }
+
+        QueryWrapper<TwMcdHyOrder> hyorderQueryWrapper = new QueryWrapper<>();
+        hyorderQueryWrapper.eq("uid", uid);
+        hyorderQueryWrapper.eq("plantime", plantime);
+        hyorderQueryWrapper.in("status", 0, 1, 2);
+        TwMcdHyOrder twHyorder = this.baseMapper.selectOne(hyorderQueryWrapper);
+        if(twHyorder != null) {
+            if (language.equals("zh")) {
+                return ResponseDTO.userErrorParam("该计划时间已购买！");
+            } else {
+                return ResponseDTO.userErrorParam("This plan time has been purchased！");
+            }
+        }
+
+        if(ctzed.compareTo(BigDecimal.ZERO) == 0) {
+            if (language.equals("zh")) {
+                return ResponseDTO.userErrorParam("投资金额不能小于最低投资额度！");
+            } else {
+                return ResponseDTO.userErrorParam("The investment amount cannot be less than the minimum investment amount！");
+            }
+        }
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", uid); // 添加查询条件
         TwUser twUser = twUserService.getOne(queryWrapper);
         Integer userType = twUser.getUserType();
         if(userType == 1){
-            return userOrder(orderId, twUser, ctzed, language) ;
+            return userOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language,  plantime) ;
         }
         if(userType == 2){
-            return mockUserOrder(orderId, twUser, ctzed, language) ;
+            return mockUserOrder(twUser, ctime,  ctzed,  ccoinname,  ctzfx,  cykbl, language, plantime) ;
         }
 
         return null;
@@ -619,11 +656,11 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
         QueryWrapper<TwMcdHyOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
         queryWrapper.eq("order_type",1);
-        queryWrapper.isNull("main_order_no");
+        //queryWrapper.isNull("main_order_no");
         queryWrapper.le("intselltime", nowtime);
         List<TwMcdHyOrder> list = this.baseMapper.selectList(queryWrapper);
 
-        for(TwMcdHyOrder twMcdHyOrder : list) {
+        /*for(TwMcdHyOrder twMcdHyOrder : list) {
             List<TwMcdHyOrder> combineList = Lists.newArrayList();
             combineList.add(twMcdHyOrder);
 
@@ -635,8 +672,8 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
             }
 
             combineCarrayout(combineList);
-        }
-
+        }*/
+        combineCarrayout(list);
     }
 
     @Override
@@ -649,11 +686,11 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
         QueryWrapper<TwMcdHyOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
         queryWrapper.eq("order_type",2);
-        queryWrapper.isNull("main_order_no");
+        //queryWrapper.isNull("main_order_no");
         queryWrapper.le("intselltime", nowtime);
         List<TwMcdHyOrder> list = this.baseMapper.selectList(queryWrapper);
 
-        for(TwMcdHyOrder twMcdHyOrder : list) {
+        /*for(TwMcdHyOrder twMcdHyOrder : list) {
             List<TwMcdHyOrder> combineList = Lists.newArrayList();
             combineList.add(twMcdHyOrder);
 
@@ -665,7 +702,8 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
             }
 
             combineMockCarrayout(combineList);
-        }
+        }*/
+        combineMockCarrayout(list);
     }
 
     private void combineMockCarrayout(List<TwMcdHyOrder> list) {
@@ -1551,7 +1589,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
         }
     }
 
-    public ResponseDTO userOrder(int orderId, TwUser twUser , BigDecimal ctzed, String language){
+    public ResponseDTO userOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime){
 
         Integer uid = twUser.getId();
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
@@ -1591,15 +1629,6 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
             }
         }
 
-//            if(ctzed.compareTo(twHysetting.getHyMin()) < 0){
-//                ResponseDTO.userErrorParam("不能小于最低投资额度");
-//            }
-
-//            BigDecimal hySxf = twHysetting.getHySxf();
-
-//            Integer companyId = twUser.getCompanyId();
-//            QueryWrapper<TwCompany> queryWrapper2 = new QueryWrapper<>();
-//            queryWrapper2.eq("id", companyId); // 添加查询条件
         BigDecimal hyFee = company.getHyFee();
         BigDecimal tmoneys= ctzed.add(hyFee);
         if(twUserCoin.getUsdt().compareTo(tmoneys) < 0){
@@ -1610,36 +1639,169 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
             }
         }
 
-        TwMcdHyOrder twMcdHyOrder = this.baseMapper.selectById(orderId);
-        if(twMcdHyOrder == null) {
-            if(language.equals("zh")){
-                return ResponseDTO.userErrorParam("当前订单已失效!");
-            }else{
-                return ResponseDTO.userErrorParam("The current order has expired！");
-            }
-        }
-
-        String symbol = twMcdHyOrder.getCoinname().toLowerCase().replace("/", "");
+        String symbol = ccoinname.toLowerCase().replace("/", "");
         String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
         Map<String, Object> map = CommonUtil.executeGet(str);
         JSONObject res = JSONObject.parseObject(map.get("res").toString());
         JSONArray data = JSONArray.parseArray(res.get("data").toString());
         JSONObject jsonObject = JSONObject.parseObject(data.get(0).toString());
+
         BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
 
-        TwMcdHyOrder twHyorder = new TwMcdHyOrder();
-        try {
-            BeanUtils.copyProperties(twHyorder, twMcdHyOrder);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        int time = 0;
+        Date plandate = DateUtil.str2DateTime(plantime);
+        Date selltime = plandate;
+        // 使用正则表达式分割字符串，非数字字符作为分隔符
+        String[] parts = ctime.split("\\D+");
+
+        // 输出第一个部分（即数字部分）
+        if (parts.length > 0) {
+            time = Integer.parseInt(parts[0]);
+        }else{
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("结算周期有误！");
+            }else{
+                return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
+            }
         }
-        twHyorder.setId(null);
-        twHyorder.setMainOrderNo(twMcdHyOrder.getOrderNo());
+
+        // 使用正则表达式将所有数字字符替换为空字符串
+        String nonDigits = ctime.replaceAll("\\d", "");
+
+        String upperCase = nonDigits.toUpperCase();
+        if(upperCase.contains("S")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }else if(upperCase.contains("M")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        } else if(upperCase.contains("H")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }else if(upperCase.contains("DAY")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }
+        else if(upperCase.contains("WEEK")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }
+        else if(upperCase.contains("MON")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }
+        else if(upperCase.contains("YEAR")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }else{
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("结算周期有误！");
+            }else{
+                return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
+            }
+        }
+
+        // 定义时间字符串的格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // 将时间字符串解析为 LocalDateTime 对象
+        LocalDateTime localDateTime = LocalDateTime.parse(plantime, formatter);
+
+        // 将 LocalDateTime 转换为时间戳（秒级别）
+        long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
+
+
+        List<TwMcdInfo> mcdInfoList = twMcdInfoMapper.findList(uid);
+        if(CollectionUtils.isNotEmpty(mcdInfoList)) {
+            for(TwMcdInfo twMcdInfo : mcdInfoList) {
+                BigDecimal subtmoneys = twMcdInfo.getInvestProp().add(hyFee);
+
+                QueryWrapper<TwUserCoin> userCoinQueryWrapper = new QueryWrapper<>();
+                userCoinQueryWrapper.eq("userid", uid);
+                TwUserCoin subTwUserCoin = twUserCoinService.getOne(userCoinQueryWrapper);
+
+                TwMcdHyOrder twHyorder = new TwMcdHyOrder();
+                TwUser followUser = twUserService.getById(twMcdInfo.getUid());
+                String subOrderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+                twHyorder.setUid(twMcdInfo.getUid());
+                twHyorder.setOrderNo(subOrderNo);
+                twHyorder.setUsername(followUser.getUsername());
+                //twHyorder.setNum(ctzed);
+                twHyorder.setNum(twMcdInfo.getInvestProp());
+                twHyorder.setHybl(cykbl);
+                twHyorder.setCompanyId(followUser.getCompanyId());
+                twHyorder.setUserCode(followUser.getUserCode());
+                twHyorder.setHyzd(ctzfx);
+                twHyorder.setBuyOrblance(subTwUserCoin.getUsdt().subtract(subtmoneys));
+                twHyorder.setCoinname(ccoinname);
+                twHyorder.setStatus(0);
+                twHyorder.setIsWin(0);
+                twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
+                twHyorder.setIntplantime((int) timestamp);
+                twHyorder.setOrderType(1);
+                twHyorder.setPath(followUser.getPath());
+                twHyorder.setDepartment(followUser.getDepatmentId());
+                twHyorder.setBuytime(DateUtil.stract12());
+                twHyorder.setSelltime(selltime);
+                twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
+                twHyorder.setBuyprice(close);
+                twHyorder.setSellprice(new BigDecimal(0));
+                twHyorder.setPloss(new BigDecimal(0));
+                twHyorder.setTime(ctime);
+                twHyorder.setKongyk(0);
+                twHyorder.setInvit(invite);
+                twHyorder.setMainOrderNo(orderNo);
+                this.baseMapper.insert(twHyorder);
+
+                //扣除USDT额度
+                twUserCoinService.decre(twMcdInfo.getUid(),subtmoneys,subTwUserCoin.getUsdt());
+
+                //创建财务日志
+                TwBill twBill = new TwBill();
+                twBill.setUserCode(followUser.getUserCode());
+                twBill.setUid(twMcdInfo.getUid());
+                twBill.setUsername(followUser.getUsername());
+                //twBill.setNum(ctzed);
+                twBill.setNum(twMcdInfo.getInvestProp());
+                twBill.setCompanyId(followUser.getCompanyId());
+                twBill.setCoinname("usdt");
+                twBill.setAfternum(twUserCoinService.afternum(twMcdInfo.getUid()));
+                twBill.setType(3);
+                twBill.setPath(followUser.getPath());
+                twBill.setDepartment(followUser.getDepatmentId());
+                twBill.setAddtime(new Date());
+                twBill.setSt(2);
+                twBill.setRemark("购买"+ ccoinname + "秒合约");
+                twBillService.save(twBill);
+
+                //结束跟单
+                twMcdInfoService.delFollow(twMcdInfo.getFollowUid(), twMcdInfo.getUid());
+            }
+        }
+
+        TwMcdHyOrder twHyorder = new TwMcdHyOrder();
+        twHyorder.setUid(uid);
+        twHyorder.setOrderNo(orderNo);
+        twHyorder.setUsername(twUser.getUsername());
         twHyorder.setNum(ctzed);
+        twHyorder.setHybl(cykbl);
+        twHyorder.setCompanyId(twUser.getCompanyId());
+        twHyorder.setUserCode(twUser.getUserCode());
+        twHyorder.setHyzd(ctzfx);
+        twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
+        twHyorder.setCoinname(ccoinname);
+        twHyorder.setStatus(0);
+        twHyorder.setIsWin(0);
+        twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
+        twHyorder.setIntplantime((int) timestamp);
+        twHyorder.setOrderType(1);
+        twHyorder.setPath(twUser.getPath());
+        twHyorder.setDepartment(twUser.getDepatmentId());
         twHyorder.setBuytime(DateUtil.stract12());
-        this.save(twHyorder);
+        twHyorder.setSelltime(selltime);
+        twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
+        twHyorder.setBuyprice(close);
+        twHyorder.setSellprice(new BigDecimal(0));
+        twHyorder.setPloss(new BigDecimal(0));
+        twHyorder.setTime(ctime);
+        twHyorder.setKongyk(0);
+        twHyorder.setInvit(invite);
+        twHyorder.setMainOrderNo(null);
+        this.baseMapper.insert(twHyorder);
+
         //扣除USDT额度
         twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
 
@@ -1657,15 +1819,16 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
         twBill.setDepartment(twUser.getDepatmentId());
         twBill.setAddtime(new Date());
         twBill.setSt(2);
-        twBill.setRemark("购买"+ twMcdHyOrder.getCoinname() + "秒合约");
+        twBill.setRemark("购买"+ ccoinname + "秒合约");
         twBillService.save(twBill);
+
         if(language.equals("zh")){
             return ResponseDTO.ok(orderNo);
         }else{
             return ResponseDTO.ok(orderNo);
         }
     }
-    public ResponseDTO mockUserOrder(int orderId, TwUser twUser , BigDecimal ctzed, String language){
+    public ResponseDTO mockUserOrder(TwUser twUser ,String ctime, BigDecimal ctzed, String ccoinname, int ctzfx, BigDecimal cykbl,String language, String plantime){
         Integer uid = twUser.getId();
 
         String orderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
@@ -1724,16 +1887,9 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
             }
         }
 
-        TwMcdHyOrder twMcdHyOrder = this.baseMapper.selectById(orderId);
-        if(twMcdHyOrder == null) {
-            if(language.equals("zh")){
-                return ResponseDTO.userErrorParam("当前订单已失效!");
-            }else{
-                return ResponseDTO.userErrorParam("The current order has expired！");
-            }
-        }
 
-        String symbol = twMcdHyOrder.getCoinname().toLowerCase().replace("/", "");
+
+        String symbol = ccoinname.toLowerCase().replace("/", "");
         String str = "https://api.huobi.pro/market/history/kline?period=1day&size=1&symbol="+symbol;
         Map<String, Object> map = CommonUtil.executeGet(str);
         JSONObject res = JSONObject.parseObject(map.get("res").toString());
@@ -1742,40 +1898,145 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
 
         BigDecimal close = new BigDecimal(jsonObject.get("close").toString()).setScale(2, RoundingMode.HALF_UP);
 
+        int time = 0;
+        Date plandate = DateUtil.str2DateTime(plantime);
+        Date selltime = plandate;
+        // 使用正则表达式分割字符串，非数字字符作为分隔符
+        String[] parts = ctime.split("\\D+");
 
+        // 输出第一个部分（即数字部分）
+        if (parts.length > 0) {
+            time = Integer.parseInt(parts[0]);
+        }else{
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("结算周期有误！");
+            }else{
+                return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
+            }
+        }
+
+        // 使用正则表达式将所有数字字符替换为空字符串
+        String nonDigits = ctime.replaceAll("\\d", "");
+
+        String upperCase = nonDigits.toUpperCase();
+        if(upperCase.contains("S")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }else if(upperCase.contains("M")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        } else if(upperCase.contains("H")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }else if(upperCase.contains("DAY")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }
+        else if(upperCase.contains("WEEK")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }
+        else if(upperCase.contains("MON")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }
+        else if(upperCase.contains("YEAR")){
+            selltime = DateUtil.dateToDate(plandate,time,upperCase);
+        }else{
+            if(language.equals("zh")){
+                return ResponseDTO.userErrorParam("结算周期有误！");
+            }else{
+                return ResponseDTO.userErrorParam("There is an error in the billing cycle！");
+            }
+        }
+
+        // 定义时间字符串的格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // 将时间字符串解析为 LocalDateTime 对象
+        LocalDateTime localDateTime = LocalDateTime.parse(plantime, formatter);
+
+        // 将 LocalDateTime 转换为时间戳（秒级别）
+        long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
+
+
+        List<TwMcdInfo> mcdInfoList = twMcdInfoMapper.findList(uid);
+        if(CollectionUtils.isNotEmpty(mcdInfoList)) {
+            for(TwMcdInfo twMcdInfo : mcdInfoList) {
+                BigDecimal subtmoneys = twMcdInfo.getInvestProp().add(hyFee);
+
+                QueryWrapper<TwUserCoin> userCoinQueryWrapper = new QueryWrapper<>();
+                userCoinQueryWrapper.eq("userid", uid);
+                TwUserCoin subTwUserCoin = twUserCoinService.getOne(userCoinQueryWrapper);
+
+                TwMcdHyOrder twHyorder = new TwMcdHyOrder();
+                TwUser followUser = twUserService.getById(twMcdInfo.getUid());
+                String subOrderNo = serialNumberService.generate(SerialNumberIdEnum.ORDER);
+                twHyorder.setUid(twMcdInfo.getUid());
+                twHyorder.setOrderNo(subOrderNo);
+                twHyorder.setUsername(followUser.getUsername());
+                //twHyorder.setNum(ctzed);
+                twHyorder.setNum(twMcdInfo.getInvestProp());
+                twHyorder.setHybl(cykbl);
+                twHyorder.setCompanyId(followUser.getCompanyId());
+                twHyorder.setUserCode(followUser.getUserCode());
+                twHyorder.setHyzd(ctzfx);
+                twHyorder.setBuyOrblance(subTwUserCoin.getUsdt().subtract(subtmoneys));
+                twHyorder.setCoinname(ccoinname);
+                twHyorder.setStatus(0);
+                twHyorder.setIsWin(0);
+                twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
+                twHyorder.setIntplantime((int) timestamp);
+                twHyorder.setOrderType(2);
+                twHyorder.setPath(followUser.getPath());
+                twHyorder.setDepartment(followUser.getDepatmentId());
+                twHyorder.setBuytime(DateUtil.stract12());
+                twHyorder.setSelltime(selltime);
+                twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
+                twHyorder.setBuyprice(close);
+                twHyorder.setSellprice(new BigDecimal(0));
+                twHyorder.setPloss(new BigDecimal(0));
+                twHyorder.setTime(ctime);
+                twHyorder.setKongyk(0);
+                twHyorder.setInvit(invite);
+                twHyorder.setMainOrderNo(orderNo);
+                this.baseMapper.insert(twHyorder);
+
+                //扣除USDT额度
+                twMockUserCoinService.decre(twMcdInfo.getUid(),subtmoneys,subTwUserCoin.getUsdt());
+
+                //结束跟单
+                twMcdInfoService.delFollow(twMcdInfo.getFollowUid(), twMcdInfo.getUid());
+            }
+        }
 
         TwMcdHyOrder twHyorder = new TwMcdHyOrder();
-        try {
-            BeanUtils.copyProperties(twMcdHyOrder, twHyorder);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        twHyorder.setId(null);
-        twHyorder.setMainOrderNo(twMcdHyOrder.getOrderNo());
+        twHyorder.setUid(uid);
+        twHyorder.setOrderNo(orderNo);
+        twHyorder.setUsername(twUser.getUsername());
         twHyorder.setNum(ctzed);
+        twHyorder.setHybl(cykbl);
+        twHyorder.setCompanyId(twUser.getCompanyId());
+        twHyorder.setUserCode(twUser.getUserCode());
+        twHyorder.setHyzd(ctzfx);
+        twHyorder.setBuyOrblance(twMockUserCoin.getUsdt().subtract(tmoneys));
+        twHyorder.setCoinname(ccoinname);
+        twHyorder.setStatus(0);
+        twHyorder.setIsWin(0);
+        twHyorder.setPlantime(DateUtil.str2DateTime(plantime));
+        twHyorder.setIntplantime((int) timestamp);
+        twHyorder.setOrderType(2);
+        twHyorder.setPath(twUser.getPath());
+        twHyorder.setDepartment(twUser.getDepatmentId());
         twHyorder.setBuytime(DateUtil.stract12());
-        this.save(twHyorder);
-        //扣除USDT额度
-        twMockUserCoinService.decre(uid,tmoneys,twMockUserCoin.getUsdt());
+        twHyorder.setSelltime(selltime);
+        twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
+        twHyorder.setBuyprice(close);
+        twHyorder.setSellprice(new BigDecimal(0));
+        twHyorder.setPloss(new BigDecimal(0));
+        twHyorder.setTime(ctime);
+        twHyorder.setKongyk(0);
+        twHyorder.setInvit(invite);
+        twHyorder.setMainOrderNo(null);
+        this.baseMapper.insert(twHyorder);
 
-//        //创建财务日志
-//        TwBill twBill = new TwBill();
-//        twBill.setUserCode(twUser.getUserCode());
-//        twBill.setUid(uid);
-//        twBill.setUsername(twUser.getUsername());
-//        twBill.setNum(ctzed);
-//        twBill.setCompanyId(twUser.getCompanyId());
-//        twBill.setCoinname("usdt");
-//        twBill.setAfternum(twUserCoinService.afternum(uid));
-//        twBill.setType(3);
-//        twBill.setPath(twUser.getPath());
-//        twBill.setDepartment(twUser.getDepatmentId());
-//        twBill.setAddtime(new Date());
-//        twBill.setSt(2);
-//        twBill.setRemark("购买"+ ccoinname + "秒合约");
-//        twBillService.save(twBill);
+        //扣除USDT额度
+        twMockUserCoinService.decre(uid, tmoneys, twMockUserCoin.getUsdt());
+
         if(language.equals("zh")){
             return ResponseDTO.ok(orderNo);
         }else{

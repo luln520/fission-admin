@@ -47,6 +47,9 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
 
     @Override
     public List<McdInfoVo> listMcdUser(int uid, String companyId) {
+        TwUser currentUser = twUserDao.selectById(uid);
+        int userType = currentUser == null ? 1 : currentUser.getUserType();
+
         List<McdInfoVo> mcdInfoVoList = Lists.newArrayList();
 
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
@@ -54,7 +57,7 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
         queryWrapper.eq("user_type",1);
         queryWrapper.eq("company_id", companyId);
         List<TwUser> userList = twUserDao.selectList(queryWrapper);
-        List<TwMcdInfo> followList = this.baseMapper.findFollowList(uid);
+        List<TwMcdInfo> followList = this.baseMapper.findFollowList(uid, userType);
         if(!CollectionUtils.isEmpty(userList)) {
             for(TwUser twUser : userList) {
                 int followCount = this.baseMapper.followCount(twUser.getId());
@@ -132,8 +135,11 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
 
     @Override
     public McdUserInfoVo queryUserInfo(int uid) {
+        TwUser currentUser = twUserDao.selectById(uid);
+        int userType = currentUser == null ? 1 : currentUser.getUserType();
+
         McdUserInfoVo mcdUserInfoVo = new McdUserInfoVo();
-        List<TwMcdInfo> twMcdInfoList = this.baseMapper.findFollowList(uid);
+        List<TwMcdInfo> twMcdInfoList = this.baseMapper.findFollowList(uid, userType);
         mcdUserInfoVo.setStarCount(CollectionUtils.isEmpty(twMcdInfoList)? 0 : twMcdInfoList.size());
         BigDecimal totalAmount = twMcdHyorderMapper.totalAmount(uid);
         mcdUserInfoVo.setAmount(totalAmount);
@@ -151,11 +157,13 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
 
     @Override
     public List<FollowVo> listMyFollow(int uid) {
+        TwUser currentUser = twUserDao.selectById(uid);
+        int userType = currentUser == null ? 1 : currentUser.getUserType();
         List<FollowVo> followVoList = Lists.newArrayList();
-        List<TwUser> userList = twUserDao.listMcdUser(uid);
+        List<TwUser> userList = twUserDao.listMcdUser(uid, userType);
         if(!CollectionUtils.isEmpty(userList)) {
             for (TwUser twUser : userList) {
-                TwMcdInfo twMcdInfo = this.baseMapper.find(uid, twUser.getId());
+                TwMcdInfo twMcdInfo = this.baseMapper.find(uid, twUser.getId(), userType);
                 FollowVo followVo = new FollowVo();
                 followVo.setUid(twUser.getId());
                 followVo.setName(twUser.getUsername());
@@ -171,9 +179,13 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
 
     @Override
     public void addFollow(int followUid, int uid, BigDecimal investProp) {
+        TwUser currentUser = twUserDao.selectById(uid);
+        int userType = currentUser == null ? 1 : currentUser.getUserType();
+
         QueryWrapper<TwMcdInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("follow_uid", followUid);
         queryWrapper.eq("uid",  uid);
+        queryWrapper.eq("type",  userType);
         TwMcdInfo twMcdInfo = this.baseMapper.selectOne(queryWrapper);
         if(twMcdInfo != null) {
             twMcdInfo.setStatus(1);
@@ -186,15 +198,20 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
             twMcdInfo.setFollowUid(followUid);
             twMcdInfo.setInvestProp(investProp);
             twMcdInfo.setStatus(1);
+            twMcdInfo.setType(userType);
             this.baseMapper.insert(twMcdInfo);
         }
     }
 
     @Override
     public void delFollow(int followUid, int uid) {
+        TwUser currentUser = twUserDao.selectById(uid);
+        int userType = currentUser == null ? 1 : currentUser.getUserType();
+
         QueryWrapper<TwMcdInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("follow_uid", followUid);
         queryWrapper.eq("uid", uid);
+        queryWrapper.eq("type", userType);
         TwMcdInfo twMcdInfo = this.baseMapper.selectOne(queryWrapper);
         if(twMcdInfo != null) {
             twMcdInfo.setStatus(0);

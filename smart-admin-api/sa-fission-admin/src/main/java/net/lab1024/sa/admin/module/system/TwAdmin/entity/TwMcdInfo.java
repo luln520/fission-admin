@@ -50,4 +50,7 @@ public class TwMcdInfo implements Serializable {
 
     @ApiModelProperty("更新时间")
     private Date updateTime;
+
+    @ApiModelProperty("状态：1正常、2模拟")
+    private Integer type;
 }

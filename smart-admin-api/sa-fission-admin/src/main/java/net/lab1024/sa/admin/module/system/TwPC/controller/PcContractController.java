@@ -147,7 +147,8 @@ public class PcContractController {
                                         @RequestParam int uid,
                                         @RequestParam BigDecimal ctzed,
                                         @RequestParam String language){
-        return twMcdHyOrderService.creatorder(orderId, uid, ctzed, language);
+        //return twMcdHyOrderService.creatorder(orderId, uid, ctzed, language);
+        return ResponseDTO.ok();
     }
 
     @GetMapping("/follow/hyorder")
