@@ -10,6 +10,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwUserVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserKuangjiService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwUserService;
+import net.lab1024.sa.admin.module.system.employee.domain.vo.EmployeeIdUpdateVO;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -284,6 +285,18 @@ public class TwUserController {
     @ApiOperation(value = "用户流水统计")
     public ResponseDTO usertj(@RequestParam int uid) {
         return twUserService.usertj(uid);
+    }
+
+
+    @PostMapping("/path/change")
+    @ApiOperation(value = "更换代理")
+    public ResponseDTO<Object> userChange(@Valid @RequestBody EmployeeIdUpdateVO employeeIdUpdateVO) {
+        try {
+            twUserService.changeEmployeeId(employeeIdUpdateVO.getDestId(), employeeIdUpdateVO.getUid());
+            return ResponseDTO.ok("更换代理成功");
+        } catch (Exception e) {
+            return ResponseDTO.userErrorParam("更换代理异常");
+        }
     }
 
 
