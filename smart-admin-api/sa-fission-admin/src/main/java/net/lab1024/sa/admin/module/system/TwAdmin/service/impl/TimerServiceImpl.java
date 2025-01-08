@@ -79,6 +79,9 @@ public class TimerServiceImpl {
 
     @Autowired
     private TwMcdHyorderMapper twMcdHyorderMapper;
+
+    @Autowired
+    private TwMcdHyOrderService twMcdHyOrderService;
 //
 //    @Autowired
 //    private TwKuangjiService twKuangjiService;
@@ -1680,5 +1683,13 @@ public class TimerServiceImpl {
         JSONObject res = JSONObject.parseObject(map.get("res").toString());
         String rates = JSONObject.parseObject(res.get("rates").toString()).toString();
         System.out.println(rates);
+    }
+
+    public void mcdHycarryout() {
+        twMcdHyOrderService.carrayout();
+    }
+
+    public void mockMcdhycarryout() {
+        twMcdHyOrderService.mockCarrayout();
     }
 }

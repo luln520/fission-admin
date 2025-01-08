@@ -19,4 +19,8 @@ public interface TwMcdHyOrderService {
     ResponseDTO<List<TwMcdHyOrder>> followHyorder(int uid);
 
     void settlement(String orderNo);
+
+    void carrayout();
+
+    void mockCarrayout();
 }
