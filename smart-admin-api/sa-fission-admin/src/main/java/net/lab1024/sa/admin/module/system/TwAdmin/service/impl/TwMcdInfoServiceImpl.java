@@ -26,6 +26,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
@@ -145,7 +146,7 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
         mcdUserInfoVo.setAmount(totalAmount);
         BigDecimal totalPloss = twMcdHyorderMapper.totalPloss(uid);
         mcdUserInfoVo.setPloss(totalPloss);
-        mcdUserInfoVo.setProfitRate(totalPloss.divide(totalAmount).setScale(2, RoundingMode.HALF_UP));
+        mcdUserInfoVo.setProfitRate(totalPloss.divide(totalAmount, new MathContext(2, RoundingMode.HALF_UP)));
         return mcdUserInfoVo;
     }
 

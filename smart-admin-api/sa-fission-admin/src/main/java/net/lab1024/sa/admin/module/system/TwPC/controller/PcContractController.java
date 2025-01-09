@@ -143,12 +143,15 @@ public class PcContractController {
     @ApiOperation(value = "跟单合约建仓")
     @NoNeedLogin
     @RedissonLockAnnotation(keyParts = "uid")
-    public ResponseDTO followCreatorder(@RequestParam int orderId,
-                                        @RequestParam int uid,
+    public ResponseDTO followCreatorder(@RequestParam int uid,
+                                        @RequestParam String ctime,
                                         @RequestParam BigDecimal ctzed,
+                                        @RequestParam String ccoinname,
+                                        @RequestParam int ctzfx,
+                                        @RequestParam String plantime,
+                                        @RequestParam BigDecimal cykbl,
                                         @RequestParam String language){
-        //return twMcdHyOrderService.creatorder(orderId, uid, ctzed, language);
-        return ResponseDTO.ok();
+        return twMcdHyOrderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl,language, plantime);
     }
 
     @GetMapping("/follow/hyorder")
