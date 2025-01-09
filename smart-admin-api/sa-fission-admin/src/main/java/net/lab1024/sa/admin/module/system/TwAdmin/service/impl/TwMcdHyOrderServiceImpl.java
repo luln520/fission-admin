@@ -1711,7 +1711,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
                     BigDecimal subtmoneys = twMcdInfo.getInvestProp().add(hyFee);
 
                     QueryWrapper<TwUserCoin> userCoinQueryWrapper = new QueryWrapper<>();
-                    userCoinQueryWrapper.eq("userid", uid);
+                    userCoinQueryWrapper.eq("userid", twMcdInfo.getUid());
                     TwUserCoin subTwUserCoin = twUserCoinService.getOne(userCoinQueryWrapper);
 
                     TwMcdHyOrder twHyorder = new TwMcdHyOrder();
@@ -1774,7 +1774,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
                     BigDecimal subtmoneys = twMcdInfo.getInvestProp().add(hyFee);
 
                     QueryWrapper<TwUserCoin> userCoinQueryWrapper = new QueryWrapper<>();
-                    userCoinQueryWrapper.eq("userid", uid);
+                    userCoinQueryWrapper.eq("userid", twMcdInfo.getUid());
                     TwUserCoin subTwUserCoin = twUserCoinService.getOne(userCoinQueryWrapper);
 
                     TwMcdHyOrder twHyorder = new TwMcdHyOrder();
