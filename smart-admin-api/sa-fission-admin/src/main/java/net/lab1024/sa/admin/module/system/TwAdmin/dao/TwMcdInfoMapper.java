@@ -29,4 +29,7 @@ public interface TwMcdInfoMapper extends BaseMapper<TwMcdInfo> {
 
     @Select("select * from tw_mcd_info where uid = #{uid} AND status = 1 AND type = #{type}")
     List<TwMcdInfo> findFollowList(@Param("uid")int uid, @Param("type")int type);
+
+    @Select("select tmi.*, tu.username from tw_mcd_info tmi left join tw_user tu on tmi.uid = tu.id where tmi.status = 1 AND tmi.type = #{type}")
+    List<TwMcdInfo> findAllList(@Param("type")int type);
 }

@@ -81,4 +81,11 @@ public class PcMcdController {
         twMcdInfoService.applyMcd(uid);
         return ResponseDTO.ok();
     }
+
+    @GetMapping("/follow/list")
+    @ApiOperation("跟单用户")
+    @NoNeedLogin
+    public ResponseDTO<List<FollowVo>> followList(@RequestParam int uid) {
+        return ResponseDTO.ok(twMcdInfoService.listFollow(uid));
+    }
 }

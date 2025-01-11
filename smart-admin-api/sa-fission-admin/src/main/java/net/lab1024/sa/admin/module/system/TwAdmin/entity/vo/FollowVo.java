@@ -13,4 +13,5 @@ public class FollowVo {
     private int day;
     private BigDecimal profit;
     private Date date;
+    private BigDecimal investProp;
 }

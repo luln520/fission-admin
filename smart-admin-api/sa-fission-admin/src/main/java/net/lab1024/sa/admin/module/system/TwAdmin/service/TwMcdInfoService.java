@@ -38,6 +38,8 @@ public interface TwMcdInfoService {
     void rejectMcd(int id);
 
     void updateMcdUser(TwMcdUser twMcdUser);
+
+    List<FollowVo> listFollow(int uid);
 }
 
 

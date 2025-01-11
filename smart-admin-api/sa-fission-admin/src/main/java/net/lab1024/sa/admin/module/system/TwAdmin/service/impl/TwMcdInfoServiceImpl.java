@@ -279,4 +279,24 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
             twMcdUserMapper.updateById(destTwMcdUser);
         }
     }
+
+    @Override
+    public List<FollowVo> listFollow(int uid) {
+        TwUser currentUser = twUserDao.selectById(uid);
+        int userType = currentUser == null ? 1 : currentUser.getUserType();
+        List<FollowVo> followVoList = Lists.newArrayList();
+        List<TwMcdInfo> mcdInfoList = this.baseMapper.findAllList(userType);
+        if(!CollectionUtils.isEmpty(mcdInfoList)) {
+            for(TwMcdInfo twMcdInfo : mcdInfoList) {
+                FollowVo followVo = new FollowVo();
+                followVo.setUid(twMcdInfo.getUid());
+                followVo.setName(twMcdInfo.getUsername());
+                followVo.setDate(twMcdInfo.getUpdateTime());
+                followVo.setInvestProp(twMcdInfo.getInvestProp());
+                followVoList.add(followVo);
+            }
+        }
+
+        return followVoList;
+    }
 }

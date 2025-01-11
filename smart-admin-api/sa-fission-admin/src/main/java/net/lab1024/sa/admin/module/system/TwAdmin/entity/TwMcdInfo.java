@@ -53,4 +53,7 @@ public class TwMcdInfo implements Serializable {
 
     @ApiModelProperty("状态：1正常、2模拟")
     private Integer type;
+
+    @TableField(exist = false)
+    private String username;
 }
