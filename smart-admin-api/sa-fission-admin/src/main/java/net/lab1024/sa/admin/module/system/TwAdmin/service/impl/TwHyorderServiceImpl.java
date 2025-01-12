@@ -537,13 +537,13 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
             }
         }
 
-        if(twUser.getBuyOn() == 2){
+        /*if(twUser.getBuyOn() == 2){
             if(language.equals("zh")){
                 return ResponseDTO.userErrorParam("您的账户已被禁止交易，请联系客服！");
             }else{
                 return ResponseDTO.userErrorParam("Your account has been banned from trading, please contact customer service！");
             }
-        }
+        }*/
 
 //            if(ctzed.compareTo(twHysetting.getHyMin()) < 0){
 //                ResponseDTO.userErrorParam("不能小于最低投资额度");

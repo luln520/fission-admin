@@ -150,6 +150,11 @@ public class TwIndexController {
         StatisticNumVo rechargeStatisticNumVo = twRechargeService.statisticNum(startDate, endDate, companyId);
         StatisticNumVo withdrawStatisticNumVo = twMyzcService.statisticNum(startDate, endDate, companyId);
 
+        BigDecimal userRecharge = twRechargeService.userRecharge(companyId);
+        BigDecimal adminRecharge = twRechargeService.adminRecharge(companyId);
+        BigDecimal deductRecharge = twRechargeService.deduct(companyId);
+        BigDecimal giftRecharge = twRechargeService.giftRecharge(companyId);
+
         result.put("userStatistic", statisticUserVo);
         result.put("userAuthStatistic", statisticAuthUserVo);
 
@@ -179,6 +184,10 @@ public class TwIndexController {
         result.put("allWithdraw", allWithdraw);
         result.put("allLineUsers", allLineUsers);
 
+        result.put("userRecharge", userRecharge);
+        result.put("adminRecharge", adminRecharge);
+        result.put("deductRecharge", deductRecharge);
+        result.put("giftRecharge", giftRecharge);
         return ResponseDTO.ok(result);
     }
 

@@ -46,4 +46,11 @@ public interface TwRechargeService extends IService<TwRecharge> {
 
     StatisticNumVo statisticNum(String startDate, String endDate, int companyId);
 
+    BigDecimal userRecharge(int companyId);
+
+    BigDecimal adminRecharge(int companyId);
+
+    BigDecimal deduct(int companyId);
+
+    BigDecimal giftRecharge(int companyId);
 }

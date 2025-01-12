@@ -21,4 +21,6 @@ public class TwHyorderVo extends PageParam {
     private String plantimeEnd;   //计划时间
 
     private String time;
+
+    private Integer orderType;
 }
