@@ -404,4 +404,104 @@ public class TwRechargeServiceImpl extends ServiceImpl<TwRechargeDao, TwRecharge
         return statisticNumVo;
     }
 
+    @Override
+    public BigDecimal userRecharge(int companyId) {
+        QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(num), 0) as recharge")
+                .eq("status", 2)
+                .eq("atype", 0)
+                .eq("company_id", companyId);
+        List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
+        if (result.isEmpty()) {
+            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object totalNumObject = result.get(0).get("recharge");
+        if (totalNumObject instanceof BigDecimal) {
+            return ((BigDecimal) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Long) {
+            return BigDecimal.valueOf((Long) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Integer) {
+            return BigDecimal.valueOf((Integer) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+    }
+
+    @Override
+    public BigDecimal adminRecharge(int companyId) {
+        QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(num), 0) as recharge")
+                .eq("status", 2)
+                .eq("atype", 1)
+                .eq("company_id", companyId);
+        List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
+        if (result.isEmpty()) {
+            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object totalNumObject = result.get(0).get("recharge");
+        if (totalNumObject instanceof BigDecimal) {
+            return ((BigDecimal) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Long) {
+            return BigDecimal.valueOf((Long) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Integer) {
+            return BigDecimal.valueOf((Integer) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+    }
+
+    @Override
+    public BigDecimal deduct(int companyId) {
+        QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(num), 0) as recharge")
+                .eq("status", 2)
+                .eq("type", 2)
+                .eq("company_id", companyId);
+        List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
+        if (result.isEmpty()) {
+            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object totalNumObject = result.get(0).get("recharge");
+        if (totalNumObject instanceof BigDecimal) {
+            return ((BigDecimal) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Long) {
+            return BigDecimal.valueOf((Long) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Integer) {
+            return BigDecimal.valueOf((Integer) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+    }
+
+    @Override
+    public BigDecimal giftRecharge(int companyId) {
+        QueryWrapper<TwRecharge> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("IFNULL(SUM(num), 0) as recharge")
+                .eq("status", 2)
+                .eq("type", 3)
+                .eq("company_id", companyId);
+        List<Map<String, Object>> result = this.baseMapper.selectMaps(queryWrapper);
+        if (result.isEmpty()) {
+            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        Object totalNumObject = result.get(0).get("recharge");
+        if (totalNumObject instanceof BigDecimal) {
+            return ((BigDecimal) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Long) {
+            return BigDecimal.valueOf((Long) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else if (totalNumObject instanceof Integer) {
+            return BigDecimal.valueOf((Integer) totalNumObject).setScale(2, BigDecimal.ROUND_HALF_UP);
+        } else {
+            // 处理其他可能的类型
+            return BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+    }
+
 }

@@ -9,7 +9,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,6 +32,7 @@ public class TwUserTeam implements Serializable {
     */
     @NotNull(message="[]不能为空")
     @ApiModelProperty("")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
     * 用户id
