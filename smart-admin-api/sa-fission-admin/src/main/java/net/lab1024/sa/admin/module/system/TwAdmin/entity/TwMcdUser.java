@@ -58,4 +58,7 @@ public class TwMcdUser implements Serializable {
     private String usercode;
     @TableField(exist = false)
     private String username;
+
+    @ApiModelProperty("跟单总人数")
+    private Integer peopleCount;
 }

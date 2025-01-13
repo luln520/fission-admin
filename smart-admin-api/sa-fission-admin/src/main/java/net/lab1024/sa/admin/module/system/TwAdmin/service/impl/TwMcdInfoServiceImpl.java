@@ -16,6 +16,7 @@ import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwUser;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMcdInfoService;
 import net.lab1024.sa.common.common.domain.PageParam;
+import net.lab1024.sa.common.common.exception.BusinessException;
 import net.lab1024.sa.common.common.util.DateUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.poi.ss.formula.functions.T;
@@ -78,6 +79,7 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
                     mcdInfoVo.setTotalAmount(twMcdUser.getAmount());
                     mcdInfoVo.setDays(twMcdUser.getDays());
                     mcdInfoVo.setMinInvest(twMcdUser.getMinInvest());
+                    mcdInfoVo.setPeopleCount(twMcdUser.getPeopleCount());
                 }
                 mcdInfoVoList.add(mcdInfoVo);
 
@@ -128,6 +130,7 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
                 mcdInfoVo.setDays(twMcdUser.getDays());
                 mcdInfoVo.setMinInvest(twMcdUser.getMinInvest());
                 mcdInfoVo.setProfitHistory(result);
+                mcdInfoVo.setPeopleCount(twMcdUser.getPeopleCount());
             }
         }
 
@@ -298,5 +301,20 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
         }
 
         return followVoList;
+    }
+
+    @Override
+    public void batchFollow(int followUid, String users, BigDecimal money) {
+        String[] usercodeArr = users.split(",");
+        for(String usercode : usercodeArr) {
+            QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_code", usercode.trim());
+            TwUser twUser = twUserDao.selectOne(queryWrapper);
+            if(twUser == null) {
+                throw new BusinessException("当前跟单用户有不存在的用户，请检查");
+            }
+
+            addFollow(followUid, twUser.getId(), money);
+        }
     }
 }

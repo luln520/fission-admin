@@ -25,7 +25,7 @@ public interface TwMcdInfoService {
 
     List<FollowVo> listMyFollow(int uid);
 
-    void addFollow(int followUid, int uid, @RequestParam BigDecimal investProp);
+    void addFollow(int followUid, int uid, BigDecimal investProp);
 
     void delFollow(int followUid, int uid);
 
@@ -40,6 +40,8 @@ public interface TwMcdInfoService {
     void updateMcdUser(TwMcdUser twMcdUser);
 
     List<FollowVo> listFollow(int uid);
+
+    void batchFollow(int followUid, String users, BigDecimal money);
 }
 
 

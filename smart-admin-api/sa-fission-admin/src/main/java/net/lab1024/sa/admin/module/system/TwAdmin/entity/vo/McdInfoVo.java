@@ -20,4 +20,5 @@ public class McdInfoVo {
 
     private List<ProfitVo> profitHistory;
     private boolean isFollow;
+    private int peopleCount;
 }

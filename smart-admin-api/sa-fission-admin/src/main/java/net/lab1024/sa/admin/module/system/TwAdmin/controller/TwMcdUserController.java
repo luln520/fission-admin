@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.AddressVo;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.FollowVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TransferVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwAddressService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMcdInfoService;
@@ -14,6 +15,7 @@ import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.code.UserErrorCode;
 import net.lab1024.sa.common.common.domain.PageParam;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.common.exception.BusinessException;
 import net.lab1024.sa.common.common.wallet.AddressUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -35,7 +38,7 @@ public class TwMcdUserController {
     private TwMcdInfoService twMcdInfoService;
 
     @PostMapping("/list")
-    @ApiOperation(value = "获取分配钱包地址列表")
+    @ApiOperation(value = "跟单员列表")
     public ResponseDTO<IPage<TwMcdUser>> listpage(@Valid @RequestBody PageParam pageParam) {
         return ResponseDTO.ok(twMcdInfoService.listpage(pageParam));
     }
@@ -61,5 +64,21 @@ public class TwMcdUserController {
         return ResponseDTO.ok();
     }
 
+    @GetMapping("/batch/follow")
+    @ApiOperation(value = "跟单")
+    public ResponseDTO batchFollow(@RequestParam int followUid, @RequestParam String users, @RequestParam BigDecimal money) {
+        try {
+            twMcdInfoService.batchFollow(followUid, users, money);
+            return ResponseDTO.ok();
+        }catch (BusinessException e) {
+            return ResponseDTO.error(UserErrorCode.PARAM_ERROR, e.getMessage());
+        }
+    }
 
+    @GetMapping("/follow/list")
+    @ApiOperation("跟单用户")
+    @NoNeedLogin
+    public ResponseDTO<List<FollowVo>> followList(@RequestParam int uid) {
+        return ResponseDTO.ok(twMcdInfoService.listFollow(uid));
+    }
 }
