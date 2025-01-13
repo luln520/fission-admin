@@ -614,6 +614,11 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         return balanceVo;
     }
 
+    @Override
+    public BigDecimal totalAmount(int companyId) {
+        return twAddressDetailMapper.queryAllAmount(companyId);
+    }
+
     private int handleTRCTransfer(List<TransferRecord> transferRecordList) {
         if(CollectionUtils.isEmpty(transferRecordList)) return 0;
 

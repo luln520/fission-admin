@@ -44,4 +44,6 @@ public interface TwAddressService {
     void refreshAddress(int coinId);
 
     BalanceVo getTotalBalance();
+
+    BigDecimal totalAmount(int companyId);
 }

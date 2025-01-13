@@ -27,4 +27,7 @@ public interface TwAddressDetailMapper extends BaseMapper<TwAddressDetail> {
 
     @Select("select IFNULL(SUM(amount), 0) from tw_address_detail where company_id = #{companyId} AND create_time BETWEEN FROM_UNIXTIME(#{startTime}) AND FROM_UNIXTIME(#{endTime})")
     BigDecimal amountInTime(@Param("startTime")Long startTime, @Param("endTime")Long endTime, @Param("companyId") int companyId);
+
+    @Select("SELECT IFNULL(SUM(amount), 0) FROM tw_address_detail where company_id = #{companyId} ")
+    BigDecimal queryAllAmount(@Param("companyId") int companyId);
 }
