@@ -288,7 +288,7 @@ public class TwMcdInfoServiceImpl extends ServiceImpl<TwMcdInfoMapper, TwMcdInfo
         TwUser currentUser = twUserDao.selectById(uid);
         int userType = currentUser == null ? 1 : currentUser.getUserType();
         List<FollowVo> followVoList = Lists.newArrayList();
-        List<TwMcdInfo> mcdInfoList = this.baseMapper.findAllList(userType, uid);
+        List<TwMcdInfo> mcdInfoList = this.baseMapper.findAllList(uid, userType);
         if(!CollectionUtils.isEmpty(mcdInfoList)) {
             for(TwMcdInfo twMcdInfo : mcdInfoList) {
                 FollowVo followVo = new FollowVo();
