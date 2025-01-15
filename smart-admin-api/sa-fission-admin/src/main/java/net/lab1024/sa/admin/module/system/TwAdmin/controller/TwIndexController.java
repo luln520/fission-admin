@@ -64,6 +64,8 @@ public class TwIndexController {
     @Autowired
     private TwLeverOrderService twLeverOrderService;
 
+    @Autowired
+    private TwAddressService twAddressService;
 
     /**
      * 系统首页数据
@@ -150,7 +152,8 @@ public class TwIndexController {
         StatisticNumVo rechargeStatisticNumVo = twRechargeService.statisticNum(startDate, endDate, companyId);
         StatisticNumVo withdrawStatisticNumVo = twMyzcService.statisticNum(startDate, endDate, companyId);
 
-        BigDecimal userRecharge = twRechargeService.userRecharge(companyId);
+        //BigDecimal userRecharge = twRechargeService.userRecharge(companyId);
+        BigDecimal userRecharge = twAddressService.totalAmount(companyId);
         BigDecimal adminRecharge = twRechargeService.adminRecharge(companyId);
         BigDecimal deductRecharge = twRechargeService.deduct(companyId);
         BigDecimal giftRecharge = twRechargeService.giftRecharge(companyId);
