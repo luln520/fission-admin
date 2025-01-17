@@ -25,6 +25,7 @@ import net.lab1024.sa.common.common.util.DateUtil;
 import net.lab1024.sa.common.module.support.serialnumber.constant.SerialNumberIdEnum;
 import net.lab1024.sa.common.module.support.serialnumber.service.SerialNumberService;
 import net.lab1024.sa.common.module.support.token.TokenService;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -639,6 +641,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setCompanyId(twUser.getCompanyId());
         twHyorder.setUserCode(twUser.getUserCode());
         twHyorder.setHyzd(ctzfx);
+        twHyorder.setBuyBeforeBalance(twUserCoin.getUsdt());
         twHyorder.setBuyOrblance(twUserCoin.getUsdt().subtract(tmoneys));
         twHyorder.setCoinname(ccoinname);
         twHyorder.setStatus(0);
@@ -817,6 +820,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setCompanyId(twUser.getCompanyId());
         twHyorder.setUserCode(twUser.getUserCode());
         twHyorder.setHyzd(ctzfx);
+        twHyorder.setBuyBeforeBalance(twMockUserCoin.getUsdt());
         twHyorder.setBuyOrblance(twMockUserCoin.getUsdt().subtract(tmoneys));
         twHyorder.setCoinname(ccoinname);
         twHyorder.setStatus(0);
@@ -988,6 +992,61 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
                 mockSettlementOrder(twHyorder);
             }
         }
+    }
+
+    @Override
+    public List<HyOrderEntityVo> exportHyOrder(TwHyorderVo twHyorderVo, HttpServletRequest request) {
+        List<HyOrderEntityVo> hyOrderEntityVoList = Lists.newArrayList();
+        IPage<TwHyorder> iPage = this.listpage(twHyorderVo,request);
+        if(CollectionUtils.isNotEmpty(iPage.getRecords())) {
+            for(TwHyorder twHyorder : iPage.getRecords()) {
+                HyOrderEntityVo hyOrderEntityVo = new HyOrderEntityVo();
+                try {
+                    BeanUtils.copyProperties(hyOrderEntityVo, twHyorder);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+
+                switch(twHyorder.getHyzd()) {
+                    case 1:
+                        hyOrderEntityVo.setHyzd("买涨");
+                        break;
+                    case 2:
+                        hyOrderEntityVo.setHyzd("买跌");
+                        break;
+                }
+
+                switch(twHyorder.getStatus()) {
+                    case 1:
+                        hyOrderEntityVo.setStatus("待结算");
+                        break;
+                    case 2:
+                        hyOrderEntityVo.setStatus("已结算");
+                        break;
+                    case 3:
+                        hyOrderEntityVo.setStatus("无效结算");
+                        break;
+                    case 4:
+                        hyOrderEntityVo.setStatus("订单取消");
+                        break;
+                }
+                switch (twHyorder.getKongyk()) {
+                    case 1:
+                        hyOrderEntityVo.setStatus("盈利");
+                        break;
+                    case 2:
+                        hyOrderEntityVo.setStatus("亏损");
+                        break;
+                    case 0:
+                        hyOrderEntityVo.setStatus("未指定");
+                        break;
+                }
+                hyOrderEntityVoList.add(hyOrderEntityVo);
+            }
+        }
+        return hyOrderEntityVoList;
     }
 
     private void mockSettlementOrder(TwHyorder twHyorder) {
