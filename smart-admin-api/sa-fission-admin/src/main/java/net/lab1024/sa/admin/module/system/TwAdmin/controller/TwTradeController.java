@@ -7,17 +7,21 @@ import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdHyOrder;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.HyOrderEntityVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.TwHyorderVo;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMcdHyOrderService;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
+import net.lab1024.sa.common.common.util.SmartEasyPoiExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -167,6 +171,19 @@ public class TwTradeController {
     @ResponseBody
     public ResponseDTO<IPage<TwMcdHyOrder>> mcdHyorderlist(@Valid @RequestBody TwHyorderVo twHyorderVo, HttpServletRequest request) {
         return ResponseDTO.ok(twMcdHyOrderService.listpage(twHyorderVo,request));
+    }
+
+    @PostMapping("/export/hyorderlist")
+    @ApiOperation(value = "导出Excel")
+    public void exportHyorderlist(@Valid @RequestBody TwHyorderVo twHyorderVo,
+                                                           HttpServletRequest request,
+                                                           HttpServletResponse response) {
+        List<HyOrderEntityVo> hyOrderEntityVoList = twHyorderService.exportHyOrder(twHyorderVo, request);
+        try {
+            SmartEasyPoiExcelUtil.exportExcel(hyOrderEntityVoList, "合约列表", "sheet1", HyOrderEntityVo.class, "hyorder", true, response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

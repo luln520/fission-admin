@@ -46,4 +46,8 @@ public interface TwAddressService {
     BalanceVo getTotalBalance();
 
     BigDecimal totalAmount(int companyId);
+
+    int statisticRechargeCount(int companyId);
+
+    int statisticFirstRechargeCount(int companyId);
 }

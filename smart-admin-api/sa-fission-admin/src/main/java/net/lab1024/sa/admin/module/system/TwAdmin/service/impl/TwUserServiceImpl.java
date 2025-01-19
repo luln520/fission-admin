@@ -249,6 +249,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
             Page<TwUser> objectPage = new Page<>(twUserVo.getPageNum(), twUserVo.getPageSize());
             List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
             for(TwUser twUser:list){
+                String upPaths = twUser.getPath();
                 if(inviteType == 1){
                     String paths = "";
                     EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
@@ -341,6 +342,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
 
                 }
                 twUser.setTwUserKuangji(kjList);
+                twUser.setUpUserId(convertPathToUserId(upPaths));
                 list1.add(twUser);
             }
             objectPage.setRecords(list1);
@@ -354,6 +356,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twUserVo.setDepartmentId(byId1.getDepartmentId());
                 List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
                 for(TwUser twUser:list){
+                    String upPaths = twUser.getPath();
                     if(inviteType == 1){
 
                         String paths = "";
@@ -446,7 +449,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         }
                     }
                     twUser.setTwUserKuangji(kjList);
-
+                    twUser.setUpUserId(convertPathToUserId(upPaths));
                     list1.add(twUser);
                 }
                 objectPage.setRecords(list1);
@@ -458,6 +461,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }
                 List<TwUser> list = baseMapper.listpage(objectPage, twUserVo);
                 for(TwUser twUser:list){
+                    String upPaths = twUser.getPath();
                     if(inviteType == 1){
                         String paths = "";
                         EmployeeEntity byId = employeeService.getById(Long.valueOf(twUser.getInvit1()));
@@ -548,6 +552,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                         }
                     }
                     twUser.setTwUserKuangji(kjList);
+                    twUser.setUpUserId(convertPathToUserId(upPaths));
                     list1.add(twUser);
 
                 }
@@ -2446,5 +2451,25 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
         }
     }
 
-
+    private String convertPathToUserId(String path) {
+        String[] parts = path.split(",");
+        if (parts.length > 0) {
+            String lastPart = parts[parts.length - 1];
+            if (lastPart.startsWith("#") && lastPart.endsWith("#")) {
+                String upUserId = lastPart.replaceAll("#", "");
+                EmployeeEntity byId = employeeService.getById(Long.valueOf(upUserId));
+                if(byId == null){
+                    QueryWrapper<TwUser> queryWrapper1 = new QueryWrapper<>();
+                    queryWrapper1.eq("id", upUserId);
+                    TwUser one = this.getOne(queryWrapper1);
+                    if(one != null){
+                        return one.getRealName();
+                    }
+                }else{
+                    return byId.getActualName();
+                }
+            }
+        }
+        return StringUtils.EMPTY;
+    }
 }

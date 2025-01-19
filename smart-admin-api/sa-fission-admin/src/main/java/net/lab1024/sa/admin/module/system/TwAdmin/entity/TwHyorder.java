@@ -48,6 +48,9 @@ public class TwHyorder implements Serializable {
     */
     @ApiModelProperty("投资金额")
     private BigDecimal num;
+
+    @ApiModelProperty("买前余额")
+    private BigDecimal buyBeforeBalance;
     /**
     * 买后余额
     */

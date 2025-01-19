@@ -158,6 +158,10 @@ public class TwIndexController {
         BigDecimal deductRecharge = twRechargeService.deduct(companyId);
         BigDecimal giftRecharge = twRechargeService.giftRecharge(companyId);
 
+        int rechargeCount = twAddressService.statisticRechargeCount(companyId);
+        int firstRechargeCount = twAddressService.statisticFirstRechargeCount(companyId);
+        int dealCount = twHyorderService.statisticDealCount(companyId);
+
         result.put("userStatistic", statisticUserVo);
         result.put("userAuthStatistic", statisticAuthUserVo);
 
@@ -191,6 +195,10 @@ public class TwIndexController {
         result.put("adminRecharge", adminRecharge);
         result.put("deductRecharge", deductRecharge);
         result.put("giftRecharge", giftRecharge);
+
+        result.put("rechargeCount", rechargeCount);
+        result.put("firstRechargeCount", firstRechargeCount);
+        result.put("dealCount", dealCount);
         return ResponseDTO.ok(result);
     }
 

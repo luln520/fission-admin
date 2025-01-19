@@ -3,14 +3,23 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwRechargeDao">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge">
-        select * from tw_recharge where 1=1 and company_id  = #{obj.companyId}
+        select username,addtime, updatetime, num, type from tw_recharge where 1=1 and company_id  = #{obj.companyId}
         <if test="obj.username != null and obj.username !=''">
             and (user_code like concat('%',#{obj.username},'%') or username like concat('%',#{obj.username},'%'))
         </if>
         <if test="obj.userCode != null and obj.userCode !=''">
             and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>
-        <if test="obj.startTime != null and obj.startTime !=''">
+        union all
+        SELECT tu.username, tad.create_time as addtime, tad.update_time, tad.amount as num, 4 FROM tw_address_detail tad left join tw_address ta on tad.address_id = ta.id
+        left join tw_user tu on ta.uid = tu.id where tx_type=0
+        <if test="obj.username != null and obj.username !=''">
+            and (tu.user_code like concat('%',#{obj.username},'%') or tu.username like concat('%',#{obj.username},'%'))
+        </if>
+        <if test="obj.userCode != null and obj.userCode !=''">
+            and (tu.user_code like concat('%',#{obj.userCode},'%') or tu.username like concat('%',#{obj.userCode},'%'))
+        </if>
+        <!--<if test="obj.startTime != null and obj.startTime !=''">
             and addtime >= #{obj.startTime}
         </if>
         <if test="obj.endTime != null and obj.endTime !=''">
@@ -24,8 +33,8 @@
         </if>
         <if test="obj.employeeId != null and obj.employeeId !=''">
             and path like concat('%',#{obj.employeeId},'%')
-        </if>
-        order by id desc
+        </if>-->
+        order by updatetime desc
     </select>
     <select id="statisticPerNum" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo">
         SELECT
