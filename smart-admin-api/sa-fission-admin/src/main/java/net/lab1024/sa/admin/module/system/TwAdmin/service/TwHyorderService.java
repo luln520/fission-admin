@@ -72,4 +72,6 @@ public interface TwHyorderService extends IService<TwHyorder> {
     void settlement(String orderNo);
 
     List<HyOrderEntityVo> exportHyOrder(TwHyorderVo twHyorderVo, HttpServletRequest request);
+
+    int statisticDealCount(int companyId);
 }

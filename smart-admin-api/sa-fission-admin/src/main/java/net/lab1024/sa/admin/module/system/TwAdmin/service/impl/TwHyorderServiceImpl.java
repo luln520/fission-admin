@@ -1049,6 +1049,11 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         return hyOrderEntityVoList;
     }
 
+    @Override
+    public int statisticDealCount(int companyId) {
+        return this.baseMapper.statisticDealCount(companyId);
+    }
+
     private void mockSettlementOrder(TwHyorder twHyorder) {
         Integer companyId = twHyorder.getCompanyId();
         QueryWrapper<TwHysetting> queryWrapper1 = new QueryWrapper<>();

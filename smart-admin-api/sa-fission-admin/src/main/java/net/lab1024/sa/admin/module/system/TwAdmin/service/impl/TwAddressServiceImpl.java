@@ -619,6 +619,16 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
         return twAddressDetailMapper.queryAllAmount(companyId);
     }
 
+    @Override
+    public int statisticRechargeCount(int companyId) {
+        return twAddressDetailMapper.statisticRechargeCount(companyId);
+    }
+
+    @Override
+    public int statisticFirstRechargeCount(int companyId) {
+        return twAddressDetailMapper.statisticFirstRechargeCount(companyId);
+    }
+
     private int handleTRCTransfer(List<TransferRecord> transferRecordList) {
         if(CollectionUtils.isEmpty(transferRecordList)) return 0;
 

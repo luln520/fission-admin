@@ -30,4 +30,10 @@ public interface TwAddressDetailMapper extends BaseMapper<TwAddressDetail> {
 
     @Select("SELECT IFNULL(SUM(amount), 0) FROM tw_address_detail where company_id = #{companyId} ")
     BigDecimal queryAllAmount(@Param("companyId") int companyId);
+
+    @Select("select count(*) from (SELECT ta.uid, count(*) FROM tw_address_detail tad left join tw_address ta on tad.address_id = ta.id where tad.company_id = #{companyId} group by ta.uid) s")
+    int statisticRechargeCount(@Param("companyId") Integer companyId);
+
+    @Select("select count(*) from (SELECT ta.uid, count(*) FROM tw_address_detail tad left join tw_address ta on tad.address_id = ta.id where tad.company_id = #{companyId} group by ta.uid having count(*) = 1) s")
+    int statisticFirstRechargeCount(@Param("companyId") Integer companyId);
 }

@@ -51,5 +51,8 @@ public interface TwHyorderDao extends BaseMapper<TwHyorder> {
 
     @Update("update tw_hyorder set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%') AND uid = #{uid}")
     int updatePathPer(@Param("sourceId") int sourceId, @Param("destId") int destId, @Param("uid") int uid);
+
+    @Select("select count(*) from (SELECT uid, count(*) FROM tw_hyorder where company_id = #{companyId} AND status = 2 AND order_type = 1 group by uid) s")
+    int statisticDealCount(@Param("companyId") Integer companyId);
 }
 
