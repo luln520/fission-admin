@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -119,4 +120,18 @@ public class TwRecharge implements Serializable {
     @ApiModelProperty("货币充值数")
     private String currenyName;
 
+    @ApiModelProperty("转账地址")
+    private String fromAddress;
+
+    @TableField(exist = false)
+    @ApiModelProperty("货币")
+    private String currency;
+
+    @TableField(exist = false)
+    @ApiModelProperty("主链")
+    private String chain;
+
+    @TableField(exist = false)
+    @ApiModelProperty("钱包余额")
+    private BigDecimal balance;
 }
