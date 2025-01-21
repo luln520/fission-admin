@@ -70,5 +70,15 @@ public class TimerController {
     public void mockUserStatus()  {
         timerService.mockUserStatus();
     }
+
+    @Scheduled(cron = "*/5 * * * * ?")
+    public void mcdHycarryout()  {
+        timerService.mcdHycarryout();
+    }
+
+    @Scheduled(cron = "*/5 * * * * ?")
+    public void mockMcdhycarryout()  {
+        timerService.mockMcdhycarryout();
+    }
 }
 

@@ -11,6 +11,8 @@ import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwFooterDao;
 import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwHyorderDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdHyorderMapper;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdInfoMapper;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
@@ -89,6 +91,15 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
 
     @Autowired
     private TwNoticeService twNoticeService;
+
+    @Autowired
+    private TwMcdHyorderMapper twMcdHyorderMapper;
+
+    @Autowired
+    private TwMcdInfoMapper twMcdInfoMapper;
+
+    @Autowired
+    private TwMcdInfoService twMcdInfoService;
 
     @Override
     public Integer countUnClosedOrders(int companyId) {
@@ -632,6 +643,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         // 将 LocalDateTime 转换为时间戳（秒级别）
         long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
 
+
         TwHyorder twHyorder = new TwHyorder();
         twHyorder.setUid(uid);
         twHyorder.setOrderNo(orderNo);
@@ -653,7 +665,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setDepartment(twUser.getDepatmentId());
         twHyorder.setBuytime(DateUtil.stract12());
         twHyorder.setSelltime(selltime);
-        twHyorder.setIntselltime((int) (selltime.getTime()/1000));
+        twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
         twHyorder.setBuyprice(close);
         twHyorder.setSellprice(new BigDecimal(0));
         twHyorder.setPloss(new BigDecimal(0));
@@ -661,6 +673,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setKongyk(0);
         twHyorder.setInvit(invite);
         this.save(twHyorder);
+
         //扣除USDT额度
         twUserCoinService.decre(uid,tmoneys,twUserCoin.getUsdt());
 
@@ -680,6 +693,8 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twBill.setSt(2);
         twBill.setRemark("购买"+ ccoinname + "秒合约");
         twBillService.save(twBill);
+
+
         if(language.equals("zh")){
             return ResponseDTO.ok(orderNo);
         }else{
@@ -811,6 +826,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         // 将 LocalDateTime 转换为时间戳（秒级别）
         long timestamp = localDateTime.atZone(ZoneId.systemDefault()).toEpochSecond();
 
+
         TwHyorder twHyorder = new TwHyorder();
         twHyorder.setUid(uid);
         twHyorder.setOrderNo(orderNo);
@@ -832,7 +848,7 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setDepartment(twUser.getDepatmentId());
         twHyorder.setBuytime(DateUtil.stract12());
         twHyorder.setSelltime(selltime);
-        twHyorder.setIntselltime((int) (selltime.getTime()/1000));
+        twHyorder.setIntselltime((int) (selltime.getTime() / 1000));
         twHyorder.setBuyprice(close);
         twHyorder.setSellprice(new BigDecimal(0));
         twHyorder.setPloss(new BigDecimal(0));
@@ -841,7 +857,8 @@ public class TwHyorderServiceImpl extends ServiceImpl<TwHyorderDao, TwHyorder> i
         twHyorder.setInvit(invite);
         this.save(twHyorder);
         //扣除USDT额度
-        twMockUserCoinService.decre(uid,tmoneys,twMockUserCoin.getUsdt());
+        twMockUserCoinService.decre(uid, tmoneys, twMockUserCoin.getUsdt());
+
 
 //        //创建财务日志
 //        TwBill twBill = new TwBill();

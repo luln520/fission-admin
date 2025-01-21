@@ -47,6 +47,9 @@ public interface TwUserDao extends BaseMapper<TwUser> {
     @Update("update tw_user set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
     int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
 
+    @Select("select * from tw_user where id in (select follow_uid from tw_mcd_info where uid = #{uid} AND type = #{type} and status = 1) ")
+    List<TwUser> listMcdUser(@Param("uid")int uid, @Param("type")int type);
+
     @Update("update tw_user set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%') AND id = #{uid}")
     int updatePathPer(@Param("sourceId") int sourceId, @Param("destId") int destId, @Param("uid") int uid);
 }

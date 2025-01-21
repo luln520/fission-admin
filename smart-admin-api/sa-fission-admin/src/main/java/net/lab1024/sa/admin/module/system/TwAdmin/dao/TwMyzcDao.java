@@ -32,11 +32,10 @@ public interface TwMyzcDao extends BaseMapper<TwMyzc> {
     @Update("update tw_myzc set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%')")
     int updatePath(@Param("sourceId") int sourceId, @Param("destId") int destId);
 
-    @Select("SELECT IFNULL(SUM(num), 0) FROM tw_myzc where status = #{status} ")
-    BigDecimal statisticAmount(@Param("status") Integer status);
-
     @Update("update tw_myzc set path = REPLACE(path, #{sourceId}, #{destId}) WHERE path LIKE CONCAT('%', #{sourceId}, '%') AND userid = #{uid}")
     int updatePathPer(@Param("sourceId") int sourceId, @Param("destId") int destId, @Param("uid") int uid);
 
+    @Select("SELECT IFNULL(SUM(num), 0) FROM tw_myzc where status = #{status} ")
+    BigDecimal statisticAmount(@Param("status") Integer status);
 }
 

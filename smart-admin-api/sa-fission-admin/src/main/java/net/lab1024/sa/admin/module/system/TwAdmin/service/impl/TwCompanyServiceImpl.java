@@ -95,16 +95,18 @@ public class TwCompanyServiceImpl extends ServiceImpl<TwCompanyMapper, TwCompany
             queryWrapper.eq("login_name",twCompany.getCompanyAccount());
             EmployeeEntity one = employeeManager.getOne(queryWrapper);
             // 设置密码 默认密码
-            if(StringUtils.isNotEmpty(twCompany.getCompanyPwd())){
-                one.setLoginPwd(encryptPwd);
+            if(one != null) {
+                if (StringUtils.isNotEmpty(twCompany.getCompanyPwd())) {
+                    one.setLoginPwd(encryptPwd);
+                }
+                one.setLoginName(twCompany.getCompanyAccount());
+                one.setActualName(twCompany.getCompanyAccount());
+                one.setUpdateTime(LocalDateTime.now());
+                one.setCompanyId(twCompany1.getId());
+                List<Long> roleIdList = new ArrayList<>();
+                roleIdList.add(1L);
+                employeeManager.updateEmployee(one, roleIdList);
             }
-            one.setLoginName(twCompany.getCompanyAccount());
-            one.setActualName(twCompany.getCompanyAccount());
-            one.setUpdateTime(LocalDateTime.now());
-            one.setCompanyId(twCompany1.getId());
-            List<Long> roleIdList = new ArrayList<>();
-            roleIdList.add(1L);
-            employeeManager.updateEmployee(one,roleIdList);
         }
 
         return ResponseDTO.ok();

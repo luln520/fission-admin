@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdUserMapper">
+
+    <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdUser">
+        select tmu.*, tu.user_code, tu.username from tw_mcd_user tmu left join tw_user tu on tmu.uid = tu.id
+        order by id desc
+    </select>
+</mapper>

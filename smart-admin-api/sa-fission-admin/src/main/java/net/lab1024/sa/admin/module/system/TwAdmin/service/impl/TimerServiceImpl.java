@@ -8,10 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import io.swagger.models.auth.In;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
-import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwAddressBalanceMapper;
-import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwAddressDetailMapper;
-import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjorderDao;
-import net.lab1024.sa.admin.module.system.TwAdmin.dao.TwKjprofitDao;
+import net.lab1024.sa.admin.module.system.TwAdmin.dao.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.*;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.*;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -79,6 +76,12 @@ public class TimerServiceImpl {
 
     @Autowired
     private TwAddressBalanceMapper twAddressBalanceMapper;
+
+    @Autowired
+    private TwMcdHyorderMapper twMcdHyorderMapper;
+
+    @Autowired
+    private TwMcdHyOrderService twMcdHyOrderService;
 //
 //    @Autowired
 //    private TwKuangjiService twKuangjiService;
@@ -809,6 +812,17 @@ public class TimerServiceImpl {
             twHyorder.setStatus(1);
             twHyorderService.updateById(twHyorder);
         }
+
+        QueryWrapper<TwMcdHyOrder> mcdQueryWrapper = new QueryWrapper<>();
+        mcdQueryWrapper.eq("status",0);
+        mcdQueryWrapper.eq("order_type",1);
+        mcdQueryWrapper.le("intplantime", nowtime);
+        List<TwMcdHyOrder> mcdList = twMcdHyorderMapper.selectList(mcdQueryWrapper);
+
+        for (TwMcdHyOrder twMcdHyOrder : mcdList){
+            twMcdHyOrder.setStatus(1);
+            twMcdHyorderMapper.updateById(twMcdHyOrder);
+        }
     }
     public  void mockhycarryplanout() {
         Instant now = Instant.now();
@@ -825,6 +839,17 @@ public class TimerServiceImpl {
         for (TwHyorder twHyorder:list){
             twHyorder.setStatus(1);
             twHyorderService.updateById(twHyorder);
+        }
+
+        QueryWrapper<TwMcdHyOrder> mcdQueryWrapper = new QueryWrapper<>();
+        mcdQueryWrapper.eq("status",0);
+        mcdQueryWrapper.eq("order_type",2);
+        mcdQueryWrapper.le("intplantime", nowtime);
+        List<TwMcdHyOrder> mcdList = twMcdHyorderMapper.selectList(mcdQueryWrapper);
+
+        for (TwMcdHyOrder twMcdHyOrder : mcdList){
+            twMcdHyOrder.setStatus(1);
+            twMcdHyorderMapper.updateById(twMcdHyOrder);
         }
     }
     public  void mockUserStatus() {
@@ -1658,5 +1683,13 @@ public class TimerServiceImpl {
         JSONObject res = JSONObject.parseObject(map.get("res").toString());
         String rates = JSONObject.parseObject(res.get("rates").toString()).toString();
         System.out.println(rates);
+    }
+
+    public void mcdHycarryout() {
+        twMcdHyOrderService.carrayout();
+    }
+
+    public void mockMcdhycarryout() {
+        twMcdHyOrderService.mockCarrayout();
     }
 }

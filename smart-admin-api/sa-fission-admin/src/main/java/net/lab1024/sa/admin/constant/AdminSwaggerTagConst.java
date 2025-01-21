@@ -164,6 +164,8 @@ public class AdminSwaggerTagConst extends SwaggerTagConst {
 
         public static final String PC_USER = "PC-用户";
 
+        public static final String PC_FOLLOW = "PC-跟单";
+
         public static final String PC_USER_INVITE = "PC-用户邀请";
 
         public static final String PC_COLLECT = "PC-用户收藏";

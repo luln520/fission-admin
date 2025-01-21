@@ -6,8 +6,10 @@ import net.lab1024.sa.admin.constant.AdminSwaggerTagConst;
 import net.lab1024.sa.admin.lock.RedissonLockAnnotation;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHyorder;
 import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwHysetting;
+import net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdHyOrder;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHyorderService;
 import net.lab1024.sa.admin.module.system.TwAdmin.service.TwHysettingService;
+import net.lab1024.sa.admin.module.system.TwAdmin.service.TwMcdHyOrderService;
 import net.lab1024.sa.admin.module.system.TwPC.controller.Res.HyorderOneRes;
 import net.lab1024.sa.common.common.annoation.NoNeedLogin;
 import net.lab1024.sa.common.common.domain.ResponseDTO;
@@ -32,6 +34,9 @@ public class PcContractController {
 
     @Autowired
     private TwHysettingService twHysettingService;
+
+    @Autowired
+    private TwMcdHyOrderService twMcdHyOrderService;
 
     @GetMapping("/getHyorderOne")
     @ResponseBody
@@ -130,6 +135,31 @@ public class PcContractController {
     @NoNeedLogin
     public ResponseDTO closeOrder(@RequestParam String orderNo) {
         return ResponseDTO.ok(twHyorderService.closeOrder(orderNo));
+    }
+
+
+    @GetMapping("/follow/creatorder")
+    @ResponseBody
+    @ApiOperation(value = "跟单合约建仓")
+    @NoNeedLogin
+    @RedissonLockAnnotation(keyParts = "uid")
+    public ResponseDTO followCreatorder(@RequestParam int uid,
+                                        @RequestParam String ctime,
+                                        @RequestParam BigDecimal ctzed,
+                                        @RequestParam String ccoinname,
+                                        @RequestParam int ctzfx,
+                                        @RequestParam String plantime,
+                                        @RequestParam BigDecimal cykbl,
+                                        @RequestParam String language){
+        return twMcdHyOrderService.creatorder(uid,ctime,ctzed,ccoinname,ctzfx,cykbl,language, plantime);
+    }
+
+    @GetMapping("/follow/hyorder")
+    @ResponseBody
+    @ApiOperation(value = "我的跟单列表")
+    @NoNeedLogin
+    public ResponseDTO<List<TwMcdHyOrder>> followHyorder(@RequestParam int uid) {
+        return twMcdHyOrderService.followHyorder(uid);
     }
 
 }

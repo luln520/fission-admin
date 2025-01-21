@@ -173,4 +173,9 @@ public class TwCompany implements Serializable {
     @ApiModelProperty("更新时间")
     private Date updateTime;
 
+    @ApiModelProperty("跟单员最小金额要求")
+    private BigDecimal mcdBalance;
+
+    @ApiModelProperty("跟单员最大金额要求")
+    private BigDecimal mcdMaxBalance;
 }
