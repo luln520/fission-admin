@@ -23,4 +23,6 @@ public class TwHyorderVo extends PageParam {
     private String time;
 
     private Integer orderType;
+
+    private String followUsercode;
 }

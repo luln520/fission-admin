@@ -98,4 +98,8 @@ public class HyOrderEntityVo {
     @ApiModelProperty(value = "用户code")
     private String userCode;
 
+    @ApiModelProperty("买前余额")
+    @Excel(name = "买前余额", width = 10)
+    private BigDecimal buyBeforeBalance;
+
 }

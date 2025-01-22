@@ -153,4 +153,10 @@ public class TwMcdHyOrder implements Serializable {
 
     @ApiModelProperty("主订单ID")
     private String mainOrderNo;
+
+    @ApiModelProperty("会员ID")
+    private Integer followUid;
+
+    @ApiModelProperty("交易员账号")
+    private String followUsername;
 }

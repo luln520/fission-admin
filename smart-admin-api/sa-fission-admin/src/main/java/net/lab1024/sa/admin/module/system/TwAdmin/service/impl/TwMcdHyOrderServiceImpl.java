@@ -1745,6 +1745,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
                     twHyorder.setKongyk(0);
                     twHyorder.setInvit(invite);
                     twHyorder.setMainOrderNo(orderNo);
+                    twHyorder.setFollowUid(uid);
                     this.baseMapper.insert(twHyorder);
 
                     //扣除USDT额度
@@ -1848,6 +1849,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
         twHyorder.setKongyk(0);
         twHyorder.setInvit(invite);
         twHyorder.setMainOrderNo(null);
+        twHyorder.setFollowUid(null);
         this.baseMapper.insert(twHyorder);
 
         //扣除USDT额度
@@ -2043,6 +2045,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
                 twHyorder.setKongyk(0);
                 twHyorder.setInvit(invite);
                 twHyorder.setMainOrderNo(orderNo);
+                twHyorder.setFollowUid(uid);
                 this.baseMapper.insert(twHyorder);
 
                 //扣除USDT额度
@@ -2081,6 +2084,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
         twHyorder.setKongyk(0);
         twHyorder.setInvit(invite);
         twHyorder.setMainOrderNo(null);
+        twHyorder.setFollowUid(null);
         this.baseMapper.insert(twHyorder);
 
         //扣除USDT额度
