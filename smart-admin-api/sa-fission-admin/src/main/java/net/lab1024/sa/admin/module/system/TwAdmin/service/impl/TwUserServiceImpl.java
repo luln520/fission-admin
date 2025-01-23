@@ -1606,6 +1606,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 if(StringUtils.isEmpty(twUser.getCardfm())){
                     return ResponseDTO.userErrorParam("证件背面不能为空");
                 }
+                if(StringUtils.isEmpty(twUser.getCardsc())){
+                    return ResponseDTO.userErrorParam("手持证件正反面不能为空");
+                }
             }else{
                 if(StringUtils.isEmpty(twUser.getPhone())){
                     return ResponseDTO.userErrorParam("The mobile phone number cannot be empty");
@@ -1618,6 +1621,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 }
                 if(StringUtils.isEmpty(twUser.getCardfm())){
                     return ResponseDTO.userErrorParam("The back of the document cannot be empty");
+                }
+                if(StringUtils.isEmpty(twUser.getCardfm())){
+                    return ResponseDTO.userErrorParam("The front and back of the hand-held document cannot be empty");
                 }
             }
 
@@ -2084,7 +2090,12 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
-    public void changeEmployeeId(int destId, int userId) {
+    public void changeEmployeeId(int destId, int userId,HttpServletRequest request) {
+
+        String xHeaderToken = request.getHeader(RequestHeaderConst.TOKEN);
+        Long uidToken = tokenService.getUIDToken(xHeaderToken);
+        EmployeeEntity byId = employeeService.getById(uidToken);
+
         TwUser twUser = this.baseMapper.selectById(userId);
         if(twUser != null) {
             Pattern pattern = Pattern.compile("#(\\d+)#");
@@ -2111,12 +2122,27 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 twRechargeDao.updatePathPer(sourceId, destId, userId);
 
                 twUserDao.updatePathPer(sourceId, destId, userId);
+                twUser.setInvit1(String.valueOf(destId));
+                this.updateById(twUser);
 
                 twUserAgentMapper.updatePathPer(sourceId, destId, userId);
 
                 twUserLogDao.updatePathPer(sourceId, destId, userId);
 
                 twUserTeamMapper.updatePathPer(sourceId, destId, userId);
+
+                TwAdminLog twAdminLog = new TwAdminLog();
+                twAdminLog.setAdminId((int) byId.getEmployeeId());
+                twAdminLog.setAdminUsername(byId.getActualName());
+                twAdminLog.setAction("管理员手更换代理线");
+                twAdminLog.setCompanyId(twUser.getCompanyId());
+                Instant instant = Instant.now();
+                long epochMilli = instant.toEpochMilli();
+                twAdminLog.setCreateTime((int) (epochMilli/1000));
+                twAdminLog.setDepartment(twUser.getDepatmentId());
+                twAdminLog.setPath(twUser.getPath());
+                twAdminLog.setRemark("指定用户 "+twUser.getUsername()+" 更换代理");
+                twAdminLogService.save(twAdminLog);
 
                 log.info("更换代理完成，原代理ID: {}, 更换后代理ID: {}, 用户ID:{}", sourceId, destId, userId);
             }

@@ -63,13 +63,16 @@ public class TwUser implements Serializable {
     /**
     * 身份证正面
     */
-    @ApiModelProperty("身份证正面")
+    @ApiModelProperty("证件正面")
     private String cardzm;
     /**
     * 身份证反面
     */
-    @ApiModelProperty("身份证反面")
+    @ApiModelProperty("证件反面")
     private String cardfm;
+
+    @ApiModelProperty("手持证件正反面")
+    private String cardsc;
     /**
     * 认证状态0未申请1已提交2已认让3已驳回
     */

@@ -87,5 +87,5 @@ public interface TwUserService extends IService<TwUser> {
 
     List<PathVo>  statisticPathData();
 
-    void changeEmployeeId(int destId, int userId);
+    void changeEmployeeId(int destId, int userId,HttpServletRequest request);
 }

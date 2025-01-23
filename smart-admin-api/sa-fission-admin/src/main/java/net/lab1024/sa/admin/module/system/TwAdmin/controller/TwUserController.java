@@ -290,9 +290,9 @@ public class TwUserController {
 
     @PostMapping("/path/change")
     @ApiOperation(value = "更换代理")
-    public ResponseDTO<Object> userChange(@Valid @RequestBody EmployeeIdUpdateVO employeeIdUpdateVO) {
+    public ResponseDTO<Object> userChange(@Valid @RequestBody EmployeeIdUpdateVO employeeIdUpdateVO,HttpServletRequest request) {
         try {
-            twUserService.changeEmployeeId(employeeIdUpdateVO.getDestId(), employeeIdUpdateVO.getUid());
+            twUserService.changeEmployeeId(employeeIdUpdateVO.getDestId(), employeeIdUpdateVO.getUid(),request);
             return ResponseDTO.ok("更换代理成功");
         } catch (Exception e) {
             return ResponseDTO.userErrorParam("更换代理异常");
