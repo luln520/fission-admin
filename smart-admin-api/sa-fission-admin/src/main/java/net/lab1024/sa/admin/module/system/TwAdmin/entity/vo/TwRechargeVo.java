@@ -16,4 +16,5 @@ public class TwRechargeVo extends PageParam {
 
         private Integer status;
 
+        private Integer rechargeType;
 }

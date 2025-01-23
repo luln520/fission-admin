@@ -3,38 +3,48 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwRechargeDao">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge">
-        select '' as from_address, '' as currency,'' as chain, address, '' as balance, username,addtime, updatetime, num, type from tw_recharge where 1=1 and company_id  = #{obj.companyId}
-        <if test="obj.username != null and obj.username !=''">
-            and (user_code like concat('%',#{obj.username},'%') or username like concat('%',#{obj.username},'%'))
-        </if>
-        <if test="obj.userCode != null and obj.userCode !=''">
-            and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
-        </if>
-        union all
-        SELECT tad.from_address, tab.currency,ta.chain_id as chain, ta.address, tab.balance,tu.username, tad.create_time as addtime, tad.update_time, tad.amount as num, 4 FROM tw_address_detail tad left join tw_address ta on tad.address_id = ta.id
-        left join tw_user tu on ta.uid = tu.id left join tw_address_balance tab on ta.id = tab.address_id where tx_type=0
-        <if test="obj.username != null and obj.username !=''">
-            and (tu.user_code like concat('%',#{obj.username},'%') or tu.username like concat('%',#{obj.username},'%'))
-        </if>
-        <if test="obj.userCode != null and obj.userCode !=''">
-            and (tu.user_code like concat('%',#{obj.userCode},'%') or tu.username like concat('%',#{obj.userCode},'%'))
-        </if>
-        <!--<if test="obj.startTime != null and obj.startTime !=''">
-            and addtime >= #{obj.startTime}
-        </if>
-        <if test="obj.endTime != null and obj.endTime !=''">
-            and  #{obj.endTime} >= addtime
-        </if>
-        <if test="obj.departmentId != null">
-            and department = #{obj.departmentId}
-        </if>
-        <if test="obj.status != null">
-            and status = #{obj.status}
-        </if>
-        <if test="obj.employeeId != null and obj.employeeId !=''">
-            and path like concat('%',#{obj.employeeId},'%')
-        </if>-->
-        order by updatetime desc
+        <choose>
+            <when test="obj.rechargeType == null">
+                select '' as from_address, '' as currency,'' as chain, address, '' as balance, username,addtime, updatetime, num, type from tw_recharge where 1=1 and company_id  = #{obj.companyId}
+                <if test="obj.username != null and obj.username !=''">
+                    and (user_code like concat('%',#{obj.username},'%') or username like concat('%',#{obj.username},'%'))
+                </if>
+                <if test="obj.userCode != null and obj.userCode !=''">
+                    and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
+                </if>
+                union all
+                SELECT tad.from_address, tab.currency,ta.chain_id as chain, ta.address, tab.balance,tu.username, tad.create_time as addtime, tad.update_time, tad.amount as num, 4 FROM tw_address_detail tad left join tw_address ta on tad.address_id = ta.id
+                left join tw_user tu on ta.uid = tu.id left join tw_address_balance tab on ta.id = tab.address_id where tx_type=0
+                <if test="obj.username != null and obj.username !=''">
+                    and (tu.user_code like concat('%',#{obj.username},'%') or tu.username like concat('%',#{obj.username},'%'))
+                </if>
+                <if test="obj.userCode != null and obj.userCode !=''">
+                    and (tu.user_code like concat('%',#{obj.userCode},'%') or tu.username like concat('%',#{obj.userCode},'%'))
+                </if>
+                order by updatetime desc
+            </when>
+            <when test="obj.rechargeType == 2">
+                select '' as from_address, '' as currency,'' as chain, address, '' as balance, username,addtime, updatetime, num, type from tw_recharge where 1=1 and company_id  = #{obj.companyId}
+                <if test="obj.username != null and obj.username !=''">
+                    and (user_code like concat('%',#{obj.username},'%') or username like concat('%',#{obj.username},'%'))
+                </if>
+                <if test="obj.userCode != null and obj.userCode !=''">
+                    and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
+                </if>
+                order by updatetime desc
+            </when>
+            <when test="obj.rechargeType == 1">
+                SELECT tad.from_address, tab.currency,ta.chain_id as chain, ta.address, tab.balance,tu.username, tad.create_time as addtime, tad.update_time, tad.amount as num, 4 AS TYPE FROM tw_address_detail tad left join tw_address ta on tad.address_id = ta.id
+                left join tw_user tu on ta.uid = tu.id left join tw_address_balance tab on ta.id = tab.address_id where tx_type=0
+                <if test="obj.username != null and obj.username !=''">
+                    and (tu.user_code like concat('%',#{obj.username},'%') or tu.username like concat('%',#{obj.username},'%'))
+                </if>
+                <if test="obj.userCode != null and obj.userCode !=''">
+                    and (tu.user_code like concat('%',#{obj.userCode},'%') or tu.username like concat('%',#{obj.userCode},'%'))
+                </if>
+                order by update_time desc
+            </when>
+        </choose>
     </select>
     <select id="statisticPerNum" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.vo.PerNumVo">
         SELECT
