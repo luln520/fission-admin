@@ -3,7 +3,7 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwRechargeDao">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwRecharge">
-        select username,addtime, updatetime, num, type from tw_recharge where 1=1 and company_id  = #{obj.companyId}
+        select '' as from_address, '' as currency,'' as chain, address, '' as balance, username,addtime, updatetime, num, type from tw_recharge where 1=1 and company_id  = #{obj.companyId}
         <if test="obj.username != null and obj.username !=''">
             and (user_code like concat('%',#{obj.username},'%') or username like concat('%',#{obj.username},'%'))
         </if>
@@ -11,8 +11,8 @@
             and (user_code like concat('%',#{obj.userCode},'%') or username like concat('%',#{obj.userCode},'%'))
         </if>
         union all
-        SELECT tu.username, tad.create_time as addtime, tad.update_time, tad.amount as num, 4 FROM tw_address_detail tad left join tw_address ta on tad.address_id = ta.id
-        left join tw_user tu on ta.uid = tu.id where tx_type=0
+        SELECT tad.from_address, tab.currency,ta.chain_id as chain, ta.address, tab.balance,tu.username, tad.create_time as addtime, tad.update_time, tad.amount as num, 4 FROM tw_address_detail tad left join tw_address ta on tad.address_id = ta.id
+        left join tw_user tu on ta.uid = tu.id left join tw_address_balance tab on ta.id = tab.address_id where tx_type=0
         <if test="obj.username != null and obj.username !=''">
             and (tu.user_code like concat('%',#{obj.username},'%') or tu.username like concat('%',#{obj.username},'%'))
         </if>
