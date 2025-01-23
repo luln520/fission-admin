@@ -220,7 +220,7 @@ public class DateUtil {
 
 
     public static Date stract12() {
-        Instant new_instant =Instant.now().minus(12, ChronoUnit.HOURS);
+        Instant new_instant =Instant.now().minus(10, ChronoUnit.HOURS);
         return Date.from(new_instant);
     }
 
