@@ -3,7 +3,7 @@
 <mapper namespace="net.lab1024.sa.admin.module.system.TwAdmin.dao.TwMcdHyorderMapper">
 
     <select id="listpage" resultType="net.lab1024.sa.admin.module.system.TwAdmin.entity.TwMcdHyOrder">
-        select *, tu.username as followUsername from tw_mcd_hyorder tmh left join tw_user tu on tmh.follow_uid = tu.id where 1=1 and tmh.company_id = #{obj.companyId}
+        select tmh.*, tu.username as followUsername from tw_mcd_hyorder tmh left join tw_user tu on tmh.follow_uid = tu.id where 1=1 and tmh.company_id = #{obj.companyId}
         <if test="obj.username != null and obj.username !=''">
             and tmh.username like concat('%',#{obj.username},'%')
         </if>
