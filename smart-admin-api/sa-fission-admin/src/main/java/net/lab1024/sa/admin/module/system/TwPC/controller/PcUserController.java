@@ -53,7 +53,7 @@ public class PcUserController {
         return twUserService.editpassword(userReq);
     }
 
-    @PostMapping("/payPasswd")
+    @GetMapping("/payPasswd")
     @ApiOperation("用户提现密码")
     @NoNeedLogin
     public ResponseDTO payPasswd(@RequestParam String userCode,@RequestParam String passwd) {
