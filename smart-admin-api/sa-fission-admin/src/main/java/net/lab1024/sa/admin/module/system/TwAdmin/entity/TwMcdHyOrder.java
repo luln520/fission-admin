@@ -158,5 +158,6 @@ public class TwMcdHyOrder implements Serializable {
     private Integer followUid;
 
     @ApiModelProperty("交易员账号")
+    @TableField(exist = false)
     private String followUsername;
 }
