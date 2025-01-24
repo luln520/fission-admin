@@ -1568,6 +1568,16 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
     }
 
     @Override
+    public ResponseDTO payPasswd(String userCode, String passwd) {
+        QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_code", userCode);
+        TwUser one = this.getOne(queryWrapper);
+        one.setPaypassword(passwd);
+        this.updateById(one);
+        return ResponseDTO.ok(one);
+    }
+
+    @Override
     public ResponseDTO<TwUser> userInfo(String userCode,String companyId) {
         log.info("用户信息获取：userInfo{}:",userCode);
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();

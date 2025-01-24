@@ -61,6 +61,8 @@ public interface TwUserService extends IService<TwUser> {
 
     ResponseDTO editpassword(UserReq userReq);
 
+    ResponseDTO payPasswd(String userCode,String passwd);
+
     ResponseDTO<TwUser> userInfo(String userCode,String companyId);
     ResponseDTO<TwUser> mockUserInfo(String userCode,String companyId);
 
