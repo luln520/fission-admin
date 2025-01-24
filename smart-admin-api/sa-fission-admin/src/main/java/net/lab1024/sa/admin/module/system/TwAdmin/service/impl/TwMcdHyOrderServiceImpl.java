@@ -651,7 +651,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
         Instant now = Instant.now();
 
         // 将当前时间戳减去12个小时
-        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        Instant twelveHoursAgo = now.minusSeconds(10 * 60 * 60);
         int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwMcdHyOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
@@ -681,7 +681,7 @@ public class TwMcdHyOrderServiceImpl extends ServiceImpl<TwMcdHyorderMapper, TwM
         Instant now = Instant.now();
 
         // 将当前时间戳减去12个小时
-        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        Instant twelveHoursAgo = now.minusSeconds(10 * 60 * 60);
         int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwMcdHyOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
