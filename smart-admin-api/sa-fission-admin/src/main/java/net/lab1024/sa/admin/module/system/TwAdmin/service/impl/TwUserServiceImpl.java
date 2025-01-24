@@ -623,6 +623,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            twUser.setPassword(encryptPwd);
            twUser.setAreaCode("");
            twUser.setUserCode(usercode);
+           twUser.setCardsc(twUser.getCardsc());
            twUser.setAddip(ip);
            twUser.setPhone(phone);
 //           twUser.setAddr(locationByIP);
@@ -714,6 +715,7 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
            one.setRztype(twUser.getRztype());
            one.setCardfm(twUser.getCardfm());
            one.setPhone(twUser.getPhone());
+           one.setCardsc(twUser.getCardsc());
            one.setCardzm(twUser.getCardzm());
            one.setUsername(twUser.getUsername());
            one.setMerchandiser(twUser.getMerchandiser());

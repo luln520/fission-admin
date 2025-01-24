@@ -342,8 +342,8 @@ public class TimerServiceImpl {
     public  void hycarryout() {
         Instant now = Instant.now();
 
-        // 将当前时间戳减去12个小时
-        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        // 将当前时间戳减去10个小时
+        Instant twelveHoursAgo = now.minusSeconds(10 * 60 * 60);
         int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",1);
@@ -799,8 +799,8 @@ public class TimerServiceImpl {
     public  void hycarryplanout() {
         Instant now = Instant.now();
 
-        // 将当前时间戳减去12个小时
-        Instant twelveHoursAgo = now.minusSeconds(12 * 60 * 60);
+        // 将当前时间戳减去10个小时
+        Instant twelveHoursAgo = now.minusSeconds(10 * 60 * 60);
         int nowtime = (int) twelveHoursAgo.getEpochSecond();
         QueryWrapper<TwHyorder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("status",0);
