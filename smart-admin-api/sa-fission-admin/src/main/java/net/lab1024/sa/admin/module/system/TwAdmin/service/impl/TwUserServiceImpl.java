@@ -1606,9 +1606,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 if(StringUtils.isEmpty(twUser.getCardfm())){
                     return ResponseDTO.userErrorParam("证件背面不能为空");
                 }
-                if(StringUtils.isEmpty(twUser.getCardsc())){
-                    return ResponseDTO.userErrorParam("手持证件正反面不能为空");
-                }
+//                if(StringUtils.isEmpty(twUser.getCardsc())){
+//                    return ResponseDTO.userErrorParam("手持证件正反面不能为空");
+//                }
             }else{
                 if(StringUtils.isEmpty(twUser.getPhone())){
                     return ResponseDTO.userErrorParam("The mobile phone number cannot be empty");
@@ -1622,9 +1622,9 @@ public class TwUserServiceImpl extends ServiceImpl<TwUserDao, TwUser> implements
                 if(StringUtils.isEmpty(twUser.getCardfm())){
                     return ResponseDTO.userErrorParam("The back of the document cannot be empty");
                 }
-                if(StringUtils.isEmpty(twUser.getCardfm())){
-                    return ResponseDTO.userErrorParam("The front and back of the hand-held document cannot be empty");
-                }
+//                if(StringUtils.isEmpty(twUser.getCardsc())){
+//                    return ResponseDTO.userErrorParam("The front and back of the hand-held document cannot be empty");
+//                }
             }
 
 
