@@ -77,7 +77,13 @@ public class TwUserQianbaoServiceImpl extends ServiceImpl<TwUserQianbaoDao, TwUs
     }
 
     @Override
-    public boolean add(int uid, int oid, String address, String remark, String czline) {
+    public ResponseDTO add(int uid, int oid, String address, String remark, String czline) {
+        QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("userid", uid);
+        List<TwUserQianbao> list = this.list();
+        if (list.size()>0) {
+            return ResponseDTO.userErrorParam("To add or modify an address, please contact customer service");
+        }
         QueryWrapper<TwUser> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", uid);
         TwUser twUser = twUserService.getOne(queryWrapper);
@@ -98,7 +104,7 @@ public class TwUserQianbaoServiceImpl extends ServiceImpl<TwUserQianbaoDao, TwUs
         twUserQianbao.setAddtime(new Date());
         twUserQianbao.setStatus(1);
         this.save(twUserQianbao);
-        return true;
+        return ResponseDTO.ok();
     }
 
 

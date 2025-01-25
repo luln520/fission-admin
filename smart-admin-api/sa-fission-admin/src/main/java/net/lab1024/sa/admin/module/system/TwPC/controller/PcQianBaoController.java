@@ -88,7 +88,7 @@ public class PcQianBaoController {
                            @RequestParam String address,
                            @RequestParam String remark,
                            @RequestParam String czline) {
-        return ResponseDTO.ok(twUserQianbaoService.add(uid,oid,address,remark,czline));
+        return twUserQianbaoService.add(uid,oid,address,remark,czline);
     }
 
     @GetMapping("/qbSum")

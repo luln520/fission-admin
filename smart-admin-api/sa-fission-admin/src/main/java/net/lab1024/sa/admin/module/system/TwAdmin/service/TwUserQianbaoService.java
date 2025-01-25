@@ -27,7 +27,7 @@ public interface TwUserQianbaoService extends IService<TwUserQianbao> {
 
     boolean del(int id);
 
-    boolean add(int uid,int oid, String address,String remark, String czline);
+    ResponseDTO add(int uid,int oid, String address,String remark, String czline);
 
     ResponseDTO qbSum(int uid);
 
