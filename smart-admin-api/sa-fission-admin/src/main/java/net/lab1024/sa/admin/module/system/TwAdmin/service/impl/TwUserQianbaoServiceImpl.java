@@ -78,7 +78,7 @@ public class TwUserQianbaoServiceImpl extends ServiceImpl<TwUserQianbaoDao, TwUs
 
     @Override
     public ResponseDTO add(int uid, int oid, String address, String remark, String czline) {
-        QueryWrapper<TwUser> queryWrapper2 = new QueryWrapper<>();
+        QueryWrapper<TwUserQianbao> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("userid", uid);
         List<TwUserQianbao> list = this.list();
         if (list.size()>0) {
