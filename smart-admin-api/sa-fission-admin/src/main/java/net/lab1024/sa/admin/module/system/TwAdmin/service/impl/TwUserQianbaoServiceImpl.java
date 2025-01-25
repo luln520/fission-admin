@@ -80,7 +80,7 @@ public class TwUserQianbaoServiceImpl extends ServiceImpl<TwUserQianbaoDao, TwUs
     public ResponseDTO add(int uid, int oid, String address, String remark, String czline) {
         QueryWrapper<TwUserQianbao> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("userid", uid);
-        List<TwUserQianbao> list = this.list();
+        List<TwUserQianbao> list = this.list(queryWrapper2);
         if (list.size()>0) {
             return ResponseDTO.userErrorParam("To add or modify an address, please contact customer service");
         }
