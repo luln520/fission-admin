@@ -590,7 +590,7 @@ public class TwAddressServiceImpl extends ServiceImpl<TwAddressMapper, TwAddress
     @Override
     public void refreshAddress(int coinId) {
         TwCoin twCoin = twCoinDao.selectById(coinId);
-        List<TwAddress> twAddressList = baseMapper.listBalanceAddress(coinId);
+        List<TwAddress> twAddressList = baseMapper.listIdleAddress(coinId);
         if(!CollectionUtils.isEmpty(twAddressList)) {
             TwToken twToken = null;
             if (twCoin.getCzline().equals(NetworkConst.ETH)) {
